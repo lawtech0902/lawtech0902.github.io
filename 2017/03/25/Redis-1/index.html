@@ -98,7 +98,7 @@ Redis与memcached及其他类型">
 <meta property="og:site_name" content="LawTech's Blog">
 <meta property="og:description" content="Redis简介Redis是一个速度极快的非关系数据库，也就是我们所说的NoSQL数据库(non-relational database)，它可以存储键(key)与5种不同类型的值(value)之间的映射(mapping)，可以将存储在内存的键值对数据持久化到硬盘，可以使用复制特性来扩展读性能，还可以使用客户端分片来扩展性能，并且它还提供了多种语言的API。
 Redis与memcached及其他类型">
-<meta property="og:updated_time" content="2017-03-26T13:03:56.000Z">
+<meta property="og:updated_time" content="2017-03-26T14:37:33.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Redis学习笔记(一)：初识Redis">
 <meta name="twitter:description" content="Redis简介Redis是一个速度极快的非关系数据库，也就是我们所说的NoSQL数据库(non-relational database)，它可以存储键(key)与5种不同类型的值(value)之间的映射(mapping)，可以将存储在内存的键值对数据持久化到硬盘，可以使用复制特性来扩展读性能，还可以使用客户端分片来扩展性能，并且它还提供了多种语言的API。
@@ -497,7 +497,7 @@ Redis与memcached及其他类型">
 </tr>
 </tbody>
 </table>
-<h3 id="Redis字符串"><a href="#Redis字符串" class="headerlink" title="Redis字符串"></a><strong>Redis字符串</strong></h3><p>下表展示了3中简单的字符串命令：</p>
+<h3 id="Redis字符串"><a href="#Redis字符串" class="headerlink" title="Redis字符串"></a><strong>Redis字符串</strong></h3><p>下表展示了3种简单的字符串命令：</p>
 <table>
 <thead>
 <tr>
@@ -521,6 +521,126 @@ Redis与memcached及其他类型">
 </tbody>
 </table>
 <p>SET、GET、DEL的使用示例：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ redis-cli</div><div class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> hello world</div><div class="line">OK</div><div class="line">127.0.0.1:6379&gt; get hello</div><div class="line"><span class="string">"world"</span></div><div class="line">127.0.0.1:6379&gt; del hello</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; get hello</div><div class="line">(nil)</div><div class="line">127.0.0.1:6379&gt;</div></pre></td></tr></table></figure></p>
+<p>SET命令在执行成功时返回OK，Python客户端会将这个OK转换为True；DEL命令在执行成功时将会返回被成功删除的值的数量；GET命令在尝试得到不存在的值时，将会返回一个nil，Python客户端会将这个nil转换为None。</p>
+<h3 id="Redis列表"><a href="#Redis列表" class="headerlink" title="Redis列表"></a><strong>Redis列表</strong></h3><p>下表展示了6种简单的列表命令：</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LPUSH(RPUSH)</td>
+<td>将给定值推入列表的左端(右端)</td>
+</tr>
+<tr>
+<td>LPOP(RPOP)</td>
+<td>从列表的左端(右端)弹出一个值，并返回被弹出的值</td>
+</tr>
+<tr>
+<td>LINDEX</td>
+<td>获取列表在给定位置上的单个值</td>
+</tr>
+<tr>
+<td>LRANGE</td>
+<td>获取列表在给定范围上的所有值</td>
+</tr>
+</tbody>
+</table>
+<p>RPUSH、LRANGE、LINDEX、LPOP的使用示例<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">$ redis-cli</div><div class="line">127.0.0.1:6379&gt; rpush list-key item</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; rpush list-key item2</div><div class="line">(<span class="built_in">integer</span>) 2</div><div class="line">127.0.0.1:6379&gt; rpush list-key item</div><div class="line">(<span class="built_in">integer</span>) 3</div><div class="line">127.0.0.1:6379&gt; lrange list-key 0 -1</div><div class="line">1) <span class="string">"item"</span></div><div class="line">2) <span class="string">"item2"</span></div><div class="line">3) <span class="string">"item"</span></div><div class="line">127.0.0.1:6379&gt; lindex list-key 1</div><div class="line"><span class="string">"item2"</span></div><div class="line">127.0.0.1:6379&gt; lpop list-key </div><div class="line"><span class="string">"item"</span></div><div class="line">127.0.0.1:6379&gt; lrange list-key 0 -1</div><div class="line">1) <span class="string">"item2"</span></div><div class="line">2) <span class="string">"item"</span></div><div class="line">127.0.0.1:6379&gt;</div></pre></td></tr></table></figure></p>
+<p>RPUSH和LPUSH命令在执行成功后会返回当前列表的长度；列表索引范围从0开始，到-1结束，可以取出列表包含的所有元素；使用LINDEX可以从列表中取出单个元素。</p>
+<h3 id="Redis集合"><a href="#Redis集合" class="headerlink" title="Redis集合"></a><strong>Redis集合</strong></h3><p>Redis的集合和列表都可以存储多个字符串，它们的不同之处在于，列表可以存储多个相同的字符串，而集合则通过散列表来保证自己存储的每个字符串都是不同的(这些散列表只有键)。</p>
+<p>下表展示了6种简单的集合命令：</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SADD</td>
+<td>将给定元素添加到集合</td>
+</tr>
+<tr>
+<td>SMEMBERS</td>
+<td>返回集合包含的所有元素</td>
+</tr>
+<tr>
+<td>SISMEMBER</td>
+<td>检查给定元素是否存在于集合中</td>
+</tr>
+<tr>
+<td>SREM</td>
+<td>如果给定的元素存在于集合中，那么移除这个元素</td>
+</tr>
+</tbody>
+</table>
+<p>SADD、SMEMBERS、SISMEMBER、SREM的使用示例<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">$ redis-cli</div><div class="line">127.0.0.1:6379&gt; sadd <span class="built_in">set</span>-key item</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; sadd <span class="built_in">set</span>-key item2</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; sadd <span class="built_in">set</span>-key item3</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; sadd <span class="built_in">set</span>-key item</div><div class="line">(<span class="built_in">integer</span>) 0</div><div class="line">127.0.0.1:6379&gt; smembers <span class="built_in">set</span>-key</div><div class="line">1) <span class="string">"item2"</span></div><div class="line">2) <span class="string">"item3"</span></div><div class="line">3) <span class="string">"item"</span></div><div class="line">127.0.0.1:6379&gt; sismember <span class="built_in">set</span>-key item4</div><div class="line">(<span class="built_in">integer</span>) 0</div><div class="line">127.0.0.1:6379&gt; sismember <span class="built_in">set</span>-key item</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; srem <span class="built_in">set</span>-key item2</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; srem <span class="built_in">set</span>-key item2</div><div class="line">(<span class="built_in">integer</span>) 0</div><div class="line">127.0.0.1:6379&gt; smembers <span class="built_in">set</span>-key</div><div class="line">1) <span class="string">"item3"</span></div><div class="line">2) <span class="string">"item"</span></div><div class="line">127.0.0.1:6379&gt;</div></pre></td></tr></table></figure></p>
+<p>SADD命令返回1表示成功添加到集合中，返回0表示该元素已存在于集合中；SMEMBERS命令获取到的元素组成的序列将会被Python客户端转换为Python集合；Python客户端会返回一个布尔值来表示SISMEMBER命令的检查结果；SREM命令会返回被移除元素的数量。</p>
+<h3 id="Redis散列"><a href="#Redis散列" class="headerlink" title="Redis散列"></a><strong>Redis散列</strong></h3><p>Redis的散列就像一个微型Redis，它可以存储多个键值对之间的映射。和字符串一样，散列存储的值既可以是字符串也可以是数值。可以将散列看做文档数据库里面的文档，还可以看做是关系数据库里面的行，因为散列、文档和行都允许用户同时访问或修改一个或多个域(field)。</p>
+<p>下表展示了4种简单的列表命令：</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HSET</td>
+<td>在散列里面关联给定的键值对</td>
+</tr>
+<tr>
+<td>HGET</td>
+<td>获取指定散列键的值</td>
+</tr>
+<tr>
+<td>HGETALL</td>
+<td>获取散列包含的所有键值对</td>
+</tr>
+<tr>
+<td>HDEL</td>
+<td>如果给定键存在于散列里面，那么移除这个键</td>
+</tr>
+</tbody>
+</table>
+<p>HSET、HGET、HGETALL、HDEL的使用示例<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">$ redis-cli</div><div class="line">127.0.0.1:6379&gt; hset <span class="built_in">hash</span>-key sub-key1 value1</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; hset <span class="built_in">hash</span>-key sub-key2 value2</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; hset <span class="built_in">hash</span>-key sub-key1 value1</div><div class="line">(<span class="built_in">integer</span>) 0</div><div class="line">127.0.0.1:6379&gt; hgetall <span class="built_in">hash</span>-key</div><div class="line">1) <span class="string">"sub-key1"</span></div><div class="line">2) <span class="string">"value1"</span></div><div class="line">3) <span class="string">"sub-key2"</span></div><div class="line">4) <span class="string">"value2"</span></div><div class="line">127.0.0.1:6379&gt; hdel <span class="built_in">hash</span>-key sub-key2</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; hdel <span class="built_in">hash</span>-key sub-key2</div><div class="line">(<span class="built_in">integer</span>) 0</div><div class="line">127.0.0.1:6379&gt; hget <span class="built_in">hash</span>-key sub-key1</div><div class="line"><span class="string">"value1"</span></div><div class="line">127.0.0.1:6379&gt; hgetall <span class="built_in">hash</span>-key</div><div class="line">1) <span class="string">"sub-key1"</span></div><div class="line">2) <span class="string">"value1"</span></div><div class="line">127.0.0.1:6379&gt;</div></pre></td></tr></table></figure></p>
+<p>HSET返回一个值来表示给定的键是否已经存在于散列里面；Python客户端会把HGETALL命令获取的整个散列转换为一个Python字典；HDEL命令执行后会返回一个值来表示给定的键在移除之前是否存在于散列里面。</p>
+<h3 id="Redis有序集合"><a href="#Redis有序集合" class="headerlink" title="Redis有序集合"></a><strong>Redis有序集合</strong></h3><p>有序集合和散列一样，都用于存储键值对：其中有序集合的每个键称为成员（member），都是独一无二的，而有序集合的每个值称为分值（score），都必须是浮点数。有序集合是Redis里面唯一既可以根据成员访问元素（这一点和散列一样），又可以根据分值以及分值的排列顺序来访问元素的结构。</p>
+<p>下表展示了4种简单的有序集合命令：</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ZADD</td>
+<td>将一个带有给定分值的成员添加到有序集合里面</td>
+</tr>
+<tr>
+<td>ZRANGE</td>
+<td>根据元素在有序排列中所处的位置，从有序集合里获取多个元素</td>
+</tr>
+<tr>
+<td>ZRANGEBYSCORE</td>
+<td>获取有序集合在给定分值范围内的所有元素</td>
+</tr>
+<tr>
+<td>ZREM</td>
+<td>如果给定成员存在于有序集合，那么移除这个成员</td>
+</tr>
+</tbody>
+</table>
+<p>ZADD、ZRANGE、ZRANGEBYSCORE、ZREM的使用示例<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">$ redis-cli</div><div class="line">127.0.0.1:6379&gt; zadd zset-key 728 member1</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; zadd zset-key 982 member0</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; zadd zset-key 982 member0</div><div class="line">(<span class="built_in">integer</span>) 0</div><div class="line">127.0.0.1:6379&gt; zrange zset-key 0 -1 withscores</div><div class="line">1) <span class="string">"member1"</span></div><div class="line">2) <span class="string">"728"</span></div><div class="line">3) <span class="string">"member0"</span></div><div class="line">4) <span class="string">"982"</span></div><div class="line">127.0.0.1:6379&gt; zrangebyscore zset-key 0 800 withscores</div><div class="line">1) <span class="string">"member1"</span></div><div class="line">2) <span class="string">"728"</span></div><div class="line">127.0.0.1:6379&gt; zrem zset-key member1</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; zrem zset-key member1</div><div class="line">(<span class="built_in">integer</span>) 0</div><div class="line">127.0.0.1:6379&gt; zrange zset-key 0 -1 withscores</div><div class="line">1) <span class="string">"member0"</span></div><div class="line">2) <span class="string">"982"</span></div><div class="line">127.0.0.1:6379&gt;</div></pre></td></tr></table></figure></p>
+<p>在尝试向有序集合添加元素的时候，ZADD命令会返回新添加元素的数量；ZRANGE命令获取有序集合包含的所有元素，这些元素会按照分值进行排序，Python客户端会将这些分值转换成浮点数；ZRANGEBYSCORE命令也可以根据分值来获取有序集合的其中一部分元素；ZREM命令在移除有序集合元素的时候，命令会返回被移除元素的数量。</p>
 
       
     </div>
@@ -734,7 +854,7 @@ Redis与memcached及其他类型">
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis简介"><span class="nav-number">1.</span> <span class="nav-text">Redis简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis与memcached及其他类型数据库对比"><span class="nav-number">2.</span> <span class="nav-text">Redis与memcached及其他类型数据库对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis安装-mac"><span class="nav-number">3.</span> <span class="nav-text">Redis安装(mac)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis数据结构简介"><span class="nav-number">4.</span> <span class="nav-text">Redis数据结构简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis字符串"><span class="nav-number">4.1.</span> <span class="nav-text">Redis字符串</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis简介"><span class="nav-number">1.</span> <span class="nav-text">Redis简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis与memcached及其他类型数据库对比"><span class="nav-number">2.</span> <span class="nav-text">Redis与memcached及其他类型数据库对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis安装-mac"><span class="nav-number">3.</span> <span class="nav-text">Redis安装(mac)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis数据结构简介"><span class="nav-number">4.</span> <span class="nav-text">Redis数据结构简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis字符串"><span class="nav-number">4.1.</span> <span class="nav-text">Redis字符串</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis列表"><span class="nav-number">4.2.</span> <span class="nav-text">Redis列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis集合"><span class="nav-number">4.3.</span> <span class="nav-text">Redis集合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis散列"><span class="nav-number">4.4.</span> <span class="nav-text">Redis散列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis有序集合"><span class="nav-number">4.5.</span> <span class="nav-text">Redis有序集合</span></a></li></ol></li></ol></div>
             
 
           </div>
