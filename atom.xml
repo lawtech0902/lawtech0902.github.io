@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-03-27T09:04:50.000Z</updated>
+  <updated>2017-03-27T09:11:12.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://yoursite.com/2017/03/27/Redis-2/"/>
     <id>http://yoursite.com/2017/03/27/Redis-2/</id>
     <published>2017-03-27T08:18:54.000Z</published>
-    <updated>2017-03-27T09:04:50.000Z</updated>
+    <updated>2017-03-27T09:11:12.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="redis-py简介"><a href="#redis-py简介" class="headerlink" title="redis-py简介"></a><strong>redis-py简介</strong></h2><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a><strong>安装</strong></h3><p>在之前的学习笔记(一)中已经安装过<a href="https://github.com/andymccurdy/redis-py" target="_blank" rel="external">redis-py</a>，我的Python版本是3.5.2<br><a id="more"></a><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ pip3 install redis</div></pre></td></tr></table></figure></p>
 <h3 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a><strong>快速开始</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> redis</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r = redis.StrictRedis(host=<span class="string">'localhost'</span>, port=<span class="number">6379</span>, db=<span class="number">0</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.set(<span class="string">'key'</span>, <span class="string">'value'</span>)</div><div class="line"><span class="keyword">True</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.get(<span class="string">'key'</span>)</div><div class="line"><span class="string">b'value'</span></div></pre></td></tr></table></figure>
@@ -175,7 +175,7 @@
     <link href="http://yoursite.com/2017/03/25/Redis-1/"/>
     <id>http://yoursite.com/2017/03/25/Redis-1/</id>
     <published>2017-03-25T12:18:54.000Z</published>
-    <updated>2017-03-27T09:04:33.000Z</updated>
+    <updated>2017-03-27T09:11:12.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="Redis简介"><a href="#Redis简介" class="headerlink" title="Redis简介"></a><strong>Redis简介</strong></h2><p>Redis是一个速度极快的非关系数据库，也就是我们所说的NoSQL数据库(non-relational database)，它可以存储键(key)与5种不同类型的值(value)之间的映射(mapping)，可以将存储在内存的键值对数据持久化到硬盘，可以使用复制特性来扩展读性能，还可以使用客户端分片来扩展性能，并且它还提供了多种语言的API。<br><a id="more"></a></p>
 <h2 id="Redis与memcached及其他类型数据库对比"><a href="#Redis与memcached及其他类型数据库对比" class="headerlink" title="Redis与memcached及其他类型数据库对比"></a><strong>Redis与memcached及其他类型数据库对比</strong></h2><p>Redis经常被拿来与memcached进行比较，两者都可用于存储键值映射，性能也相差无几，但是Redis能够自动以两种不同的方式将数据写入硬盘，而且Redis除了能存储普通的字符串键，还能存储其他4种数据结构，使得Redis可以用于解决更为广泛的问题，并且即可以作为主数据库使用，又可以作为其他存储系统的辅助数据库。</p>
