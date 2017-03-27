@@ -90,20 +90,17 @@
 
 
 
-<meta name="description" content="Redis简介Redis是一个速度极快的非关系数据库，也就是我们所说的NoSQL数据库(non-relational database)，它可以存储键(key)与5种不同类型的值(value)之间的映射(mapping)，可以将存储在内存的键值对数据持久化到硬盘，可以使用复制特性来扩展读性能，还可以使用客户端分片来扩展性能，并且它还提供了多种语言的API。
-Redis与memcached及其他类型">
+<meta name="description" content="Redis简介Redis是一个速度极快的非关系数据库，也就是我们所说的NoSQL数据库(non-relational database)，它可以存储键(key)与5种不同类型的值(value)之间的映射(mapping)，可以将存储在内存的键值对数据持久化到硬盘，可以使用复制特性来扩展读性能，还可以使用客户端分片来扩展性能，并且它还提供了多种语言的API。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis学习笔记(一)：初识Redis">
 <meta property="og:url" content="http://yoursite.com/2017/03/25/Redis-1/index.html">
 <meta property="og:site_name" content="LawTech's Blog">
-<meta property="og:description" content="Redis简介Redis是一个速度极快的非关系数据库，也就是我们所说的NoSQL数据库(non-relational database)，它可以存储键(key)与5种不同类型的值(value)之间的映射(mapping)，可以将存储在内存的键值对数据持久化到硬盘，可以使用复制特性来扩展读性能，还可以使用客户端分片来扩展性能，并且它还提供了多种语言的API。
-Redis与memcached及其他类型">
+<meta property="og:description" content="Redis简介Redis是一个速度极快的非关系数据库，也就是我们所说的NoSQL数据库(non-relational database)，它可以存储键(key)与5种不同类型的值(value)之间的映射(mapping)，可以将存储在内存的键值对数据持久化到硬盘，可以使用复制特性来扩展读性能，还可以使用客户端分片来扩展性能，并且它还提供了多种语言的API。">
 <meta property="og:image" content="https://redis.io/images/redis-300dpi.png">
-<meta property="og:updated_time" content="2017-03-27T08:40:37.000Z">
+<meta property="og:updated_time" content="2017-03-27T08:49:02.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Redis学习笔记(一)：初识Redis">
-<meta name="twitter:description" content="Redis简介Redis是一个速度极快的非关系数据库，也就是我们所说的NoSQL数据库(non-relational database)，它可以存储键(key)与5种不同类型的值(value)之间的映射(mapping)，可以将存储在内存的键值对数据持久化到硬盘，可以使用复制特性来扩展读性能，还可以使用客户端分片来扩展性能，并且它还提供了多种语言的API。
-Redis与memcached及其他类型">
+<meta name="twitter:description" content="Redis简介Redis是一个速度极快的非关系数据库，也就是我们所说的NoSQL数据库(non-relational database)，它可以存储键(key)与5种不同类型的值(value)之间的映射(mapping)，可以将存储在内存的键值对数据持久化到硬盘，可以使用复制特性来扩展读性能，还可以使用客户端分片来扩展性能，并且它还提供了多种语言的API。">
 <meta name="twitter:image" content="https://redis.io/images/redis-300dpi.png">
 
 
@@ -430,7 +427,7 @@ Redis与memcached及其他类型">
       
 
       
-        <h2 id="Redis简介"><a href="#Redis简介" class="headerlink" title="Redis简介"></a><strong>Redis简介</strong></h2><p>Redis是一个速度极快的非关系数据库，也就是我们所说的NoSQL数据库(non-relational database)，它可以存储键(key)与5种不同类型的值(value)之间的映射(mapping)，可以将存储在内存的键值对数据持久化到硬盘，可以使用复制特性来扩展读性能，还可以使用客户端分片来扩展性能，并且它还提供了多种语言的API。</p>
+        <h2 id="Redis简介"><a href="#Redis简介" class="headerlink" title="Redis简介"></a><strong>Redis简介</strong></h2><p>Redis是一个速度极快的非关系数据库，也就是我们所说的NoSQL数据库(non-relational database)，它可以存储键(key)与5种不同类型的值(value)之间的映射(mapping)，可以将存储在内存的键值对数据持久化到硬盘，可以使用复制特性来扩展读性能，还可以使用客户端分片来扩展性能，并且它还提供了多种语言的API。<br><a id="more"></a></p>
 <h2 id="Redis与memcached及其他类型数据库对比"><a href="#Redis与memcached及其他类型数据库对比" class="headerlink" title="Redis与memcached及其他类型数据库对比"></a><strong>Redis与memcached及其他类型数据库对比</strong></h2><p>Redis经常被拿来与memcached进行比较，两者都可用于存储键值映射，性能也相差无几，但是Redis能够自动以两种不同的方式将数据写入硬盘，而且Redis除了能存储普通的字符串键，还能存储其他4种数据结构，使得Redis可以用于解决更为广泛的问题，并且即可以作为主数据库使用，又可以作为其他存储系统的辅助数据库。</p>
 <p>下表展示了Redis与memcached，MySQL以及MongoDB的特性与功能。</p>
 <table>
