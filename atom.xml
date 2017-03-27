@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-03-27T08:37:56.000Z</updated>
+  <updated>2017-03-27T08:40:37.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -16,166 +16,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Redis学习笔记(二)：Redis命令及其Python API</title>
-    <link href="http://yoursite.com/2017/03/25/Redis-2/"/>
-    <id>http://yoursite.com/2017/03/25/Redis-2/</id>
-    <published>2017-03-25T14:21:04.000Z</published>
-    <updated>2017-03-27T08:37:56.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="redis-py简介"><a href="#redis-py简介" class="headerlink" title="redis-py简介"></a><strong>redis-py简介</strong></h2><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a><strong>安装</strong></h3><p>在之前的学习笔记(一)中已经安装过<a href="https://github.com/andymccurdy/redis-py" target="_blank" rel="external">redis-py</a>，我的Python版本是3.5.2<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ pip3 install redis</div></pre></td></tr></table></figure></p>
-<h3 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a><strong>快速开始</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> redis</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r = redis.StrictRedis(host=<span class="string">'localhost'</span>, port=<span class="number">6379</span>, db=<span class="number">0</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.set(<span class="string">'key'</span>, <span class="string">'value'</span>)</div><div class="line"><span class="keyword">True</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.get(<span class="string">'key'</span>)</div><div class="line"><span class="string">b'value'</span></div></pre></td></tr></table></figure>
-<h3 id="API参考"><a href="#API参考" class="headerlink" title="API参考"></a><strong>API参考</strong></h3><p>Redis的<a href="http://www.redis.cn/commands.html" target="_blank" rel="external">官方命令文档</a>很好地解释了每个命令的详细信息。 redis-py公开了实现这些命令的两个客户端类。 </p>
-<p>第一，StrictRedis类试图遵守官方命令语法， 但是有些一些例外：</p>
-<ul>
-<li>SELECT: 没有实现，考虑到线程安全的原因。</li>
-<li>DEL: 由于del是python语法关键字，所用delete来代替。</li>
-<li>CONFIG GET|SET: 分开用 config_get or config_set来代替</li>
-<li>MULTI/EXEC: 事务作为Pipeline类的其中一部分的实现。Pipeline默认保证了MULTI,EXEC声明。但是你可以指定transaction=False来禁用这一行为。</li>
-<li>SUBSCRIBE/LISTEN:PubSub作为一个独立的类来实现发布订阅机制。</li>
-<li>SCAN/SSCAN/HSCAN/ZSCAN:每个命令都对应一个等价的迭代器方法scan_iter/sscan_iter/hscan_iter/zscan_iter methods for this behavior。</li>
-</ul>
-<p>第二，Redis类是StrictRedis的子类，提供redis-py版本向后的兼容性。</p>
-<p>关于StrictRedis与Redis的区别：(官方推荐使用StrictRedis.)</p>
-<p>以下几个方法在StrictRedis和Redis类中的参数顺序不同。</p>
-<ul>
-<li>LREM: 在Redis类中是这样的：<br>lrem(self, name, value, num=0)<br>在StrictRedis类中是这样的：<br>lrem(self, name, count, value)</li>
-<li>ZADD: 在Redis类中是这样的：<br>zadd(‘my-key’, ‘name1’, 1.1, ‘name2’, 2.2, name3=3.3, name4=4.4)<br>在StrictRedis中是这样的：<br>zadd(‘my-key’, 1.1, ‘name1’, 2.2, ‘name2’, name3=3.3, name4=4.4)</li>
-<li>SETEX: 在Redis类中是这样的：<br>setex(self, name, value, time)<br>而在StrictRedis中是这样的：<br>setex(self, name, time, value)</li>
-</ul>
-<h3 id="连接池"><a href="#连接池" class="headerlink" title="连接池"></a><strong>连接池</strong></h3><p> redis-py使用connection pool来管理对一个redis server的所有连接，避免每次建立、释放连接的开销。默认情况下，每个Redis实例都会依次创建并维护一个自己的连接池。我们可以直接建立一个连接池，然后传递给Redis或StrictRedis连接命令作为参数，这样就可以实现多个Redis实例共享一个连接池，以实现客户端分片，或者对连接的管理方式进行更高精度的控制。<br> <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>pool = redis.ConnectionPool(host=<span class="string">'localhost'</span>, port=<span class="number">6379</span>, db=<span class="number">0</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r = redis.StrictRedis(connection_pool=pool)</div></pre></td></tr></table></figure></p>
-<p> 我们也可以创建自己的Connection子类，用于控制异步框架中的套接字行为，要使用自己的连接实例化客户端类，需要创建一个连接池，将类传递给connection_class参数。<br> <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>pool = redis.ConnectionPool(connection_class=YourConnectionClass,your_arg=<span class="string">'...'</span>, ...)</div></pre></td></tr></table></figure></p>
-<p> 释放连接回到连接池：可以使用Redis类的reset()方法，或者使用with上下文管理语法。</p>
-<p> 解析器：解析器控制如何解析Redis-server的响应内容，redis-py提供两种方式的解析器类支持PythonParser和HiredisParser(需要单独安装)。它优先选用HiredisParser,如果不存在，则选用PythonParser. Hiredis是redis核心团队开发的一个高性能c库，能够提高10x的解析速度。</p>
-<p>响应回调：The client class使用一系列的callbacks来完成响应到对应python类型的映射。这些响应回调，定义在 Redis client class中的RESPONSE_CALLBACKS字典中。你可以使用set_response_callback 方法来添加自定义回调类。这个方法接受两个参数：一个命令名字，一个回调类。回调类接受至少一个参数：响应内容，关键字参数作为命令调用时的参数。</p>
-<h3 id="线程安全性"><a href="#线程安全性" class="headerlink" title="线程安全性"></a><strong>线程安全性</strong></h3><p>Redis客户端实例可以安全地在线程之间共享。 在内部，连接实例只在命令执行期间从连接池检索，并在执行后直接返回到池中。 命令执行过程从不修改客户端实例上的状态。</p>
-<p>但是，有一个警告：Redis SELECT命令。 SELECT命令允许您切换连接正在使用的数据库。 该数据库保持选中，直到选择另一个或连接关闭为止。 这会创建一个问题，因为可以将连接返回到连接到不同数据库的池。</p>
-<p>因此，redis-py不会在客户端实例上实现SELECT命令。 如果在同一应用程序中使用多个Redis数据库，则应为每个数据库创建一个单独的客户机实例（也可能是单独的连接池）。</p>
-<p>在线程之间传递PubSub或Pipeline对象是不安全的。</p>
-<h2 id="Redis命令及其对应redis-py-API"><a href="#Redis命令及其对应redis-py-API" class="headerlink" title="Redis命令及其对应redis-py API"></a><strong>Redis命令及其对应redis-py API</strong></h2><p>由于Redis<a href="http://www.redis.cn/commands.html" target="_blank" rel="external">官方命令文档</a>很好地解释了每个命令的详细信息，所以我这里只对最常用的Redis命令进行整理，并给出其redis-py API。</p>
-<h3 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a><strong>字符串</strong></h3><p>下表展示了对Redis字符串执行自增和自减操作的命令及其redis-py API。</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>用例</th>
-<th>描述</th>
-<th>redis-py API</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>INCR</td>
-<td>INCR key-name</td>
-<td>将键存储的值加1</td>
-<td>incr(name, amount=1)</td>
-</tr>
-<tr>
-<td>DECR</td>
-<td>DECR key-name</td>
-<td>将键存储的值减1</td>
-<td>decr(name, amount=1)</td>
-</tr>
-<tr>
-<td>INCRBY</td>
-<td>INCRBY key-name amount</td>
-<td>将键存储的值加整数amount</td>
-<td>incr(name, amount=1)</td>
-</tr>
-<tr>
-<td>DECRBY</td>
-<td>DECRBY key-name amount</td>
-<td>将键存储的值减整数amount</td>
-<td>decr(name, amount=1)</td>
-</tr>
-<tr>
-<td>INCRBYFLOAT</td>
-<td>INCRBYFLOAT key-name amount</td>
-<td>将键存储的值加浮点数amount</td>
-<td>incrbyfloat(name, amount=1.0)</td>
-</tr>
-</tbody>
-</table>
-<p>在redis-py内部，使用了INCRBY和DECRBY命令来实现incr()和decr()方法，并且第二个参数amount是可选的，默认为1。</p>
-<p>下面这个交互示例展示了Redis的INCR和DECR操作<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.get(<span class="string">'key'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.incr(<span class="string">'key'</span>)</div><div class="line"><span class="number">1</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.incr(<span class="string">'key'</span>, <span class="number">15</span>)</div><div class="line"><span class="number">16</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.get(<span class="string">'key'</span>)</div><div class="line"><span class="string">b'16'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.decr(<span class="string">'key'</span>, <span class="number">5</span>)</div><div class="line"><span class="number">11</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.set(<span class="string">'key'</span>, <span class="number">13</span>)</div><div class="line"><span class="keyword">True</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.incr(<span class="string">'key'</span>)</div><div class="line"><span class="number">14</span></div></pre></td></tr></table></figure></p>
-<p>当用户将一个值存储到Redis字符串中时，如果这个值可以被解释(interpet)为十进制整数或者浮点数，那么Redis会允许用户对这个字符串执行各种INCR<em>和DECR</em>操作。如果用户对一个不存在的键或者一个保存了空串的键执行自增或自减操作，Redis会自动将这个键的值当作是0来处理。若非上述情况，则Redis将会返回一个错误。</p>
-<p>除了自增和自减操作，Redis还可以对字节串进行读取和写入的操作。</p>
-<p>下表展示了Redis用来处理字符串子串和二进制位的命令及其redis-py API。</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>用例</th>
-<th>描述</th>
-<th>redis-py API</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>APPEND</td>
-<td>APPEND key-name value</td>
-<td>将值value追加到给定键key-name当前存储的值的末尾</td>
-<td>append(key, value)</td>
-</tr>
-<tr>
-<td>GETRANGE</td>
-<td>GETRANGE key-name start end</td>
-<td>获取一个偏移量从start到end的子串，包含start和end</td>
-<td>getrange(key, start, end)</td>
-</tr>
-<tr>
-<td>SETRANGE</td>
-<td>SETRANGE key-name offset value</td>
-<td>将从start开始的子串设置为给定值</td>
-<td>setrange(name, offset, value)</td>
-</tr>
-<tr>
-<td>GETBIT</td>
-<td>GETBIT key-name offset</td>
-<td>将字节串看作是二进制位串，并返回位串中偏移量为offset的二进制位的值</td>
-<td>getbit(name, offset)</td>
-</tr>
-<tr>
-<td>SETBIT</td>
-<td>SETBIT key-name offset value</td>
-<td>将字节串看作是二进制位串，并将位串中偏移量为offset的二进制位的值设为value</td>
-<td>setbit(name, offset, value)</td>
-</tr>
-<tr>
-<td>BITCOUNT</td>
-<td>BITCOUNT key-name [start end]</td>
-<td>统计字符串被设置为1的bit数，通过指定额外的 start 或 end 参数，可以让计数只在特定的位上进行</td>
-<td>bitcount(key, start=None, end=None)</td>
-</tr>
-<tr>
-<td>BITOP</td>
-<td>BITOP operation dest-key key-name [key-name …]</td>
-<td>对一个或多个保存二进制位的字符串 key 进行位元操作，并将结果保存到 destkey 上。</td>
-<td>bitop(operation, dest, *keys)</td>
-</tr>
-</tbody>
-</table>
-<p>在执行如果offset比当前key对应string还要长，那这个string后面就补0以达到offset不存在的keys被认为是空字符串</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;redis-py简介&quot;&gt;&lt;a href=&quot;#redis-py简介&quot; class=&quot;headerlink&quot; title=&quot;redis-py简介&quot;&gt;&lt;/a&gt;&lt;strong&gt;redis-py简介&lt;/strong&gt;&lt;/h2&gt;&lt;h3 id=&quot;安装&quot;&gt;&lt;a href=&quot;#安装
-    
-    </summary>
-    
-      <category term="Redis" scheme="http://yoursite.com/categories/Redis/"/>
-    
-    
-      <category term="Redis, Python" scheme="http://yoursite.com/tags/Redis-Python/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Redis学习笔记(一)：初识Redis</title>
     <link href="http://yoursite.com/2017/03/25/Redis-1/"/>
     <id>http://yoursite.com/2017/03/25/Redis-1/</id>
     <published>2017-03-25T14:21:04.000Z</published>
-    <updated>2017-03-26T14:37:33.000Z</updated>
+    <updated>2017-03-27T08:40:37.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="Redis简介"><a href="#Redis简介" class="headerlink" title="Redis简介"></a><strong>Redis简介</strong></h2><p>Redis是一个速度极快的非关系数据库，也就是我们所说的NoSQL数据库(non-relational database)，它可以存储键(key)与5种不同类型的值(value)之间的映射(mapping)，可以将存储在内存的键值对数据持久化到硬盘，可以使用复制特性来扩展读性能，还可以使用客户端分片来扩展性能，并且它还提供了多种语言的API。</p>
 <h2 id="Redis与memcached及其他类型数据库对比"><a href="#Redis与memcached及其他类型数据库对比" class="headerlink" title="Redis与memcached及其他类型数据库对比"></a><strong>Redis与memcached及其他类型数据库对比</strong></h2><p>Redis经常被拿来与memcached进行比较，两者都可用于存储键值映射，性能也相差无几，但是Redis能够自动以两种不同的方式将数据写入硬盘，而且Redis除了能存储普通的字符串键，还能存储其他4种数据结构，使得Redis可以用于解决更为广泛的问题，并且即可以作为主数据库使用，又可以作为其他存储系统的辅助数据库。</p>
@@ -411,6 +256,161 @@
     <summary type="html">
     
       &lt;h2 id=&quot;Redis简介&quot;&gt;&lt;a href=&quot;#Redis简介&quot; class=&quot;headerlink&quot; title=&quot;Redis简介&quot;&gt;&lt;/a&gt;&lt;strong&gt;Redis简介&lt;/strong&gt;&lt;/h2&gt;&lt;p&gt;Redis是一个速度极快的非关系数据库，也就是我们所说的NoSQL
+    
+    </summary>
+    
+      <category term="Redis" scheme="http://yoursite.com/categories/Redis/"/>
+    
+    
+      <category term="Redis, Python" scheme="http://yoursite.com/tags/Redis-Python/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Redis学习笔记(二)：Redis命令及其Python API</title>
+    <link href="http://yoursite.com/2017/03/25/Redis-2/"/>
+    <id>http://yoursite.com/2017/03/25/Redis-2/</id>
+    <published>2017-03-25T14:21:04.000Z</published>
+    <updated>2017-03-27T08:40:42.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="redis-py简介"><a href="#redis-py简介" class="headerlink" title="redis-py简介"></a><strong>redis-py简介</strong></h2><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a><strong>安装</strong></h3><p>在之前的学习笔记(一)中已经安装过<a href="https://github.com/andymccurdy/redis-py" target="_blank" rel="external">redis-py</a>，我的Python版本是3.5.2<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ pip3 install redis</div></pre></td></tr></table></figure></p>
+<h3 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a><strong>快速开始</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> redis</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r = redis.StrictRedis(host=<span class="string">'localhost'</span>, port=<span class="number">6379</span>, db=<span class="number">0</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.set(<span class="string">'key'</span>, <span class="string">'value'</span>)</div><div class="line"><span class="keyword">True</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.get(<span class="string">'key'</span>)</div><div class="line"><span class="string">b'value'</span></div></pre></td></tr></table></figure>
+<h3 id="API参考"><a href="#API参考" class="headerlink" title="API参考"></a><strong>API参考</strong></h3><p>Redis的<a href="http://www.redis.cn/commands.html" target="_blank" rel="external">官方命令文档</a>很好地解释了每个命令的详细信息。 redis-py公开了实现这些命令的两个客户端类。 </p>
+<p>第一，StrictRedis类试图遵守官方命令语法， 但是有些一些例外：</p>
+<ul>
+<li>SELECT: 没有实现，考虑到线程安全的原因。</li>
+<li>DEL: 由于del是python语法关键字，所用delete来代替。</li>
+<li>CONFIG GET|SET: 分开用 config_get or config_set来代替</li>
+<li>MULTI/EXEC: 事务作为Pipeline类的其中一部分的实现。Pipeline默认保证了MULTI,EXEC声明。但是你可以指定transaction=False来禁用这一行为。</li>
+<li>SUBSCRIBE/LISTEN:PubSub作为一个独立的类来实现发布订阅机制。</li>
+<li>SCAN/SSCAN/HSCAN/ZSCAN:每个命令都对应一个等价的迭代器方法scan_iter/sscan_iter/hscan_iter/zscan_iter methods for this behavior。</li>
+</ul>
+<p>第二，Redis类是StrictRedis的子类，提供redis-py版本向后的兼容性。</p>
+<p>关于StrictRedis与Redis的区别：(官方推荐使用StrictRedis.)</p>
+<p>以下几个方法在StrictRedis和Redis类中的参数顺序不同。</p>
+<ul>
+<li>LREM: 在Redis类中是这样的：<br>lrem(self, name, value, num=0)<br>在StrictRedis类中是这样的：<br>lrem(self, name, count, value)</li>
+<li>ZADD: 在Redis类中是这样的：<br>zadd(‘my-key’, ‘name1’, 1.1, ‘name2’, 2.2, name3=3.3, name4=4.4)<br>在StrictRedis中是这样的：<br>zadd(‘my-key’, 1.1, ‘name1’, 2.2, ‘name2’, name3=3.3, name4=4.4)</li>
+<li>SETEX: 在Redis类中是这样的：<br>setex(self, name, value, time)<br>而在StrictRedis中是这样的：<br>setex(self, name, time, value)</li>
+</ul>
+<h3 id="连接池"><a href="#连接池" class="headerlink" title="连接池"></a><strong>连接池</strong></h3><p> redis-py使用connection pool来管理对一个redis server的所有连接，避免每次建立、释放连接的开销。默认情况下，每个Redis实例都会依次创建并维护一个自己的连接池。我们可以直接建立一个连接池，然后传递给Redis或StrictRedis连接命令作为参数，这样就可以实现多个Redis实例共享一个连接池，以实现客户端分片，或者对连接的管理方式进行更高精度的控制。<br> <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>pool = redis.ConnectionPool(host=<span class="string">'localhost'</span>, port=<span class="number">6379</span>, db=<span class="number">0</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r = redis.StrictRedis(connection_pool=pool)</div></pre></td></tr></table></figure></p>
+<p> 我们也可以创建自己的Connection子类，用于控制异步框架中的套接字行为，要使用自己的连接实例化客户端类，需要创建一个连接池，将类传递给connection_class参数。<br> <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>pool = redis.ConnectionPool(connection_class=YourConnectionClass,your_arg=<span class="string">'...'</span>, ...)</div></pre></td></tr></table></figure></p>
+<p> 释放连接回到连接池：可以使用Redis类的reset()方法，或者使用with上下文管理语法。</p>
+<p> 解析器：解析器控制如何解析Redis-server的响应内容，redis-py提供两种方式的解析器类支持PythonParser和HiredisParser(需要单独安装)。它优先选用HiredisParser,如果不存在，则选用PythonParser. Hiredis是redis核心团队开发的一个高性能c库，能够提高10x的解析速度。</p>
+<p>响应回调：The client class使用一系列的callbacks来完成响应到对应python类型的映射。这些响应回调，定义在 Redis client class中的RESPONSE_CALLBACKS字典中。你可以使用set_response_callback 方法来添加自定义回调类。这个方法接受两个参数：一个命令名字，一个回调类。回调类接受至少一个参数：响应内容，关键字参数作为命令调用时的参数。</p>
+<h3 id="线程安全性"><a href="#线程安全性" class="headerlink" title="线程安全性"></a><strong>线程安全性</strong></h3><p>Redis客户端实例可以安全地在线程之间共享。 在内部，连接实例只在命令执行期间从连接池检索，并在执行后直接返回到池中。 命令执行过程从不修改客户端实例上的状态。</p>
+<p>但是，有一个警告：Redis SELECT命令。 SELECT命令允许您切换连接正在使用的数据库。 该数据库保持选中，直到选择另一个或连接关闭为止。 这会创建一个问题，因为可以将连接返回到连接到不同数据库的池。</p>
+<p>因此，redis-py不会在客户端实例上实现SELECT命令。 如果在同一应用程序中使用多个Redis数据库，则应为每个数据库创建一个单独的客户机实例（也可能是单独的连接池）。</p>
+<p>在线程之间传递PubSub或Pipeline对象是不安全的。</p>
+<h2 id="Redis命令及其对应redis-py-API"><a href="#Redis命令及其对应redis-py-API" class="headerlink" title="Redis命令及其对应redis-py API"></a><strong>Redis命令及其对应redis-py API</strong></h2><p>由于Redis<a href="http://www.redis.cn/commands.html" target="_blank" rel="external">官方命令文档</a>很好地解释了每个命令的详细信息，所以我这里只对最常用的Redis命令进行整理，并给出其redis-py API。</p>
+<h3 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a><strong>字符串</strong></h3><p>下表展示了对Redis字符串执行自增和自减操作的命令及其redis-py API。</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>用例</th>
+<th>描述</th>
+<th>redis-py API</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>INCR</td>
+<td>INCR key-name</td>
+<td>将键存储的值加1</td>
+<td>incr(name, amount=1)</td>
+</tr>
+<tr>
+<td>DECR</td>
+<td>DECR key-name</td>
+<td>将键存储的值减1</td>
+<td>decr(name, amount=1)</td>
+</tr>
+<tr>
+<td>INCRBY</td>
+<td>INCRBY key-name amount</td>
+<td>将键存储的值加整数amount</td>
+<td>incr(name, amount=1)</td>
+</tr>
+<tr>
+<td>DECRBY</td>
+<td>DECRBY key-name amount</td>
+<td>将键存储的值减整数amount</td>
+<td>decr(name, amount=1)</td>
+</tr>
+<tr>
+<td>INCRBYFLOAT</td>
+<td>INCRBYFLOAT key-name amount</td>
+<td>将键存储的值加浮点数amount</td>
+<td>incrbyfloat(name, amount=1.0)</td>
+</tr>
+</tbody>
+</table>
+<p>在redis-py内部，使用了INCRBY和DECRBY命令来实现incr()和decr()方法，并且第二个参数amount是可选的，默认为1。</p>
+<p>下面这个交互示例展示了Redis的INCR和DECR操作<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.get(<span class="string">'key'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.incr(<span class="string">'key'</span>)</div><div class="line"><span class="number">1</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.incr(<span class="string">'key'</span>, <span class="number">15</span>)</div><div class="line"><span class="number">16</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.get(<span class="string">'key'</span>)</div><div class="line"><span class="string">b'16'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.decr(<span class="string">'key'</span>, <span class="number">5</span>)</div><div class="line"><span class="number">11</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.set(<span class="string">'key'</span>, <span class="number">13</span>)</div><div class="line"><span class="keyword">True</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.incr(<span class="string">'key'</span>)</div><div class="line"><span class="number">14</span></div></pre></td></tr></table></figure></p>
+<p>当用户将一个值存储到Redis字符串中时，如果这个值可以被解释(interpet)为十进制整数或者浮点数，那么Redis会允许用户对这个字符串执行各种INCR<em>和DECR</em>操作。如果用户对一个不存在的键或者一个保存了空串的键执行自增或自减操作，Redis会自动将这个键的值当作是0来处理。若非上述情况，则Redis将会返回一个错误。</p>
+<p>除了自增和自减操作，Redis还可以对字节串进行读取和写入的操作。</p>
+<p>下表展示了Redis用来处理字符串子串和二进制位的命令及其redis-py API。</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>用例</th>
+<th>描述</th>
+<th>redis-py API</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>APPEND</td>
+<td>APPEND key-name value</td>
+<td>将值value追加到给定键key-name当前存储的值的末尾</td>
+<td>append(key, value)</td>
+</tr>
+<tr>
+<td>GETRANGE</td>
+<td>GETRANGE key-name start end</td>
+<td>获取一个偏移量从start到end的子串，包含start和end</td>
+<td>getrange(key, start, end)</td>
+</tr>
+<tr>
+<td>SETRANGE</td>
+<td>SETRANGE key-name offset value</td>
+<td>将从start开始的子串设置为给定值</td>
+<td>setrange(name, offset, value)</td>
+</tr>
+<tr>
+<td>GETBIT</td>
+<td>GETBIT key-name offset</td>
+<td>将字节串看作是二进制位串，并返回位串中偏移量为offset的二进制位的值</td>
+<td>getbit(name, offset)</td>
+</tr>
+<tr>
+<td>SETBIT</td>
+<td>SETBIT key-name offset value</td>
+<td>将字节串看作是二进制位串，并将位串中偏移量为offset的二进制位的值设为value</td>
+<td>setbit(name, offset, value)</td>
+</tr>
+<tr>
+<td>BITCOUNT</td>
+<td>BITCOUNT key-name [start end]</td>
+<td>统计字符串被设置为1的bit数，通过指定额外的 start 或 end 参数，可以让计数只在特定的位上进行</td>
+<td>bitcount(key, start=None, end=None)</td>
+</tr>
+<tr>
+<td>BITOP</td>
+<td>BITOP operation dest-key key-name [key-name …]</td>
+<td>对一个或多个保存二进制位的字符串 key 进行位元操作，并将结果保存到 destkey 上。</td>
+<td>bitop(operation, dest, *keys)</td>
+</tr>
+</tbody>
+</table>
+<p>在执行如果offset比当前key对应string还要长，那这个string后面就补0以达到offset不存在的keys被认为是空字符串</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;redis-py简介&quot;&gt;&lt;a href=&quot;#redis-py简介&quot; class=&quot;headerlink&quot; title=&quot;redis-py简介&quot;&gt;&lt;/a&gt;&lt;strong&gt;redis-py简介&lt;/strong&gt;&lt;/h2&gt;&lt;h3 id=&quot;安装&quot;&gt;&lt;a href=&quot;#安装
     
     </summary>
     
