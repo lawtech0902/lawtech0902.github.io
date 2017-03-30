@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-03-27T09:11:12.000Z</updated>
+  <updated>2017-03-30T12:17:22.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://yoursite.com/2017/03/27/Redis-2/"/>
     <id>http://yoursite.com/2017/03/27/Redis-2/</id>
     <published>2017-03-27T08:18:54.000Z</published>
-    <updated>2017-03-27T09:11:12.000Z</updated>
+    <updated>2017-03-30T12:17:22.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="redis-py简介"><a href="#redis-py简介" class="headerlink" title="redis-py简介"></a><strong>redis-py简介</strong></h2><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a><strong>安装</strong></h3><p>在之前的学习笔记(一)中已经安装过<a href="https://github.com/andymccurdy/redis-py" target="_blank" rel="external">redis-py</a>，我的Python版本是3.5.2<br><a id="more"></a><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ pip3 install redis</div></pre></td></tr></table></figure></p>
 <h3 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a><strong>快速开始</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> redis</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r = redis.StrictRedis(host=<span class="string">'localhost'</span>, port=<span class="number">6379</span>, db=<span class="number">0</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.set(<span class="string">'key'</span>, <span class="string">'value'</span>)</div><div class="line"><span class="keyword">True</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.get(<span class="string">'key'</span>)</div><div class="line"><span class="string">b'value'</span></div></pre></td></tr></table></figure>
@@ -154,7 +154,441 @@
 </tr>
 </tbody>
 </table>
-<p>在执行如果offset比当前key对应string还要长，那这个string后面就补0以达到offset不存在的keys被认为是空字符串</p>
+<p>在执行SETRANGE或者SETBIT命令时，如果offset比当前key对应string还要长，那这个string后面就补空字节(null)以达到offset。使用GETRANGE时超出字符串末尾的数据会被认为是空字符串，而使用GETBIT时超出字符串末尾的二进制位会被视为是0。</p>
+<p>下面这个交互示例展示了Redis的子串操作和二进制位操作<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.append(<span class="string">'new-string-key'</span>, <span class="string">'hello '</span>)</div><div class="line"><span class="number">6</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.append(<span class="string">'new-string-key'</span>, <span class="string">'world!'</span>)</div><div class="line"><span class="number">12</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.substr(<span class="string">'new-string-key'</span>, <span class="number">3</span>, <span class="number">7</span>)</div><div class="line"><span class="string">b'lo wo'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.getrange(<span class="string">'new-string-key'</span>, <span class="number">3</span>, <span class="number">7</span>)</div><div class="line"><span class="string">b'lo wo'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.setrange(<span class="string">'new-string-key'</span>, <span class="number">0</span>, <span class="string">'H'</span>)</div><div class="line"><span class="number">12</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.get(<span class="string">'new-string-key'</span>)</div><div class="line"><span class="string">b'Hello world!'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.setrange(<span class="string">'new-string-key'</span>, <span class="number">11</span>, <span class="string">', how are you?'</span>)</div><div class="line"><span class="number">25</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.get(<span class="string">'new-string-key'</span>)</div><div class="line"><span class="string">b'Hello world, how are you?'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.setbit(<span class="string">'another-key'</span>, <span class="number">2</span>, <span class="number">1</span>)</div><div class="line"><span class="number">0</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.setbit(<span class="string">'another-key'</span>, <span class="number">7</span>, <span class="number">1</span>)</div><div class="line"><span class="number">0</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.getbit(<span class="string">'another-key'</span>, <span class="number">1</span>)</div><div class="line"><span class="number">0</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.get(<span class="string">'another-key'</span>)</div><div class="line"><span class="string">b'!'</span></div></pre></td></tr></table></figure></p>
+<p>Redis现在的GETRANGE命令是由以前的SUBSTR命令改名而来，所以现在redis-py中两者仍然都可以使用，但是最好还是使用getrange()方法来获取子串。</p>
+<h3 id="列表"><a href="#列表" class="headerlink" title="列表"></a><strong>列表</strong></h3><p>下表展示了一些之前介绍过的常用列表命令</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>用例</th>
+<th>描述</th>
+<th>redis-py API</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RPUSH</td>
+<td>RPUSH key value [value …]</td>
+<td>向存于key的列表的尾部插入所有指定的值</td>
+<td>rpush(name, *values)</td>
+</tr>
+<tr>
+<td>LPUSH</td>
+<td>LPUSH key value [value …]</td>
+<td>将所有指定的值插入到存于key的列表的头部</td>
+<td>lpush(name, *values)</td>
+</tr>
+<tr>
+<td>RPOP</td>
+<td>RPOP key</td>
+<td>移除并返回key对应的list的最后一个元素</td>
+<td>rpop(name)</td>
+</tr>
+<tr>
+<td>LPOP</td>
+<td>LPOP key</td>
+<td>移除并返回key对应的list的第一个元素</td>
+<td>lpop(name)</td>
+</tr>
+<tr>
+<td>LINDEX</td>
+<td>LINDEX key index</td>
+<td>返回列表索引位置的元素</td>
+<td>lindex(name, index)</td>
+</tr>
+<tr>
+<td>LRANGE</td>
+<td>LRANGE key start stop</td>
+<td>返回存储在key的列表里指定范围内的元素</td>
+<td>lrange(name, start, end)</td>
+</tr>
+<tr>
+<td>LTRIM</td>
+<td>LTRIM key start stop</td>
+<td>修剪(trim)一个已存在的list，这样list就会只包含指定范围的指定元素</td>
+<td>ltrim(name, start, end)</td>
+</tr>
+</tbody>
+</table>
+<p>下面这个交互示例展示了Redis列表的推入和弹出操作<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.rpush(<span class="string">'list-key'</span>, <span class="string">'last'</span>)</div><div class="line"><span class="number">1</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.lpush(<span class="string">'list-key'</span>, <span class="string">'first'</span>)</div><div class="line"><span class="number">2</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.rpush(<span class="string">'list-key'</span>, <span class="string">'new last'</span>)</div><div class="line"><span class="number">3</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.lrange(<span class="string">'list-key'</span>, <span class="number">0</span>, <span class="number">-1</span>)</div><div class="line">[<span class="string">b'first'</span>, <span class="string">b'last'</span>, <span class="string">b'new last'</span>]</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.lpop(<span class="string">'list-key'</span>)</div><div class="line"><span class="string">b'first'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.lpop(<span class="string">'list-key'</span>)</div><div class="line"><span class="string">b'last'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.lrange(<span class="string">'list-key'</span>, <span class="number">0</span>, <span class="number">-1</span>)</div><div class="line">[<span class="string">b'new last'</span>]</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.rpush(<span class="string">'list-key'</span>, <span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>)</div><div class="line"><span class="number">4</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.lrange(<span class="string">'list-key'</span>, <span class="number">0</span>, <span class="number">-1</span>)</div><div class="line">[<span class="string">b'new last'</span>, <span class="string">b'a'</span>, <span class="string">b'b'</span>, <span class="string">b'c'</span>]</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.ltrim(<span class="string">'list-key'</span>, <span class="number">2</span>, <span class="number">-1</span>)</div><div class="line"><span class="keyword">True</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.lrange(<span class="string">'list-key'</span>, <span class="number">0</span>, <span class="number">-1</span>)</div><div class="line">[<span class="string">b'b'</span>, <span class="string">b'c'</span>]</div></pre></td></tr></table></figure></p>
+<p>还有几个列表命令能将元素从一个列表移动到另一个列表，或者阻塞(block)执行命令的客户端直到有其他客户端给列表添加元素为止。</p>
+<p>下表列出了这些阻塞弹出命令以及列表之间移动元素的命令</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>用例</th>
+<th>描述</th>
+<th>redis-py API</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BLPOP</td>
+<td>BLPOP key [key …] timeout</td>
+<td>弹出第一个非空列表的头元素，或在timeout秒内阻塞并等待可弹出的元素出现</td>
+<td>blpop(keys, timeout=0)</td>
+</tr>
+<tr>
+<td>BRPOP</td>
+<td>BRPOP key [key …] timeout</td>
+<td>弹出第一个非空列表的末尾元素，或在timeout秒内阻塞并等待可弹出的元素出现</td>
+<td>brpop(keys, timeout=0)</td>
+</tr>
+<tr>
+<td>RPOPLPUSH</td>
+<td>RPOPLPUSH source destination</td>
+<td>原子性地返回并移除存储在source的列表的最后一个元素(列表尾部元素)， 并把该元素放入存储在destination的列表的第一个元素位置(列表头部)</td>
+<td>rpoplpush(src, dst)</td>
+</tr>
+<tr>
+<td>BRPOPLPUSH</td>
+<td>BRPOPLPUSH source destination timeout</td>
+<td>BRPOPLPUSH 是 RPOPLPUSH 的阻塞版本。 当 source 包含元素的时候，这个命令表现得跟 RPOPLPUSH 一模一样。 当 source 是空的时候，Redis将会阻塞这个连接，直到另一个客户端 push 元素进入或者达到 timeout 时限。</td>
+<td>brpoplpush(src, dst, timeout=0)</td>
+</tr>
+</tbody>
+</table>
+<p>注：原子性是指命令正在都区或者修改数据的时候，其他客户端不能读取或修改相同的数据。</p>
+<p>下面这个交互示例展示了Redis列表的阻塞弹出命令以及元素移动命令<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.rpush(<span class="string">'list'</span>, <span class="string">'item1'</span>)</div><div class="line"><span class="number">1</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.rpush(<span class="string">'list'</span>, <span class="string">'item2'</span>)</div><div class="line"><span class="number">2</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.rpush(<span class="string">'list2'</span>, <span class="string">'item3'</span>)</div><div class="line"><span class="number">1</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.brpoplpush(<span class="string">'list2'</span>, <span class="string">'list'</span>, <span class="number">1</span>)</div><div class="line"><span class="string">b'item3'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.brpoplpush(<span class="string">'list2'</span>, <span class="string">'list'</span>, <span class="number">1</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.lrange(<span class="string">'list'</span>, <span class="number">0</span>, <span class="number">-1</span>)</div><div class="line">[<span class="string">b'item3'</span>, <span class="string">b'item1'</span>, <span class="string">b'item2'</span>]</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.brpoplpush(<span class="string">'list'</span>, <span class="string">'list2'</span>, <span class="number">1</span>)</div><div class="line"><span class="string">b'item2'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.blpop([<span class="string">'list'</span>, <span class="string">'list2'</span>], <span class="number">1</span>)</div><div class="line">(<span class="string">b'list'</span>, <span class="string">b'item3'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.blpop([<span class="string">'list'</span>, <span class="string">'list2'</span>], <span class="number">1</span>)</div><div class="line">(<span class="string">b'list'</span>, <span class="string">b'item1'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.blpop([<span class="string">'list'</span>, <span class="string">'list2'</span>], <span class="number">1</span>)</div><div class="line">(<span class="string">b'list2'</span>, <span class="string">b'item2'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.blpop([<span class="string">'list'</span>, <span class="string">'list2'</span>], <span class="number">1</span>)</div></pre></td></tr></table></figure></p>
+<p>对于阻塞弹出命令和弹出并推入命令，最常见的用例就是消息传递(messaging)和任务队列(task queue)。</p>
+<h3 id="集合"><a href="#集合" class="headerlink" title="集合"></a><strong>集合</strong></h3><p>下表展示了一部分最常用的集合命令</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>用例</th>
+<th>描述</th>
+<th>redis-py API</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SADD</td>
+<td>SADD key member [member …]</td>
+<td>添加一个或多个指定的member元素到key集合中</td>
+<td>sadd(name, *values)</td>
+</tr>
+<tr>
+<td>SREM</td>
+<td>SREM key member [member …]</td>
+<td>在key集合中移除指定的元素</td>
+<td>srem(name, *values)</td>
+</tr>
+<tr>
+<td>SISMEMBER</td>
+<td>SISMEMBER key member</td>
+<td>返回成员member是否是存储的集合key的成员</td>
+<td>sismember(name, value)</td>
+</tr>
+<tr>
+<td>SCARD</td>
+<td>SCARD key</td>
+<td>返回集合包含元素的数量</td>
+<td>scard(name)</td>
+</tr>
+<tr>
+<td>SMEMBERS</td>
+<td>SMEMBERS key</td>
+<td>返回key集合所有的元素</td>
+<td>smembers(name)</td>
+</tr>
+<tr>
+<td>SRANDMEMBER</td>
+<td>SRANDMEMBER key [count]</td>
+<td>仅提供key参数,那么随机返回key集合中的一个元素，返回含有 count 个不同的元素的数组，对count分情况处理</td>
+<td>srandmember(name, number=None)</td>
+</tr>
+<tr>
+<td>SPOP</td>
+<td>SPOP key [count]</td>
+<td>从key对应集合中返回并删除一个或多个元素</td>
+<td>spop(name)</td>
+</tr>
+<tr>
+<td>SMOVE</td>
+<td>SMOVE source destination member</td>
+<td>将member从source集合移动到destination集合中</td>
+<td>smove(src, dst, value)</td>
+</tr>
+</tbody>
+</table>
+<p>下面这个交互示例展示了这些常用的集合命令<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.sadd(<span class="string">'set-key'</span>, <span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>)</div><div class="line"><span class="number">3</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.srem(<span class="string">'set-key'</span>, <span class="string">'c'</span>, <span class="string">'d'</span>)</div><div class="line"><span class="number">1</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.srem(<span class="string">'set-key'</span>, <span class="string">'c'</span>, <span class="string">'d'</span>)</div><div class="line"><span class="number">0</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.scard(<span class="string">'set-key'</span>)</div><div class="line"><span class="number">2</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.smembers(<span class="string">'set-key'</span>)</div><div class="line">&#123;<span class="string">b'b'</span>, <span class="string">b'a'</span>&#125;</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.smove(<span class="string">'set-key'</span>, <span class="string">'set-key2'</span>, <span class="string">'a'</span>)</div><div class="line"><span class="keyword">True</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.smove(<span class="string">'set-key'</span>, <span class="string">'set-key2'</span>, <span class="string">'c'</span>)</div><div class="line"><span class="keyword">False</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.smembers(<span class="string">'set-key2'</span>)</div><div class="line">&#123;<span class="string">b'a'</span>&#125;</div></pre></td></tr></table></figure></p>
+<p>但是集合真正厉害的地方在于组合和关联多个集合，下表展示了相关的Redis命令</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>用例</th>
+<th>描述</th>
+<th>redis-py API</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SDIFF</td>
+<td>SDIFF key [key …]</td>
+<td>返回一个集合与给定集合的差集的元素</td>
+<td>sdiff(keys, *args)</td>
+</tr>
+<tr>
+<td>SDIFFSTORE</td>
+<td>SDIFFSTORE destination key [key …]</td>
+<td>类似于 SDIFF，不同之处在于该命令不返回结果集，而是将结果存放在destination集合中，如果destination已经存在, 则将其覆盖重写</td>
+<td>sdiffstore(dest, keys, *args)</td>
+</tr>
+<tr>
+<td>SINTER</td>
+<td>SINTER key [key …]</td>
+<td>返回指定所有的集合的成员的交集</td>
+<td>sinter(keys, *args)</td>
+</tr>
+<tr>
+<td>SINTERSTORE</td>
+<td>SINTERSTORE destination key [key …]</td>
+<td>与SINTER命令类似，但是它并不是直接返回结果集，而是将结果保存在 destination集合中，如果destination集合存在, 则会被重写</td>
+<td>sinterstore(dest, keys, *args)</td>
+</tr>
+<tr>
+<td>SUNION</td>
+<td>SUNION key [key …]</td>
+<td>返回给定的多个集合的并集中的所有成员</td>
+<td>sunion(keys, *args)</td>
+</tr>
+<tr>
+<td>SUNIONSTORE</td>
+<td>SUNIONSTORE destination key [key …]</td>
+<td>类似于SUNION命令，不同的是它并不返回结果集，而是将结果存储在destination集合中，如果destination已经存在，则将其覆盖.</td>
+<td>sunionstore(dest, keys, *args)</td>
+</tr>
+</tbody>
+</table>
+<p>这些命令分别是并集运算、交集运算和差集运算这三个基本集合操作的“返回结果”版本和“存储结果”版本，下面这个交互示例展示了这些命令的基本使用<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.sadd(<span class="string">'skey1'</span>, <span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>, <span class="string">'d'</span>)</div><div class="line"><span class="number">4</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.sadd(<span class="string">'skey2'</span>, <span class="string">'c'</span>, <span class="string">'d'</span>, <span class="string">'e'</span>, <span class="string">'f'</span>)</div><div class="line"><span class="number">4</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.sdiff(<span class="string">'skey1'</span>, <span class="string">'skey2'</span>)</div><div class="line">&#123;<span class="string">b'b'</span>, <span class="string">b'a'</span>&#125;</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.sinter(<span class="string">'skey1'</span>, <span class="string">'skey2'</span>)</div><div class="line">&#123;<span class="string">b'c'</span>, <span class="string">b'd'</span>&#125;</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.sunion(<span class="string">'skey1'</span>, <span class="string">'skey2'</span>)</div><div class="line">&#123;<span class="string">b'd'</span>, <span class="string">b'a'</span>, <span class="string">b'f'</span>, <span class="string">b'e'</span>, <span class="string">b'c'</span>, <span class="string">b'b'</span>&#125;</div></pre></td></tr></table></figure></p>
+<p>和Python的集合相比，Redis的集合除了可以被多个客户端远程地进行访问之外，其他的语义和功能基本都是相同的。</p>
+<h3 id="散列"><a href="#散列" class="headerlink" title="散列"></a><strong>散列</strong></h3><p>首先介绍一些常用的添加和删除键值对的Redis散列命令</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>用例</th>
+<th>描述</th>
+<th>redis-py API</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HMGET</td>
+<td>HMGET key field [field …]</td>
+<td>返回key指定的散列中指定字段的值</td>
+<td>hmget(name, keys, *args)</td>
+</tr>
+<tr>
+<td>HMSET</td>
+<td>HMSET key field value [field value …]</td>
+<td>设置key指定的散列中指定字段的值，该命令将重写所有在散列中存在的字段，如果key指定的散列不存在，会创建一个新的散列并与key关联</td>
+<td>hmset(name, mapping)</td>
+</tr>
+<tr>
+<td>HDEL</td>
+<td>HDEL key field [field …]</td>
+<td>从key指定的散列中移除指定的域，在散列中不存在的域将被忽略，如果key指定的散列不存在，它将被认为是一个空的散列，该命令将返回0</td>
+<td>hdel(name, *keys)</td>
+</tr>
+<tr>
+<td>HLEN</td>
+<td>HLEN key</td>
+<td>返回key指定的散列包含的字段的数量</td>
+<td>hlen(name)</td>
+</tr>
+</tbody>
+</table>
+<p>其中，HDEL命令已经介绍过了，而HLEN以及用于一次读取或设置多个键的HMGET和HMSET则是新出现的命令。它们既可以给用户带来方便，又可以通过减少命令的调用次数以及客户端与Redis之间的通信往返次数来提升Redis的性能。</p>
+<p>下面这个交互示例展示了这些命令的使用方法<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.hmset(<span class="string">'hash-key'</span>, &#123;<span class="string">'k1'</span>:<span class="string">'v1'</span>,<span class="string">'k2'</span>:<span class="string">'v2'</span>,<span class="string">'k3'</span>:<span class="string">'v3'</span>&#125;)</div><div class="line"><span class="keyword">True</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.hmget(<span class="string">'hash-key'</span>, [<span class="string">'k2'</span>, <span class="string">'k3'</span>])</div><div class="line">[<span class="string">b'v2'</span>, <span class="string">b'v3'</span>]</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.hlen(<span class="string">'hash-key'</span>)</div><div class="line"><span class="number">3</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.hdel(<span class="string">'hash-key'</span>, <span class="string">'k1'</span>, <span class="string">'k3'</span>)</div><div class="line"><span class="number">2</span></div></pre></td></tr></table></figure></p>
+<p>之前的学习笔记(一)介绍的HGET命令和HSET命令分别是HMGET和HMSET命令的单参数版本。因为HDEL已经可以同时删除多个键值对了，所以Redis没有实现HMDEL命令。</p>
+<p>下表列出了散列的其他几个批量操作命令，以及一些和字符串操作类似的散列命令。</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>用例</th>
+<th>描述</th>
+<th>redis-py API</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HEXISTS</td>
+<td>HEXISTS key field</td>
+<td>检查给定键是否存在于散列中</td>
+<td>hexists(name, key)</td>
+</tr>
+<tr>
+<td>HKEYS</td>
+<td>HKEYS key</td>
+<td>返回散列包含的所有键</td>
+<td>hkeys(name)</td>
+</tr>
+<tr>
+<td>HVALS</td>
+<td>HVALS key</td>
+<td>返回散列包含的所有值</td>
+<td>hvals(name)</td>
+</tr>
+<tr>
+<td>HGETALL</td>
+<td>HGETALL key</td>
+<td>返回散列包含的所有键值对</td>
+<td>hgetall(name)</td>
+</tr>
+<tr>
+<td>HINCRBY</td>
+<td>HINCRBY key field increment</td>
+<td>将键存储的值加上整数increment</td>
+<td>hincrby(name, key, amount=1)</td>
+</tr>
+<tr>
+<td>HINCRBYFLOAT</td>
+<td>HINCRBYFLOAT key field increment</td>
+<td>将键存储的值加上浮点数increment</td>
+<td>hincrbyfloat(name, key, amount=1.0)</td>
+</tr>
+</tbody>
+</table>
+<p>下面这个交互示例展示了这些命令的使用方法<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.hmset(<span class="string">'hash-key2'</span>, &#123;<span class="string">'short'</span>:<span class="string">'hello'</span>, <span class="string">'long'</span>:<span class="number">1000</span>*<span class="number">1</span>&#125;)</div><div class="line"><span class="keyword">True</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.hkeys(<span class="string">'hash-key2'</span>)</div><div class="line">[<span class="string">b'short'</span>, <span class="string">b'long'</span>]</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.hexists(<span class="string">'hash-key2'</span>, <span class="string">'num'</span>)</div><div class="line"><span class="keyword">False</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.hincrby(<span class="string">'hash-key2'</span>, <span class="string">'num'</span>)</div><div class="line"><span class="number">1</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.hexists(<span class="string">'hash-key2'</span>, <span class="string">'num'</span>)</div><div class="line"><span class="keyword">True</span></div></pre></td></tr></table></figure></p>
+<p>在对散列进行处理时，如果键值对的值的体积非常大，那么用户可以先用HKEYS获取散列的所有键，然后只获取必要的值，这样可以有效地减少需要传输的数据量，避免服务器阻塞。</p>
+<h3 id="有序集合"><a href="#有序集合" class="headerlink" title="有序集合"></a><strong>有序集合</strong></h3><p>下表展示了一些常用的有序集合命令，大部分在第一章都有介绍</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>用例</th>
+<th>描述</th>
+<th>redis-py API</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ZADD</td>
+<td>ZADD key score member [score member …]</td>
+<td>将带有给定分值的成员添加到有序集合中</td>
+<td>zadd(name, <em>args, *</em>kwargs)</td>
+</tr>
+<tr>
+<td>ZREM</td>
+<td>ZREM key member [member …]</td>
+<td>移除给定的成员，并返回被移除成员的数量</td>
+<td>zrem(name, *values)</td>
+</tr>
+<tr>
+<td>ZCARD</td>
+<td>ZCARD key</td>
+<td>返回有序集合包含的成员数量</td>
+<td>zcard(name)</td>
+</tr>
+<tr>
+<td>ZINCRBY</td>
+<td>ZINCRBY key increment member</td>
+<td>将member成员的分值加上increment</td>
+<td>zincrby(name, value, amount=1)</td>
+</tr>
+<tr>
+<td>ZCOUNT</td>
+<td>ZCOUNT key min max</td>
+<td>返回分值介于min和max之间的成员数量</td>
+<td>zcount(name, min, max)</td>
+</tr>
+<tr>
+<td>ZRANK</td>
+<td>ZRANK key member</td>
+<td>返回成员member在有序集合中的排名</td>
+<td>zrank(name, value)</td>
+</tr>
+<tr>
+<td>ZSCORE</td>
+<td>ZSCORE key member</td>
+<td>返回成员member的分值</td>
+<td>zscore(name, value)</td>
+</tr>
+<tr>
+<td>ZRANGE</td>
+<td>ZRANGE key start stop [WITHSCORES]</td>
+<td>返回排名介于start和stop之间的成员，如果给定了可选的WITHSCORES选项，那么命令会将成员的分值也一并返回</td>
+<td>zrange(name, start, end, desc=False, withscores=False, score_cast_func=<class 'float'="">)</class></td>
+</tr>
+</tbody>
+</table>
+<p>下面这个交互示例展示了Redis中的一些常用的有序集合命令<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.zadd(<span class="string">'zset-key'</span>, <span class="number">3</span>, <span class="string">'a'</span>, <span class="number">2</span>, <span class="string">'b'</span>, <span class="number">1</span>, <span class="string">'c'</span>)</div><div class="line"><span class="number">3</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.zcard(<span class="string">'zset-key'</span>)</div><div class="line"><span class="number">3</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.zincrby(<span class="string">'zset-key'</span>, <span class="string">'c'</span>, <span class="number">3</span>)</div><div class="line"><span class="number">4.0</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.zscore(<span class="string">'zset-key'</span>, <span class="string">'b'</span>)</div><div class="line"><span class="number">2.0</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.zrank(<span class="string">'zset-key'</span>, <span class="string">'c'</span>)</div><div class="line"><span class="number">2</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.zcount(<span class="string">'zset-key'</span>, <span class="number">0</span>, <span class="number">3</span>)</div><div class="line"><span class="number">2</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.zrem(<span class="string">'zset-key'</span>, <span class="string">'b'</span>)</div><div class="line"><span class="number">1</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.zrange(<span class="string">'zset-key'</span>, <span class="number">0</span>, <span class="number">-1</span>, withscores=<span class="keyword">True</span>)</div><div class="line">[(<span class="string">b'a'</span>, <span class="number">3.0</span>), (<span class="string">b'c'</span>, <span class="number">4.0</span>)]</div></pre></td></tr></table></figure></p>
+<p>其中在Python客户端用StrictRedis客户端类执行ZADD命令需要先输入分值，再输入成员，这也是Redis的标准，而Redis客户端类则截然相反。</p>
+<p>下表展示了另外一下非常有用的有序集合命令</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>用例</th>
+<th>描述</th>
+<th>redis-py API</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ZREVRANK</td>
+<td>ZREVRANK key member</td>
+<td>返回有序集合里成员member的排名，成员按照分值从大到小排列</td>
+<td>zrevrank(name, value)</td>
+</tr>
+<tr>
+<td>ZREVRANGE</td>
+<td>ZREVRANGE key start stop [WITHSCORES]</td>
+<td>返回有序集合给定排名范围内的成员，成员按照分值从大到小排列</td>
+<td>zrevrange(name, start, end, withscores=False, score_cast_func=<class 'float'="">)</class></td>
+</tr>
+<tr>
+<td>ZRANGEBYSCORE</td>
+<td>ZRANGEBYSCORE key min max [WITHSCORES] [LIMIT offset count]</td>
+<td>返回有序集合中指定分数区间内的成员</td>
+<td>zrangebyscore(name, min, max, start=None, num=None, withscores=False, score_cast_func=<class 'float'="">)</class></td>
+</tr>
+<tr>
+<td>ZREVRANGEBYSCORE</td>
+<td>ZREVRANGEBYSCORE key max min [WITHSCORES][LIMIT offset count]</td>
+<td>返回有序集合中指定分数区间内的成员，分数由高到低排序。</td>
+<td>zrevrangebyscore(name, max, min, start=None, num=None, withscores=False, score_cast_func=<class 'float'="">)</class></td>
+</tr>
+<tr>
+<td>ZREMRANGEBYRANK</td>
+<td>ZREMRANGEBYRANK key start stop</td>
+<td>移除有序集key中，指定排名(rank)区间内的所有成员</td>
+<td>zremrangebyrank(name, min, max)</td>
+</tr>
+<tr>
+<td>ZREMRANGEBYSCORE</td>
+<td>ZREMRANGEBYSCORE key min max</td>
+<td>移除有序集key中，所有score值介于min和max之间(包括等于min或max)的成员</td>
+<td>zremrangebyscore(name, min, max)</td>
+</tr>
+<tr>
+<td>ZINTERSTORE</td>
+<td>ZINTERSTORE destination numkeys key [key …] [WEIGHTS weight] [SUM</td>
+<td>MIN</td>
+<td>MAX]</td>
+<td>计算给定的numkeys个有序集合的交集，并且把结果放到destination中</td>
+<td>zinterstore(dest, keys, aggregate=None)</td>
+</tr>
+<tr>
+<td>ZUNIONSTORE</td>
+<td>ZUNIONSTORE destination numkeys key [key …] [WEIGHTS weight] [SUM</td>
+<td>MIN</td>
+<td>MAX]</td>
+<td>计算给定的numkeys个有序集合的并集，并且把结果放到destination中。</td>
+<td>zunionstore(dest, keys, aggregate=None)</td>
+</tr>
+</tbody>
+</table>
+<p>其中有几个是没有介绍过的新命令，除了使用逆序来处理有序集合之外，ZREV*命令的工作方式和相对应的非逆序命令的工作方式完全一样(逆序就是指元素按照分值从大到小地排列)。</p>
+<p>下面这个交互示例展示了ZINTERSTORE和ZUNIONSTORE命令的用法<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.zadd(<span class="string">'zset-1'</span>, <span class="number">1</span>, <span class="string">'a'</span>, <span class="number">2</span>, <span class="string">'b'</span>, <span class="number">3</span>, <span class="string">'c'</span>)</div><div class="line"><span class="number">3</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.zadd(<span class="string">'zset-2'</span>, <span class="number">4</span>, <span class="string">'b'</span>, <span class="number">1</span>, <span class="string">'c'</span>, <span class="number">0</span>, <span class="string">'d'</span>)</div><div class="line"><span class="number">3</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.zinterstore(<span class="string">'zset-i'</span>, [<span class="string">'zset-1'</span>, <span class="string">'zset-2'</span>])</div><div class="line"><span class="number">2</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.zrange(<span class="string">'zset-i'</span>, <span class="number">0</span>, <span class="number">-1</span>, withscores=<span class="keyword">True</span>)</div><div class="line">[(<span class="string">b'c'</span>, <span class="number">4.0</span>), (<span class="string">b'b'</span>, <span class="number">6.0</span>)]</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.zunionstore(<span class="string">'zset-u'</span>, [<span class="string">'zset-1'</span>, <span class="string">'zset-2'</span>], aggregate=<span class="string">'min'</span>)</div><div class="line"><span class="number">4</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.zrange(<span class="string">'zset-u'</span>, <span class="number">0</span>, <span class="number">-1</span>, withscores=<span class="keyword">True</span>)</div><div class="line">[(<span class="string">b'd'</span>, <span class="number">0.0</span>), (<span class="string">b'a'</span>, <span class="number">1.0</span>), (<span class="string">b'c'</span>, <span class="number">1.0</span>), (<span class="string">b'b'</span>, <span class="number">2.0</span>)]</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.sadd(<span class="string">'set-1'</span>, <span class="string">'a'</span>, <span class="string">'d'</span>)</div><div class="line"><span class="number">2</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.zunionstore(<span class="string">'zset-u2'</span>, [<span class="string">'zset-1'</span>, <span class="string">'zset-2'</span>, <span class="string">'set-1'</span>])</div><div class="line"><span class="number">4</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.zrange(<span class="string">'zset-u2'</span>, <span class="number">0</span>, <span class="number">-1</span>, withscores=<span class="keyword">True</span>)</div><div class="line">[(<span class="string">b'd'</span>, <span class="number">1.0</span>), (<span class="string">b'a'</span>, <span class="number">2.0</span>), (<span class="string">b'c'</span>, <span class="number">4.0</span>), (<span class="string">b'b'</span>, <span class="number">6.0</span>)]</div></pre></td></tr></table></figure></p>
+<p>用户可以在执行交并运算时传入不同的聚合函数，共有sum、min、max三种可选；用户还可以把集合作为输入传给ZINTERSTORE和ZUNIONSTORE，命令会将集合看作是成员分值全为1的有序集合来处理。</p>
 ]]></content>
     
     <summary type="html">
@@ -175,7 +609,7 @@
     <link href="http://yoursite.com/2017/03/25/Redis-1/"/>
     <id>http://yoursite.com/2017/03/25/Redis-1/</id>
     <published>2017-03-25T12:18:54.000Z</published>
-    <updated>2017-03-27T09:11:12.000Z</updated>
+    <updated>2017-03-27T09:12:22.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="Redis简介"><a href="#Redis简介" class="headerlink" title="Redis简介"></a><strong>Redis简介</strong></h2><p>Redis是一个速度极快的非关系数据库，也就是我们所说的NoSQL数据库(non-relational database)，它可以存储键(key)与5种不同类型的值(value)之间的映射(mapping)，可以将存储在内存的键值对数据持久化到硬盘，可以使用复制特性来扩展读性能，还可以使用客户端分片来扩展性能，并且它还提供了多种语言的API。<br><a id="more"></a></p>
 <h2 id="Redis与memcached及其他类型数据库对比"><a href="#Redis与memcached及其他类型数据库对比" class="headerlink" title="Redis与memcached及其他类型数据库对比"></a><strong>Redis与memcached及其他类型数据库对比</strong></h2><p>Redis经常被拿来与memcached进行比较，两者都可用于存储键值映射，性能也相差无几，但是Redis能够自动以两种不同的方式将数据写入硬盘，而且Redis除了能存储普通的字符串键，还能存储其他4种数据结构，使得Redis可以用于解决更为广泛的问题，并且即可以作为主数据库使用，又可以作为其他存储系统的辅助数据库。</p>
