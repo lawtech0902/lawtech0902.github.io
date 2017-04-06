@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-04-06T13:05:14.000Z</updated>
+  <updated>2017-04-06T13:07:11.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -20,9 +20,9 @@
     <link href="http://yoursite.com/2017/04/06/Redis-3/"/>
     <id>http://yoursite.com/2017/04/06/Redis-3/</id>
     <published>2017-04-06T12:18:54.000Z</published>
-    <updated>2017-04-06T13:05:14.000Z</updated>
+    <updated>2017-04-06T13:07:11.000Z</updated>
     
-    <content type="html"><![CDATA[<p>在之前的学习笔记中，还有许多Redis的命令没有涉及，这一篇主要用来简要地补充，当然，详细的命令还得参考Redis的<a href="http://www.redis.cn/commands.html" target="_blank" rel="external">官方命令文档</a>。</p>
+    <content type="html"><![CDATA[<p>在之前的学习笔记中，还有许多Redis的命令没有涉及，这一篇主要用来简要地补充，当然，详细的命令还得参考Redis的<a href="http://www.redis.cn/commands.html" target="_blank" rel="external">官方命令文档</a>。<br><a id="more"></a></p>
 <h2 id="键值相关命令"><a href="#键值相关命令" class="headerlink" title="键值相关命令"></a><strong>键值相关命令</strong></h2><p>下表展示了Redis提供的一些键值(KEY-VALUE)相关的常用命令及其redis-py API</p>
 <table>
 <thead>
@@ -192,7 +192,7 @@
     
     <summary type="html">
     
-      &lt;p&gt;在之前的学习笔记中，还有许多Redis的命令没有涉及，这一篇主要用来简要地补充，当然，详细的命令还得参考Redis的&lt;a href=&quot;http://www.redis.cn/commands.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;官方命令
+      &lt;p&gt;在之前的学习笔记中，还有许多Redis的命令没有涉及，这一篇主要用来简要地补充，当然，详细的命令还得参考Redis的&lt;a href=&quot;http://www.redis.cn/commands.html&quot;&gt;官方命令文档&lt;/a&gt;。&lt;br&gt;
     
     </summary>
     
