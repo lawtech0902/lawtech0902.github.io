@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-04-07T13:19:25.000Z</updated>
+  <updated>2017-04-07T13:26:06.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -20,9 +20,9 @@
     <link href="http://yoursite.com/2017/04/07/MxOnline-summary/"/>
     <id>http://yoursite.com/2017/04/07/MxOnline-summary/</id>
     <published>2017-04-07T13:18:54.000Z</published>
-    <updated>2017-04-07T13:19:25.000Z</updated>
+    <updated>2017-04-07T13:26:06.000Z</updated>
     
-    <content type="html"><![CDATA[<p>拖拖拉拉地学完了imooc的”强力django+杀手级xadmin打造上线标准的在线教育平台”课程，记录一下每一章学习的内容概要。</p>
+    <content type="html"><![CDATA[<p>拖拖拉拉地学完了imooc的”强力django+杀手级xadmin打造上线标准的在线教育平台”课程，记录一下每一章学习的内容概要。<br><a id="more"></a></p>
 <h1 id="MxOnline项目学习总结"><a href="#MxOnline项目学习总结" class="headerlink" title="MxOnline项目学习总结"></a>MxOnline项目学习总结</h1><h2 id="第一、二章"><a href="#第一、二章" class="headerlink" title="第一、二章"></a>第一、二章</h2><ul>
 <li>课程介绍</li>
 <li>开发环境搭建</li>
@@ -91,8 +91,7 @@
     
     <summary type="html">
     
-      &lt;p&gt;拖拖拉拉地学完了imooc的”强力django+杀手级xadmin打造上线标准的在线教育平台”课程，记录一下每一章学习的内容概要。&lt;/p&gt;
-&lt;h1 id=&quot;MxOnline项目学习总结&quot;&gt;&lt;a href=&quot;#MxOnline项目学习总结&quot; class=&quot;headerlink
+      &lt;p&gt;拖拖拉拉地学完了imooc的”强力django+杀手级xadmin打造上线标准的在线教育平台”课程，记录一下每一章学习的内容概要。&lt;br&gt;
     
     </summary>
     
