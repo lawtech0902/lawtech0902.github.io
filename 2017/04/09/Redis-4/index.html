@@ -90,17 +90,17 @@
 
 
 
-<meta name="description" content="Redis简介Redis是一个速度极快的非关系数据库，也就是我们所说的NoSQL数据库(non-relational database)，它可以存储键(key)与5种不同类型的值(value)之间的映射(mapping)，可以将存储在内存的键值对数据持久化到硬盘，可以使用复制特性来扩展读性能，还可以使用客户端分片来扩展性能，并且它还提供了多种语言的API。">
+<meta name="description" content="什么是持久化？持久化（Persistence），即把数据（如内存中的对象）保存到可永久保存的存储设备中（如磁盘）。持久化的主要应用是将内存中的对象存储在数据库中，或者存储在磁盘文件中、XML数据文件中等等。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Redis学习笔记(一)：初识Redis">
-<meta property="og:url" content="http://yoursite.com/2017/03/25/Redis-1/index.html">
+<meta property="og:title" content="Redis学习笔记(四)：数据安全与性能保障——持久化">
+<meta property="og:url" content="http://yoursite.com/2017/04/09/Redis-4/index.html">
 <meta property="og:site_name" content="LawTech's Blog">
-<meta property="og:description" content="Redis简介Redis是一个速度极快的非关系数据库，也就是我们所说的NoSQL数据库(non-relational database)，它可以存储键(key)与5种不同类型的值(value)之间的映射(mapping)，可以将存储在内存的键值对数据持久化到硬盘，可以使用复制特性来扩展读性能，还可以使用客户端分片来扩展性能，并且它还提供了多种语言的API。">
+<meta property="og:description" content="什么是持久化？持久化（Persistence），即把数据（如内存中的对象）保存到可永久保存的存储设备中（如磁盘）。持久化的主要应用是将内存中的对象存储在数据库中，或者存储在磁盘文件中、XML数据文件中等等。">
 <meta property="og:image" content="https://redis.io/images/redis-300dpi.png">
-<meta property="og:updated_time" content="2017-03-27T09:12:22.000Z">
+<meta property="og:updated_time" content="2017-04-09T15:12:58.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Redis学习笔记(一)：初识Redis">
-<meta name="twitter:description" content="Redis简介Redis是一个速度极快的非关系数据库，也就是我们所说的NoSQL数据库(non-relational database)，它可以存储键(key)与5种不同类型的值(value)之间的映射(mapping)，可以将存储在内存的键值对数据持久化到硬盘，可以使用复制特性来扩展读性能，还可以使用客户端分片来扩展性能，并且它还提供了多种语言的API。">
+<meta name="twitter:title" content="Redis学习笔记(四)：数据安全与性能保障——持久化">
+<meta name="twitter:description" content="什么是持久化？持久化（Persistence），即把数据（如内存中的对象）保存到可永久保存的存储设备中（如磁盘）。持久化的主要应用是将内存中的对象存储在数据库中，或者存储在磁盘文件中、XML数据文件中等等。">
 <meta name="twitter:image" content="https://redis.io/images/redis-300dpi.png">
 
 
@@ -129,13 +129,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/03/25/Redis-1/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/04/09/Redis-4/"/>
 
 
 
 
 
-  <title> Redis学习笔记(一)：初识Redis | LawTech's Blog </title>
+  <title> Redis学习笔记(四)：数据安全与性能保障——持久化 | LawTech's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -300,7 +300,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/25/Redis-1/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/09/Redis-4/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="LawTech.">
@@ -324,7 +324,7 @@
             
             
               
-                Redis学习笔记(一)：初识Redis
+                Redis学习笔记(四)：数据安全与性能保障——持久化
               
             
           </h2>
@@ -339,8 +339,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-25T20:18:54+08:00">
-                2017-03-25
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-09T23:12:54+08:00">
+                2017-04-09
               </time>
             
 
@@ -355,8 +355,8 @@
               
                 <span class="post-meta-item-text">更新于</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2017-03-27T17:12:22+08:00">
-                2017-03-27
+              <time title="更新于" itemprop="dateModified" datetime="2017-04-09T23:12:58+08:00">
+                2017-04-09
               </time>
             
           </span>
@@ -393,7 +393,7 @@
 
           
           
-             <span id="/2017/03/25/Redis-1/" class="leancloud_visitors" data-flag-title="Redis学习笔记(一)：初识Redis">
+             <span id="/2017/04/09/Redis-4/" class="leancloud_visitors" data-flag-title="Redis学习笔记(四)：数据安全与性能保障——持久化">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -426,7 +426,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://redis.io/images/redis-300dpi.png" rel="gallery_cj1atwt950003tqqz4i1cdhgu"
+                 href="https://redis.io/images/redis-300dpi.png" rel="gallery_cj1atwt9k000atqqz0bvt7fz5"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://redis.io/images/redis-300dpi.png" itemprop="contentUrl"/>
               </a>
@@ -439,235 +439,105 @@
       
 
       
-        <h2 id="Redis简介"><a href="#Redis简介" class="headerlink" title="Redis简介"></a><strong>Redis简介</strong></h2><p>Redis是一个速度极快的非关系数据库，也就是我们所说的NoSQL数据库(non-relational database)，它可以存储键(key)与5种不同类型的值(value)之间的映射(mapping)，可以将存储在内存的键值对数据持久化到硬盘，可以使用复制特性来扩展读性能，还可以使用客户端分片来扩展性能，并且它还提供了多种语言的API。<br><a id="more"></a></p>
-<h2 id="Redis与memcached及其他类型数据库对比"><a href="#Redis与memcached及其他类型数据库对比" class="headerlink" title="Redis与memcached及其他类型数据库对比"></a><strong>Redis与memcached及其他类型数据库对比</strong></h2><p>Redis经常被拿来与memcached进行比较，两者都可用于存储键值映射，性能也相差无几，但是Redis能够自动以两种不同的方式将数据写入硬盘，而且Redis除了能存储普通的字符串键，还能存储其他4种数据结构，使得Redis可以用于解决更为广泛的问题，并且即可以作为主数据库使用，又可以作为其他存储系统的辅助数据库。</p>
-<p>下表展示了Redis与memcached，MySQL以及MongoDB的特性与功能。</p>
+        <h2 id="什么是持久化？"><a href="#什么是持久化？" class="headerlink" title="什么是持久化？"></a><strong>什么是持久化？</strong></h2><p>持久化（Persistence），即把数据（如内存中的对象）保存到可永久保存的存储设备中（如磁盘）。持久化的主要应用是将内存中的对象存储在数据库中，或者存储在磁盘文件中、XML数据文件中等等。</p>
+<a id="more"></a>
+<p>持久化是将程序数据在持久状态和瞬时状态间转换的机制。</p>
+<p>JDBC就是一种持久化机制。文件IO也是一种持久化机制。</p>
+<p>我们这样理解：在一定周期内保持不变就是持久化，持久化是针对时间来说的。数据库中的数据就是持久化了的数据，只要你不去删除或修改。</p>
+<h2 id="持久化选项"><a href="#持久化选项" class="headerlink" title="持久化选项"></a><strong>持久化选项</strong></h2><p>Redis提供了两种不同的持久化方法来将数据存储到硬盘中，保证数据在Redis重启后仍然存在：</p>
+<ul>
+<li>RDB持久化：在指定的时间间隔内生成数据集的时间点快照（point-in-time snapshot），也就是将存在于某一时刻的所有数据都写入硬盘里面，所以也叫作快照持久化。</li>
+<li>AOF持久化：全称是 append-only file（只追加文件）， 它记录服务器执行的所有写操作命令，并在服务器启动时，通过重新执行这些命令来还原数据集。 AOF 文件中的命令全部以 Redis 协议的格式来保存，新命令会被追加到文件的末尾。 Redis 还可以在后台对 AOF 文件进行重写（rewrite），使得 AOF 文件的体积不会超出保存数据集状态所需的实际大小。</li>
+</ul>
+<p>这两种持久化的方式既可以单独使用，也可以同时使用，具体选择哪种方式需要根据用户的数据及应用进行选择。</p>
+<p>下面的代码示例展示了Redis对于两种持久化选项提供的配置选项</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 快照持久化选项</span></div><div class="line">save <span class="number">60</span> <span class="number">1000</span>  <span class="comment"># 60秒内有1000次写入操作的时候执行快照的创建</span></div><div class="line">stop-writes-on-bgsave-error no  <span class="comment"># 创建快照失败的时候是否仍然继续执行写命令</span></div><div class="line">rdbcompression yes  <span class="comment"># 是否对快照文件进行压缩</span></div><div class="line">dbfilename dump.rdb  <span class="comment"># 如何命名硬盘上的快照文件</span></div><div class="line">dir ./  <span class="comment"># 快照所保存的位置</span></div><div class="line"></div><div class="line"><span class="comment"># AOF持久化选项</span></div><div class="line">appendonly no  <span class="comment"># 是否使用AOF持久化</span></div><div class="line">appendfsync everysec  <span class="comment"># 多久才将写入的内容同步到硬盘</span></div><div class="line">no-appendfsync-on-rewrite no  <span class="comment"># 在对AOF进行压缩(compaction)的时候能否执行同步操作</span></div><div class="line">auto-aof-rewrite-percentage <span class="number">100</span>  <span class="comment"># 多久执行一次AOF压缩</span></div><div class="line">auto-aof-rewrite-min-size <span class="number">64</span>mb  <span class="comment"># 多久执行一次AOF压缩</span></div><div class="line">dir ./  <span class="comment"># AOF所保存的位置</span></div></pre></td></tr></table></figure>
+<h2 id="快照持久化（RDB）"><a href="#快照持久化（RDB）" class="headerlink" title="快照持久化（RDB）"></a><strong>快照持久化（RDB）</strong></h2><h3 id="创建快照的办法"><a href="#创建快照的办法" class="headerlink" title="创建快照的办法"></a><strong>创建快照的办法</strong></h3><ul>
+<li><p>客户端通过向Redis发送BGSAVE命令来创建快照。</p>
+<p>如果平台支持（除了Windows），那么Redis会调用fork来创建一个子进程，然后子进程负责将快照写到硬盘中，而父进程则继续处理命令请求。</p>
+<p><strong>使用场景：</strong></p>
+<p>如果用户使用了save设置，例如：<code>save 60 1000</code> ,那么从Redis最近一次创建快照之后开始计算，当“60秒之内有1000次写入操作”这个条件满足的时候，Redis就会自动触发BGSAVE命令。</p>
+<p>如果用户使用了多个save设置，那么当任意一个save配置满足条件的时候，Redis都会触发一次BGSAVE命令。</p>
+</li>
+<li><p>客户端通过向Redis发SAVE命令来创建快照。</p>
+<p>接收到SAVE命令的Redis服务器在快照创建完毕之前将不再响应任何其他命令的请求。SAVE命令并不常用，我们通常只在没有足够的内存去执行BGSAVE命令的时候才会使用SAVE命令，或者即使等待持久化操作执行完毕也无所谓的情况下，才会使用这个命令。</p>
+<p><strong>使用场景：</strong></p>
+<p>当Redis通过SHUTDOWN命令接收到关闭服务器的请求时，或者接收到标准的TERM信号时，会执行一次SAVE命令，阻塞所有的客户端，不再执行客户端发送的任何命令，并且在执行完SAVE命令之后关闭服务器。</p>
+</li>
+</ul>
+<h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a><strong>优点</strong></h3><ul>
+<li>RDB 是一个非常紧凑（compact）的文件，它保存了 Redis 在某个时间点上的数据集。 这种文件非常适合用于进行备份： 比如说，你可以在最近的 24 小时内，每小时备份一次快照文件，并且在每个月的每一天，也备份一个快照文件。 这样的话，即使遇到问题，也可以随时将数据集还原到不同的版本。</li>
+<li>RDB 非常适用于灾难恢复（disaster recovery）：它只有一个文件，并且内容都非常紧凑，可以（在加密后）将它传送到别的数据中心。</li>
+<li>RDB 可以最大化 Redis 的性能：父进程在保存快照文件时唯一要做的就是 <code>fork</code> 出一个子进程，然后这个子进程就会处理接下来的所有保存工作，父进程无须执行任何磁盘 I/O 操作。</li>
+<li>RDB 在恢复大数据集时的速度比 AOF 的恢复速度要快。</li>
+</ul>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a><strong>缺点</strong></h3><ul>
+<li>如果在新的快照文件创建好之前，Redis、系统、硬件三者中任意一个发生崩溃，那么Redis将丢失最近一次创建快照之后写入的所有数据。如果你需要尽量避免在服务器故障时丢失数据，那么 RDB 不适合你。</li>
+<li>每次保存 RDB 的时候，Redis 都要 <code>fork()</code> 出一个子进程，并由子进程来进行实际的持久化工作。 在数据集比较庞大时， <code>fork()</code>可能会非常耗时，造成服务器在某某毫秒内停止处理客户端； 如果数据集非常巨大，并且 CPU 时间非常紧张的话，那么这种停止时间甚至可能会长达整整一秒。 虽然 AOF 重写也需要进行 <code>fork()</code> ，但无论 AOF 重写的执行间隔有多长，数据的耐久性都不会有任何损失。</li>
+</ul>
+<h2 id="AOF持久化"><a href="#AOF持久化" class="headerlink" title="AOF持久化"></a><strong>AOF持久化</strong></h2><p>AOF持久化会将被执行的写命令写到AOF文件的末尾，以此来记录数据发生的变化。这样，我们在恢复数据的时候，只需要从头到尾的执行一下AOF文件即可恢复数据。</p>
+<p>我们可以通过<code>appendonly yes</code>命令来打开AOF持久化选项</p>
+<h3 id="appendfsync同步频率"><a href="#appendfsync同步频率" class="headerlink" title="appendfsync同步频率"></a><strong>appendfsync同步频率</strong></h3><p>下表展示了appendfsync选项对AOF文件的同步频率的影响</p>
 <table>
 <thead>
 <tr>
-<th>名称</th>
-<th>类型</th>
-<th>数据存储选项</th>
-<th>查询类型</th>
-<th>附加功能</th>
+<th style="text-align:center">选项</th>
+<th style="text-align:center">同步频率</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Redis</td>
-<td>使用内存存储的非关系数据库</td>
-<td>字符串、列表、集合、散列表、有序集合</td>
-<td>每种数据类型专属的命令，以及批量操作和不完全的事务支持</td>
-<td>发布与订阅，主从复制，持久化，脚本</td>
+<td style="text-align:center">always</td>
+<td style="text-align:center">每个Redis写命令都要同步写入硬盘。这样做会严重降低Redis的速度</td>
 </tr>
 <tr>
-<td>memcached</td>
-<td>使用内存存储的键值缓存</td>
-<td>键值之间的映射</td>
-<td>创建、读取、删除、更新等命令</td>
-<td>多线程服务器，用于提升性能</td>
+<td style="text-align:center">everysec</td>
+<td style="text-align:center">每秒执行一次同步，显示地将多个写命令同步到硬盘</td>
 </tr>
 <tr>
-<td>MySQL</td>
-<td>关系数据库</td>
-<td>每个数据库可以包含多个表，每个表可以包含多个行；可以处理多个表的视图；支持空间和第三方扩展</td>
-<td>SELECT、INSERT、UPDATE、DELETE、函数、存储过程</td>
-<td>支持ACID性质(需要使用InnoDB)，主从复制，主主复制</td>
-</tr>
-<tr>
-<td>MongoDB</td>
-<td>使用硬盘存储(on-disk)的非关系文档存储</td>
-<td>每个数据库可以包含多个表，每个表可以包含多个无schema的BSON文档</td>
-<td>创建、读取、更新、删除、条件查询等命令</td>
-<td>支持map-reduce操作，主从复制，分片，空间索引</td>
+<td style="text-align:center">no</td>
+<td style="text-align:center">让操作系统来决定应该何时进行同步</td>
 </tr>
 </tbody>
 </table>
-<h2 id="Redis安装-mac"><a href="#Redis安装-mac" class="headerlink" title="Redis安装(mac)"></a><strong>Redis安装(mac)</strong></h2><p>首先下载用于安装Rudix的引导脚本，并安装Rudix<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ curl -O http://rudix.google.code.com/hg/Ports/rudix/rudix.Py</div><div class="line">$ sudo python rudix.py install rudix</div></pre></td></tr></table></figure></p>
-<p>然后使用命令Rudix安装Redis，若能成功启动Redis服务器则安装成功<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ sudo rudix install redis</div><div class="line">$ redis-server</div></pre></td></tr></table></figure></p>
-<p>最后用pip为Python安装Redis客户端库<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo pip install redis</div></pre></td></tr></table></figure></p>
-<h2 id="Redis数据结构简介"><a href="#Redis数据结构简介" class="headerlink" title="Redis数据结构简介"></a><strong>Redis数据结构简介</strong></h2><p>Redis可以存储键与5种不同数据结构类型之间的映射，分别是STRING(字符串)、LIST(列表)、SET(集合)、HASH(散列)、ZSET(有序集合)。有一部分命令对于这5种数据结构是通用的，如DEL、TYPE、RENAME等；但也有一部分命令只能对特定的一种或者两种结构使用。</p>
-<p>下表从结构存储的值及读写能力对比了Redis的5种数据结构。</p>
-<table>
-<thead>
-<tr>
-<th>结构类型</th>
-<th>结构存储的值</th>
-<th>结构的读写能力</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>STRING</td>
-<td>字符串、整数或者浮点数</td>
-<td>对整个字符串或者字符串的其中一部分执行操作；对整数和浮点数进行自增或自减操作</td>
-</tr>
-<tr>
-<td>LIST</td>
-<td>一个链表，链表上的每个节点都包含了一个字符串</td>
-<td>从链表两端推入或弹出元素；根据偏移量对链表进行修剪(trim)；读取单个或多个元素；根据值查找或移除元素</td>
-</tr>
-<tr>
-<td>SET</td>
-<td>包含字符串的无序收集器，并且被包含的每个字符串互不相同</td>
-<td>添加、获取、移除单个元素；检查一个元素是否存在于集合中；计算交集、并集、差集；从集合里面随机获取元素</td>
-</tr>
-<tr>
-<td>HASH</td>
-<td>包含键值对的无序散列表</td>
-<td>添加、获取、移除单个键值对；获取所有键值对</td>
-</tr>
-<tr>
-<td>ZSET</td>
-<td>字符串成员(member)与浮点数分值(score)之间的有序映射，元素的排列顺序由分值的大小决定</td>
-<td>添加、获取、删除单个元素；根据分值范围(range)或者成员来获取元素</td>
-</tr>
-</tbody>
-</table>
-<h3 id="Redis字符串"><a href="#Redis字符串" class="headerlink" title="Redis字符串"></a><strong>Redis字符串</strong></h3><p>下表展示了3种简单的字符串命令：</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>行为</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>GET</td>
-<td>获取存储在给定键中的值</td>
-</tr>
-<tr>
-<td>SET</td>
-<td>设置存储在给定键中的值</td>
-</tr>
-<tr>
-<td>DEL</td>
-<td>删除存储在给定键中的值(该命令可用于所有类型)</td>
-</tr>
-</tbody>
-</table>
-<p>SET、GET、DEL的使用示例：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ redis-cli</div><div class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> hello world</div><div class="line">OK</div><div class="line">127.0.0.1:6379&gt; get hello</div><div class="line"><span class="string">"world"</span></div><div class="line">127.0.0.1:6379&gt; del hello</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; get hello</div><div class="line">(nil)</div><div class="line">127.0.0.1:6379&gt;</div></pre></td></tr></table></figure></p>
-<p>SET命令在执行成功时返回OK，Python客户端会将这个OK转换为True；DEL命令在执行成功时将会返回被成功删除的值的数量；GET命令在尝试得到不存在的值时，将会返回一个nil，Python客户端会将这个nil转换为None。</p>
-<h3 id="Redis列表"><a href="#Redis列表" class="headerlink" title="Redis列表"></a><strong>Redis列表</strong></h3><p>下表展示了6种简单的列表命令：</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>行为</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>LPUSH(RPUSH)</td>
-<td>将给定值推入列表的左端(右端)</td>
-</tr>
-<tr>
-<td>LPOP(RPOP)</td>
-<td>从列表的左端(右端)弹出一个值，并返回被弹出的值</td>
-</tr>
-<tr>
-<td>LINDEX</td>
-<td>获取列表在给定位置上的单个值</td>
-</tr>
-<tr>
-<td>LRANGE</td>
-<td>获取列表在给定范围上的所有值</td>
-</tr>
-</tbody>
-</table>
-<p>RPUSH、LRANGE、LINDEX、LPOP的使用示例<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">$ redis-cli</div><div class="line">127.0.0.1:6379&gt; rpush list-key item</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; rpush list-key item2</div><div class="line">(<span class="built_in">integer</span>) 2</div><div class="line">127.0.0.1:6379&gt; rpush list-key item</div><div class="line">(<span class="built_in">integer</span>) 3</div><div class="line">127.0.0.1:6379&gt; lrange list-key 0 -1</div><div class="line">1) <span class="string">"item"</span></div><div class="line">2) <span class="string">"item2"</span></div><div class="line">3) <span class="string">"item"</span></div><div class="line">127.0.0.1:6379&gt; lindex list-key 1</div><div class="line"><span class="string">"item2"</span></div><div class="line">127.0.0.1:6379&gt; lpop list-key </div><div class="line"><span class="string">"item"</span></div><div class="line">127.0.0.1:6379&gt; lrange list-key 0 -1</div><div class="line">1) <span class="string">"item2"</span></div><div class="line">2) <span class="string">"item"</span></div><div class="line">127.0.0.1:6379&gt;</div></pre></td></tr></table></figure></p>
-<p>RPUSH和LPUSH命令在执行成功后会返回当前列表的长度；列表索引范围从0开始，到-1结束，可以取出列表包含的所有元素；使用LINDEX可以从列表中取出单个元素。</p>
-<h3 id="Redis集合"><a href="#Redis集合" class="headerlink" title="Redis集合"></a><strong>Redis集合</strong></h3><p>Redis的集合和列表都可以存储多个字符串，它们的不同之处在于，列表可以存储多个相同的字符串，而集合则通过散列表来保证自己存储的每个字符串都是不同的(这些散列表只有键)。</p>
-<p>下表展示了6种简单的集合命令：</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>行为</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SADD</td>
-<td>将给定元素添加到集合</td>
-</tr>
-<tr>
-<td>SMEMBERS</td>
-<td>返回集合包含的所有元素</td>
-</tr>
-<tr>
-<td>SISMEMBER</td>
-<td>检查给定元素是否存在于集合中</td>
-</tr>
-<tr>
-<td>SREM</td>
-<td>如果给定的元素存在于集合中，那么移除这个元素</td>
-</tr>
-</tbody>
-</table>
-<p>SADD、SMEMBERS、SISMEMBER、SREM的使用示例<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">$ redis-cli</div><div class="line">127.0.0.1:6379&gt; sadd <span class="built_in">set</span>-key item</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; sadd <span class="built_in">set</span>-key item2</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; sadd <span class="built_in">set</span>-key item3</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; sadd <span class="built_in">set</span>-key item</div><div class="line">(<span class="built_in">integer</span>) 0</div><div class="line">127.0.0.1:6379&gt; smembers <span class="built_in">set</span>-key</div><div class="line">1) <span class="string">"item2"</span></div><div class="line">2) <span class="string">"item3"</span></div><div class="line">3) <span class="string">"item"</span></div><div class="line">127.0.0.1:6379&gt; sismember <span class="built_in">set</span>-key item4</div><div class="line">(<span class="built_in">integer</span>) 0</div><div class="line">127.0.0.1:6379&gt; sismember <span class="built_in">set</span>-key item</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; srem <span class="built_in">set</span>-key item2</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; srem <span class="built_in">set</span>-key item2</div><div class="line">(<span class="built_in">integer</span>) 0</div><div class="line">127.0.0.1:6379&gt; smembers <span class="built_in">set</span>-key</div><div class="line">1) <span class="string">"item3"</span></div><div class="line">2) <span class="string">"item"</span></div><div class="line">127.0.0.1:6379&gt;</div></pre></td></tr></table></figure></p>
-<p>SADD命令返回1表示成功添加到集合中，返回0表示该元素已存在于集合中；SMEMBERS命令获取到的元素组成的序列将会被Python客户端转换为Python集合；Python客户端会返回一个布尔值来表示SISMEMBER命令的检查结果；SREM命令会返回被移除元素的数量。</p>
-<h3 id="Redis散列"><a href="#Redis散列" class="headerlink" title="Redis散列"></a><strong>Redis散列</strong></h3><p>Redis的散列就像一个微型Redis，它可以存储多个键值对之间的映射。和字符串一样，散列存储的值既可以是字符串也可以是数值。可以将散列看做文档数据库里面的文档，还可以看做是关系数据库里面的行，因为散列、文档和行都允许用户同时访问或修改一个或多个域(field)。</p>
-<p>下表展示了4种简单的列表命令：</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>行为</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>HSET</td>
-<td>在散列里面关联给定的键值对</td>
-</tr>
-<tr>
-<td>HGET</td>
-<td>获取指定散列键的值</td>
-</tr>
-<tr>
-<td>HGETALL</td>
-<td>获取散列包含的所有键值对</td>
-</tr>
-<tr>
-<td>HDEL</td>
-<td>如果给定键存在于散列里面，那么移除这个键</td>
-</tr>
-</tbody>
-</table>
-<p>HSET、HGET、HGETALL、HDEL的使用示例<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">$ redis-cli</div><div class="line">127.0.0.1:6379&gt; hset <span class="built_in">hash</span>-key sub-key1 value1</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; hset <span class="built_in">hash</span>-key sub-key2 value2</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; hset <span class="built_in">hash</span>-key sub-key1 value1</div><div class="line">(<span class="built_in">integer</span>) 0</div><div class="line">127.0.0.1:6379&gt; hgetall <span class="built_in">hash</span>-key</div><div class="line">1) <span class="string">"sub-key1"</span></div><div class="line">2) <span class="string">"value1"</span></div><div class="line">3) <span class="string">"sub-key2"</span></div><div class="line">4) <span class="string">"value2"</span></div><div class="line">127.0.0.1:6379&gt; hdel <span class="built_in">hash</span>-key sub-key2</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; hdel <span class="built_in">hash</span>-key sub-key2</div><div class="line">(<span class="built_in">integer</span>) 0</div><div class="line">127.0.0.1:6379&gt; hget <span class="built_in">hash</span>-key sub-key1</div><div class="line"><span class="string">"value1"</span></div><div class="line">127.0.0.1:6379&gt; hgetall <span class="built_in">hash</span>-key</div><div class="line">1) <span class="string">"sub-key1"</span></div><div class="line">2) <span class="string">"value1"</span></div><div class="line">127.0.0.1:6379&gt;</div></pre></td></tr></table></figure></p>
-<p>HSET返回一个值来表示给定的键是否已经存在于散列里面；Python客户端会把HGETALL命令获取的整个散列转换为一个Python字典；HDEL命令执行后会返回一个值来表示给定的键在移除之前是否存在于散列里面。</p>
-<h3 id="Redis有序集合"><a href="#Redis有序集合" class="headerlink" title="Redis有序集合"></a><strong>Redis有序集合</strong></h3><p>有序集合和散列一样，都用于存储键值对：其中有序集合的每个键称为成员（member），都是独一无二的，而有序集合的每个值称为分值（score），都必须是浮点数。有序集合是Redis里面唯一既可以根据成员访问元素（这一点和散列一样），又可以根据分值以及分值的排列顺序来访问元素的结构。</p>
-<p>下表展示了4种简单的有序集合命令：</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>行为</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ZADD</td>
-<td>将一个带有给定分值的成员添加到有序集合里面</td>
-</tr>
-<tr>
-<td>ZRANGE</td>
-<td>根据元素在有序排列中所处的位置，从有序集合里获取多个元素</td>
-</tr>
-<tr>
-<td>ZRANGEBYSCORE</td>
-<td>获取有序集合在给定分值范围内的所有元素</td>
-</tr>
-<tr>
-<td>ZREM</td>
-<td>如果给定成员存在于有序集合，那么移除这个成员</td>
-</tr>
-</tbody>
-</table>
-<p>ZADD、ZRANGE、ZRANGEBYSCORE、ZREM的使用示例<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">$ redis-cli</div><div class="line">127.0.0.1:6379&gt; zadd zset-key 728 member1</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; zadd zset-key 982 member0</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; zadd zset-key 982 member0</div><div class="line">(<span class="built_in">integer</span>) 0</div><div class="line">127.0.0.1:6379&gt; zrange zset-key 0 -1 withscores</div><div class="line">1) <span class="string">"member1"</span></div><div class="line">2) <span class="string">"728"</span></div><div class="line">3) <span class="string">"member0"</span></div><div class="line">4) <span class="string">"982"</span></div><div class="line">127.0.0.1:6379&gt; zrangebyscore zset-key 0 800 withscores</div><div class="line">1) <span class="string">"member1"</span></div><div class="line">2) <span class="string">"728"</span></div><div class="line">127.0.0.1:6379&gt; zrem zset-key member1</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; zrem zset-key member1</div><div class="line">(<span class="built_in">integer</span>) 0</div><div class="line">127.0.0.1:6379&gt; zrange zset-key 0 -1 withscores</div><div class="line">1) <span class="string">"member0"</span></div><div class="line">2) <span class="string">"982"</span></div><div class="line">127.0.0.1:6379&gt;</div></pre></td></tr></table></figure></p>
-<p>在尝试向有序集合添加元素的时候，ZADD命令会返回新添加元素的数量；ZRANGE命令获取有序集合包含的所有元素，这些元素会按照分值进行排序，Python客户端会将这些分值转换成浮点数；ZRANGEBYSCORE命令也可以根据分值来获取有序集合的其中一部分元素；ZREM命令在移除有序集合元素的时候，命令会返回被移除元素的数量。</p>
+<ul>
+<li><p>always的方式固然可以对没一条数据进行很好的保存，但是这种同步策略需要对硬盘进行大量的写操作，所以Redis处理命令的速度会受到硬盘性能的限制。</p>
+<p>普通的硬盘每秒钟只能处理大约200个写命令，使用固态硬盘SSD每秒可以处理几万个写命令，但是每次只写一个命令，这种只能怪不断地写入很少量的数据的做法有可能引发严重的写入放大问题，这种情况下降严重影响固态硬盘的使用寿命。</p>
+</li>
+<li><p>everysec的方式，Redis以每秒一次的频率大队AOF文件进行同步。这样的话既可以兼顾数据安全也可以兼顾写入性能。</p>
+<p>Redis以每秒同步一次AOF文件的性能和不使用任何持久化特性时的性能相差无几，使用每秒更新一次 的方式，可以保证，即使出现故障，丢失的数据也在一秒之内产生的数据。</p>
+</li>
+<li><p>no的方式，Redis将不对AOF文件执行任何显示的同步操作，而是由操作系统来决定应该何时对AOF文件进行同步。</p>
+<p>这个命令一般不会对Redis的性能造成多大的影响，但是当系统出现故障的时候使用这种选项的Redis服务器丢失不定数量的数据。</p>
+<p>另外，当用户的硬盘处理写入操作的速度不够快的话，那么缓冲区被等待写入硬盘的数据填满时，Redis的写入操作将被阻塞，并导致Redis处理命令请求的速度变慢，因为这个原因，一般不推荐使用这个选项。</p>
+</li>
+</ul>
+<h3 id="重写-压缩AOF文件"><a href="#重写-压缩AOF文件" class="headerlink" title="重写/压缩AOF文件"></a><strong>重写/压缩AOF文件</strong></h3><p>随着数据量的增大，AOF的文件可能会很大，这样在每次进行数据恢复的时候就会进行很长的时间，为了解决日益增大的AOF文件，用户可以向Redis发送BGREWRITEAOF命令，这个命令会通过移除AOF文件中的冗余命令来重写AOF文件，是AOF文件的体积变得尽可能的小。</p>
+<p>BGREWRITEAOF的工作原理和BGSAVE的原理很像：Redis会创建一个子进程，然后由子进程负责对AOF文件的重写操作。</p>
+<p>因为AOF文件重写的时候会创建子进程，所以快照持久化因为创建子进程而导致的性能和内存占用问题同样会出现在AOF文件重写的时候。</p>
+<p>跟快照持久化通过save选项来自动执行BGSAVE一样，AOF通过设置<code>auto-aof-rewrite-percentage</code>和<code>auto-aof-rewrite-min-size</code>选项来自动执行BGREWRITEAOF。</p>
+<p>如下配置</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">auto-aof-rewrite-percentage <span class="number">100</span></div><div class="line">auto-aof-rewrite-min-size <span class="number">64</span>mb</div></pre></td></tr></table></figure>
+<p>表示当前AOF的文件体积大于64MB，并且AOF文件的体积比上一次重写之后的体积变大了至少一倍（100%）的时候，Redis将执行重写BGREWRITEAOF命令。</p>
+<p>如果AOF重写执行的过于频繁的话，可以将<code>auto-aof-rewrite-percentage</code>选项的值设置为100以上，这种最偶发就可以让Redis在AOF文件的体积变得更大之后才执行重写操作，不过，这也使得在进行数据恢复的时候执行的时间变得更加长一些。</p>
+<h3 id="优点-1"><a href="#优点-1" class="headerlink" title="优点"></a><strong>优点</strong></h3><ul>
+<li>使用 AOF 持久化会让 Redis 变得非常耐久（much more durable）：你可以设置不同的 <code>fsync</code> 策略，比如无 <code>fsync</code> ，每秒钟一次 <code>fsync</code> ，或者每次执行写入命令时 <code>fsync</code> 。 AOF 的默认策略为每秒钟 <code>fsync</code> 一次，在这种配置下，Redis 仍然可以保持良好的性能，并且就算发生故障停机，也最多只会丢失一秒钟的数据（ <code>fsync</code> 会在后台线程执行，所以主线程可以继续努力地处理命令请求）。</li>
+<li>AOF 文件是一个只进行追加操作的日志文件（append only log）， 因此对 AOF 文件的写入不需要进行 <code>seek</code> ， 即使日志因为某些原因而包含了未写入完整的命令（比如写入时磁盘已满，写入中途停机，等等）， <code>redis-check-aof</code> 工具也可以轻易地修复这种问题。</li>
+<li>Redis 可以在 AOF 文件体积变得过大时，自动地在后台对 AOF 进行重写： 重写后的新 AOF 文件包含了恢复当前数据集所需的最小命令集合。 整个重写操作是绝对安全的，因为 Redis 在创建新 AOF 文件的过程中，会继续将命令追加到现有的 AOF 文件里面，即使重写过程中发生停机，现有的 AOF 文件也不会丢失。 而一旦新 AOF 文件创建完毕，Redis 就会从旧 AOF 文件切换到新 AOF 文件，并开始对新 AOF 文件进行追加操作。</li>
+<li>AOF 文件有序地保存了对数据库执行的所有写入操作， 这些写入操作以 Redis 协议的格式保存， 因此 AOF 文件的内容非常容易被人读懂， 对文件进行分析（parse）也很轻松。 导出（export） AOF 文件也非常简单： 举个例子， 如果你不小心执行了 <a href="http://redisdoc.com/server/flushall.html#flushall" target="_blank" rel="external">FLUSHALL</a> 命令， 但只要 AOF 文件未被重写， 那么只要停止服务器， 移除 AOF 文件末尾的 <a href="http://redisdoc.com/server/flushall.html#flushall" target="_blank" rel="external">FLUSHALL</a> 命令， 并重启 Redis ， 就可以将数据集恢复到 <a href="http://redisdoc.com/server/flushall.html#flushall" target="_blank" rel="external">FLUSHALL</a> 执行之前的状态。</li>
+</ul>
+<h3 id="缺点-1"><a href="#缺点-1" class="headerlink" title="缺点"></a><strong>缺点</strong></h3><ul>
+<li>对于相同的数据集来说，AOF 文件的体积通常要大于 RDB 文件的体积。</li>
+<li>根据所使用的 <code>fsync</code> 策略，AOF 的速度可能会慢于 RDB 。 在一般情况下， 每秒 <code>fsync</code> 的性能依然非常高， 而关闭 <code>fsync</code> 可以让 AOF 的速度和 RDB 一样快， 即使在高负荷之下也是如此。 不过在处理巨大的写入载入时，RDB 可以提供更有保证的最大延迟时间（latency）。</li>
+<li>AOF 在过去曾经发生过这样的 bug ： 因为个别命令的原因，导致 AOF 文件在重新载入时，无法将数据集恢复成保存时的原样。 （举个例子，阻塞命令 <a href="http://redisdoc.com/list/brpoplpush.html#brpoplpush" target="_blank" rel="external">BRPOPLPUSH</a> 就曾经引起过这样的 bug 。） 测试套件里为这种情况添加了测试： 它们会自动生成随机的、复杂的数据集， 并通过重新载入这些数据来确保一切正常。 虽然这种 bug 在 AOF 文件中并不常见， 但是对比来说， RDB 几乎是不可能出现这种 bug 的。</li>
+</ul>
+<h3 id="如何选择RDB和AOF？"><a href="#如何选择RDB和AOF？" class="headerlink" title="如何选择RDB和AOF？"></a><strong>如何选择RDB和AOF？</strong></h3><p>一般来说， 如果想达到足以媲美 PostgreSQL 的数据安全性， 你应该同时使用两种持久化功能。</p>
+<p>如果你非常关心你的数据， 但仍然可以承受数分钟以内的数据丢失， 那么你可以只使用 RDB 持久化。</p>
+<p>有很多用户都只使用 AOF 持久化， 但我们并不推荐这种方式： 因为定时生成 RDB 快照（snapshot）非常便于进行数据库备份， 并且 RDB 恢复数据集的速度也要比 AOF 恢复的速度要快， 除此之外， 使用 RDB 还可以避免之前提到的 AOF 程序的 bug 。</p>
+<h3 id="RDB-和-AOF-之间的相互作用"><a href="#RDB-和-AOF-之间的相互作用" class="headerlink" title="RDB 和 AOF 之间的相互作用"></a>RDB 和 AOF 之间的相互作用</h3><p>BGSAVE 执行的过程中， 不可以执行 BGREWRITEAOF 。 反过来说， 在 BGREWRITEAOF 执行的过程中， 也不可以执行 BGSAVE 。</p>
+<p>这可以防止两个 Redis 后台进程同时对磁盘进行大量的 I/O 操作。</p>
+<p>如果 BGSAVE 正在执行， 并且用户显示地调用 BGREWRITEAOF 命令， 那么服务器将向用户回复一个 <code>OK</code> 状态， 并告知用户，BGREWRITEAOF 已经被预定执行： 一旦 BGSAVE 执行完毕， BGREWRITEAOF 就会正式开始。</p>
+<p>当 Redis 启动时， 如果 RDB 持久化和 AOF 持久化都被打开了， 那么程序会优先使用 AOF 文件来恢复数据集， 因为 AOF 文件所保存的数据通常是最完整的。</p>
 
       
     </div>
@@ -722,15 +592,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2017/04/07/MxOnline-summary/" rel="next" title="MxOnline项目学习总结">
+                <i class="fa fa-chevron-left"></i> MxOnline项目学习总结
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/03/27/Redis-2/" rel="prev" title="Redis学习笔记(二)：Redis命令及其Python API">
-                Redis学习笔记(二)：Redis命令及其Python API <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -897,7 +767,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis简介"><span class="nav-number">1.</span> <span class="nav-text">Redis简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis与memcached及其他类型数据库对比"><span class="nav-number">2.</span> <span class="nav-text">Redis与memcached及其他类型数据库对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis安装-mac"><span class="nav-number">3.</span> <span class="nav-text">Redis安装(mac)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis数据结构简介"><span class="nav-number">4.</span> <span class="nav-text">Redis数据结构简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis字符串"><span class="nav-number">4.1.</span> <span class="nav-text">Redis字符串</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis列表"><span class="nav-number">4.2.</span> <span class="nav-text">Redis列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis集合"><span class="nav-number">4.3.</span> <span class="nav-text">Redis集合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis散列"><span class="nav-number">4.4.</span> <span class="nav-text">Redis散列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis有序集合"><span class="nav-number">4.5.</span> <span class="nav-text">Redis有序集合</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是持久化？"><span class="nav-number">1.</span> <span class="nav-text">什么是持久化？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#持久化选项"><span class="nav-number">2.</span> <span class="nav-text">持久化选项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#快照持久化（RDB）"><span class="nav-number">3.</span> <span class="nav-text">快照持久化（RDB）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建快照的办法"><span class="nav-number">3.1.</span> <span class="nav-text">创建快照的办法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优点"><span class="nav-number">3.2.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缺点"><span class="nav-number">3.3.</span> <span class="nav-text">缺点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AOF持久化"><span class="nav-number">4.</span> <span class="nav-text">AOF持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#appendfsync同步频率"><span class="nav-number">4.1.</span> <span class="nav-text">appendfsync同步频率</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重写-压缩AOF文件"><span class="nav-number">4.2.</span> <span class="nav-text">重写/压缩AOF文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优点-1"><span class="nav-number">4.3.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缺点-1"><span class="nav-number">4.4.</span> <span class="nav-text">缺点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何选择RDB和AOF？"><span class="nav-number">4.5.</span> <span class="nav-text">如何选择RDB和AOF？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RDB-和-AOF-之间的相互作用"><span class="nav-number">4.6.</span> <span class="nav-text">RDB 和 AOF 之间的相互作用</span></a></li></ol></li></ol></div>
             
 
           </div>
