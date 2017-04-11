@@ -124,7 +124,7 @@
     <link href="http://yoursite.com/2017/04/10/xpath-usage/"/>
     <id>http://yoursite.com/2017/04/10/xpath-usage/</id>
     <published>2017-04-10T12:18:54.000Z</published>
-    <updated>2017-04-11T07:54:38.000Z</updated>
+    <updated>2017-04-11T07:56:37.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="XPath的用法"><a href="#XPath的用法" class="headerlink" title="XPath的用法"></a><strong>XPath的用法</strong></h2><h3 id="XPath简介"><a href="#XPath简介" class="headerlink" title="XPath简介"></a><strong>XPath简介</strong></h3><ul>
 <li>XPath 使用路径表达式在 XML / HTML 文档中进行导航</li>
