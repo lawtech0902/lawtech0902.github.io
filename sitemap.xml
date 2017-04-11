@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2017/04/10/Redis-5/</loc>
+    
+    <lastmod>2017-04-11T13:45:03.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2017/04/11/regex/</loc>
     
     <lastmod>2017-04-11T12:10:21.000Z</lastmod>
