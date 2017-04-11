@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-04-11T07:49:05.000Z</updated>
+  <updated>2017-04-11T12:07:42.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,459 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Python正则表达式</title>
+    <link href="http://yoursite.com/2017/04/11/regex/"/>
+    <id>http://yoursite.com/2017/04/11/regex/</id>
+    <published>2017-04-11T12:18:54.000Z</published>
+    <updated>2017-04-11T12:07:42.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Python正则表达式"><a href="#Python正则表达式" class="headerlink" title="Python正则表达式"></a><strong>Python正则表达式</strong></h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a><strong>简介</strong></h3><p>正则表达式是一个特殊的字符序列，它能帮助你方便的检查一个字符串是否与某种模式匹配。</p>
+<p>Python 自1.5版本起增加了re 模块，它提供 Perl 风格的正则表达式模式。</p>
+<p>re 模块使 Python 语言拥有全部的正则表达式功能。<br><a id="more"></a></p>
+<p>compile 函数根据一个模式字符串和可选的标志参数生成一个正则表达式对象。该对象拥有一系列方法用于正则表达式匹配和替换。</p>
+<p>re 模块也提供了与这些方法功能完全一致的函数，这些函数使用一个模式字符串做为它们的第一个参数。</p>
+<h3 id="正则表达式模式（常用）"><a href="#正则表达式模式（常用）" class="headerlink" title="正则表达式模式（常用）"></a><strong>正则表达式模式（常用）</strong></h3><p>模式字符串使用特殊的语法来表示一个正则表达式：字母和数字表示他们自身。一个正则表达式模式中的字母和数字匹配同样的字符串。多数字母和数字前加一个反斜杠时会拥有不同的含义。标点符号只有被转义时才匹配自身，否则它们表示特殊的含义。反斜杠本身需要使用反斜杠转义。由于正则表达式通常都包含反斜杠，所以你最好使用原始字符串来表示它们。模式元素(如 r’/t’，等价于’//t’)匹配相应的特殊字符。</p>
+<p>下表列出了正则表达式模式语法中的特殊元素。如果你使用模式的同时提供了可选的标志参数，某些模式元素的含义会改变。</p>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>^</td>
+<td>匹配字符串的开头</td>
+</tr>
+<tr>
+<td>$</td>
+<td>匹配字符串的末尾</td>
+</tr>
+<tr>
+<td>.</td>
+<td>匹配任意字符，除了换行符”\n”，当re.DOTALL标记被指定时，可以匹配包含换行符的任意字符</td>
+</tr>
+<tr>
+<td>[…]</td>
+<td>用来表示一组字符，单独列出：[amk]匹配’a’，’m’或’k’</td>
+</tr>
+<tr>
+<td>[^…]</td>
+<td>不在[]中的字符： [ ^abc ]匹配除了a,b,c之外的字符</td>
+</tr>
+<tr>
+<td>re*</td>
+<td>匹配0个或多个的表达式</td>
+</tr>
+<tr>
+<td>re+</td>
+<td>匹配1个或多个的表达式</td>
+</tr>
+<tr>
+<td>re?</td>
+<td>匹配0个或1个由前面的正则表达式定义的片段，非贪婪方式</td>
+</tr>
+<tr>
+<td>re{ n,}</td>
+<td>精确匹配n个前面表达式</td>
+</tr>
+<tr>
+<td>re{n,m}</td>
+<td>匹配 n 到 m 次由前面的正则表达式定义的片段，贪婪方式</td>
+</tr>
+<tr>
+<td>a \</td>
+<td>b</td>
+<td>匹配a或b</td>
+</tr>
+<tr>
+<td>(re)</td>
+<td>匹配括号内的表达式，也表示一个组</td>
+</tr>
+<tr>
+<td>(?imx)</td>
+<td>正则表达式包含三种可选标志：i, m, 或 x 。只影响括号中的区域</td>
+</tr>
+<tr>
+<td>(?-imx)</td>
+<td>正则表达式关闭 i, m, 或 x 可选标志。只影响括号中的区域</td>
+</tr>
+<tr>
+<td>\w</td>
+<td>匹配字母数字及下划线</td>
+</tr>
+<tr>
+<td>\W</td>
+<td>匹配非字母数字及下划线</td>
+</tr>
+<tr>
+<td>\s</td>
+<td>匹配任意空白字符，等价于 [\t\n\r\f].</td>
+</tr>
+<tr>
+<td>\S</td>
+<td>匹配任意非空字符</td>
+</tr>
+<tr>
+<td>\d</td>
+<td>匹配任意数字，等价于 [0-9].</td>
+</tr>
+<tr>
+<td>\D</td>
+<td>匹配任意非数字</td>
+</tr>
+<tr>
+<td>\A</td>
+<td>匹配字符串开始</td>
+</tr>
+<tr>
+<td>\Z</td>
+<td>匹配字符串结束，如果是存在换行，只匹配到换行前的结束字符串</td>
+</tr>
+<tr>
+<td>\z</td>
+<td>匹配字符串结束</td>
+</tr>
+<tr>
+<td>\G</td>
+<td>匹配最后匹配完成的位置</td>
+</tr>
+<tr>
+<td>\b</td>
+<td>匹配一个单词边界，也就是指单词和空格间的位置。例如， ‘er\b’ 可以匹配”never” 中的 ‘er’，但不能匹配 “verb” 中的 ‘er’</td>
+</tr>
+<tr>
+<td>\B</td>
+<td>匹配非单词边界。’er\B’ 能匹配 “verb” 中的 ‘er’，但不能匹配 “never” 中的 ‘er’</td>
+</tr>
+<tr>
+<td>\n,\t,等</td>
+<td>匹配一个换行符。匹配一个制表符。等</td>
+</tr>
+<tr>
+<td>\1…\9</td>
+<td>匹配第n个分组的子表达式。</td>
+</tr>
+<tr>
+<td>\10</td>
+<td>匹配第n个分组的子表达式，如果它经匹配。否则指的是八进制字符码的表达式</td>
+</tr>
+</tbody>
+</table>
+<h3 id="正则表达式实例"><a href="#正则表达式实例" class="headerlink" title="正则表达式实例"></a><strong>正则表达式实例</strong></h3><p>字符匹配</p>
+<table>
+<thead>
+<tr>
+<th>实例</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>python</td>
+<td>匹配”python”</td>
+</tr>
+</tbody>
+</table>
+<p>字符类</p>
+<table>
+<thead>
+<tr>
+<th>实例</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[Pp]ython</td>
+<td>匹配 “Python” 或 “python”</td>
+</tr>
+<tr>
+<td>rub[ye]</td>
+<td>匹配 “ruby” 或 “rube”</td>
+</tr>
+<tr>
+<td>[lawtech]</td>
+<td>匹配中括号内的任意一个字母</td>
+</tr>
+<tr>
+<td>[0-9]</td>
+<td>匹配任何数字。类似于 [0123456789]</td>
+</tr>
+<tr>
+<td>[a-z]</td>
+<td>匹配任何小写字母</td>
+</tr>
+<tr>
+<td>[A-Z]</td>
+<td>匹配任何大写字母</td>
+</tr>
+<tr>
+<td>[a-zA-Z0-9]</td>
+<td>匹配任何字母及数字</td>
+</tr>
+<tr>
+<td>[^lawtech]</td>
+<td>除了lawtech字母以外的所有字符</td>
+</tr>
+<tr>
+<td>[^0-9]</td>
+<td>匹配除了数字外的字符</td>
+</tr>
+</tbody>
+</table>
+<p>特殊字符类</p>
+<table>
+<thead>
+<tr>
+<th>实例</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>.</td>
+<td>匹配除 “\n” 之外的任何单个字符，要匹配包括 ‘\n’ 在内的任何字符，请使用像’[.\n]’ 的模式</td>
+</tr>
+<tr>
+<td>\d</td>
+<td>匹配一个数字字符，等价于 [0-9]</td>
+</tr>
+<tr>
+<td>\D</td>
+<td>匹配一个非数字字符，等价于 [ ^0-9 ]</td>
+</tr>
+<tr>
+<td>\s</td>
+<td>匹配任何空白字符，包括空格、制表符、换页符等等，等价于[\f\n\r\t\v]</td>
+</tr>
+<tr>
+<td>\S</td>
+<td>匹配任何非空白字符。等价于 [ ^\f\n\r\t\v ]</td>
+</tr>
+<tr>
+<td>\w</td>
+<td>匹配包括下划线的任何单词字符，等价于[A-Za-z0-9_]</td>
+</tr>
+<tr>
+<td>\W</td>
+<td>匹配任何非单词字符等价于 [ ^A-Za-z0-9_ ]</td>
+</tr>
+</tbody>
+</table>
+<h3 id="正则表达式修饰符-可选标志"><a href="#正则表达式修饰符-可选标志" class="headerlink" title="正则表达式修饰符 - 可选标志"></a>正则表达式修饰符 - 可选标志</h3><p>正则表达式可以包含一些可选标志修饰符来控制匹配的模式。修饰符被指定为一个可选的标志。多个标志可以通过按位 OR(|) 它们来指定。如 re.I | re.M 被设置成 I 和 M 标志：</p>
+<table>
+<thead>
+<tr>
+<th>修饰符</th>
+<th style="text-align:left">描述</th>
+<th>全拼</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>re.I</td>
+<td style="text-align:left">使匹配对大小写不敏感</td>
+<td>IGNORECASE</td>
+</tr>
+<tr>
+<td>re.L</td>
+<td style="text-align:left">做本地化识别（locale-aware）匹配</td>
+<td>LOCALE</td>
+</tr>
+<tr>
+<td>re.M</td>
+<td style="text-align:left">多行匹配，影响 ^ 和 $</td>
+<td>MULTILINE</td>
+</tr>
+<tr>
+<td>re.S</td>
+<td style="text-align:left">使 . 匹配包括换行在内的所有字符</td>
+<td>DOTALL</td>
+</tr>
+<tr>
+<td>re.U</td>
+<td style="text-align:left">根据Unicode字符集解析字符。这个标志影响 \w, \W, \b, \B.</td>
+<td>UNICODE</td>
+</tr>
+<tr>
+<td>re.X</td>
+<td style="text-align:left">该标志通过给予你更灵活的格式以便你将正则表达式写得更易于理解</td>
+<td>VERBOSE</td>
+</tr>
+</tbody>
+</table>
+<h3 id="re模块能够处理正则表达式的操作生成正则表达式对象"><a href="#re模块能够处理正则表达式的操作生成正则表达式对象" class="headerlink" title="re模块能够处理正则表达式的操作生成正则表达式对象"></a><strong>re模块能够处理正则表达式的操作生成正则表达式对象</strong></h3><ul>
+<li><p>生成正则表达式对象 compile(pattern, flags=0)构建一个正则表达式，返回该正则表达式对象</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line">pattern = re.compile(<span class="string">'re'</span>)</div></pre></td></tr></table></figure>
+</li>
+<li><p>进行匹配</p>
+<ul>
+<li>match() 确定正则表达式是否匹配字符串的开头</li>
+<li>search() 扫描字符串以查找匹配</li>
+<li>findall() 找到所有正则表达式匹配的子字符串，并把它们作为一个列表返回</li>
+<li>finditer() 找到所有正则表达式匹配的子字符串，并把它们以迭代器的形式返回</li>
+<li>group() 返回通过正则表达式匹配到的字符串</li>
+<li>start() 返回成功匹配开始位置</li>
+<li>end()   返回成功匹配结束位置</li>
+<li>span()  返回包含成功匹配开始和结束位置的元组</li>
+</ul>
+</li>
+</ul>
+<h4 id="re-match函数"><a href="#re-match函数" class="headerlink" title="re.match函数"></a><strong>re.match函数</strong></h4><p>re.match 尝试从字符串的起始位置匹配一个模式，如果不是起始位置匹配成功的话，match()就返回None。</p>
+<p>函数语法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">re.match(pattern, string, flags=<span class="number">0</span>)</div></pre></td></tr></table></figure>
+<p>函数参数说明：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pattern</td>
+<td>匹配的正则表达式</td>
+</tr>
+<tr>
+<td>string</td>
+<td>要匹配的字符串</td>
+</tr>
+<tr>
+<td>flags</td>
+<td>标志位，用于控制正则表达式的匹配方式，如：是否区分大小写，多行匹配等等</td>
+</tr>
+</tbody>
+</table>
+<p>匹配成功re.match方法返回一个匹配的对象（match object），否则返回None。</p>
+<p>我们可以使用group(num) 或 groups() 匹配对象函数来获取匹配表达式。</p>
+<table>
+<thead>
+<tr>
+<th>匹配对象方法</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>group(num=0)</td>
+<td>匹配的整个表达式的字符串，group() 可以一次输入多个组号，在这种情况下它将返回一个包含那些组所对应值的元组</td>
+</tr>
+<tr>
+<td>groups()</td>
+<td>返回一个包含所有小组字符串的元组，从1到所含的小组号</td>
+</tr>
+</tbody>
+</table>
+<p>实例1：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: UTF-8 -*- </span></div><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line">print(re.match(<span class="string">'www'</span>, <span class="string">'www.lawtech0902.com'</span>).span())  <span class="comment"># 在起始位置匹配</span></div><div class="line">print(re.match(<span class="string">'com'</span>, <span class="string">'www.lawtech0902.com'</span>)) <span class="comment"># 不在起始位置匹配</span></div></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">(<span class="number">0</span>, <span class="number">3</span>)</div><div class="line"><span class="keyword">None</span></div></pre></td></tr></table></figure>
+<p>实例2：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: UTF-8 -*- </span></div><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line">line = <span class="string">"Cats are smarter than dogs"</span></div><div class="line"></div><div class="line">matchObj = re.match( <span class="string">r'(.*) are (.*?) .*'</span>, line, re.M|re.I)</div><div class="line"></div><div class="line"><span class="keyword">if</span> matchObj:</div><div class="line">   print(<span class="string">"matchObj.group() : "</span>, matchObj.group())</div><div class="line">   print(<span class="string">"matchObj.group(1) : "</span>, matchObj.group(<span class="number">1</span>))</div><div class="line">   print(<span class="string">"matchObj.group(2) : "</span>, matchObj.group(<span class="number">2</span>))</div><div class="line"><span class="keyword">else</span>:</div><div class="line">   print(<span class="string">"No match!!"</span>)</div></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">matchObj.group() :  Cats are smarter than dogs</div><div class="line">matchObj.group(<span class="number">1</span>) :  Cats</div><div class="line">matchObj.group(<span class="number">2</span>) :  smarter</div></pre></td></tr></table></figure>
+<h4 id="re-search方法"><a href="#re-search方法" class="headerlink" title="re.search方法"></a><strong>re.search方法</strong></h4><p>re.search 扫描整个字符串并返回第一个成功的匹配。</p>
+<p>函数语法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">re.search(pattern, string, flags=<span class="number">0</span>)</div></pre></td></tr></table></figure>
+<p>函数参数说明与re.match方法相同。</p>
+<p>匹配成功re.search方法返回一个匹配的对象，否则返回None。</p>
+<p>实例1：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: UTF-8 -*- </span></div><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line">print(re.search(<span class="string">'www'</span>, <span class="string">'www.lawtech0902.com'</span>).span())  <span class="comment"># 在起始位置匹配</span></div><div class="line">print(re.search(<span class="string">'com'</span>, <span class="string">'www.lawtech0902.com'</span>).span())  <span class="comment"># 不在起始位置匹配</span></div></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">(<span class="number">0</span>, <span class="number">3</span>)</div><div class="line">(<span class="number">16</span>, <span class="number">19</span>)</div></pre></td></tr></table></figure>
+<p>实例2：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: UTF-8 -*- </span></div><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line">line = <span class="string">"Cats are smarter than dogs"</span></div><div class="line"></div><div class="line">searchObj = re.search( <span class="string">r'(.*) are (.*?) .*'</span>, line, re.M|re.I)</div><div class="line"></div><div class="line"><span class="keyword">if</span> searchObj:</div><div class="line">   print(<span class="string">"searchObj.group() : "</span>, searchObj.group())</div><div class="line">   print(<span class="string">"searchObj.group(1) : "</span>, searchObj.group(<span class="number">1</span>))</div><div class="line">   print(<span class="string">"searchObj.group(2) : "</span>, searchObj.group(<span class="number">2</span>))</div><div class="line"><span class="keyword">else</span>:</div><div class="line">   print(<span class="string">"Nothing found!!"</span>)</div></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">searchObj.group() :  Cats are smarter than dogs</div><div class="line">searchObj.group(<span class="number">1</span>) :  Cats</div><div class="line">searchObj.group(<span class="number">2</span>) :  smarter</div></pre></td></tr></table></figure>
+<h4 id="re-match与re-search的区别"><a href="#re-match与re-search的区别" class="headerlink" title="re.match与re.search的区别"></a>re.match与re.search的区别</h4><p>re.match只匹配字符串的开始，如果字符串开始不符合正则表达式，则匹配失败，函数返回None；而re.search匹配整个字符串，直到找到一个匹配。</p>
+<p>实例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: UTF-8 -*- </span></div><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line">line = <span class="string">"Cats are smarter than dogs"</span></div><div class="line"></div><div class="line">matchObj = re.match( <span class="string">r'dogs'</span>, line, re.M|re.I)</div><div class="line"><span class="keyword">if</span> matchObj:</div><div class="line">   print(<span class="string">"match --&gt; matchObj.group() : "</span>, matchObj.group())</div><div class="line"><span class="keyword">else</span>:</div><div class="line">   print(<span class="string">"No match!!"</span>)</div><div class="line"></div><div class="line">matchObj = re.search( <span class="string">r'dogs'</span>, line, re.M|re.I)</div><div class="line"><span class="keyword">if</span> matchObj:</div><div class="line">   print(<span class="string">"search --&gt; matchObj.group() : "</span>, matchObj.group())</div><div class="line"><span class="keyword">else</span>:</div><div class="line">   print(<span class="string">"No match!!"</span>)</div></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">No match!!</div><div class="line">search --&gt; matchObj.group() :  dogs</div></pre></td></tr></table></figure>
+<h4 id="检索和替换"><a href="#检索和替换" class="headerlink" title="检索和替换"></a><strong>检索和替换</strong></h4><p>Python 的 re 模块提供了re.sub用于替换字符串中的匹配项。</p>
+<p>语法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">re.sub(pattern, repl, string, count=<span class="number">0</span>, flags=<span class="number">0</span>)</div></pre></td></tr></table></figure>
+<p>参数：</p>
+<ul>
+<li>pattern : 正则中的模式字符串。</li>
+<li>repl : 替换的字符串，也可为一个函数。</li>
+<li>string : 要被查找替换的原始字符串。</li>
+<li>count : 模式匹配后替换的最大次数，默认 0 表示替换所有的匹配。</li>
+</ul>
+<p>实例：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line">phone = <span class="string">"2004-959-559 # 这是一个国外电话号码"</span></div><div class="line"></div><div class="line"><span class="comment"># 删除字符串中的 Python注释 </span></div><div class="line">num = re.sub(<span class="string">r'#.*$'</span>, <span class="string">""</span>, phone)</div><div class="line">print(<span class="string">"电话号码是: "</span>, num)</div><div class="line"></div><div class="line"><span class="comment"># 删除非数字(-)的字符串 </span></div><div class="line">num = re.sub(<span class="string">r'\D'</span>, <span class="string">""</span>, phone)</div><div class="line">print(<span class="string">"电话号码是 : "</span>, num)</div></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">电话号码是:  <span class="number">2004</span><span class="number">-959</span><span class="number">-559</span></div><div class="line">电话号码是 :  <span class="number">2004959559</span></div></pre></td></tr></table></figure>
+<h5 id="repl参数是一个函数"><a href="#repl参数是一个函数" class="headerlink" title="repl参数是一个函数"></a><strong>repl参数是一个函数</strong></h5><p>以下实例中将字符串中的匹配的数字乘于 2：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line"><span class="comment"># 将匹配的数字乘于 2</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">double</span><span class="params">(matched)</span>:</span></div><div class="line">    value = int(matched.group(<span class="string">'value'</span>))</div><div class="line">    <span class="keyword">return</span> str(value * <span class="number">2</span>)</div><div class="line"></div><div class="line">s = <span class="string">'A23G4HFD567'</span></div><div class="line">print(re.sub(<span class="string">'(?P&lt;value&gt;\d+)'</span>, double, s))</div></pre></td></tr></table></figure>
+<p>运行结果为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">A46G8HFD1134</div></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;Python正则表达式&quot;&gt;&lt;a href=&quot;#Python正则表达式&quot; class=&quot;headerlink&quot; title=&quot;Python正则表达式&quot;&gt;&lt;/a&gt;&lt;strong&gt;Python正则表达式&lt;/strong&gt;&lt;/h2&gt;&lt;h3 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;/a&gt;&lt;strong&gt;简介&lt;/strong&gt;&lt;/h3&gt;&lt;p&gt;正则表达式是一个特殊的字符序列，它能帮助你方便的检查一个字符串是否与某种模式匹配。&lt;/p&gt;
+&lt;p&gt;Python 自1.5版本起增加了re 模块，它提供 Perl 风格的正则表达式模式。&lt;/p&gt;
+&lt;p&gt;re 模块使 Python 语言拥有全部的正则表达式功能。&lt;br&gt;
+    
+    </summary>
+    
+      <category term="Regular Expression" scheme="http://yoursite.com/categories/Regular-Expression/"/>
+    
+    
+      <category term="Scrapy，Regular Expression，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CRegular-Expression%EF%BC%8CPython/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy安装及调试</title>
+    <link href="http://yoursite.com/2017/04/11/scrapy-install/"/>
+    <id>http://yoursite.com/2017/04/11/scrapy-install/</id>
+    <published>2017-04-11T12:18:54.000Z</published>
+    <updated>2017-04-11T07:48:50.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a><strong>环境搭建</strong></h2><a id="more"></a>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ mkvirtualenv article_spider</div><div class="line">$ pip install -i https://pypi.douban.com/simple/ scrapy</div></pre></td></tr></table></figure>
+<h2 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a><strong>创建项目</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$ workon article_spider</div><div class="line">$ scrapy startproject ArticleSpider</div><div class="line">New Scrapy project &apos;ArticleSpider&apos;, using template directory &apos;/Users/lawtech/myvirtualenvs/article_spider/lib/python3.5/site-packages/scrapy/templates/project&apos;, created in:</div><div class="line">    /Users/lawtech/PycharmProjects/ArticleSpider</div><div class="line"></div><div class="line">You can start your first spider with:</div><div class="line">    cd ArticleSpider</div><div class="line">    scrapy genspider example example.com</div><div class="line">    </div><div class="line">$ cd ArticleSpider</div><div class="line">$ scrapy genspider jobbole blog.jobbole.com</div><div class="line">Created spider &apos;jobbole&apos; using template &apos;basic&apos; in module:</div><div class="line">  ArticleSpider.spiders.jobbole</div></pre></td></tr></table></figure>
+<h2 id="项目目录介绍"><a href="#项目目录介绍" class="headerlink" title="项目目录介绍"></a><strong>项目目录介绍</strong></h2><p>首先先要回答一个问题。</p>
+<p>问：把网站装进爬虫里，总共分几步？<br>答案很简单，四步：</p>
+<ul>
+<li>新建项目 (Project)：新建一个新的爬虫项目</li>
+<li>明确目标（Items）：明确你想要抓取的目标</li>
+<li>制作爬虫（Spider）：制作爬虫开始爬取网页</li>
+<li>存储内容（Pipeline）：设计管道存储爬取内容</li>
+</ul>
+<p>创建好AticleSpider项目之后，可以看到将会创建一个AticleSpider文件夹，目录结构如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">ArticleSpider/  </div><div class="line">    scrapy.cfg  </div><div class="line">    ArticleSpider/  </div><div class="line">        __init__.py  </div><div class="line">        items.py  </div><div class="line">        pipelines.py  </div><div class="line">        settings.py  </div><div class="line">        spiders/  </div><div class="line">            __init__.py  </div><div class="line">            jobbole.py</div></pre></td></tr></table></figure>
+<p>下面来简单介绍一下各个文件的作用：</p>
+<ul>
+<li>scrapy.cfg：项目的配置文件</li>
+<li>ArticleSpider/：项目的 Python 模块，将会从这里引用代码</li>
+<li>ArticleSpider/items.py：项目的 items 文件</li>
+<li>ArticleSpider/pipelines.py：项目的 pipelines 文件</li>
+<li>ArticleSpider/settings.py：项目的设置文件</li>
+<li>ArticleSpider/spiders/：存储爬虫的目录</li>
+</ul>
+<h2 id="pycharm-调试-scrapy-执行流程"><a href="#pycharm-调试-scrapy-执行流程" class="headerlink" title="pycharm 调试 scrapy 执行流程"></a><strong>pycharm 调试 scrapy 执行流程</strong></h2><p>在项目根目录下新建 main.py 文件，添加如下代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> scrapy.cmdline <span class="keyword">import</span> execute</div><div class="line"></div><div class="line"><span class="keyword">import</span> sys</div><div class="line"><span class="keyword">import</span> os</div><div class="line"></div><div class="line"><span class="comment"># __file__ 表示当前py文件</span></div><div class="line">sys.path.append(os.path.dirname(os.path.abspath(__file__)))</div><div class="line"><span class="comment"># 将实际命令拆分</span></div><div class="line">execute([<span class="string">"scrapy"</span>, <span class="string">"crawl"</span>, <span class="string">"spiders文件夹下的py文件名称"</span>])</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;环境搭建&quot;&gt;&lt;a href=&quot;#环境搭建&quot; class=&quot;headerlink&quot; title=&quot;环境搭建&quot;&gt;&lt;/a&gt;&lt;strong&gt;环境搭建&lt;/strong&gt;&lt;/h2&gt;
+    
+    </summary>
+    
+      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
+    
+    
+      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
+    
+  </entry>
   
   <entry>
     <title>Python分布式爬虫打造搜索引擎项目学习笔记——爬虫基础知识回顾</title>
@@ -74,57 +527,11 @@
   </entry>
   
   <entry>
-    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy安装及调试</title>
-    <link href="http://yoursite.com/2017/04/11/scrapy-install/"/>
-    <id>http://yoursite.com/2017/04/11/scrapy-install/</id>
-    <published>2017-04-11T12:18:54.000Z</published>
-    <updated>2017-04-11T07:48:50.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a><strong>环境搭建</strong></h2><a id="more"></a>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ mkvirtualenv article_spider</div><div class="line">$ pip install -i https://pypi.douban.com/simple/ scrapy</div></pre></td></tr></table></figure>
-<h2 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a><strong>创建项目</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$ workon article_spider</div><div class="line">$ scrapy startproject ArticleSpider</div><div class="line">New Scrapy project &apos;ArticleSpider&apos;, using template directory &apos;/Users/lawtech/myvirtualenvs/article_spider/lib/python3.5/site-packages/scrapy/templates/project&apos;, created in:</div><div class="line">    /Users/lawtech/PycharmProjects/ArticleSpider</div><div class="line"></div><div class="line">You can start your first spider with:</div><div class="line">    cd ArticleSpider</div><div class="line">    scrapy genspider example example.com</div><div class="line">    </div><div class="line">$ cd ArticleSpider</div><div class="line">$ scrapy genspider jobbole blog.jobbole.com</div><div class="line">Created spider &apos;jobbole&apos; using template &apos;basic&apos; in module:</div><div class="line">  ArticleSpider.spiders.jobbole</div></pre></td></tr></table></figure>
-<h2 id="项目目录介绍"><a href="#项目目录介绍" class="headerlink" title="项目目录介绍"></a><strong>项目目录介绍</strong></h2><p>首先先要回答一个问题。</p>
-<p>问：把网站装进爬虫里，总共分几步？<br>答案很简单，四步：</p>
-<ul>
-<li>新建项目 (Project)：新建一个新的爬虫项目</li>
-<li>明确目标（Items）：明确你想要抓取的目标</li>
-<li>制作爬虫（Spider）：制作爬虫开始爬取网页</li>
-<li>存储内容（Pipeline）：设计管道存储爬取内容</li>
-</ul>
-<p>创建好AticleSpider项目之后，可以看到将会创建一个AticleSpider文件夹，目录结构如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">ArticleSpider/  </div><div class="line">    scrapy.cfg  </div><div class="line">    ArticleSpider/  </div><div class="line">        __init__.py  </div><div class="line">        items.py  </div><div class="line">        pipelines.py  </div><div class="line">        settings.py  </div><div class="line">        spiders/  </div><div class="line">            __init__.py  </div><div class="line">            jobbole.py</div></pre></td></tr></table></figure>
-<p>下面来简单介绍一下各个文件的作用：</p>
-<ul>
-<li>scrapy.cfg：项目的配置文件</li>
-<li>ArticleSpider/：项目的 Python 模块，将会从这里引用代码</li>
-<li>ArticleSpider/items.py：项目的 items 文件</li>
-<li>ArticleSpider/pipelines.py：项目的 pipelines 文件</li>
-<li>ArticleSpider/settings.py：项目的设置文件</li>
-<li>ArticleSpider/spiders/：存储爬虫的目录</li>
-</ul>
-<h2 id="pycharm-调试-scrapy-执行流程"><a href="#pycharm-调试-scrapy-执行流程" class="headerlink" title="pycharm 调试 scrapy 执行流程"></a><strong>pycharm 调试 scrapy 执行流程</strong></h2><p>在项目根目录下新建 main.py 文件，添加如下代码</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> scrapy.cmdline <span class="keyword">import</span> execute</div><div class="line"></div><div class="line"><span class="keyword">import</span> sys</div><div class="line"><span class="keyword">import</span> os</div><div class="line"></div><div class="line"><span class="comment"># __file__ 表示当前py文件</span></div><div class="line">sys.path.append(os.path.dirname(os.path.abspath(__file__)))</div><div class="line"><span class="comment"># 将实际命令拆分</span></div><div class="line">execute([<span class="string">"scrapy"</span>, <span class="string">"crawl"</span>, <span class="string">"spiders文件夹下的py文件名称"</span>])</div></pre></td></tr></table></figure>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;环境搭建&quot;&gt;&lt;a href=&quot;#环境搭建&quot; class=&quot;headerlink&quot; title=&quot;环境搭建&quot;&gt;&lt;/a&gt;&lt;strong&gt;环境搭建&lt;/strong&gt;&lt;/h2&gt;
-    
-    </summary>
-    
-      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
-    
-    
-      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Python分布式爬虫打造搜索引擎项目学习笔记——Xpath用法</title>
-    <link href="http://yoursite.com/2017/04/10/xpath-usage/"/>
-    <id>http://yoursite.com/2017/04/10/xpath-usage/</id>
-    <published>2017-04-10T12:18:54.000Z</published>
-    <updated>2017-04-11T07:56:37.000Z</updated>
+    <link href="http://yoursite.com/2017/04/11/xpath-usage/"/>
+    <id>http://yoursite.com/2017/04/11/xpath-usage/</id>
+    <published>2017-04-11T12:18:54.000Z</published>
+    <updated>2017-04-11T08:04:49.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="XPath的用法"><a href="#XPath的用法" class="headerlink" title="XPath的用法"></a><strong>XPath的用法</strong></h2><h3 id="XPath简介"><a href="#XPath简介" class="headerlink" title="XPath简介"></a><strong>XPath简介</strong></h3><ul>
 <li>XPath 使用路径表达式在 XML / HTML 文档中进行导航</li>
