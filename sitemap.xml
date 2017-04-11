@@ -2,23 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://yoursite.com/2017/04/11/xpath-usage/</loc>
+    <loc>http://yoursite.com/2017/04/10/xpath-usage/</loc>
     
-    <lastmod>2017-04-11T07:44:33.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2017/04/10/scrapy-project-basic/</loc>
-    
-    <lastmod>2017-04-11T07:44:12.000Z</lastmod>
+    <lastmod>2017-04-11T07:52:04.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://yoursite.com/2017/04/10/scrapy-install/</loc>
+    <loc>http://yoursite.com/2017/04/11/scrapy-project-basic/</loc>
     
-    <lastmod>2017-04-11T07:43:50.000Z</lastmod>
+    <lastmod>2017-04-11T07:49:05.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2017/04/11/scrapy-install/</loc>
+    
+    <lastmod>2017-04-11T07:48:50.000Z</lastmod>
     
   </url>
   
