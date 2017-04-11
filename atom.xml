@@ -124,16 +124,16 @@
     <link href="http://yoursite.com/2017/04/10/xpath-usage/"/>
     <id>http://yoursite.com/2017/04/10/xpath-usage/</id>
     <published>2017-04-10T12:18:54.000Z</published>
-    <updated>2017-04-11T07:52:04.000Z</updated>
+    <updated>2017-04-11T07:54:38.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="XPath的用法"><a href="#XPath的用法" class="headerlink" title="XPath的用法"></a><strong>XPath的用法</strong></h2><h3 id="XPath简介"><a href="#XPath简介" class="headerlink" title="XPath简介"></a><strong>XPath简介</strong></h3><ul>
 <li>XPath 使用路径表达式在 XML / HTML 文档中进行导航</li>
 <li>XPath 包含一个标准函数库</li>
 <li>XPath 是 XSLT 中的主要元素</li>
-<li>XPath 是一个 W3C 标准<a id="more"></a>
-<h3 id="XPath术语"><a href="#XPath术语" class="headerlink" title="XPath术语"></a><strong>XPath术语</strong></h3></li>
+<li>XPath 是一个 W3C 标准</li>
 </ul>
-<h4 id="节点（Node）"><a href="#节点（Node）" class="headerlink" title="节点（Node）"></a><strong>节点（Node）</strong></h4><p>在 XPath 中，有七种类型的节点：元素、属性、文本、命名空间、处理指令、注释以及文档（根）节点。XML 文档是被作为节点树来对待的。树的根被称为文档节点或者根节点。</p>
+<a id="more"></a>
+<h3 id="XPath术语"><a href="#XPath术语" class="headerlink" title="XPath术语"></a><strong>XPath术语</strong></h3><h4 id="节点（Node）"><a href="#节点（Node）" class="headerlink" title="节点（Node）"></a><strong>节点（Node）</strong></h4><p>在 XPath 中，有七种类型的节点：元素、属性、文本、命名空间、处理指令、注释以及文档（根）节点。XML 文档是被作为节点树来对待的。树的根被称为文档节点或者根节点。</p>
 <p>请看下面这个 XML 文档：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;</div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span>Harry Potter<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">author</span>&gt;</span>J K. Rowling<span class="tag">&lt;/<span class="name">author</span>&gt;</span> </div><div class="line">  <span class="tag">&lt;<span class="name">year</span>&gt;</span>2005<span class="tag">&lt;/<span class="name">year</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>29.99<span class="tag">&lt;/<span class="name">price</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">bookstore</span>&gt;</span></div></pre></td></tr></table></figure>
 <p>上面的XML文档中的节点例子：</p>
@@ -364,7 +364,8 @@
 &lt;li&gt;XPath 使用路径表达式在 XML / HTML 文档中进行导航&lt;/li&gt;
 &lt;li&gt;XPath 包含一个标准函数库&lt;/li&gt;
 &lt;li&gt;XPath 是 XSLT 中的主要元素&lt;/li&gt;
-&lt;li&gt;XPath 是一个 W3C 标准
+&lt;li&gt;XPath 是一个 W3C 标准&lt;/li&gt;
+&lt;/ul&gt;
     
     </summary>
     
