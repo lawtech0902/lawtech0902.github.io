@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-04-12T06:56:06.000Z</updated>
+  <updated>2017-04-12T07:01:03.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://yoursite.com/2017/04/12/python-str-encode/"/>
     <id>http://yoursite.com/2017/04/12/python-str-encode/</id>
     <published>2017-04-12T12:18:54.000Z</published>
-    <updated>2017-04-12T06:56:06.000Z</updated>
+    <updated>2017-04-12T07:01:03.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="Python字符编码"><a href="#Python字符编码" class="headerlink" title="Python字符编码"></a><strong>Python字符编码</strong></h2><p>字符编码是计算机编程中不可回避的问题，不管你用 Python2 还是 Python3，亦或是 C++, Java 等，我都觉得非常有必要理清计算机中的字符编码概念。</p>
 <a id="more"></a>
@@ -34,7 +34,7 @@
 <li><p>字符编码（Character encoding）</p>
 <p><strong>字符编码，是指对于字符集中的字符，将其编码为特定的二进制数</strong>，以便计算机处理。常见的字符编码有 ASCII 编码，UTF-8 编码，GBK 编码等。一般而言，<strong>字符集</strong>和<strong>字符编码</strong>往往被认为是同义的概念，比如，对于字符集 ASCII，它除了有「字符的集合」这层含义外，同时也包含了「编码」的含义，也就是说，<strong>ASCII 既表示了字符集也表示了对应的字符编码</strong>。</p>
 <p>下面我们用一个表格做下总结：</p>
-<p>| 概念   | 描述                           | 实例                                 |<br>| —- | —————————- | ———————————- |<br>| 字符   | 一个信息单位，各种文字和符号的总称            | ‘中’, ‘a’, ‘1’, ‘$’, ‘￥’, …         |<br>| 字符集  | 字符的集合                        | ASCII 字符集, GB2312 字符集, Unicode 字符集 |<br>| 字符编码 | 将字符集中的字符，编码为特定的二进制数          | ASCII 编码，GB2312 编码，Unicode 编码      |<br>| 字节   | 计算机中存储数据的单元，一个 8 位（bit）的二进制数 | 0x01, 0x45, …                      |</p>
+<p>| 概念   | 描述                           | 实例                                 |<br>| :— | :————————— | :——————————— |<br>| 字符   | 一个信息单位，各种文字和符号的总称            | ‘中’, ‘a’, ‘1’, ‘$’, ‘￥’, …         |<br>| 字符集  | 字符的集合                        | ASCII 字符集, GB2312 字符集, Unicode 字符集 |<br>| 字符编码 | 将字符集中的字符，编码为特定的二进制数          | ASCII 编码，GB2312 编码，Unicode 编码      |<br>| 字节   | 计算机中存储数据的单元，一个 8 位（bit）的二进制数 | 0x01, 0x45, …                      |</p>
 </li>
 </ul>
 <h3 id="常见字符编码简介"><a href="#常见字符编码简介" class="headerlink" title="常见字符编码简介"></a><strong>常见字符编码简介</strong></h3><p>常见的字符编码有 ASCII 编码，GBK 编码，Unicode 编码和 UTF-8 编码等等。这里，我们主要介绍 ASCII、Unicode 和 UTF-8。</p>
