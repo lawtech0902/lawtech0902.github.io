@@ -97,7 +97,7 @@
 <meta property="og:site_name" content="LawTech's Blog">
 <meta property="og:description" content="Python字符编码字符编码是计算机编程中不可回避的问题，不管你用 Python2 还是 Python3，亦或是 C++, Java 等，我都觉得非常有必要理清计算机中的字符编码概念。">
 <meta property="og:image" content="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg">
-<meta property="og:updated_time" content="2017-04-12T07:01:03.000Z">
+<meta property="og:updated_time" content="2017-04-12T07:05:23.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——Python字符编码">
 <meta name="twitter:description" content="Python字符编码字符编码是计算机编程中不可回避的问题，不管你用 Python2 还是 Python3，亦或是 C++, Java 等，我都觉得非常有必要理清计算机中的字符编码概念。">
@@ -355,7 +355,7 @@
               
                 <span class="post-meta-item-text">更新于</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2017-04-12T15:01:03+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2017-04-12T15:05:23+08:00">
                 2017-04-12
               </time>
             
@@ -426,7 +426,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj1emnoln0009e3qzqha14njy"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj1emt16f0008f5qz18iof46x"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
               </a>
@@ -450,10 +450,40 @@
 </li>
 <li><p>字符编码（Character encoding）</p>
 <p><strong>字符编码，是指对于字符集中的字符，将其编码为特定的二进制数</strong>，以便计算机处理。常见的字符编码有 ASCII 编码，UTF-8 编码，GBK 编码等。一般而言，<strong>字符集</strong>和<strong>字符编码</strong>往往被认为是同义的概念，比如，对于字符集 ASCII，它除了有「字符的集合」这层含义外，同时也包含了「编码」的含义，也就是说，<strong>ASCII 既表示了字符集也表示了对应的字符编码</strong>。</p>
-<p>下面我们用一个表格做下总结：</p>
-<p>| 概念   | 描述                           | 实例                                 |<br>| :— | :————————— | :——————————— |<br>| 字符   | 一个信息单位，各种文字和符号的总称            | ‘中’, ‘a’, ‘1’, ‘$’, ‘￥’, …         |<br>| 字符集  | 字符的集合                        | ASCII 字符集, GB2312 字符集, Unicode 字符集 |<br>| 字符编码 | 将字符集中的字符，编码为特定的二进制数          | ASCII 编码，GB2312 编码，Unicode 编码      |<br>| 字节   | 计算机中存储数据的单元，一个 8 位（bit）的二进制数 | 0x01, 0x45, …                      |</p>
 </li>
 </ul>
+<p>下面我们用一个表格做下总结：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">概念</th>
+<th style="text-align:left">描述</th>
+<th style="text-align:left">实例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">字符</td>
+<td style="text-align:left">一个信息单位，各种文字和符号的总称</td>
+<td style="text-align:left">‘中’, ‘a’, ‘1’, ‘$’, ‘￥’, …</td>
+</tr>
+<tr>
+<td style="text-align:left">字符集</td>
+<td style="text-align:left">字符的集合</td>
+<td style="text-align:left">ASCII 字符集, GB2312 字符集, Unicode 字符集</td>
+</tr>
+<tr>
+<td style="text-align:left">字符编码</td>
+<td style="text-align:left">将字符集中的字符，编码为特定的二进制数</td>
+<td style="text-align:left">ASCII 编码，GB2312 编码，Unicode 编码</td>
+</tr>
+<tr>
+<td style="text-align:left">字节</td>
+<td style="text-align:left">计算机中存储数据的单元，一个 8 位（bit）的二进制数</td>
+<td style="text-align:left">0x01, 0x45, …</td>
+</tr>
+</tbody>
+</table>
 <h3 id="常见字符编码简介"><a href="#常见字符编码简介" class="headerlink" title="常见字符编码简介"></a><strong>常见字符编码简介</strong></h3><p>常见的字符编码有 ASCII 编码，GBK 编码，Unicode 编码和 UTF-8 编码等等。这里，我们主要介绍 ASCII、Unicode 和 UTF-8。</p>
 <ul>
 <li><p>ASCII</p>
@@ -586,8 +616,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/04/11/xpath-usage/" rel="next" title="Python分布式爬虫打造搜索引擎项目学习笔记——Xpath用法">
-                <i class="fa fa-chevron-left"></i> Python分布式爬虫打造搜索引擎项目学习笔记——Xpath用法
+              <a href="/2017/04/11/scrapy-project-basic/" rel="next" title="Python分布式爬虫打造搜索引擎项目学习笔记——爬虫基础知识回顾">
+                <i class="fa fa-chevron-left"></i> Python分布式爬虫打造搜索引擎项目学习笔记——爬虫基础知识回顾
               </a>
             
           </div>
