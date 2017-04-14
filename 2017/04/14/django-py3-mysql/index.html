@@ -72,7 +72,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="LawTech" />
+  <meta name="keywords" content="Django，Mysql，Python," />
 
 
 
@@ -90,49 +90,27 @@
 
 
 
-<meta name="description" content="About个人简介
-lawtech0902— Python爱好者
-学生党一枚~
-本科：南邮信息安全
-硕士：南邮软件工程
-Email：584563542@qq.com
+<meta name="description" content="之前一直使用的是Django1.9和Python2.7，现在使用Python3和Django1.10，发现Mysql-Python一直无法安装
 
-关于这个博客
-写着玩儿~
-
-其他：
-皇马球迷，我罗加油；">
-<meta property="og:type" content="website">
-<meta property="og:title" content="关于">
-<meta property="og:url" content="http://yoursite.com/about/index.html">
+这是因为mysql官网上的版本只支持Python3.4的数据库驱动，所以Python3.5是安装不上相应的驱动的，可以使用pymysql。在虚拟环境下pip install pymysql就可以了，然后在项目目录下的__init__.py文件中添加
+12">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python3+Django配置mysql连接">
+<meta property="og:url" content="http://yoursite.com/2017/04/14/django-py3-mysql/index.html">
 <meta property="og:site_name" content="LawTech's Blog">
-<meta property="og:description" content="About个人简介
-lawtech0902— Python爱好者
-学生党一枚~
-本科：南邮信息安全
-硕士：南邮软件工程
-Email：584563542@qq.com
+<meta property="og:description" content="之前一直使用的是Django1.9和Python2.7，现在使用Python3和Django1.10，发现Mysql-Python一直无法安装
 
-关于这个博客
-写着玩儿~
-
-其他：
-皇马球迷，我罗加油；">
-<meta property="og:updated_time" content="2017-03-26T08:36:08.000Z">
+这是因为mysql官网上的版本只支持Python3.4的数据库驱动，所以Python3.5是安装不上相应的驱动的，可以使用pymysql。在虚拟环境下pip install pymysql就可以了，然后在项目目录下的__init__.py文件中添加
+12">
+<meta property="og:image" content="http://ww3.sinaimg.cn/large/006tKfTcgy1fem7zkr4ucj30ve0b274w.jpg">
+<meta property="og:updated_time" content="2017-04-14T07:24:58.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="关于">
-<meta name="twitter:description" content="About个人简介
-lawtech0902— Python爱好者
-学生党一枚~
-本科：南邮信息安全
-硕士：南邮软件工程
-Email：584563542@qq.com
+<meta name="twitter:title" content="python3+Django配置mysql连接">
+<meta name="twitter:description" content="之前一直使用的是Django1.9和Python2.7，现在使用Python3和Django1.10，发现Mysql-Python一直无法安装
 
-关于这个博客
-写着玩儿~
-
-其他：
-皇马球迷，我罗加油；">
+这是因为mysql官网上的版本只支持Python3.4的数据库驱动，所以Python3.5是安装不上相应的驱动的，可以使用pymysql。在虚拟环境下pip install pymysql就可以了，然后在项目目录下的__init__.py文件中添加
+12">
+<meta name="twitter:image" content="http://ww3.sinaimg.cn/large/006tKfTcgy1fem7zkr4ucj30ve0b274w.jpg">
 
 
 
@@ -160,19 +138,13 @@ Email：584563542@qq.com
 
 
 
-  <link rel="canonical" href="http://yoursite.com/about/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/04/14/django-py3-mysql/"/>
 
 
 
 
 
-  <title>
-  
-
-  
-    关于 | LawTech's Blog
-  
-</title>
+  <title> python3+Django配置mysql连接 | LawTech's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -202,7 +174,7 @@ Email：584563542@qq.com
     
   
 
-  <div class="container one-collumn sidebar-position-right  ">
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -328,31 +300,237 @@ Email：584563542@qq.com
             
 
   <div id="posts" class="posts-expand">
-  <header class="post-header">
+    
 
-	<h2 class="post-title" itemprop="name headline">关于</h2>
+  
 
+  
+  
+  
 
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/14/django-py3-mysql/">
 
-</header>
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="LawTech.">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="LawTech's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="LawTech's Blog" src="/images/avatar.jpg">
+    </span>
+  </span>
 
     
-    
-      <h2 id="About"><a href="#About" class="headerlink" title="About"></a><strong>About</strong></h2><h2 id="个人简介"><a href="#个人简介" class="headerlink" title="个人简介"></a><strong>个人简介</strong></h2><ul>
-<li>lawtech0902<br>— Python爱好者</li>
-<li>学生党一枚~</li>
-<li>本科：南邮信息安全</li>
-<li>硕士：南邮软件工程</li>
-<li>Email：584563542@qq.com</li>
-</ul>
-<h2 id="关于这个博客"><a href="#关于这个博客" class="headerlink" title="关于这个博客"></a><strong>关于这个博客</strong></h2><ul>
-<li>写着玩儿~</li>
-</ul>
-<h2 id="其他："><a href="#其他：" class="headerlink" title="其他："></a><strong>其他</strong>：</h2><ul>
-<li>皇马球迷，我罗加油；</li>
-</ul>
+      <header class="post-header">
 
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                python3+Django配置mysql连接
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-14T15:18:54+08:00">
+                2017-04-14
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2017-04-14T15:24:58+08:00">
+                2017-04-14
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Django/" itemprop="url" rel="index">
+                    <span itemprop="name">Django</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/04/14/django-py3-mysql/" class="leancloud_visitors" data-flag-title="python3+Django配置mysql连接">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+ 
+        
+
+
+        </div>
+      </header>
     
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+          
+          
+            <div class="post-gallery-row">
+              <a class="post-gallery-img fancybox"
+                 href="http://ww3.sinaimg.cn/large/006tKfTcgy1fem7zkr4ucj30ve0b274w.jpg" rel="gallery_cj1hif3w80008veqzswybcipd"
+                 itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
+                <img src="http://ww3.sinaimg.cn/large/006tKfTcgy1fem7zkr4ucj30ve0b274w.jpg" itemprop="contentUrl"/>
+              </a>
+            
+          
+
+          
+          </div>
+        </div>
+      
+
+      
+        <p>之前一直使用的是Django1.9和Python2.7，现在使用Python3和Django1.10，发现Mysql-Python一直无法安装</p>
+<p><img src="http://ww4.sinaimg.cn/large/006tKfTcgy1fem85h0fdlj30wi0p4gqc.jpg" alt=""></p>
+<p>这是因为mysql官网上的版本只支持Python3.4的数据库驱动，所以Python3.5是安装不上相应的驱动的，可以使用pymysql。在虚拟环境下pip install pymysql就可以了，然后在项目目录下的<code>__init__.py</code>文件中添加</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pymysql</div><div class="line">pymysql.install_as_mysqldb()</div></pre></td></tr></table></figure>
+<p>就可以代替Django默认使用的<code>MySQLdb</code>了。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+  
+        <div class="post-tags">
+          
+            <a href="/tags/Django，Mysql，Python/" rel="tag"># Django，Mysql，Python</a>
+          
+        </div>
+      
+
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>🐶 怕是要给老板下跪了哦~ 🐶</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赞赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat-reward-img.jpg" alt="LawTech. WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay-reward-img.jpg" alt="LawTech. Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+         
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/12/python-str-encode/" rel="next" title="Python分布式爬虫打造搜索引擎项目学习笔记——Python字符编码">
+                <i class="fa fa-chevron-left"></i> Python分布式爬虫打造搜索引擎项目学习笔记——Python字符编码
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
           
@@ -364,6 +542,10 @@ Email：584563542@qq.com
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -599,6 +781,10 @@ Email：584563542@qq.com
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
 
   
 
@@ -630,6 +816,10 @@ Email：584563542@qq.com
 
   
 
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
   
 
 
