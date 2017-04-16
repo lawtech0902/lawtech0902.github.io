@@ -91,25 +91,19 @@
 
 
 <meta name="description" content="Scrapy 中 XPath 获取相应内容为了方便调试，在终端下输入以下命令进入Scrapy shell：
-1scrapy shell &amp;apos;http://blog.jobbole.com/110287&amp;apos;
-获取标题
-1234&amp;gt;&amp;gt;&amp;gt; response.xpath(&amp;quot;//div[@class=&amp;apos;entry-header&amp;apos;]/h1/text">
+1scrapy shell &amp;apos;http://blog.jobbole.com/110287&amp;apos;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——Xpath用法示例">
 <meta property="og:url" content="http://yoursite.com/2017/04/16/xpath-example/index.html">
 <meta property="og:site_name" content="LawTech's Blog">
 <meta property="og:description" content="Scrapy 中 XPath 获取相应内容为了方便调试，在终端下输入以下命令进入Scrapy shell：
-1scrapy shell &amp;apos;http://blog.jobbole.com/110287&amp;apos;
-获取标题
-1234&amp;gt;&amp;gt;&amp;gt; response.xpath(&amp;quot;//div[@class=&amp;apos;entry-header&amp;apos;]/h1/text">
+1scrapy shell &amp;apos;http://blog.jobbole.com/110287&amp;apos;">
 <meta property="og:image" content="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg">
-<meta property="og:updated_time" content="2017-04-16T10:25:25.000Z">
+<meta property="og:updated_time" content="2017-04-16T10:26:54.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——Xpath用法示例">
 <meta name="twitter:description" content="Scrapy 中 XPath 获取相应内容为了方便调试，在终端下输入以下命令进入Scrapy shell：
-1scrapy shell &amp;apos;http://blog.jobbole.com/110287&amp;apos;
-获取标题
-1234&amp;gt;&amp;gt;&amp;gt; response.xpath(&amp;quot;//div[@class=&amp;apos;entry-header&amp;apos;]/h1/text">
+1scrapy shell &amp;apos;http://blog.jobbole.com/110287&amp;apos;">
 <meta name="twitter:image" content="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg">
 
 
@@ -364,7 +358,7 @@
               
                 <span class="post-meta-item-text">更新于</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2017-04-16T18:25:25+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2017-04-16T18:26:54+08:00">
                 2017-04-16
               </time>
             
@@ -435,7 +429,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj1kjq3yr000ycsqzdna1w1bg"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj1kjrq8l000teeqzm6c1nrnv"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
               </a>
@@ -450,6 +444,7 @@
       
         <h2 id="Scrapy-中-XPath-获取相应内容"><a href="#Scrapy-中-XPath-获取相应内容" class="headerlink" title="Scrapy 中 XPath 获取相应内容"></a><strong>Scrapy 中 XPath 获取相应内容</strong></h2><p>为了方便调试，在终端下输入以下命令进入Scrapy shell：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">scrapy shell &apos;http://blog.jobbole.com/110287&apos;</div></pre></td></tr></table></figure>
+<a id="more"></a>
 <h3 id="获取标题"><a href="#获取标题" class="headerlink" title="获取标题"></a><strong>获取标题</strong></h3><p><img src="http://ww3.sinaimg.cn/large/006tNc79gy1feomdj05qkj31aw03yq47.jpg" alt=""></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; response.xpath(&quot;//div[@class=&apos;entry-header&apos;]/h1/text()&quot;).extract()[0]</div><div class="line">&apos;2016 腾讯软件开发面试题（部分）&apos;</div><div class="line">&gt;&gt;&gt; response.xpath(&apos;//*[@id=&quot;post-110287&quot;]/div[1]/h1/text()&apos;).extract()[0]</div><div class="line">&apos;2016 腾讯软件开发面试题（部分）&apos;</div></pre></td></tr></table></figure>
 <p>以上两种方法都可以得到文章标题，第一种方法通过标题class的属性得到，第二种方法通过确定id，然后通过列表切片得到标题字符串。</p>
