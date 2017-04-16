@@ -299,6 +299,269 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/scrapy-simple-intro/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="LawTech.">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="LawTech's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="LawTech's Blog" src="/images/avatar.jpg">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/scrapy-simple-intro/" itemprop="url">
+                  Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy简单入门
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-16T14:18:54+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2017-04-16T14:44:39+08:00">
+                2017-04-16
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Scrapy/" itemprop="url" rel="index">
+                    <span itemprop="name">Scrapy</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/04/16/scrapy-simple-intro/" class="leancloud_visitors" data-flag-title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy简单入门">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+ 
+        
+
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+          
+          
+            <div class="post-gallery-row">
+              <a class="post-gallery-img fancybox"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj1kbugux000xvgqz5bapgm93"
+                 itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
+                <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
+              </a>
+            
+          
+
+          
+          </div>
+        </div>
+      
+
+      
+        
+          
+            <h2 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a><strong>创建项目</strong></h2><p>开始爬取前，首先需要创建一个新的Scrapy项目</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">scrapy startproject tutorial</div></pre></td></tr></table></figure>
+<p>该命令将会创建包含下列内容的 tutorial 目录:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">tutorial/</div><div class="line">  scrapy.cfg </div><div class="line">  tutorial/ </div><div class="line">    __init__.py </div><div class="line">    items.py </div><div class="line">    pipelines.py</div><div class="line">    settings.py </div><div class="line">    spiders/ </div><div class="line">      __init__.py </div><div class="line">      ...</div></pre></td></tr></table></figure>
+<p>这些文件分别是:</p>
+<ul>
+<li>scrapy.cfg：项目的配置文件</li>
+<li>tutorial/：该项目的 python 模块，之后我们将在此加入代码。 </li>
+<li>tutorial/items.py：项目中的 item 文件。 </li>
+<li>tutorial/pipelines.py：项目中的 pipelines 文件。 </li>
+<li>tutorial/settings.py：项目的设置文件。 </li>
+<li>tutorial/spiders/：放置 spider 代码的目录。</li>
+</ul>
+<h2 id="定义-Item"><a href="#定义-Item" class="headerlink" title="定义 Item"></a><strong>定义 Item</strong></h2><p>Item 是保存爬取到的数据的容器；其使用方法和 python 字典类似， 并且提供了额外保护机制来避免拼写错误导 致的未定义字段错误。</p>
+<p>类似在 ORM 中做的一样，您可以通过创建一个<code>scrapy.Item</code>类， 并且定义类型为<code>scrapy.Field</code>的类属性来定义一个 Item。 (如果不了解 ORM, 不用担心，您会发现这个步骤非常简单)</p>
+<p>首先根据需要从 dmoz.org 获取到的数据对 item 进行建模。 我们需要从 dmoz 中获取名字，url，以及网站的描 述。 对此，在 item 中定义相应的字段。编辑<code>tutorial</code>目录中的<code>items.py</code>文件:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> scrapy</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">DmozItem</span><span class="params">(scrapy.Item)</span>:</span> </div><div class="line">    title = scrapy.Field() </div><div class="line">    link = scrapy.Field() </div><div class="line">    desc = scrapy.Field()</div></pre></td></tr></table></figure>
+<p>可能一开始这有些复杂，但是通过定义 item， 我们可以很方便的使用 Scrapy 的其他方法，而这些方法需要知道我们的 item 的定义。</p>
+<h2 id="编写第一个爬虫"><a href="#编写第一个爬虫" class="headerlink" title="编写第一个爬虫"></a><strong>编写第一个爬虫</strong></h2><p>Spider 是用户编写用于从单个网站(或者一些网站)爬取数据的类。 </p>
+<p>其包含了一个用于下载的初始 URL，如何跟进网页中的链接以及如何分析页面中的内容， 提取生成 item 的方 法。 </p>
+<p>为了创建一个 Spider，我们必须继承<code>scrapy.Spider</code>类， 且定义以下三个属性: </p>
+<ul>
+<li><code>name</code> : 用于区别 Spider。 该名字必须是唯一的，您不可以为不同的 Spider 设定相同的名字。</li>
+<li><code>start_urls</code> : 包含了 Spider 在启动时进行爬取的 url 列表。 因此，第一个被获取到的页面将是其中之一。 后续的 URL 则从初始的 URL 获取到的数据中提取。 </li>
+<li><code>parse()</code> : spider 的一个方法。 被调用时，每个初始 URL 完成下载后生成的<code>Response</code>对象将会作为 唯一的参数传递给该函数。 该方法负责解析返回的数据(response data)，提取数据(生成 item)以及生成需 要进一步处理的 URL 的<code>Request</code>对象。 </li>
+</ul>
+<p>以下为我们的第一个 Spider 代码，保存在<code>tutorial/spiders</code>目录下的<code>dmoz_spider.py</code>文件中:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> scrapy</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">DmozSpider</span><span class="params">(scrapy.Spider)</span>:</span></div><div class="line">    name = <span class="string">"dmoz"</span></div><div class="line">    allow_domains = [<span class="string">"dmoz.org"</span>]</div><div class="line">    start_urls = [</div><div class="line">      <span class="string">"http://www.dmoz.org/Computers/Programming/Languages/Python/Books/"</span>,</div><div class="line">      <span class="string">"http://www.dmoz.org/Computers/Programming/Languages/Python/Resources/"</span>  </div><div class="line">    ]</div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></div><div class="line">        filename = response.url.split(<span class="string">"/"</span>)[<span class="number">-2</span>] </div><div class="line">        <span class="keyword">with</span> open(filename, <span class="string">'wb'</span>) <span class="keyword">as</span> f: </div><div class="line">            f.write(response.body)</div></pre></td></tr></table></figure>
+<p>其中，allow_domains是搜索的域名范围，也就是爬虫的约束区域，规定爬虫只爬取这个域名下的网页。</p>
+<h3 id="爬取"><a href="#爬取" class="headerlink" title="爬取"></a><strong>爬取</strong></h3><p>进入项目的根目录，执行以下命令启动spider</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">scrapy crawl dmoz</div></pre></td></tr></table></figure>
+<p><code>crawl dmoz</code>启动用于爬取<code>dmoz.org</code>的 spider，可以得到如下输出：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line">2017-04-15 21:51:39 [scrapy.utils.log] INFO: Scrapy 1.3.3 started (bot: tutorial)</div><div class="line">2017-04-15 21:51:39 [scrapy.utils.log] INFO: Overridden settings: &#123;&apos;BOT_NAME&apos;: &apos;tutorial&apos;, &apos;ROBOTSTXT_OBEY&apos;: True, &apos;NEWSPIDER_MODULE&apos;: &apos;tutorial.spiders&apos;, &apos;SPIDER_MODULES&apos;: [&apos;tutorial.spiders&apos;]&#125;</div><div class="line">2017-04-15 21:51:39 [scrapy.middleware] INFO: Enabled extensions:</div><div class="line">[&apos;scrapy.extensions.corestats.CoreStats&apos;,</div><div class="line"> &apos;scrapy.extensions.logstats.LogStats&apos;,</div><div class="line"> &apos;scrapy.extensions.telnet.TelnetConsole&apos;]</div><div class="line">2017-04-15 21:51:39 [scrapy.middleware] INFO: Enabled downloader middlewares:</div><div class="line">[&apos;scrapy.downloadermiddlewares.robotstxt.RobotsTxtMiddleware&apos;,</div><div class="line"> &apos;scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware&apos;,</div><div class="line"> &apos;scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware&apos;,</div><div class="line"> &apos;scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware&apos;,</div><div class="line"> &apos;scrapy.downloadermiddlewares.useragent.UserAgentMiddleware&apos;,</div><div class="line"> &apos;scrapy.downloadermiddlewares.retry.RetryMiddleware&apos;,</div><div class="line"> &apos;scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware&apos;,</div><div class="line"> &apos;scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware&apos;,</div><div class="line"> &apos;scrapy.downloadermiddlewares.redirect.RedirectMiddleware&apos;,</div><div class="line"> &apos;scrapy.downloadermiddlewares.cookies.CookiesMiddleware&apos;,</div><div class="line"> &apos;scrapy.downloadermiddlewares.stats.DownloaderStats&apos;]</div><div class="line">2017-04-15 21:51:39 [scrapy.middleware] INFO: Enabled spider middlewares:</div><div class="line">[&apos;scrapy.spidermiddlewares.httperror.HttpErrorMiddleware&apos;,</div><div class="line"> &apos;scrapy.spidermiddlewares.offsite.OffsiteMiddleware&apos;,</div><div class="line"> &apos;scrapy.spidermiddlewares.referer.RefererMiddleware&apos;,</div><div class="line"> &apos;scrapy.spidermiddlewares.urllength.UrlLengthMiddleware&apos;,</div><div class="line"> &apos;scrapy.spidermiddlewares.depth.DepthMiddleware&apos;]</div><div class="line">2017-04-15 21:51:39 [scrapy.middleware] INFO: Enabled item pipelines:</div><div class="line">[]</div><div class="line">2017-04-15 21:51:39 [scrapy.core.engine] INFO: Spider opened</div><div class="line">2017-04-15 21:51:39 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)</div><div class="line">2017-04-15 21:51:39 [scrapy.extensions.telnet] DEBUG: Telnet console listening on 127.0.0.1:6023</div><div class="line">2017-04-15 21:51:41 [scrapy.core.engine] DEBUG: Crawled (403) &lt;GET http://www.dmoz.org/robots.txt&gt; (referer: None)</div><div class="line">2017-04-15 21:51:41 [scrapy.core.engine] DEBUG: Crawled (403) &lt;GET http://www.dmoz.org/Computers/Programming/Languages/Python/Books/&gt; (referer: None)</div><div class="line">2017-04-15 21:51:41 [scrapy.spidermiddlewares.httperror] INFO: Ignoring response &lt;403 http://www.dmoz.org/Computers/Programming/Languages/Python/Books/&gt;: HTTP status code is not handled or not allowed</div><div class="line">2017-04-15 21:51:41 [scrapy.core.engine] DEBUG: Crawled (403) &lt;GET http://www.dmoz.org/Computers/Programming/Languages/Python/Resources/&gt; (referer: None)</div><div class="line">2017-04-15 21:51:41 [scrapy.spidermiddlewares.httperror] INFO: Ignoring response &lt;403 http://www.dmoz.org/Computers/Programming/Languages/Python/Resources/&gt;: HTTP status code is not handled or not allowed</div><div class="line">2017-04-15 21:51:41 [scrapy.core.engine] INFO: Closing spider (finished)</div><div class="line">2017-04-15 21:51:41 [scrapy.statscollectors] INFO: Dumping Scrapy stats:</div><div class="line">&#123;&apos;downloader/request_bytes&apos;: 734,</div><div class="line"> &apos;downloader/request_count&apos;: 3,</div><div class="line"> &apos;downloader/request_method_count/GET&apos;: 3,</div><div class="line"> &apos;downloader/response_bytes&apos;: 3525,</div><div class="line"> &apos;downloader/response_count&apos;: 3,</div><div class="line"> &apos;downloader/response_status_count/403&apos;: 3,</div><div class="line"> &apos;finish_reason&apos;: &apos;finished&apos;,</div><div class="line"> &apos;finish_time&apos;: datetime.datetime(2017, 4, 15, 13, 51, 41, 968931),</div><div class="line"> &apos;log_count/DEBUG&apos;: 4,</div><div class="line"> &apos;log_count/INFO&apos;: 9,</div><div class="line"> &apos;response_received_count&apos;: 3,</div><div class="line"> &apos;scheduler/dequeued&apos;: 2,</div><div class="line"> &apos;scheduler/dequeued/memory&apos;: 2,</div><div class="line"> &apos;scheduler/enqueued&apos;: 2,</div><div class="line"> &apos;scheduler/enqueued/memory&apos;: 2,</div><div class="line"> &apos;start_time&apos;: datetime.datetime(2017, 4, 15, 13, 51, 39, 764494)&#125;</div><div class="line">2017-04-15 21:51:41 [scrapy.core.engine] INFO: Spider closed (finished)</div></pre></td></tr></table></figure>
+<p>查看包含<code>[dmoz]</code>的输出，可以看到输出的 log 中包含定义在<code>start_urls</code>的初始 URL，并且与 spider 中是一 一对应的。在 log 中可以看到其没有指向其他页面( (<code>referer:None</code>) )。 除此之外，更有趣的事情发生了。就像我们 parse 方法指定的那样，有两个包含 url 所对应的内容的文件被创建 了: Book，Resources 。</p>
+<h3 id="发生了什么？"><a href="#发生了什么？" class="headerlink" title="发生了什么？"></a><strong>发生了什么？</strong></h3><p>Scrapy 为 Spider 的<code>start_urls</code>属性中的每个 URL 创建了<code>scrapy.Request</code>对象，并将<code>parse</code>方法作为回调函数(callback)赋值给了<code>Request</code>。 <code>Request</code>对象经过调度，执行生成<code>scrapy.http.Response</code>对象并送回给<code>spider parse()</code>方法。</p>
+<h3 id="提取-Item"><a href="#提取-Item" class="headerlink" title="提取 Item"></a><strong>提取 Item</strong></h3><h4 id="Selectors-选择器简介"><a href="#Selectors-选择器简介" class="headerlink" title="Selectors 选择器简介"></a><strong>Selectors 选择器简介</strong></h4><p>从网页中提取数据有很多方法。Scrapy 使用了一种基于 XPath 和 CSS 表达式机制: <code>Scrapy Selectors</code>。关于 selector 和其他提取机制的信息请参考<code>Selector</code>文档。 </p>
+<p>关于Xpath的简单使用方法，可以查看之前的一篇博客<a href="http://lawtech0902.com/2017/04/11/xpath-usage/" target="_blank" rel="external">Python分布式爬虫打造搜索引擎项目学习笔记——Xpath用法</a></p>
+<p>为了配合 XPath，Scrapy 除了提供了<code>Selector</code>之外，还提供了方法来避免每次从 response 中提取数据时生成 selector 的麻烦。</p>
+<p>Selector 有四个基本的方法：</p>
+<ul>
+<li><code>xpath()</code>：传入 xpath 表达式，返回该表达式所对应的所有节点的 selector list 列表 。</li>
+<li><code>css()</code>：传入 CSS 表达式，返回该表达式所对应的所有节点的 selector list 列表。</li>
+<li><code>extract()</code>：序列化该节点为 unicode 字符串并返回 list。</li>
+<li><code>re()</code>：根据传入的正则表达式对数据进行提取，返回 unicode 字符串 list 列表。</li>
+</ul>
+<h4 id="在-Shell-中尝试-Selector-选择器"><a href="#在-Shell-中尝试-Selector-选择器" class="headerlink" title="在 Shell 中尝试 Selector 选择器"></a><strong>在 Shell 中尝试 Selector 选择器</strong></h4><p>为了介绍 Selector 的使用方法，接下来我们将要使用内置的 Scrapy shell。Scrapy Shell 需要我们预装好 IPython(一个扩展的 Python 终端)。 我们需要进入项目的根目录，执行下列命令来启动 shell:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">scrapy shell &quot;http://www.dmoz.org/Computers/Programming/Languages/Python/Books/&quot;</div></pre></td></tr></table></figure>
+<p>Shell 的输出类似于：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">2017-04-15 22:04:22 [scrapy.core.engine] INFO: Spider opened</div><div class="line">2017-04-15 22:04:23 [scrapy.core.engine] DEBUG: Crawled (403) &lt;GET http://www.dmoz.org/robots.txt&gt; (referer: None)</div><div class="line">2017-04-15 22:04:24 [scrapy.core.engine] DEBUG: Crawled (403) &lt;GET http://www.dmoz.org/Computers/Programming/Languages/Python/Books/&gt; (referer: None)</div><div class="line">[s] Available Scrapy objects:</div><div class="line">[s]   scrapy     scrapy module (contains scrapy.Request, scrapy.Selector, etc)</div><div class="line">[s]   crawler    &lt;scrapy.crawler.Crawler object at 0x109728ac8&gt;</div><div class="line">[s]   item       &#123;&#125;</div><div class="line">[s]   request    &lt;GET http://www.dmoz.org/Computers/Programming/Languages/Python/Books/&gt;</div><div class="line">[s]   response   &lt;403 http://www.dmoz.org/Computers/Programming/Languages/Python/Books/&gt;</div><div class="line">[s]   settings   &lt;scrapy.settings.Settings object at 0x10a2a0a58&gt;</div><div class="line">[s]   spider     &lt;DefaultSpider &apos;default&apos; at 0x10a4dc3c8&gt;</div><div class="line">[s] Useful shortcuts:</div><div class="line">[s]   fetch(url[, redirect=True]) Fetch URL and update local objects (by default, redirects are followed)</div><div class="line">[s]   fetch(req)                  Fetch a scrapy.Request and update local objects</div><div class="line">[s]   shelp()           Shell help (print this help)</div><div class="line">[s]   view(response)    View response in a browser</div><div class="line">&gt;&gt;&gt;</div></pre></td></tr></table></figure>
+<p>当 shell 载入后，我们将得到一个包含 response 数据的本地 response 变量。输入 response.body 将输出 resp onse 的包体，输出 response.headers 可以看到 response 的包头。 </p>
+<p>更为重要的是，当输入 response.selector 时， 我们将获取到一个可以用于查询返回数据的 selector(选择器)， 以及映射到 response.selector.xpath() 、response.selector.css() 的 快捷方法(shortcut): response.xpat h() 和 response.css() 。 </p>
+<p>下面就来试试：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; response.xpath(&apos;//title&apos;)</div><div class="line">[&lt;Selector xpath=&apos;//title&apos; data=&apos;&lt;title&gt;DMOZ&lt;/title&gt;&apos;&gt;]</div><div class="line">&gt;&gt;&gt; response.xpath(&apos;//title&apos;).extract()</div><div class="line">[&apos;&lt;title&gt;DMOZ&lt;/title&gt;&apos;]</div><div class="line">&gt;&gt;&gt; response.xpath(&apos;//title/text()&apos;)</div><div class="line">[&lt;Selector xpath=&apos;//title/text()&apos; data=&apos;DMOZ&apos;&gt;]</div><div class="line">&gt;&gt;&gt; response.xpath(&apos;//title/text()&apos;).extract()</div><div class="line">[&apos;DMOZ&apos;]</div></pre></td></tr></table></figure>
+<h4 id="提取数据"><a href="#提取数据" class="headerlink" title="提取数据"></a><strong>提取数据</strong></h4><p>现在，我们来尝试从这些页面中提取些有用的数据。 </p>
+<p>我们可以在终端中输入 response.body 来观察 HTML 源码并确定合适的 XPath 表达式。不过，这任务非常无聊且不易。您可以考虑使用 Firefox 的 Firebug 扩展来使得工作更为轻松。</p>
+<p>在查看了网页的源码后，您会发现网站的信息是被包含在 第二个 <ul> 元素中。 </ul></p>
+<p>我们可以通过这段代码选择该页面中网站列表里所有 <li> 元素:</li></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">response.xpath(&apos;//ul/li&apos;)</div></pre></td></tr></table></figure>
+<p>网站的描述：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">response.xpath(&apos;//ul/li/text()&apos;).extract()</div></pre></td></tr></table></figure>
+<p>网站的标题：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">response.xpath(&apos;//ul/li/a/text()&apos;).extract()</div></pre></td></tr></table></figure>
+<p>以及网站的链接：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">response.xpath(&apos;//ul/li/a/@href&apos;).extract()</div></pre></td></tr></table></figure>
+<p>之前提到过，每个 <code>.xpath()</code> 调用返回 selector 组成的 list，因此我们可以拼接更多的  <code>.xpath()</code> 来进一步获取某个节点。我们将在下边使用这样的特性:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> response <span class="keyword">in</span> response.xpath(<span class="string">'//ul/li'</span>):</div><div class="line">	title = response.xpath(<span class="string">'a/text()'</span>).extract()</div><div class="line">    link = response.xpath(<span class="string">'a/@href'</span>).extract()</div><div class="line">    desc = response.xpath(<span class="string">'text()'</span>).extract()</div><div class="line">    print(title, link, desc)</div></pre></td></tr></table></figure>
+<p>在我们的 spider 中加入如下代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> scrapy</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">DmozSpider</span><span class="params">(scrapy.Spider)</span>:</span></div><div class="line">    name = <span class="string">"dmoz"</span></div><div class="line">    allow_domains = [<span class="string">"dmoz.org"</span>]</div><div class="line">    start_urls = [      	     <span class="string">"http://www.dmoz.org/Computers/Programming/Languages/Python/Books/"</span>,</div><div class="line">        <span class="string">"http://www.dmoz.org/Computers/Programming/Languages/Python/Resources/"</span>]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="keyword">for</span> response <span class="keyword">in</span> response.xpath(<span class="string">'//ul/li'</span>):</div><div class="line">            title = response.xpath(<span class="string">'a/text()'</span>).extract()</div><div class="line">            link = response.xpath(<span class="string">'a/@href'</span>).extract()</div><div class="line">            desc = response.xpath(<span class="string">'text()'</span>).extract()</div><div class="line">            print(title, link, desc)</div></pre></td></tr></table></figure>
+<p>现在尝试再次爬取 dmoz.org，您将看到爬取到的网站信息被成功输出:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">scrapy crawl dmoz</div></pre></td></tr></table></figure>
+<h3 id="使用-Item"><a href="#使用-Item" class="headerlink" title="使用 Item"></a><strong>使用 Item</strong></h3><p>Item 对象是自定义的 python 字典。您可以使用标准的字典语法来获取到其每个字段的值。(字段就是我们之前用 Field 赋值的属性):</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; item = DmozItem() </div><div class="line">&gt;&gt;&gt; item[&apos;title&apos;] = &apos;Example title&apos; </div><div class="line">&gt;&gt;&gt; item[&apos;title&apos;] </div><div class="line">&apos;Example title&apos;</div></pre></td></tr></table></figure>
+<p>一般来说，Spider 将会将爬取到的数据以 Item 对象返回。所以为了将爬取的数据返回，我们最终的代码将是:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> scrapy</div><div class="line"></div><div class="line"><span class="keyword">from</span> tutorial.items <span class="keyword">import</span> DmozItem</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">DmozSpider</span><span class="params">(scrapy.Spider)</span>:</span></div><div class="line">    name = <span class="string">"dmoz"</span></div><div class="line">    allow_domains = [<span class="string">"dmoz.org"</span>]</div><div class="line">    start_urls = [</div><div class="line">        <span class="string">"http://www.dmoz.org/Computers/Programming/Languages/Python/Books/"</span>,</div><div class="line">        <span class="string">"http://www.dmoz.org/Computers/Programming/Languages/Python/Resources/"</span></div><div class="line">    ]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="keyword">for</span> response <span class="keyword">in</span> response.xpath(<span class="string">'//ul/li'</span>):</div><div class="line">            item = DmozItem()</div><div class="line">            item[<span class="string">'title'</span>] = response.xpath(<span class="string">'a/text()'</span>).extract()</div><div class="line">            item[<span class="string">'link'</span>] = response.xpath(<span class="string">'a/@href'</span>).extract()</div><div class="line">            item[<span class="string">'desc'</span>] = response.xpath(<span class="string">'text()'</span>).extract()</div><div class="line">            <span class="keyword">yield</span> item</div></pre></td></tr></table></figure>
+<p>现在对 dmoz.org 进行爬取将会产生 <code>DmozItem</code> 对象:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[dmoz] DEBUG: Scraped from &lt;200 http://www.dmoz.org/Computers/Programming/Languages/Python/Books/&gt; &#123;&apos;desc&apos;: [u&apos; - By David Mertz; Addison Wesley. Book in progress, full text, ASCII format. Asks for feedback. [author webs &apos;link&apos;: [u&apos;http://gnosis.cx/TPiP/&apos;], &apos;title&apos;: [u&apos;Text Processing in Python&apos;]&#125; [dmoz] DEBUG: Scraped from &lt;200 http://www.dmoz.org/Computers/Programming/Languages/Python/Books/&gt; &#123;&apos;desc&apos;: [u&apos; - By Sean McGrath; Prentice Hall PTR, 2000, ISBN 0130211192, has CD-ROM. Methods to build XML applic &apos;link&apos;: [u&apos;http://www.informit.com/store/product.aspx?isbn=0130211192&apos;], &apos;title&apos;: [u&apos;XML Processing with Python&apos;]&#125;</div></pre></td></tr></table></figure>
+<h2 id="保存爬取到的数据"><a href="#保存爬取到的数据" class="headerlink" title="保存爬取到的数据"></a><strong>保存爬取到的数据</strong></h2><p>最简单存储爬取的数据的方式是使用 <code>Feed exports</code> :</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">scrapy crawl dmoz -o items.json</div></pre></td></tr></table></figure>
+<p>该命令将采用 JSON 格式对爬取的数据进行序列化，生成 <code>items.json</code> 文件。</p>
+<p>在类似本篇教程里这样小规模的项目中，这种存储方式已经足够。 如果需要对爬取到的 item 做更多更为复杂的 操作，您可以编写 <code>Item Pipeline</code> 。 类似于我们在创建项目时对 Item 做的，用于您编写自己的 <code>tutorial/pipelines.py</code> 也被创建。 不过如果您仅仅想要保存 item，您不需要实现任何的 pipeline。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+  
+
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+         
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/14/django-py3-mysql/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -428,7 +691,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="http://ww3.sinaimg.cn/large/006tKfTcgy1fem7zkr4ucj30ve0b274w.jpg" rel="gallery_cj1hif3w80008veqzswybcipd"
+                 href="http://ww3.sinaimg.cn/large/006tKfTcgy1fem7zkr4ucj30ve0b274w.jpg" rel="gallery_cj1kbugud000cvgqzuyqc2r73"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="http://ww3.sinaimg.cn/large/006tKfTcgy1fem7zkr4ucj30ve0b274w.jpg" itemprop="contentUrl"/>
               </a>
@@ -616,7 +879,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj1hif3we0009veqzyecodgsf"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj1kbugue000evgqztx6bv2kz"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
               </a>
@@ -634,387 +897,6 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2017/04/12/python-str-encode/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-  
-
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-         
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/11/xpath-usage/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="LawTech.">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="LawTech's Blog">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="LawTech's Blog" src="/images/avatar.jpg">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/11/xpath-usage/" itemprop="url">
-                  Python分布式爬虫打造搜索引擎项目学习笔记——Xpath用法
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-11T20:18:54+08:00">
-                2017-04-11
-              </time>
-            
-
-            
-              <span class="post-meta-divider">|</span>
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2017-04-11T16:04:49+08:00">
-                2017-04-11
-              </time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/XPath/" itemprop="url" rel="index">
-                    <span itemprop="name">XPath</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/04/11/xpath-usage/" class="leancloud_visitors" data-flag-title="Python分布式爬虫打造搜索引擎项目学习笔记——Xpath用法">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
- 
-        
-
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
-          
-          
-            <div class="post-gallery-row">
-              <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj1hif3x3000zveqz620pclbi"
-                 itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
-                <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
-              </a>
-            
-          
-
-          
-          </div>
-        </div>
-      
-
-      
-        
-          <h2 id="XPath的用法"><a href="#XPath的用法" class="headerlink" title="XPath的用法"></a><strong>XPath的用法</strong></h2><h3 id="XPath简介"><a href="#XPath简介" class="headerlink" title="XPath简介"></a><strong>XPath简介</strong></h3><ul>
-<li>XPath 使用路径表达式在 XML / HTML 文档中进行导航</li>
-<li>XPath 包含一个标准函数库</li>
-<li>XPath 是 XSLT 中的主要元素</li>
-<li>XPath 是一个 W3C 标准</li>
-</ul>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/04/11/xpath-usage/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-  
-
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-         
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/11/scrapy-project-basic/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="LawTech.">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="LawTech's Blog">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="LawTech's Blog" src="/images/avatar.jpg">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/11/scrapy-project-basic/" itemprop="url">
-                  Python分布式爬虫打造搜索引擎项目学习笔记——爬虫基础知识回顾
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-11T20:18:54+08:00">
-                2017-04-11
-              </time>
-            
-
-            
-              <span class="post-meta-divider">|</span>
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2017-04-11T15:49:05+08:00">
-                2017-04-11
-              </time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Basic-knowledge/" itemprop="url" rel="index">
-                    <span itemprop="name">Basic knowledge</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/04/11/scrapy-project-basic/" class="leancloud_visitors" data-flag-title="Python分布式爬虫打造搜索引擎项目学习笔记——爬虫基础知识回顾">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
- 
-        
-
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
-          
-          
-            <div class="post-gallery-row">
-              <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj1hif3x1000uveqze1x0zkia"
-                 itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
-                <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
-              </a>
-            
-          
-
-          
-          </div>
-        </div>
-      
-
-      
-        
-          <h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a><strong>基础知识</strong></h2><h3 id="技术选型：scrapy-vs-requests-beautifulsoup"><a href="#技术选型：scrapy-vs-requests-beautifulsoup" class="headerlink" title="技术选型：scrapy vs requests + beautifulsoup"></a><strong>技术选型：<a href="https://scrapy-chs.readthedocs.io/zh_CN/1.0/">scrapy</a> vs <a href="http://docs.python-requests.org/zh_CN/latest/index.html">requests</a> + <a href="http://beautifulsoup.readthedocs.io/zh_CN/latest/">beautifulsoup</a></strong></h3>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/04/11/scrapy-project-basic/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1185,7 +1067,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj1hif3wz000rveqzsp7fymv7"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj1kbugun000jvgqz6t67loqx"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
               </a>
@@ -1203,6 +1085,387 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2017/04/11/scrapy-install/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+  
+
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+         
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/11/scrapy-project-basic/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="LawTech.">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="LawTech's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="LawTech's Blog" src="/images/avatar.jpg">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/11/scrapy-project-basic/" itemprop="url">
+                  Python分布式爬虫打造搜索引擎项目学习笔记——爬虫基础知识回顾
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-11T20:18:54+08:00">
+                2017-04-11
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2017-04-11T15:49:05+08:00">
+                2017-04-11
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Basic-knowledge/" itemprop="url" rel="index">
+                    <span itemprop="name">Basic knowledge</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/04/11/scrapy-project-basic/" class="leancloud_visitors" data-flag-title="Python分布式爬虫打造搜索引擎项目学习笔记——爬虫基础知识回顾">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+ 
+        
+
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+          
+          
+            <div class="post-gallery-row">
+              <a class="post-gallery-img fancybox"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj1kbuguq000ovgqzyvs6mkv8"
+                 itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
+                <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
+              </a>
+            
+          
+
+          
+          </div>
+        </div>
+      
+
+      
+        
+          <h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a><strong>基础知识</strong></h2><h3 id="技术选型：scrapy-vs-requests-beautifulsoup"><a href="#技术选型：scrapy-vs-requests-beautifulsoup" class="headerlink" title="技术选型：scrapy vs requests + beautifulsoup"></a><strong>技术选型：<a href="https://scrapy-chs.readthedocs.io/zh_CN/1.0/">scrapy</a> vs <a href="http://docs.python-requests.org/zh_CN/latest/index.html">requests</a> + <a href="http://beautifulsoup.readthedocs.io/zh_CN/latest/">beautifulsoup</a></strong></h3>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/04/11/scrapy-project-basic/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+  
+
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+         
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/11/xpath-usage/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="LawTech.">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="LawTech's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="LawTech's Blog" src="/images/avatar.jpg">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/11/xpath-usage/" itemprop="url">
+                  Python分布式爬虫打造搜索引擎项目学习笔记——Xpath用法
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-11T20:18:54+08:00">
+                2017-04-11
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2017-04-11T16:04:49+08:00">
+                2017-04-11
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/XPath/" itemprop="url" rel="index">
+                    <span itemprop="name">XPath</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/04/11/xpath-usage/" class="leancloud_visitors" data-flag-title="Python分布式爬虫打造搜索引擎项目学习笔记——Xpath用法">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+ 
+        
+
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+          
+          
+            <div class="post-gallery-row">
+              <a class="post-gallery-img fancybox"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj1kbugus000rvgqze07d2ua9"
+                 itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
+                <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
+              </a>
+            
+          
+
+          
+          </div>
+        </div>
+      
+
+      
+        
+          <h2 id="XPath的用法"><a href="#XPath的用法" class="headerlink" title="XPath的用法"></a><strong>XPath的用法</strong></h2><h3 id="XPath简介"><a href="#XPath简介" class="headerlink" title="XPath简介"></a><strong>XPath简介</strong></h3><ul>
+<li>XPath 使用路径表达式在 XML / HTML 文档中进行导航</li>
+<li>XPath 包含一个标准函数库</li>
+<li>XPath 是 XSLT 中的主要元素</li>
+<li>XPath 是一个 W3C 标准</li>
+</ul>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/04/11/xpath-usage/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1373,7 +1636,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj1hif3wv000mveqzr8fyf2ec"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj1kbuguv000vvgqz7iufisz7"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
               </a>
@@ -1563,7 +1826,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://redis.io/images/redis-300dpi.png" rel="gallery_cj1hif3wj000dveqzt07ydr56"
+                 href="https://redis.io/images/redis-300dpi.png" rel="gallery_cj1kbuguk000hvgqzc3hanyhm"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://redis.io/images/redis-300dpi.png" itemprop="contentUrl"/>
               </a>
@@ -1581,194 +1844,6 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2017/04/10/Redis-5/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-  
-
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-         
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/09/Redis-4/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="LawTech.">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="LawTech's Blog">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="LawTech's Blog" src="/images/avatar.jpg">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/09/Redis-4/" itemprop="url">
-                  Redis学习笔记(四)：数据安全与性能保障——持久化
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-09T23:12:54+08:00">
-                2017-04-09
-              </time>
-            
-
-            
-              <span class="post-meta-divider">|</span>
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2017-04-09T23:12:58+08:00">
-                2017-04-09
-              </time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Redis/" itemprop="url" rel="index">
-                    <span itemprop="name">Redis</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/04/09/Redis-4/" class="leancloud_visitors" data-flag-title="Redis学习笔记(四)：数据安全与性能保障——持久化">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
- 
-        
-
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
-          
-          
-            <div class="post-gallery-row">
-              <a class="post-gallery-img fancybox"
-                 href="https://redis.io/images/redis-300dpi.png" rel="gallery_cj1hif3wm000fveqzoscsntpb"
-                 itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
-                <img src="https://redis.io/images/redis-300dpi.png" itemprop="contentUrl"/>
-              </a>
-            
-          
-
-          
-          </div>
-        </div>
-      
-
-      
-        
-          <h2 id="什么是持久化？"><a href="#什么是持久化？" class="headerlink" title="什么是持久化？"></a><strong>什么是持久化？</strong></h2><p>持久化（Persistence），即把数据（如内存中的对象）保存到可永久保存的存储设备中（如磁盘）。持久化的主要应用是将内存中的对象存储在数据库中，或者存储在磁盘文件中、XML数据文件中等等。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/04/09/Redis-4/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1848,7 +1923,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
