@@ -299,6 +299,215 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/xpath-example/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="LawTech.">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="LawTech's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="LawTech's Blog" src="/images/avatar.jpg">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/04/16/xpath-example/" itemprop="url">
+                  Python分布式爬虫打造搜索引擎项目学习笔记——Xpath用法示例
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-16T20:18:54+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2017-04-16T18:25:25+08:00">
+                2017-04-16
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/XPath/" itemprop="url" rel="index">
+                    <span itemprop="name">XPath</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/04/16/xpath-example/" class="leancloud_visitors" data-flag-title="Python分布式爬虫打造搜索引擎项目学习笔记——Xpath用法示例">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+ 
+        
+
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+          
+          
+            <div class="post-gallery-row">
+              <a class="post-gallery-img fancybox"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj1kjq3yr000ycsqzdna1w1bg"
+                 itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
+                <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
+              </a>
+            
+          
+
+          
+          </div>
+        </div>
+      
+
+      
+        
+          
+            <h2 id="Scrapy-中-XPath-获取相应内容"><a href="#Scrapy-中-XPath-获取相应内容" class="headerlink" title="Scrapy 中 XPath 获取相应内容"></a><strong>Scrapy 中 XPath 获取相应内容</strong></h2><p>为了方便调试，在终端下输入以下命令进入Scrapy shell：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">scrapy shell &apos;http://blog.jobbole.com/110287&apos;</div></pre></td></tr></table></figure>
+<h3 id="获取标题"><a href="#获取标题" class="headerlink" title="获取标题"></a><strong>获取标题</strong></h3><p><img src="http://ww3.sinaimg.cn/large/006tNc79gy1feomdj05qkj31aw03yq47.jpg" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; response.xpath(&quot;//div[@class=&apos;entry-header&apos;]/h1/text()&quot;).extract()[0]</div><div class="line">&apos;2016 腾讯软件开发面试题（部分）&apos;</div><div class="line">&gt;&gt;&gt; response.xpath(&apos;//*[@id=&quot;post-110287&quot;]/div[1]/h1/text()&apos;).extract()[0]</div><div class="line">&apos;2016 腾讯软件开发面试题（部分）&apos;</div></pre></td></tr></table></figure>
+<p>以上两种方法都可以得到文章标题，第一种方法通过标题class的属性得到，第二种方法通过确定id，然后通过列表切片得到标题字符串。</p>
+<h3 id="获得文章发布时间"><a href="#获得文章发布时间" class="headerlink" title="获得文章发布时间"></a><strong>获得文章发布时间</strong></h3><p><img src="http://ww2.sinaimg.cn/large/006tNc79gy1feomdvqxpxj30hs01g3yo.jpg" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; response.xpath(&quot;//p[@class=&apos;entry-meta-hide-on-mobile&apos;]/text()&quot;).extract()[0]</div><div class="line">&apos;\r\n\r\n            2017/02/18 ·  &apos;</div><div class="line">&gt;&gt;&gt; response.xpath(&quot;//p[@class=&apos;entry-meta-hide-on-mobile&apos;]/text()&quot;).extract()[0].strip().replace(&apos;·&apos;, &apos;&apos;).strip()</div><div class="line">&apos;2017/02/18&apos;</div></pre></td></tr></table></figure>
+<p>第一条命令只能获取p标签中的内容，还需要对获取的数据用 <code>strip()</code> 和 <code>replace()</code> 方法进行清洗。</p>
+<h3 id="获取点赞数、收藏数、评论数"><a href="#获取点赞数、收藏数、评论数" class="headerlink" title="获取点赞数、收藏数、评论数"></a><strong>获取点赞数</strong>、收藏数、评论数</h3><p><img src="http://ww3.sinaimg.cn/large/006tNc79gy1feomjmf5h8j30gi03at8w.jpg" alt=""></p>
+<p><img src="http://ww1.sinaimg.cn/large/006tNc79gy1feomjq25ixj31eg0cq77q.jpg" alt=""></p>
+<p>对于含有多个属性的class如：<code>class=&quot; btn-bluet-bigger href-style vote-post-up   register-user-only &quot;</code>，若只使用其中的一个属性得到值，可以使用<code>contains</code>。</p>
+<h4 id="获取点赞数"><a href="#获取点赞数" class="headerlink" title="获取点赞数"></a><strong>获取点赞数</strong></h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; int(response.xpath(&quot;//span[contains(@class, &apos;vote-post-up&apos;)]/h10/text()&quot;).extract()[0])</div><div class="line">2</div></pre></td></tr></table></figure>
+<h4 id="获取收藏数、评论数"><a href="#获取收藏数、评论数" class="headerlink" title="获取收藏数、评论数"></a><strong>获取收藏数、评论数</strong></h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; response.xpath(&quot;//span[contains(@class, &apos;bookmark-btn&apos;)]/text()&quot;).extract()[0]</div><div class="line">&apos; 23 收藏&apos;</div></pre></td></tr></table></figure>
+<p>得到的内容为’ 23 收藏’，需要使用正则表达式进行数据清洗。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">fav_nums = response.xpath(<span class="string">"//span[contains(@class, 'bookmark-btn')]/text()"</span>).extract()[<span class="number">0</span>]</div><div class="line">match_re = re.match(<span class="string">".*?(\d+).*?"</span>, fav_nums)</div><div class="line"><span class="keyword">if</span> match_re:</div><div class="line">	fav_nums = int(match_re.group(<span class="number">1</span>))</div></pre></td></tr></table></figure>
+<p>同样的，评论数的获取也需要正则表达式的帮忙。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">comment_nums = response.xpath(<span class="string">"//a[@href='#article-comment']/span/text()"</span>).extract()[<span class="number">0</span>]</div><div class="line">match_re = re.match(<span class="string">".*?(\d+).*?"</span>, comment_nums)</div><div class="line"><span class="keyword">if</span> match_re:</div><div class="line">	comment_nums = int(match_re.group(<span class="number">1</span>))</div></pre></td></tr></table></figure>
+<h3 id="获取正文"><a href="#获取正文" class="headerlink" title="获取正文"></a><strong>获取正文</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">content = response.xpath(<span class="string">"//div[@class='entry']"</span>).extract()[<span class="number">0</span>]</div></pre></td></tr></table></figure>
+<h3 id="获取tags"><a href="#获取tags" class="headerlink" title="获取tags"></a><strong>获取tags</strong></h3><p><img src="http://ww1.sinaimg.cn/large/006tNc79gy1feooy0mzgpj30bi01ydfw.jpg" alt=""></p>
+<p><img src="http://ww1.sinaimg.cn/large/006tNc79gy1feooya6zapj30x2072jt4.jpg" alt=""></p>
+<p>所有的tag都在a标签下，类似获得日期的方式，增加一个a标签路径即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; response.xpath(&quot;//p[@class=&apos;entry-meta-hide-on-mobile&apos;]/a/text()&quot;).extract()</div><div class="line">[&apos;职场&apos;, &apos; 7 评论 &apos;, &apos;面试&apos;]</div></pre></td></tr></table></figure>
+<p>现在需要对数据进行清洗，去除评论标签。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">tag_list = response.xpath(<span class="string">"//p[@class='entry-meta-hide-on-mobile']/a/text()"</span>).extract()</div><div class="line">tag_list = [element <span class="keyword">for</span> element <span class="keyword">in</span> tag_list <span class="keyword">if</span> <span class="keyword">not</span> element.strip().endswith(<span class="string">"评论"</span>)]</div><div class="line">tags = <span class="string">","</span>.join(tag_list)</div></pre></td></tr></table></figure>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h3><p>最后我们构造的spider文件如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"><span class="keyword">import</span> scrapy</div><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">JobboleSpider</span><span class="params">(scrapy.Spider)</span>:</span></div><div class="line">    name = <span class="string">"jobbole"</span></div><div class="line">    allowed_domains = [<span class="string">"blog.jobbole.com"</span>]</div><div class="line">    start_urls = [<span class="string">'http://blog.jobbole.com/110287'</span>]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></div><div class="line">        title = response.xpath(<span class="string">"//div[@class='entry-header']/h1/text()"</span>).extract()[<span class="number">0</span>]</div><div class="line">        create_date = response.xpath(<span class="string">"//p[@class='entry-meta-hide-on-mobile']/text()"</span>).extract()[<span class="number">0</span>].strip().replace(<span class="string">"·"</span>,</div><div class="line">                                                                                                                          <span class="string">""</span>).strip()</div><div class="line">        praise_nums = int(response.xpath(<span class="string">"//span[contains(@class, 'vote-post-up')]/h10/text()"</span>).extract()[<span class="number">0</span>])</div><div class="line">        fav_nums = response.xpath(<span class="string">"//span[contains(@class, 'bookmark-btn')]/text()"</span>).extract()[<span class="number">0</span>]</div><div class="line">        match_re = re.match(<span class="string">".*?(\d+).*?"</span>, fav_nums)</div><div class="line">        <span class="keyword">if</span> match_re:</div><div class="line">            fav_nums = int(match_re.group(<span class="number">1</span>))</div><div class="line">        comment_nums = response.xpath(<span class="string">"//a[@href='#article-comment']/span/text()"</span>).extract()[<span class="number">0</span>]</div><div class="line">        match_re = re.match(<span class="string">".*?(\d+).*?"</span>, comment_nums)</div><div class="line">        <span class="keyword">if</span> match_re:</div><div class="line">            comment_nums = int(match_re.group(<span class="number">1</span>))</div><div class="line">        content = response.xpath(<span class="string">"//div[@class='entry']"</span>).extract()[<span class="number">0</span>]</div><div class="line">        tag_list = response.xpath(<span class="string">"//p[@class='entry-meta-hide-on-mobile']/a/text()"</span>).extract()</div><div class="line">        tag_list = [element <span class="keyword">for</span> element <span class="keyword">in</span> tag_list <span class="keyword">if</span> <span class="keyword">not</span> element.strip().endswith(<span class="string">"评论"</span>)]</div><div class="line">        tags = <span class="string">","</span>.join(tag_list)</div></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+  
+
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+         
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/scrapy-simple-intro/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -428,7 +637,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj1kcut1v000pyvqz65snif4f"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj1kjq3yi000ncsqzc3u2vq8g"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
               </a>
@@ -617,7 +826,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="http://ww3.sinaimg.cn/large/006tKfTcgy1fem7zkr4ucj30ve0b274w.jpg" rel="gallery_cj1kcut1j000eyvqzkzcrl6cs"
+                 href="http://ww3.sinaimg.cn/large/006tKfTcgy1fem7zkr4ucj30ve0b274w.jpg" rel="gallery_cj1kjq3xz0007csqz36qpexvu"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="http://ww3.sinaimg.cn/large/006tKfTcgy1fem7zkr4ucj30ve0b274w.jpg" itemprop="contentUrl"/>
               </a>
@@ -805,7 +1014,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj1kcut1s000myvqzdwkmii8l"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj1kjq3y2000bcsqz47xd3bki"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
               </a>
@@ -890,7 +1099,7 @@
               
                 
                 <a class="post-title-link" href="/2017/04/11/xpath-usage/" itemprop="url">
-                  Python分布式爬虫打造搜索引擎项目学习笔记——Xpath用法
+                  Python分布式爬虫打造搜索引擎项目学习笔记——Xpath教程
                 </a>
               
             
@@ -922,8 +1131,8 @@
               
                 <span class="post-meta-item-text">更新于</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2017-04-11T16:04:49+08:00">
-                2017-04-11
+              <time title="更新于" itemprop="dateModified" datetime="2017-04-16T16:41:39+08:00">
+                2017-04-16
               </time>
             
           </span>
@@ -960,7 +1169,7 @@
 
           
           
-             <span id="/2017/04/11/xpath-usage/" class="leancloud_visitors" data-flag-title="Python分布式爬虫打造搜索引擎项目学习笔记——Xpath用法">
+             <span id="/2017/04/11/xpath-usage/" class="leancloud_visitors" data-flag-title="Python分布式爬虫打造搜索引擎项目学习笔记——Xpath教程">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -993,7 +1202,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj1kcut260013yvqz66osovom"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj1kjq3yv0012csqzloh4emsu"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
               </a>
@@ -1016,194 +1225,6 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2017/04/11/xpath-usage/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-  
-
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-         
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/11/scrapy-install/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="LawTech.">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="LawTech's Blog">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="LawTech's Blog" src="/images/avatar.jpg">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/04/11/scrapy-install/" itemprop="url">
-                  Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy安装及调试
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-11T20:18:54+08:00">
-                2017-04-11
-              </time>
-            
-
-            
-              <span class="post-meta-divider">|</span>
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2017-04-11T15:48:50+08:00">
-                2017-04-11
-              </time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Scrapy/" itemprop="url" rel="index">
-                    <span itemprop="name">Scrapy</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/04/11/scrapy-install/" class="leancloud_visitors" data-flag-title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy安装及调试">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
- 
-        
-
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
-          
-          
-            <div class="post-gallery-row">
-              <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj1kcut240011yvqz9r278ei9"
-                 itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
-                <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
-              </a>
-            
-          
-
-          
-          </div>
-        </div>
-      
-
-      
-        
-          <h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a><strong>环境搭建</strong></h2>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/04/11/scrapy-install/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1374,7 +1395,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj1kcut21000xyvqzjovnrnsl"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj1kjq3yo000vcsqztb4seqpf"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
               </a>
@@ -1562,7 +1583,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj1kcut1y000uyvqz73u8lwcf"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj1kjq3yk000qcsqz02ar7ts6"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
               </a>
@@ -1623,7 +1644,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/10/Redis-5/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/11/scrapy-install/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="LawTech.">
@@ -1648,8 +1669,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/04/10/Redis-5/" itemprop="url">
-                  Redis学习笔记(五)：数据安全与性能保障——复制
+                <a class="post-title-link" href="/2017/04/11/scrapy-install/" itemprop="url">
+                  Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy安装及调试
                 </a>
               
             
@@ -1665,8 +1686,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-10T20:18:54+08:00">
-                2017-04-10
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-11T20:18:54+08:00">
+                2017-04-11
               </time>
             
 
@@ -1681,8 +1702,8 @@
               
                 <span class="post-meta-item-text">更新于</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2017-04-12T14:16:29+08:00">
-                2017-04-12
+              <time title="更新于" itemprop="dateModified" datetime="2017-04-11T15:48:50+08:00">
+                2017-04-11
               </time>
             
           </span>
@@ -1700,8 +1721,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Redis/" itemprop="url" rel="index">
-                    <span itemprop="name">Redis</span>
+                  <a href="/categories/Scrapy/" itemprop="url" rel="index">
+                    <span itemprop="name">Scrapy</span>
                   </a>
                 </span>
 
@@ -1719,7 +1740,7 @@
 
           
           
-             <span id="/2017/04/10/Redis-5/" class="leancloud_visitors" data-flag-title="Redis学习笔记(五)：数据安全与性能保障——复制">
+             <span id="/2017/04/11/scrapy-install/" class="leancloud_visitors" data-flag-title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy安装及调试">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -1752,9 +1773,9 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://redis.io/images/redis-300dpi.png" rel="gallery_cj1kcut1n000hyvqztculxuey"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj1kjq3ye000icsqzeq47cmkc"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
-                <img src="https://redis.io/images/redis-300dpi.png" itemprop="contentUrl"/>
+                <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
               </a>
             
           
@@ -1766,10 +1787,10 @@
 
       
         
-          <p>复制（replication），可以让其他服务器拥有一个不断更新的数据副本，从而使得拥有数据副本的服务器可以用于处理客户端发送的读请求。对于高负载应用来说，复制是不可或缺的一个特性。</p>
+          <h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a><strong>环境搭建</strong></h2>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/04/10/Redis-5/#more" rel="contents">
+            <a class="btn" href="/2017/04/11/scrapy-install/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1849,7 +1870,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
