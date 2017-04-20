@@ -72,7 +72,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="LawTech" />
+  <meta name="keywords" content="Redis, Python," />
 
 
 
@@ -90,49 +90,18 @@
 
 
 
-<meta name="description" content="About个人简介
-lawtech0902— Python爱好者
-学生党一枚~
-本科：南邮信息安全
-硕士：南邮软件工程
-Email：584563542@qq.com
-
-关于这个博客
-写着玩儿~
-
-其他：
-皇马球迷，我罗加油；">
-<meta property="og:type" content="website">
-<meta property="og:title" content="关于">
-<meta property="og:url" content="http://yoursite.com/about/index.html">
+<meta name="description" content="如果我们决定要将Redis用作应用程序唯一的数据存储手段的话，那么就必须确保Redis不会丢失任何数据。跟提供了ACID（原子性atomicity，一致性consistency，隔离性isolation，耐久性durability，如果一个数据库想要实现可靠的数据事务，那么它就必须保证 ACID 性质）保证的传统关系数据库不同，在使用Redis为后端构建应用程序的时候，我们需要多做一些工作才能保证">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis学习笔记(五)：数据安全与性能保障——处理系统故障">
+<meta property="og:url" content="http://yoursite.com/2017/04/20/Redis-6/index.html">
 <meta property="og:site_name" content="LawTech's Blog">
-<meta property="og:description" content="About个人简介
-lawtech0902— Python爱好者
-学生党一枚~
-本科：南邮信息安全
-硕士：南邮软件工程
-Email：584563542@qq.com
-
-关于这个博客
-写着玩儿~
-
-其他：
-皇马球迷，我罗加油；">
-<meta property="og:updated_time" content="2017-03-26T08:36:08.000Z">
+<meta property="og:description" content="如果我们决定要将Redis用作应用程序唯一的数据存储手段的话，那么就必须确保Redis不会丢失任何数据。跟提供了ACID（原子性atomicity，一致性consistency，隔离性isolation，耐久性durability，如果一个数据库想要实现可靠的数据事务，那么它就必须保证 ACID 性质）保证的传统关系数据库不同，在使用Redis为后端构建应用程序的时候，我们需要多做一些工作才能保证">
+<meta property="og:image" content="https://redis.io/images/redis-300dpi.png">
+<meta property="og:updated_time" content="2017-04-20T13:44:02.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="关于">
-<meta name="twitter:description" content="About个人简介
-lawtech0902— Python爱好者
-学生党一枚~
-本科：南邮信息安全
-硕士：南邮软件工程
-Email：584563542@qq.com
-
-关于这个博客
-写着玩儿~
-
-其他：
-皇马球迷，我罗加油；">
+<meta name="twitter:title" content="Redis学习笔记(五)：数据安全与性能保障——处理系统故障">
+<meta name="twitter:description" content="如果我们决定要将Redis用作应用程序唯一的数据存储手段的话，那么就必须确保Redis不会丢失任何数据。跟提供了ACID（原子性atomicity，一致性consistency，隔离性isolation，耐久性durability，如果一个数据库想要实现可靠的数据事务，那么它就必须保证 ACID 性质）保证的传统关系数据库不同，在使用Redis为后端构建应用程序的时候，我们需要多做一些工作才能保证">
+<meta name="twitter:image" content="https://redis.io/images/redis-300dpi.png">
 
 
 
@@ -160,19 +129,13 @@ Email：584563542@qq.com
 
 
 
-  <link rel="canonical" href="http://yoursite.com/about/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/04/20/Redis-6/"/>
 
 
 
 
 
-  <title>
-  
-
-  
-    关于 | LawTech's Blog
-  
-</title>
+  <title> Redis学习笔记(五)：数据安全与性能保障——处理系统故障 | LawTech's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -202,7 +165,7 @@ Email：584563542@qq.com
     
   
 
-  <div class="container one-collumn sidebar-position-right  ">
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -328,31 +291,265 @@ Email：584563542@qq.com
             
 
   <div id="posts" class="posts-expand">
-  <header class="post-header">
+    
 
-	<h2 class="post-title" itemprop="name headline">关于</h2>
+  
 
+  
+  
+  
 
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/20/Redis-6/">
 
-</header>
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="LawTech.">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="LawTech's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="LawTech's Blog" src="/images/avatar.jpg">
+    </span>
+  </span>
 
     
-    
-      <h2 id="About"><a href="#About" class="headerlink" title="About"></a><strong>About</strong></h2><h2 id="个人简介"><a href="#个人简介" class="headerlink" title="个人简介"></a><strong>个人简介</strong></h2><ul>
-<li>lawtech0902<br>— Python爱好者</li>
-<li>学生党一枚~</li>
-<li>本科：南邮信息安全</li>
-<li>硕士：南邮软件工程</li>
-<li>Email：584563542@qq.com</li>
-</ul>
-<h2 id="关于这个博客"><a href="#关于这个博客" class="headerlink" title="关于这个博客"></a><strong>关于这个博客</strong></h2><ul>
-<li>写着玩儿~</li>
-</ul>
-<h2 id="其他："><a href="#其他：" class="headerlink" title="其他："></a><strong>其他</strong>：</h2><ul>
-<li>皇马球迷，我罗加油；</li>
-</ul>
+      <header class="post-header">
 
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                Redis学习笔记(五)：数据安全与性能保障——处理系统故障
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-20T20:18:54+08:00">
+                2017-04-20
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2017-04-20T21:44:02+08:00">
+                2017-04-20
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index">
+                    <span itemprop="name">Redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/04/20/Redis-6/" class="leancloud_visitors" data-flag-title="Redis学习笔记(五)：数据安全与性能保障——处理系统故障">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+ 
+        
+
+
+        </div>
+      </header>
     
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+          
+          
+            <div class="post-gallery-row">
+              <a class="post-gallery-img fancybox"
+                 href="https://redis.io/images/redis-300dpi.png" rel="gallery_cj1qgla8y0007smqzwh13r1kw"
+                 itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
+                <img src="https://redis.io/images/redis-300dpi.png" itemprop="contentUrl"/>
+              </a>
+            
+          
+
+          
+          </div>
+        </div>
+      
+
+      
+        <p>如果我们决定要将Redis用作应用程序唯一的数据存储手段的话，那么就必须确保Redis不会丢失任何数据。跟提供了ACID（原子性atomicity，一致性consistency，隔离性isolation，耐久性durability，如果一个数据库想要实现可靠的数据事务，那么它就必须保证 ACID 性质）保证的传统关系数据库不同，在使用Redis为后端构建应用程序的时候，我们需要多做一些工作才能保证数据的一致性。</p>
+<a id="more"></a>
+<h2 id="验证快照文件和-AOF-文件"><a href="#验证快照文件和-AOF-文件" class="headerlink" title="验证快照文件和 AOF 文件"></a><strong>验证快照文件和 AOF 文件</strong></h2><p>无论时快照持久化还是AOF持久化，都提供了在遇到系统故障时进行数据回复的工具。Redis提供了两个命令行程序 <code>redis-check-aof</code> 和 <code>redis-check-rdb(redis-check-dump was renamed to redis-check-rdb in redis version 3.2)</code> ，它们可以在系统故障发生之后，检查AOF文件和快照文件的状态，并在有需要的情况下对文件进行修复。</p>
+<p>在不给定任何参数的情况下运行这两个程序，就可以看见它们的基本使用方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ redis-check-rdb</div><div class="line">Usage: redis-check-rdb &lt;rdb-file-name&gt;</div><div class="line">$ redis-check-dump</div><div class="line">Usage: redis-check-dump &lt;dump.rdb&gt;</div></pre></td></tr></table></figure>
+<p>如果运行 <code>redis-check-aof</code> 程序时给了 <code>--fix</code> 参数，那么会对AOF文件进行修复。修复方法非常简单：扫描给定的 AOF 文件，寻找不正确或不完整的命令，当发现第一个出错命令的时候，程序会删除出错的命令以及位于出错命令之后的所有命令。在大多数情况下，被删除的都是 AOF 文件末尾的不完整的写命令。<br>遗憾的是，目前没有办法修复出错的快照文件。尽管发现快照文件首个出现错误的地方是有可能的，但因为快照文件本身经过了压缩，而出现在快照文件中间的错误有可能会导致快照文件的剩余部分无法读取。因此，最好为重要的快照文件保留多个备份，并在进行数据恢复时，通过计算快照文件的 SHA1 散列值和 SHA256 散列值来对内容进行验证。</p>
+<h2 id="更换故障主服务器"><a href="#更换故障主服务器" class="headerlink" title="更换故障主服务器"></a><strong>更换故障主服务器</strong></h2><p>我们来看一下在拥有一个主服务器和一个从服务器的情况下，更换主服务器的具体步骤。假设A、B两台机器都运行着 Redis ，机器A为 master ，机器B为 slave 。机器A因为暂时无法修复的故障而断开了连接，因此决定将同样安装了 Redis 的机器 C 用作新的主服务器。</p>
+<p>更换服务器的计划非常简单：首先向机器B发送一个 SAVE 命令，让它创建一个新的快照文件，接着将这个快照文件发送给机器C，并在机器 C 上面启动 Redis 。最后，让B成为机器C的从服务器。由于环境有限，就在同一台机器上用不同的端口进行测试，下面进行演示：</p>
+<ol>
+<li><p>先进入 Redis 安装位置，再安装两个 Redis 服务并分别修改配置文件 redis.conf 中的 port 为6380和6381</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ cd /usr/local</div><div class="line">$ sudo cp -r redis redis6380</div><div class="line">Password:</div><div class="line">$ sudo chmod -R 777 redis6380</div><div class="line">$ vim redis6380/redis.conf</div><div class="line">$ sudo cp -r redis redis6381</div><div class="line">$ sudo chmod -R 777 redis6381</div><div class="line">$ vim redis6381/redis.conf</div></pre></td></tr></table></figure>
+</li>
+<li><p>启动机器A端口为6379，机器B端口为6380，并让B成为A的从服务器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"># 启动A</div><div class="line">$ cd redis</div><div class="line">$ ./src/redis-server redis.conf</div><div class="line"></div><div class="line"># 启动B</div><div class="line">$ cd redis6380</div><div class="line">$ ./src/redis-server redis.conf</div><div class="line"></div><div class="line"># 让B成为A的从服务器</div><div class="line">$ $ redis-cli -h localhost -p 6380</div><div class="line">localhost:6380&gt; SLAVEOF localhost 6379</div><div class="line">OK</div></pre></td></tr></table></figure>
+</li>
+<li><p>停止机器A的 Redis 服务，此时只剩 Redis 从服务器B在运行</p>
+</li>
+<li><p>向机器B发送 SAVE 命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">localhost:6380&gt; SAVE</div><div class="line">OK</div></pre></td></tr></table></figure>
+</li>
+<li><p>将机器B的快照文件复制到机器C的对应目录，并启动 Redis 服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ cp -f /usr/local/redis6380/dump.rdb /usr/local/redis6381</div><div class="line">$ cd /usr/local/redis6381</div><div class="line">$ ./src/redis-server redis.conf</div></pre></td></tr></table></figure>
+</li>
+<li><p>让机器B成为机器C的从服务器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">localhost:6380&gt; SLAVEOF localhost 6381</div><div class="line">OK</div></pre></td></tr></table></figure>
+</li>
+<li><p>测试机器B是否能从机器C同步数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ redis-cli -h localhost -p 6381</div><div class="line">localhost:6381&gt; set key new-master</div><div class="line">OK</div><div class="line">$ redis-cli -h localhost -p 6380</div><div class="line">localhost:6380&gt; get key</div><div class="line">&apos;new-master&apos;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>另一种创建新的主服务器的方法，就是将从服务器升级（turn）为主服务器，并为升级后的主服务器创建从服务器。</p>
+<p>以上两种方法都可以让 Redis 回到之前的一个主服务器和一个从服务器的状态，而用户接下来需要做的就是更新客户端的配置，让它们去读写正确的服务器。除此之外，如果用户需要重启 Redis 的话，那么可能还需要对服务器的持久化配置进行更新。</p>
+<p>Redis Sentinel可以监视指定的Redis主服务器及其下属的从服务器，并在主服务器下线时自动进行故障转移(failover)。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+  
+        <div class="post-tags">
+          
+            <a href="/tags/Redis-Python/" rel="tag"># Redis, Python</a>
+          
+        </div>
+      
+
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>🐶 怕是要给老板下跪了哦~ 🐶</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赞赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat-reward-img.jpg" alt="LawTech. WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay-reward-img.jpg" alt="LawTech. Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+         
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/20/scrapy-command-line-tools/" rel="next" title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy命令行工具">
+                <i class="fa fa-chevron-left"></i> Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy命令行工具
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
           
@@ -364,6 +561,10 @@ Email：584563542@qq.com
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -383,8 +584,17 @@ Email：584563542@qq.com
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg"
@@ -481,6 +691,22 @@ Email：584563542@qq.com
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#验证快照文件和-AOF-文件"><span class="nav-number">1.</span> <span class="nav-text">验证快照文件和 AOF 文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更换故障主服务器"><span class="nav-number">2.</span> <span class="nav-text">更换故障主服务器</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
     </div>
@@ -599,6 +825,10 @@ Email：584563542@qq.com
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
 
   
 
@@ -630,6 +860,10 @@ Email：584563542@qq.com
 
   
 
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
   
 
 
