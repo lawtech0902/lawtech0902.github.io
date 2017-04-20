@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-04-16T10:26:54.000Z</updated>
+  <updated>2017-04-20T07:53:41.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,147 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy命令行工具</title>
+    <link href="http://yoursite.com/2017/04/20/scrapy-command-line-tools/"/>
+    <id>http://yoursite.com/2017/04/20/scrapy-command-line-tools/</id>
+    <published>2017-04-20T06:18:54.000Z</published>
+    <updated>2017-04-20T07:53:41.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Scrapy 是通过 scrapy 命令行工具进行控制的。 这里我们称之为 “Scrapy tool” 以用来和子命令进行区 分。对于子命令，我们称为 “command” 或者 “Scrapy commands”。 Scrapy tool 针对不同的目的提供了多个命令，每个命令支持不同的参数和选项。</p>
+<a id="more"></a>
+<h2 id="使用-scrapy-工具"><a href="#使用-scrapy-工具" class="headerlink" title="使用 scrapy 工具"></a><strong>使用 scrapy 工具</strong></h2><h3 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a><strong>创建项目</strong></h3><p>一般来说，使用 <code>scrapy</code> 工具的第一件事就是创建 Scrapy 项目：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">scrapy startproject myproject</div></pre></td></tr></table></figure>
+<p>该命令将会在 myproject 目录中创建一个 Scrapy 项目。 接下来，进入到项目目录中:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cd myproject</div></pre></td></tr></table></figure>
+<p>这时候就可以使用 scrapy 命令来管理和控制项目了。</p>
+<h3 id="控制项目"><a href="#控制项目" class="headerlink" title="控制项目"></a><strong>控制项目</strong></h3><p>创建一个新的 spider：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">scrapy genspider mydomain mydomain.com</div></pre></td></tr></table></figure>
+<p>Scrapy 提供了两种类型的命令。一种必须在 Scrapy 项目中运行(针对项目(Project-specific)的命令)，另外一种则不需要(全局命令)。全局命令在项目中运行时的表现可能会与在非项目中运行有些许差别(因为可能会使用项目的设定)。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"># 全局命令(不需要在项目中运行)</div><div class="line">startproject</div><div class="line">settings</div><div class="line">runspider</div><div class="line">shell</div><div class="line">fetch</div><div class="line">view</div><div class="line">version</div><div class="line"></div><div class="line"># 项目(Project-only)命令(必须在项目中运行)</div><div class="line">crawl</div><div class="line">check</div><div class="line">list</div><div class="line">edit</div><div class="line">parse</div><div class="line">genspider</div><div class="line">deploy</div><div class="line">bench</div></pre></td></tr></table></figure>
+<h2 id="工具命令介绍"><a href="#工具命令介绍" class="headerlink" title="工具命令介绍"></a><strong>工具命令介绍</strong></h2><p>我们可以通过运行命令来获取关于每个命令的详细内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">scrapy &lt;command&gt; -h</div></pre></td></tr></table></figure>
+<p>也可以查看所有的命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">scrapy -h</div></pre></td></tr></table></figure>
+<p>下面就对这些命令进行介绍。</p>
+<h3 id="startproject"><a href="#startproject" class="headerlink" title="startproject"></a>startproject</h3><ul>
+<li>语法：<code>scrapy startproject &lt;project_name&gt;</code></li>
+<li>全局命令</li>
+</ul>
+<p>在 project_name 文件夹下创建一个名为 project_name 的 Scrapy 项目。</p>
+<h3 id="genspider"><a href="#genspider" class="headerlink" title="genspider"></a>genspider</h3><ul>
+<li>语法：<code>scrapy genspider [-t template] &lt;name&gt; &lt;domain&gt;</code></li>
+<li>项目命令</li>
+</ul>
+<p>在当前项目中创建 spider。这仅仅是创建 spider 的一种快捷方法。该方法可以使用提前定义好的模板来生成 spider。您也可以自己创建 spider 的源码文件。</p>
+<p>例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"># 查看模板</div><div class="line">$ scrapy genspider -l</div><div class="line">Available templates:</div><div class="line">  basic</div><div class="line">  crawl</div><div class="line">  csvfeed</div><div class="line">  xmlfeed</div><div class="line"></div><div class="line"># 编辑模板</div><div class="line">$ scrapy genspider -d basic</div><div class="line"># -*- coding: utf-8 -*-</div><div class="line">import scrapy</div><div class="line"></div><div class="line"></div><div class="line">class $classname(scrapy.Spider):</div><div class="line">    name = &quot;$name&quot;</div><div class="line">    allowed_domains = [&quot;$domain&quot;]</div><div class="line">    start_urls = [&apos;http://$domain/&apos;]</div><div class="line"></div><div class="line">    def parse(self, response):</div><div class="line">        pass</div><div class="line">    </div><div class="line"># 根据模板来生成spider</div><div class="line">$ scrapy genspider -t basic example example.com </div><div class="line">Created spider &apos;example&apos; using template &apos;basic&apos; in module: tutorial.spiders.example</div></pre></td></tr></table></figure>
+<h3 id="crawl"><a href="#crawl" class="headerlink" title="crawl"></a>crawl</h3><ul>
+<li>语法：<code>scrapy crawl myspider</code></li>
+<li>项目命令</li>
+</ul>
+<p>使用 spider 进行爬取。</p>
+<p>例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ scrapy crawl myspider </div><div class="line">[ ... myspider starts crawling ... ]</div></pre></td></tr></table></figure>
+<h3 id="check"><a href="#check" class="headerlink" title="check"></a>check</h3><ul>
+<li>语法：<code>scrapy check [-l] &lt;spider&gt;</code></li>
+<li>项目命令</li>
+</ul>
+<p>运行 contract 检查。</p>
+<p>例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">$ scrapy check -l </div><div class="line">first_spider </div><div class="line">* parse </div><div class="line">* parse_item </div><div class="line">second_spider </div><div class="line">* parse </div><div class="line">* parse_item</div><div class="line"></div><div class="line">$ scrapy check </div><div class="line">[FAILED] first_spider:parse_item </div><div class="line">&gt;&gt;&gt; &apos;RetailPricex&apos; field is missing</div><div class="line"></div><div class="line">[FAILED] first_spider:parse </div><div class="line">&gt;&gt;&gt; Returned 92 requests, expected 0..4</div></pre></td></tr></table></figure>
+<h3 id="list"><a href="#list" class="headerlink" title="list"></a>list</h3><ul>
+<li>语法：<code>scrapy list</code></li>
+<li>项目命令</li>
+</ul>
+<p>列出当前项目中所有可用的 spider。每行输出一个 spider。 </p>
+<p>例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ scrapy list </div><div class="line">spider1 </div><div class="line">spider2</div></pre></td></tr></table></figure>
+<h3 id="edit"><a href="#edit" class="headerlink" title="edit"></a>edit</h3><ul>
+<li>语法：<code>scrapy edit &lt;spider&gt;</code></li>
+<li>项目命令</li>
+</ul>
+<p>使用 EDITOR 中设定的编辑器编辑给定的 spider </p>
+<p>该命令仅仅是提供一个快捷方式。开发者可以自由选择其他工具或者 IDE 来编写调试 spider。 </p>
+<h3 id="fetch"><a href="#fetch" class="headerlink" title="fetch"></a>fetch</h3><ul>
+<li>语法：<code>scrapy fetch &lt;url&gt;</code></li>
+<li>全局命令</li>
+</ul>
+<p>使用 Scrapy 下载器(downloader)下载给定的 URL，并将获取到的内容送到标准输出。 </p>
+<p>该命令以 spider 下载页面的方式获取页面。例如，如果 spider 有 USER_AGENT 属性修改了 User Agen t，该命令将会使用该属性。</p>
+<p>因此，您可以使用该命令来查看 spider 如何获取某个特定页面。 该命令如果非项目中运行则会使用默认 Scrapy downloader 设定。</p>
+<p>例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$ scrapy fetch --nolog http://www.example.com/some/page.html </div><div class="line">[ ... html content here ... ]</div><div class="line"></div><div class="line">$ scrapy fetch --nolog --headers http://www.example.com/ </div><div class="line">&#123;&apos;Accept-Ranges&apos;: [&apos;bytes&apos;],</div><div class="line">&apos;Age&apos;: [&apos;1263 &apos;], </div><div class="line">&apos;Connection&apos;: [&apos;close &apos;], </div><div class="line">&apos;Content-Length&apos;: [&apos;596&apos;], </div><div class="line">&apos;Content-Type&apos;: [&apos;text/html; charset=UTF-8&apos;], </div><div class="line">&apos;Date&apos;: [&apos;Wed, 18 Aug 2010 23:59:46 GMT&apos;], </div><div class="line">&apos;Etag&apos;: [&apos;&quot;573c1-254-48c9c87349680&quot;&apos;], </div><div class="line">&apos;Last-Modified&apos;: [&apos;Fri, 30 Jul 2010 15:30:18 GMT&apos;], </div><div class="line">&apos;Server&apos;: [&apos;Apache/2.2.3 (CentOS)&apos;]&#125;</div></pre></td></tr></table></figure>
+<h3 id="view"><a href="#view" class="headerlink" title="view"></a>view</h3><ul>
+<li>语法：<code>scrapy view &lt;url&gt;</code></li>
+<li>全局命令</li>
+</ul>
+<p>在浏览器中打开给定的 URL，并以 Scrapy spider 获取到的形式展现。 有些时候 spider 获取到的页面和普通用户看到的并不相同。 因此该命令可以用来检查 spider 所获取到的页面，并确认这是您所期望的。</p>
+<p>例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ scrapy view http://www.example.com/some/page.html </div><div class="line">[ ... browser starts ... ]</div></pre></td></tr></table></figure>
+<h3 id="shell"><a href="#shell" class="headerlink" title="shell"></a>shell</h3><ul>
+<li>语法：<code>scrapy shell [url]</code></li>
+<li>全局命令</li>
+</ul>
+<p>以给定的 URL(如果给出)或者空(没有给出 URL)启动 Scrapy shell。查看 Scrapy 终端(Scrapy shell) 获取更多信息。</p>
+<p>例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ scrapy shell http://www.example.com/some/page.html </div><div class="line">[ ... scrapy shell starts ... ]</div></pre></td></tr></table></figure>
+<h3 id="parse"><a href="#parse" class="headerlink" title="parse"></a>parse</h3><ul>
+<li>语法：<code>scrapy parse &lt;url&gt; [options]</code></li>
+<li>项目命令</li>
+</ul>
+<p>获取给定的 URL 并使用相应的 spider 分析处理。如果提供 <code>--callback</code> 选项，则使用 spider 的该方法处理，否则使用 <code>parse</code> 。</p>
+<h3 id="settings"><a href="#settings" class="headerlink" title="settings"></a>settings</h3><ul>
+<li>语法：<code>scrapy settings [option]</code></li>
+<li>全局命令</li>
+</ul>
+<p>获取 Scrapy 的设定 </p>
+<p>在项目中运行时，该命令将会输出项目的设定值，否则输出 Scrapy 默认设定。 </p>
+<p>例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ scrapy settings --get BOT_NAME </div><div class="line">scrapybot </div><div class="line">$ scrapy settings --get DOWNLOAD_DELAY </div><div class="line">0</div></pre></td></tr></table></figure>
+<h3 id="runspider"><a href="#runspider" class="headerlink" title="runspider"></a>runspider</h3><ul>
+<li>语法：<code>scrapy runspider &lt;spider_file.py&gt;</code></li>
+<li>全局命令</li>
+</ul>
+<p>在未创建项目的情况下，运行一个编写在 Python 文件中的 spider。</p>
+<p>例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ scrapy runspider myspider.py </div><div class="line">[ ... spider starts crawling ... ]</div></pre></td></tr></table></figure>
+<h3 id="version"><a href="#version" class="headerlink" title="version"></a>version</h3><ul>
+<li>语法：<code>scrapy version [-v]</code></li>
+<li>全局命令</li>
+</ul>
+<p>输出 Scrapy 版本。配合 -v 运行时，该命令同时输出 Python，Twisted 以及平台的信息，方便 bug 提交。</p>
+<p>例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">$ scrapy version -v</div><div class="line">Scrapy    : 1.3.3</div><div class="line">lxml      : 3.7.3.0</div><div class="line">libxml2   : 2.9.4</div><div class="line">cssselect : 1.0.1</div><div class="line">parsel    : 1.1.0</div><div class="line">w3lib     : 1.17.0</div><div class="line">Twisted   : 17.1.0</div><div class="line">Python    : 3.5.2 (default, Oct 11 2016, 04:59:56) - [GCC 4.2.1 Compatible Apple LLVM 8.0.0 (clang-800.0.38)]</div><div class="line">pyOpenSSL : 16.2.0 (OpenSSL 1.1.0e  16 Feb 2017)</div><div class="line">Platform  : Darwin-16.6.0-x86_64-i386-64bit</div></pre></td></tr></table></figure>
+<h3 id="deploy"><a href="#deploy" class="headerlink" title="deploy"></a>deploy</h3><ul>
+<li>语法：<code>scrapy deploy [ &lt;target:project&gt; | -l &lt;target&gt; | -L ]</code></li>
+<li>项目命令</li>
+</ul>
+<p>将项目部署到 Scrapyd 服务。</p>
+<h3 id="bench"><a href="#bench" class="headerlink" title="bench"></a>bench</h3><ul>
+<li>语法：<code>scrapy bench</code></li>
+<li>全局命令</li>
+</ul>
+<p>运行 benchmark 测试。Benchmarking。</p>
+<h2 id="自定义项目命令"><a href="#自定义项目命令" class="headerlink" title="自定义项目命令"></a>自定义项目命令</h2><p>您也可以通过 COMMANDS_MODULE 来添加您自己的项目命令。您可以以 scrapy/commands 中 Scrapy commands 为例来了解如何实现您的命令。</p>
+<h2 id="COMMANDS-MODULE"><a href="#COMMANDS-MODULE" class="headerlink" title="COMMANDS_MODULE"></a>COMMANDS_MODULE</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Default: &apos;&apos; (empty string)</div></pre></td></tr></table></figure>
+<p>用于查找添加自定义 Scrapy 命令的模块。 例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">COMMANDS_MODULE = &apos;mybot.commands&apos;</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Scrapy 是通过 scrapy 命令行工具进行控制的。 这里我们称之为 “Scrapy tool” 以用来和子命令进行区 分。对于子命令，我们称为 “command” 或者 “Scrapy commands”。 Scrapy tool 针对不同的目的提供了多个命令，每个命令支持不同的参数和选项。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
+    
+    
+      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
+    
+  </entry>
   
   <entry>
     <title>Python分布式爬虫打造搜索引擎项目学习笔记——Xpath用法示例</title>
@@ -339,367 +480,6 @@
     
     
       <category term="Scrapy，Unicode，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CUnicode%EF%BC%8CPython/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Xpath教程</title>
-    <link href="http://yoursite.com/2017/04/11/xpath-usage/"/>
-    <id>http://yoursite.com/2017/04/11/xpath-usage/</id>
-    <published>2017-04-11T12:18:54.000Z</published>
-    <updated>2017-04-16T08:41:39.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="XPath的用法"><a href="#XPath的用法" class="headerlink" title="XPath的用法"></a><strong>XPath的用法</strong></h2><h3 id="XPath简介"><a href="#XPath简介" class="headerlink" title="XPath简介"></a><strong>XPath简介</strong></h3><ul>
-<li>XPath 使用路径表达式在 XML / HTML 文档中进行导航</li>
-<li>XPath 包含一个标准函数库</li>
-<li>XPath 是 XSLT 中的主要元素</li>
-<li>XPath 是一个 W3C 标准</li>
-</ul>
-<a id="more"></a>
-<h3 id="XPath术语"><a href="#XPath术语" class="headerlink" title="XPath术语"></a><strong>XPath术语</strong></h3><h4 id="节点（Node）"><a href="#节点（Node）" class="headerlink" title="节点（Node）"></a><strong>节点（Node）</strong></h4><p>在 XPath 中，有七种类型的节点：元素、属性、文本、命名空间、处理指令、注释以及文档（根）节点。XML 文档是被作为节点树来对待的。树的根被称为文档节点或者根节点。</p>
-<p>请看下面这个 XML 文档：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;</div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span>Harry Potter<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">author</span>&gt;</span>J K. Rowling<span class="tag">&lt;/<span class="name">author</span>&gt;</span> </div><div class="line">  <span class="tag">&lt;<span class="name">year</span>&gt;</span>2005<span class="tag">&lt;/<span class="name">year</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>29.99<span class="tag">&lt;/<span class="name">price</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">bookstore</span>&gt;</span></div></pre></td></tr></table></figure>
-<p>上面的XML文档中的节点例子：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span> （文档节点）</div><div class="line"><span class="tag">&lt;<span class="name">author</span>&gt;</span>J K. Rowling<span class="tag">&lt;/<span class="name">author</span>&gt;</span> （元素节点）</div><div class="line">lang="en" （属性节点）</div></pre></td></tr></table></figure>
-<h4 id="基本值（或称原子值，Atomic-value）"><a href="#基本值（或称原子值，Atomic-value）" class="headerlink" title="基本值（或称原子值，Atomic value）"></a><strong>基本值（或称原子值，Atomic value）</strong></h4><p>基本值是无父或无子的节点。</p>
-<p>基本值的例子：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">J K. Rowling</div><div class="line">"en"</div></pre></td></tr></table></figure>
-<h4 id="项目（Item）"><a href="#项目（Item）" class="headerlink" title="项目（Item）"></a><strong>项目（Item）</strong></h4><p>项目是基本值或者节点。</p>
-<h4 id="节点关系"><a href="#节点关系" class="headerlink" title="节点关系"></a><strong>节点关系</strong></h4><p>参考示例：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Harry Potter<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">author</span>&gt;</span>J K. Rowling<span class="tag">&lt;/<span class="name">author</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">year</span>&gt;</span>2005<span class="tag">&lt;/<span class="name">year</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>29.99<span class="tag">&lt;/<span class="name">price</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">bookstore</span>&gt;</span></div></pre></td></tr></table></figure>
-<ul>
-<li><p>父节点（Parent）</p>
-<p>每个元素以及属性都有一个父节点。</p>
-<p>在上面的例子中，book 元素是 title、author、year 以及 price 元素的父节点</p>
-</li>
-<li><p>子节点（Children）</p>
-<p>元素节点可有零个、一个或多个子节点。</p>
-<p>在上面的例子中，title、author、year 以及 price 元素都是 book 元素的子节点</p>
-</li>
-<li><p>同胞节点（Sibling）</p>
-<p>拥有相同的父节点的节点</p>
-<p>在上面的例子中，title、author、year 以及 price 元素都是同胞节点</p>
-</li>
-<li><p>先辈节点（Ancestor）</p>
-<p>某节点的父节点、父节点的父节点，等等。</p>
-<p>在上面的例子中，title 元素的先辈节点是 book 元素和 bookstore 元素</p>
-</li>
-<li><p>后代节点（Descendant）</p>
-<p>某个节点的子节点，子节点的子节点，等等。</p>
-<p>在上面的例子中，bookstore 的后代节点是 book、title、author、year 以及 price 元素</p>
-</li>
-</ul>
-<h3 id="XPath语法"><a href="#XPath语法" class="headerlink" title="XPath语法"></a><strong>XPath语法</strong></h3><p>参考示例：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;</div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span> <span class="attr">lang</span>=<span class="string">"eng"</span>&gt;</span>Harry Potter<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>29.99<span class="tag">&lt;/<span class="name">price</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span> <span class="attr">lang</span>=<span class="string">"eng"</span>&gt;</span>Learning XML<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>39.95<span class="tag">&lt;/<span class="name">price</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">bookstore</span>&gt;</span></div></pre></td></tr></table></figure>
-<h4 id="选取节点"><a href="#选取节点" class="headerlink" title="选取节点"></a><strong>选取节点</strong></h4><p>XPath 使用路径表达式在 XML 文档中选取节点。节点是通过沿着路径或者 step 来选取的。下面列出了最有用的路径表达式：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">表达式</th>
-<th style="text-align:left">描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">nodename</td>
-<td style="text-align:left">选取此节点的所有子节点</td>
-</tr>
-<tr>
-<td style="text-align:left">/</td>
-<td style="text-align:left">从根节点选取</td>
-</tr>
-<tr>
-<td style="text-align:left">//</td>
-<td style="text-align:left">从匹配选择的当前节点选择文档中的节点，而不考虑它们的位置</td>
-</tr>
-<tr>
-<td style="text-align:left">.</td>
-<td style="text-align:left">选取当前节点</td>
-</tr>
-<tr>
-<td style="text-align:left">..</td>
-<td style="text-align:left">选取当前节点的父节点。</td>
-</tr>
-<tr>
-<td style="text-align:left">@</td>
-<td style="text-align:left">选取属性。</td>
-</tr>
-</tbody>
-</table>
-<p>实例：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">路径表达式</th>
-<th style="text-align:left">结果</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">bookstore</td>
-<td style="text-align:left">选取bookstore元素的所有子节点</td>
-</tr>
-<tr>
-<td style="text-align:left">/bookstore</td>
-<td style="text-align:left">选取根元素bookstore 注释：假如路径起始于正斜杠( / )，则此路径始终代表到某元素的绝对路径！</td>
-</tr>
-<tr>
-<td style="text-align:left">bookstore/book</td>
-<td style="text-align:left">选取属于bookstore的子元素的所有book元素</td>
-</tr>
-<tr>
-<td style="text-align:left">//book</td>
-<td style="text-align:left">选取所有book元素，而不考虑它们的位置</td>
-</tr>
-<tr>
-<td style="text-align:left">bookstore//book</td>
-<td style="text-align:left">选择属于 bookstore 元素的后代的所有 book 元素，而不管它们位于 bookstore 之下的什么位置</td>
-</tr>
-<tr>
-<td style="text-align:left">//@lang</td>
-<td style="text-align:left">选取名为 lang 的所有属性</td>
-</tr>
-</tbody>
-</table>
-<h4 id="谓语（Predicates）"><a href="#谓语（Predicates）" class="headerlink" title="谓语（Predicates）"></a><strong>谓语（Predicates）</strong></h4><p>谓语用来查找某个特定的节点或者包含某个指定的值的节点。</p>
-<p>谓语被嵌在方括号中。</p>
-<p>实例</p>
-<p>在下面的表格中，我们列出了带有谓语的一些路径表达式，以及表达式的结果：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">路径表达式</th>
-<th style="text-align:left">结果</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">/bookstore/book[1]</td>
-<td style="text-align:left">选取属于 bookstore 子元素的第一个 book 元素</td>
-</tr>
-<tr>
-<td style="text-align:left">/bookstore/book[last()]</td>
-<td style="text-align:left">选取属于 bookstore 子元素的最后一个 book 元素</td>
-</tr>
-<tr>
-<td style="text-align:left">/bookstore/book[last()-1]</td>
-<td style="text-align:left">选取属于 bookstore 子元素的倒数第二个 book 元素</td>
-</tr>
-<tr>
-<td style="text-align:left">/bookstore/book[postion()&lt;3]</td>
-<td style="text-align:left">选取最前面的两个属于 bookstore 元素的子元素的 book 元素</td>
-</tr>
-<tr>
-<td style="text-align:left">//title[@lang]</td>
-<td style="text-align:left">选取所有拥有名为 lang 的属性的 title 元素</td>
-</tr>
-<tr>
-<td style="text-align:left">//title[@lang=’eng’]</td>
-<td style="text-align:left">选取所有 title 元素，且这些元素拥有值为 eng 的 lang 属性</td>
-</tr>
-<tr>
-<td style="text-align:left">/bookstore/book[price&gt;35.00]</td>
-<td style="text-align:left">选取 bookstore 元素的所有 book 元素，且其中的 price 元素的值须大于 35.00</td>
-</tr>
-<tr>
-<td style="text-align:left">/bookstore/book[price&gt;35.00]/title</td>
-<td style="text-align:left">选取 bookstore 元素中的 book 元素的所有 title 元素，且其中的 price 元素的值须大于 35.00</td>
-</tr>
-</tbody>
-</table>
-<h4 id="选取未知节点"><a href="#选取未知节点" class="headerlink" title="选取未知节点"></a><strong>选取未知节点</strong></h4><p>XPath 通配符可用来选取未知的 XML 元素</p>
-<table>
-<thead>
-<tr>
-<th>通配符</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>*</td>
-<td>匹配任何元素节点</td>
-</tr>
-<tr>
-<td>@*</td>
-<td>匹配任何属性节点</td>
-</tr>
-<tr>
-<td>node()</td>
-<td>匹配任何节点</td>
-</tr>
-</tbody>
-</table>
-<p>实例</p>
-<p>在下面的表格中，我们列出了一些路径表达式，以及这些表达式的结果：</p>
-<table>
-<thead>
-<tr>
-<th>路径表达式</th>
-<th>结果</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>/bookstore/*</td>
-<td>选取 bookstore 元素的所有子元素</td>
-</tr>
-<tr>
-<td>//*</td>
-<td>选取文档中的所有元素</td>
-</tr>
-<tr>
-<td>//title[@*]</td>
-<td>选取所有带有属性的 title 元素</td>
-</tr>
-</tbody>
-</table>
-<h4 id="选取若干路径"><a href="#选取若干路径" class="headerlink" title="选取若干路径"></a><strong>选取若干路径</strong></h4><p>通过在路径表达式中使用“|”运算符，您可以选取若干个路径。</p>
-<p>实例</p>
-<p>在下面的表格中，我们列出了一些路径表达式，以及这些表达式的结果：</p>
-<table>
-<thead>
-<tr>
-<th>路径表达式</th>
-<th>结果</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>//book/title &#124; //book/price</td>
-<td>选取 book 元素的所有 title 和 price 元素</td>
-</tr>
-<tr>
-<td>//title &#124; //price</td>
-<td>选取文档中的所有 title 和 price 元素</td>
-</tr>
-<tr>
-<td>/bookstore/book/title &#124; //price</td>
-<td>选取属于 bookstore 元素的 book 元素的所有 title 元素，以及文档中所有的 price 元素</td>
-</tr>
-</tbody>
-</table>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;XPath的用法&quot;&gt;&lt;a href=&quot;#XPath的用法&quot; class=&quot;headerlink&quot; title=&quot;XPath的用法&quot;&gt;&lt;/a&gt;&lt;strong&gt;XPath的用法&lt;/strong&gt;&lt;/h2&gt;&lt;h3 id=&quot;XPath简介&quot;&gt;&lt;a href=&quot;#XPath简介&quot; class=&quot;headerlink&quot; title=&quot;XPath简介&quot;&gt;&lt;/a&gt;&lt;strong&gt;XPath简介&lt;/strong&gt;&lt;/h3&gt;&lt;ul&gt;
-&lt;li&gt;XPath 使用路径表达式在 XML / HTML 文档中进行导航&lt;/li&gt;
-&lt;li&gt;XPath 包含一个标准函数库&lt;/li&gt;
-&lt;li&gt;XPath 是 XSLT 中的主要元素&lt;/li&gt;
-&lt;li&gt;XPath 是一个 W3C 标准&lt;/li&gt;
-&lt;/ul&gt;
-    
-    </summary>
-    
-      <category term="XPath" scheme="http://yoursite.com/categories/XPath/"/>
-    
-    
-      <category term="Scrapy，XPath，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CXPath%EF%BC%8CPython/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Python分布式爬虫打造搜索引擎项目学习笔记——爬虫基础知识回顾</title>
-    <link href="http://yoursite.com/2017/04/11/scrapy-project-basic/"/>
-    <id>http://yoursite.com/2017/04/11/scrapy-project-basic/</id>
-    <published>2017-04-11T12:18:54.000Z</published>
-    <updated>2017-04-11T07:49:05.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a><strong>基础知识</strong></h2><h3 id="技术选型：scrapy-vs-requests-beautifulsoup"><a href="#技术选型：scrapy-vs-requests-beautifulsoup" class="headerlink" title="技术选型：scrapy vs requests + beautifulsoup"></a><strong>技术选型：<a href="https://scrapy-chs.readthedocs.io/zh_CN/1.0/" target="_blank" rel="external">scrapy</a> vs <a href="http://docs.python-requests.org/zh_CN/latest/index.html" target="_blank" rel="external">requests</a> + <a href="http://beautifulsoup.readthedocs.io/zh_CN/latest/" target="_blank" rel="external">beautifulsoup</a></strong></h3><a id="more"></a>
-<ul>
-<li>requests和beautifulsoup都是库，scrapy是框架</li>
-<li>scrapy框架中可以加入requests和beautifulsoup</li>
-<li>scrapy基于<a href="https://www.gitbook.com/book/likebeta/twisted-intro-cn/details" target="_blank" rel="external">twisted</a>，性能是最大的优势</li>
-<li>scrapy方便扩展，提供了很多内置的功能</li>
-<li>scrapy内置的css和xpath selector非常方便，beautifulsoup最大的缺点就是慢</li>
-</ul>
-<h3 id="网页分类"><a href="#网页分类" class="headerlink" title="网页分类"></a><strong>网页分类</strong></h3><ul>
-<li>静态网页</li>
-<li>动态网页</li>
-<li>webservice（<a href="http://www.restapitutorial.com" target="_blank" rel="external">restapi</a>）</li>
-</ul>
-<h3 id="爬虫能做什么"><a href="#爬虫能做什么" class="headerlink" title="爬虫能做什么"></a><strong>爬虫能做什么</strong></h3><p>爬虫的作用</p>
-<ul>
-<li>搜索引擎——百度、谷歌、垂直领域搜索引擎</li>
-<li>推荐引擎——今日头条</li>
-<li>机器学习的数据样本</li>
-<li>数据分析、舆情分析等</li>
-</ul>
-<h3 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a><strong>正则表达式</strong></h3><p>详见另一篇博客</p>
-<h3 id="网站url结构"><a href="#网站url结构" class="headerlink" title="网站url结构"></a><strong>网站url结构</strong></h3><p><img src="https://ww1.sinaimg.cn/large/006tNc79gy1fehiknw0gbj315k0j0jth.jpg" alt=""></p>
-<p><img src="https://ww2.sinaimg.cn/large/006tNc79gy1fehikzuhq5j31300jo0v3.jpg" alt=""></p>
-<h3 id="深度优先遍历和广度优先遍历"><a href="#深度优先遍历和广度优先遍历" class="headerlink" title="深度优先遍历和广度优先遍历"></a><strong>深度优先遍历和广度优先遍历</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># _*_ coding: utf-8 _*_</span></div><div class="line"><span class="string">"""</span></div><div class="line">__author__ = 'lawtech'</div><div class="line">__date__ = '2017/4/10 下午1:41'</div><div class="line">"""</div><div class="line"></div><div class="line"><span class="string">"""</span></div><div class="line">深度优先遍历和广度优先遍历</div><div class="line">"""</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Graph</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, *args, **kwargs)</span>:</span></div><div class="line">        self.node_neighbors = &#123;&#125;</div><div class="line">        self.visited = &#123;&#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_nodes</span><span class="params">(self, nodelist)</span>:</span></div><div class="line"></div><div class="line">        <span class="keyword">for</span> node <span class="keyword">in</span> nodelist:</div><div class="line">            self.add_node(node)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_node</span><span class="params">(self, node)</span>:</span></div><div class="line">        <span class="keyword">if</span> node <span class="keyword">not</span> <span class="keyword">in</span> self.nodes():</div><div class="line">            self.node_neighbors[node] = []</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_edge</span><span class="params">(self, edge)</span>:</span></div><div class="line">        u, v = edge</div><div class="line">        <span class="keyword">if</span> (v <span class="keyword">not</span> <span class="keyword">in</span> self.node_neighbors[u]) <span class="keyword">and</span> (u <span class="keyword">not</span> <span class="keyword">in</span> self.node_neighbors[v]):</div><div class="line">            self.node_neighbors[u].append(v)</div><div class="line">            <span class="keyword">if</span> u != v:</div><div class="line">                self.node_neighbors[v].append(u)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">nodes</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.node_neighbors.keys()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">depth_first_search</span><span class="params">(self, root=None)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        队列</div><div class="line">        :param root: </div><div class="line">        :return: </div><div class="line">        """</div><div class="line">        order = []</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(node)</span>:</span></div><div class="line">            self.visited[node] = <span class="keyword">True</span></div><div class="line">            order.append(node)</div><div class="line">            <span class="keyword">for</span> n <span class="keyword">in</span> self.node_neighbors[node]:</div><div class="line">                <span class="keyword">if</span> n <span class="keyword">not</span> <span class="keyword">in</span> self.visited:</div><div class="line">                    dfs(n)</div><div class="line"></div><div class="line">        <span class="keyword">if</span> root:</div><div class="line">            dfs(root)</div><div class="line"></div><div class="line">        <span class="keyword">for</span> node <span class="keyword">in</span> self.nodes():</div><div class="line">            <span class="keyword">if</span> node <span class="keyword">not</span> <span class="keyword">in</span> self.visited:</div><div class="line">                dfs(node)</div><div class="line"></div><div class="line">        print(order)</div><div class="line">        <span class="keyword">return</span> order</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">breadth_first_search</span><span class="params">(self, root=None)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        递归</div><div class="line">        :param root: </div><div class="line">        :return: </div><div class="line">        """</div><div class="line">        queue = []</div><div class="line">        order = []</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">def</span> <span class="title">bfs</span><span class="params">()</span>:</span></div><div class="line">            <span class="keyword">while</span> len(queue) &gt; <span class="number">0</span>:</div><div class="line">                node = queue.pop(<span class="number">0</span>)</div><div class="line">                self.visited[node] = <span class="keyword">True</span></div><div class="line"></div><div class="line">                <span class="keyword">for</span> n <span class="keyword">in</span> self.node_neighbors[node]:</div><div class="line">                    <span class="keyword">if</span> (n <span class="keyword">not</span> <span class="keyword">in</span> self.visited) <span class="keyword">and</span> (n <span class="keyword">not</span> <span class="keyword">in</span> queue):</div><div class="line">                        queue.append(n)</div><div class="line">                        order.append(n)</div><div class="line"></div><div class="line">        <span class="keyword">if</span> root:</div><div class="line">            queue.append(root)</div><div class="line">            order.append(root)</div><div class="line">            bfs()</div><div class="line"></div><div class="line">        <span class="keyword">for</span> node <span class="keyword">in</span> self.nodes():</div><div class="line">            <span class="keyword">if</span> node <span class="keyword">not</span> <span class="keyword">in</span> self.visited:</div><div class="line">                queue.append(node)</div><div class="line">                order.append(node)</div><div class="line">                bfs()</div><div class="line"></div><div class="line">        print(order)</div><div class="line">        <span class="keyword">return</span> order</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    g = Graph()</div><div class="line">    g.add_nodes(nodelist=[i + <span class="number">1</span> <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">8</span>)])</div><div class="line">    g.add_edge((<span class="number">1</span>, <span class="number">2</span>))</div><div class="line">    g.add_edge((<span class="number">1</span>, <span class="number">3</span>))</div><div class="line">    g.add_edge((<span class="number">2</span>, <span class="number">4</span>))</div><div class="line">    g.add_edge((<span class="number">2</span>, <span class="number">5</span>))</div><div class="line">    g.add_edge((<span class="number">4</span>, <span class="number">8</span>))</div><div class="line">    g.add_edge((<span class="number">5</span>, <span class="number">8</span>))</div><div class="line">    g.add_edge((<span class="number">3</span>, <span class="number">6</span>))</div><div class="line">    g.add_edge((<span class="number">3</span>, <span class="number">7</span>))</div><div class="line">    g.add_edge((<span class="number">6</span>, <span class="number">7</span>))</div><div class="line">    print(<span class="string">"nodes:"</span>, g.nodes())</div><div class="line"></div><div class="line">    g.breadth_first_search(<span class="number">1</span>)</div><div class="line">    g.depth_first_search(<span class="number">1</span>)</div></pre></td></tr></table></figure>
-<p>运行结果：</p>
-<p>​    (‘nodes:’, [1, 2, 3, 4, 5, 6, 7, 8])</p>
-<p>​    [1, 2, 3, 4, 5, 6, 7, 8]</p>
-<p>​    [1, 2, 4, 8, 5, 3, 6, 7]</p>
-<h3 id="爬虫去重策略"><a href="#爬虫去重策略" class="headerlink" title="爬虫去重策略"></a><strong>爬虫去重策略</strong></h3><ul>
-<li>将访问过的url保存到数据库中</li>
-<li>将访问过的url保存到set中，只需要O(1)的代价就可以查询url</li>
-<li>url经过md5等方法哈希后保存到set中</li>
-<li>用bitmap方法，将访问过的url通过hash函数映射到某一位</li>
-<li>bloomfilter方法对bitmap进行改进，多重hash函数降低冲突</li>
-</ul>
-<h3 id="Python字符串编码"><a href="#Python字符串编码" class="headerlink" title="Python字符串编码"></a><strong>Python字符串编码</strong></h3><p>详见另一篇博客</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;基础知识&quot;&gt;&lt;a href=&quot;#基础知识&quot; class=&quot;headerlink&quot; title=&quot;基础知识&quot;&gt;&lt;/a&gt;&lt;strong&gt;基础知识&lt;/strong&gt;&lt;/h2&gt;&lt;h3 id=&quot;技术选型：scrapy-vs-requests-beautifulsoup&quot;&gt;&lt;a href=&quot;#技术选型：scrapy-vs-requests-beautifulsoup&quot; class=&quot;headerlink&quot; title=&quot;技术选型：scrapy vs requests + beautifulsoup&quot;&gt;&lt;/a&gt;&lt;strong&gt;技术选型：&lt;a href=&quot;https://scrapy-chs.readthedocs.io/zh_CN/1.0/&quot;&gt;scrapy&lt;/a&gt; vs &lt;a href=&quot;http://docs.python-requests.org/zh_CN/latest/index.html&quot;&gt;requests&lt;/a&gt; + &lt;a href=&quot;http://beautifulsoup.readthedocs.io/zh_CN/latest/&quot;&gt;beautifulsoup&lt;/a&gt;&lt;/strong&gt;&lt;/h3&gt;
-    
-    </summary>
-    
-      <category term="Basic knowledge" scheme="http://yoursite.com/categories/Basic-knowledge/"/>
-    
-    
-      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy安装及调试</title>
-    <link href="http://yoursite.com/2017/04/11/scrapy-install/"/>
-    <id>http://yoursite.com/2017/04/11/scrapy-install/</id>
-    <published>2017-04-11T12:18:54.000Z</published>
-    <updated>2017-04-11T07:48:50.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a><strong>环境搭建</strong></h2><a id="more"></a>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ mkvirtualenv article_spider</div><div class="line">$ pip install -i https://pypi.douban.com/simple/ scrapy</div></pre></td></tr></table></figure>
-<h2 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a><strong>创建项目</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$ workon article_spider</div><div class="line">$ scrapy startproject ArticleSpider</div><div class="line">New Scrapy project &apos;ArticleSpider&apos;, using template directory &apos;/Users/lawtech/myvirtualenvs/article_spider/lib/python3.5/site-packages/scrapy/templates/project&apos;, created in:</div><div class="line">    /Users/lawtech/PycharmProjects/ArticleSpider</div><div class="line"></div><div class="line">You can start your first spider with:</div><div class="line">    cd ArticleSpider</div><div class="line">    scrapy genspider example example.com</div><div class="line">    </div><div class="line">$ cd ArticleSpider</div><div class="line">$ scrapy genspider jobbole blog.jobbole.com</div><div class="line">Created spider &apos;jobbole&apos; using template &apos;basic&apos; in module:</div><div class="line">  ArticleSpider.spiders.jobbole</div></pre></td></tr></table></figure>
-<h2 id="项目目录介绍"><a href="#项目目录介绍" class="headerlink" title="项目目录介绍"></a><strong>项目目录介绍</strong></h2><p>首先先要回答一个问题。</p>
-<p>问：把网站装进爬虫里，总共分几步？<br>答案很简单，四步：</p>
-<ul>
-<li>新建项目 (Project)：新建一个新的爬虫项目</li>
-<li>明确目标（Items）：明确你想要抓取的目标</li>
-<li>制作爬虫（Spider）：制作爬虫开始爬取网页</li>
-<li>存储内容（Pipeline）：设计管道存储爬取内容</li>
-</ul>
-<p>创建好AticleSpider项目之后，可以看到将会创建一个AticleSpider文件夹，目录结构如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">ArticleSpider/  </div><div class="line">    scrapy.cfg  </div><div class="line">    ArticleSpider/  </div><div class="line">        __init__.py  </div><div class="line">        items.py  </div><div class="line">        pipelines.py  </div><div class="line">        settings.py  </div><div class="line">        spiders/  </div><div class="line">            __init__.py  </div><div class="line">            jobbole.py</div></pre></td></tr></table></figure>
-<p>下面来简单介绍一下各个文件的作用：</p>
-<ul>
-<li>scrapy.cfg：项目的配置文件</li>
-<li>ArticleSpider/：项目的 Python 模块，将会从这里引用代码</li>
-<li>ArticleSpider/items.py：项目的 items 文件</li>
-<li>ArticleSpider/pipelines.py：项目的 pipelines 文件</li>
-<li>ArticleSpider/settings.py：项目的设置文件</li>
-<li>ArticleSpider/spiders/：存储爬虫的目录</li>
-</ul>
-<h2 id="pycharm-调试-scrapy-执行流程"><a href="#pycharm-调试-scrapy-执行流程" class="headerlink" title="pycharm 调试 scrapy 执行流程"></a><strong>pycharm 调试 scrapy 执行流程</strong></h2><p>在项目根目录下新建 main.py 文件，添加如下代码</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> scrapy.cmdline <span class="keyword">import</span> execute</div><div class="line"></div><div class="line"><span class="keyword">import</span> sys</div><div class="line"><span class="keyword">import</span> os</div><div class="line"></div><div class="line"><span class="comment"># __file__ 表示当前py文件</span></div><div class="line">sys.path.append(os.path.dirname(os.path.abspath(__file__)))</div><div class="line"><span class="comment"># 将实际命令拆分</span></div><div class="line">execute([<span class="string">"scrapy"</span>, <span class="string">"crawl"</span>, <span class="string">"spiders文件夹下的py文件名称"</span>])</div></pre></td></tr></table></figure>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;环境搭建&quot;&gt;&lt;a href=&quot;#环境搭建&quot; class=&quot;headerlink&quot; title=&quot;环境搭建&quot;&gt;&lt;/a&gt;&lt;strong&gt;环境搭建&lt;/strong&gt;&lt;/h2&gt;
-    
-    </summary>
-    
-      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
-    
-    
-      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
     
   </entry>
   
@@ -1106,6 +886,367 @@
     
     
       <category term="Scrapy，Regular Expression，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CRegular-Expression%EF%BC%8CPython/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy安装及调试</title>
+    <link href="http://yoursite.com/2017/04/11/scrapy-install/"/>
+    <id>http://yoursite.com/2017/04/11/scrapy-install/</id>
+    <published>2017-04-11T12:18:54.000Z</published>
+    <updated>2017-04-11T07:48:50.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a><strong>环境搭建</strong></h2><a id="more"></a>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ mkvirtualenv article_spider</div><div class="line">$ pip install -i https://pypi.douban.com/simple/ scrapy</div></pre></td></tr></table></figure>
+<h2 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a><strong>创建项目</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$ workon article_spider</div><div class="line">$ scrapy startproject ArticleSpider</div><div class="line">New Scrapy project &apos;ArticleSpider&apos;, using template directory &apos;/Users/lawtech/myvirtualenvs/article_spider/lib/python3.5/site-packages/scrapy/templates/project&apos;, created in:</div><div class="line">    /Users/lawtech/PycharmProjects/ArticleSpider</div><div class="line"></div><div class="line">You can start your first spider with:</div><div class="line">    cd ArticleSpider</div><div class="line">    scrapy genspider example example.com</div><div class="line">    </div><div class="line">$ cd ArticleSpider</div><div class="line">$ scrapy genspider jobbole blog.jobbole.com</div><div class="line">Created spider &apos;jobbole&apos; using template &apos;basic&apos; in module:</div><div class="line">  ArticleSpider.spiders.jobbole</div></pre></td></tr></table></figure>
+<h2 id="项目目录介绍"><a href="#项目目录介绍" class="headerlink" title="项目目录介绍"></a><strong>项目目录介绍</strong></h2><p>首先先要回答一个问题。</p>
+<p>问：把网站装进爬虫里，总共分几步？<br>答案很简单，四步：</p>
+<ul>
+<li>新建项目 (Project)：新建一个新的爬虫项目</li>
+<li>明确目标（Items）：明确你想要抓取的目标</li>
+<li>制作爬虫（Spider）：制作爬虫开始爬取网页</li>
+<li>存储内容（Pipeline）：设计管道存储爬取内容</li>
+</ul>
+<p>创建好AticleSpider项目之后，可以看到将会创建一个AticleSpider文件夹，目录结构如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">ArticleSpider/  </div><div class="line">    scrapy.cfg  </div><div class="line">    ArticleSpider/  </div><div class="line">        __init__.py  </div><div class="line">        items.py  </div><div class="line">        pipelines.py  </div><div class="line">        settings.py  </div><div class="line">        spiders/  </div><div class="line">            __init__.py  </div><div class="line">            jobbole.py</div></pre></td></tr></table></figure>
+<p>下面来简单介绍一下各个文件的作用：</p>
+<ul>
+<li>scrapy.cfg：项目的配置文件</li>
+<li>ArticleSpider/：项目的 Python 模块，将会从这里引用代码</li>
+<li>ArticleSpider/items.py：项目的 items 文件</li>
+<li>ArticleSpider/pipelines.py：项目的 pipelines 文件</li>
+<li>ArticleSpider/settings.py：项目的设置文件</li>
+<li>ArticleSpider/spiders/：存储爬虫的目录</li>
+</ul>
+<h2 id="pycharm-调试-scrapy-执行流程"><a href="#pycharm-调试-scrapy-执行流程" class="headerlink" title="pycharm 调试 scrapy 执行流程"></a><strong>pycharm 调试 scrapy 执行流程</strong></h2><p>在项目根目录下新建 main.py 文件，添加如下代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> scrapy.cmdline <span class="keyword">import</span> execute</div><div class="line"></div><div class="line"><span class="keyword">import</span> sys</div><div class="line"><span class="keyword">import</span> os</div><div class="line"></div><div class="line"><span class="comment"># __file__ 表示当前py文件</span></div><div class="line">sys.path.append(os.path.dirname(os.path.abspath(__file__)))</div><div class="line"><span class="comment"># 将实际命令拆分</span></div><div class="line">execute([<span class="string">"scrapy"</span>, <span class="string">"crawl"</span>, <span class="string">"spiders文件夹下的py文件名称"</span>])</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;环境搭建&quot;&gt;&lt;a href=&quot;#环境搭建&quot; class=&quot;headerlink&quot; title=&quot;环境搭建&quot;&gt;&lt;/a&gt;&lt;strong&gt;环境搭建&lt;/strong&gt;&lt;/h2&gt;
+    
+    </summary>
+    
+      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
+    
+    
+      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Python分布式爬虫打造搜索引擎项目学习笔记——爬虫基础知识回顾</title>
+    <link href="http://yoursite.com/2017/04/11/scrapy-project-basic/"/>
+    <id>http://yoursite.com/2017/04/11/scrapy-project-basic/</id>
+    <published>2017-04-11T12:18:54.000Z</published>
+    <updated>2017-04-11T07:49:05.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a><strong>基础知识</strong></h2><h3 id="技术选型：scrapy-vs-requests-beautifulsoup"><a href="#技术选型：scrapy-vs-requests-beautifulsoup" class="headerlink" title="技术选型：scrapy vs requests + beautifulsoup"></a><strong>技术选型：<a href="https://scrapy-chs.readthedocs.io/zh_CN/1.0/" target="_blank" rel="external">scrapy</a> vs <a href="http://docs.python-requests.org/zh_CN/latest/index.html" target="_blank" rel="external">requests</a> + <a href="http://beautifulsoup.readthedocs.io/zh_CN/latest/" target="_blank" rel="external">beautifulsoup</a></strong></h3><a id="more"></a>
+<ul>
+<li>requests和beautifulsoup都是库，scrapy是框架</li>
+<li>scrapy框架中可以加入requests和beautifulsoup</li>
+<li>scrapy基于<a href="https://www.gitbook.com/book/likebeta/twisted-intro-cn/details" target="_blank" rel="external">twisted</a>，性能是最大的优势</li>
+<li>scrapy方便扩展，提供了很多内置的功能</li>
+<li>scrapy内置的css和xpath selector非常方便，beautifulsoup最大的缺点就是慢</li>
+</ul>
+<h3 id="网页分类"><a href="#网页分类" class="headerlink" title="网页分类"></a><strong>网页分类</strong></h3><ul>
+<li>静态网页</li>
+<li>动态网页</li>
+<li>webservice（<a href="http://www.restapitutorial.com" target="_blank" rel="external">restapi</a>）</li>
+</ul>
+<h3 id="爬虫能做什么"><a href="#爬虫能做什么" class="headerlink" title="爬虫能做什么"></a><strong>爬虫能做什么</strong></h3><p>爬虫的作用</p>
+<ul>
+<li>搜索引擎——百度、谷歌、垂直领域搜索引擎</li>
+<li>推荐引擎——今日头条</li>
+<li>机器学习的数据样本</li>
+<li>数据分析、舆情分析等</li>
+</ul>
+<h3 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a><strong>正则表达式</strong></h3><p>详见另一篇博客</p>
+<h3 id="网站url结构"><a href="#网站url结构" class="headerlink" title="网站url结构"></a><strong>网站url结构</strong></h3><p><img src="https://ww1.sinaimg.cn/large/006tNc79gy1fehiknw0gbj315k0j0jth.jpg" alt=""></p>
+<p><img src="https://ww2.sinaimg.cn/large/006tNc79gy1fehikzuhq5j31300jo0v3.jpg" alt=""></p>
+<h3 id="深度优先遍历和广度优先遍历"><a href="#深度优先遍历和广度优先遍历" class="headerlink" title="深度优先遍历和广度优先遍历"></a><strong>深度优先遍历和广度优先遍历</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># _*_ coding: utf-8 _*_</span></div><div class="line"><span class="string">"""</span></div><div class="line">__author__ = 'lawtech'</div><div class="line">__date__ = '2017/4/10 下午1:41'</div><div class="line">"""</div><div class="line"></div><div class="line"><span class="string">"""</span></div><div class="line">深度优先遍历和广度优先遍历</div><div class="line">"""</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Graph</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, *args, **kwargs)</span>:</span></div><div class="line">        self.node_neighbors = &#123;&#125;</div><div class="line">        self.visited = &#123;&#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_nodes</span><span class="params">(self, nodelist)</span>:</span></div><div class="line"></div><div class="line">        <span class="keyword">for</span> node <span class="keyword">in</span> nodelist:</div><div class="line">            self.add_node(node)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_node</span><span class="params">(self, node)</span>:</span></div><div class="line">        <span class="keyword">if</span> node <span class="keyword">not</span> <span class="keyword">in</span> self.nodes():</div><div class="line">            self.node_neighbors[node] = []</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_edge</span><span class="params">(self, edge)</span>:</span></div><div class="line">        u, v = edge</div><div class="line">        <span class="keyword">if</span> (v <span class="keyword">not</span> <span class="keyword">in</span> self.node_neighbors[u]) <span class="keyword">and</span> (u <span class="keyword">not</span> <span class="keyword">in</span> self.node_neighbors[v]):</div><div class="line">            self.node_neighbors[u].append(v)</div><div class="line">            <span class="keyword">if</span> u != v:</div><div class="line">                self.node_neighbors[v].append(u)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">nodes</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.node_neighbors.keys()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">depth_first_search</span><span class="params">(self, root=None)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        队列</div><div class="line">        :param root: </div><div class="line">        :return: </div><div class="line">        """</div><div class="line">        order = []</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(node)</span>:</span></div><div class="line">            self.visited[node] = <span class="keyword">True</span></div><div class="line">            order.append(node)</div><div class="line">            <span class="keyword">for</span> n <span class="keyword">in</span> self.node_neighbors[node]:</div><div class="line">                <span class="keyword">if</span> n <span class="keyword">not</span> <span class="keyword">in</span> self.visited:</div><div class="line">                    dfs(n)</div><div class="line"></div><div class="line">        <span class="keyword">if</span> root:</div><div class="line">            dfs(root)</div><div class="line"></div><div class="line">        <span class="keyword">for</span> node <span class="keyword">in</span> self.nodes():</div><div class="line">            <span class="keyword">if</span> node <span class="keyword">not</span> <span class="keyword">in</span> self.visited:</div><div class="line">                dfs(node)</div><div class="line"></div><div class="line">        print(order)</div><div class="line">        <span class="keyword">return</span> order</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">breadth_first_search</span><span class="params">(self, root=None)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        递归</div><div class="line">        :param root: </div><div class="line">        :return: </div><div class="line">        """</div><div class="line">        queue = []</div><div class="line">        order = []</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">def</span> <span class="title">bfs</span><span class="params">()</span>:</span></div><div class="line">            <span class="keyword">while</span> len(queue) &gt; <span class="number">0</span>:</div><div class="line">                node = queue.pop(<span class="number">0</span>)</div><div class="line">                self.visited[node] = <span class="keyword">True</span></div><div class="line"></div><div class="line">                <span class="keyword">for</span> n <span class="keyword">in</span> self.node_neighbors[node]:</div><div class="line">                    <span class="keyword">if</span> (n <span class="keyword">not</span> <span class="keyword">in</span> self.visited) <span class="keyword">and</span> (n <span class="keyword">not</span> <span class="keyword">in</span> queue):</div><div class="line">                        queue.append(n)</div><div class="line">                        order.append(n)</div><div class="line"></div><div class="line">        <span class="keyword">if</span> root:</div><div class="line">            queue.append(root)</div><div class="line">            order.append(root)</div><div class="line">            bfs()</div><div class="line"></div><div class="line">        <span class="keyword">for</span> node <span class="keyword">in</span> self.nodes():</div><div class="line">            <span class="keyword">if</span> node <span class="keyword">not</span> <span class="keyword">in</span> self.visited:</div><div class="line">                queue.append(node)</div><div class="line">                order.append(node)</div><div class="line">                bfs()</div><div class="line"></div><div class="line">        print(order)</div><div class="line">        <span class="keyword">return</span> order</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    g = Graph()</div><div class="line">    g.add_nodes(nodelist=[i + <span class="number">1</span> <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">8</span>)])</div><div class="line">    g.add_edge((<span class="number">1</span>, <span class="number">2</span>))</div><div class="line">    g.add_edge((<span class="number">1</span>, <span class="number">3</span>))</div><div class="line">    g.add_edge((<span class="number">2</span>, <span class="number">4</span>))</div><div class="line">    g.add_edge((<span class="number">2</span>, <span class="number">5</span>))</div><div class="line">    g.add_edge((<span class="number">4</span>, <span class="number">8</span>))</div><div class="line">    g.add_edge((<span class="number">5</span>, <span class="number">8</span>))</div><div class="line">    g.add_edge((<span class="number">3</span>, <span class="number">6</span>))</div><div class="line">    g.add_edge((<span class="number">3</span>, <span class="number">7</span>))</div><div class="line">    g.add_edge((<span class="number">6</span>, <span class="number">7</span>))</div><div class="line">    print(<span class="string">"nodes:"</span>, g.nodes())</div><div class="line"></div><div class="line">    g.breadth_first_search(<span class="number">1</span>)</div><div class="line">    g.depth_first_search(<span class="number">1</span>)</div></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<p>​    (‘nodes:’, [1, 2, 3, 4, 5, 6, 7, 8])</p>
+<p>​    [1, 2, 3, 4, 5, 6, 7, 8]</p>
+<p>​    [1, 2, 4, 8, 5, 3, 6, 7]</p>
+<h3 id="爬虫去重策略"><a href="#爬虫去重策略" class="headerlink" title="爬虫去重策略"></a><strong>爬虫去重策略</strong></h3><ul>
+<li>将访问过的url保存到数据库中</li>
+<li>将访问过的url保存到set中，只需要O(1)的代价就可以查询url</li>
+<li>url经过md5等方法哈希后保存到set中</li>
+<li>用bitmap方法，将访问过的url通过hash函数映射到某一位</li>
+<li>bloomfilter方法对bitmap进行改进，多重hash函数降低冲突</li>
+</ul>
+<h3 id="Python字符串编码"><a href="#Python字符串编码" class="headerlink" title="Python字符串编码"></a><strong>Python字符串编码</strong></h3><p>详见另一篇博客</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;基础知识&quot;&gt;&lt;a href=&quot;#基础知识&quot; class=&quot;headerlink&quot; title=&quot;基础知识&quot;&gt;&lt;/a&gt;&lt;strong&gt;基础知识&lt;/strong&gt;&lt;/h2&gt;&lt;h3 id=&quot;技术选型：scrapy-vs-requests-beautifulsoup&quot;&gt;&lt;a href=&quot;#技术选型：scrapy-vs-requests-beautifulsoup&quot; class=&quot;headerlink&quot; title=&quot;技术选型：scrapy vs requests + beautifulsoup&quot;&gt;&lt;/a&gt;&lt;strong&gt;技术选型：&lt;a href=&quot;https://scrapy-chs.readthedocs.io/zh_CN/1.0/&quot;&gt;scrapy&lt;/a&gt; vs &lt;a href=&quot;http://docs.python-requests.org/zh_CN/latest/index.html&quot;&gt;requests&lt;/a&gt; + &lt;a href=&quot;http://beautifulsoup.readthedocs.io/zh_CN/latest/&quot;&gt;beautifulsoup&lt;/a&gt;&lt;/strong&gt;&lt;/h3&gt;
+    
+    </summary>
+    
+      <category term="Basic knowledge" scheme="http://yoursite.com/categories/Basic-knowledge/"/>
+    
+    
+      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Xpath教程</title>
+    <link href="http://yoursite.com/2017/04/11/xpath-usage/"/>
+    <id>http://yoursite.com/2017/04/11/xpath-usage/</id>
+    <published>2017-04-11T12:18:54.000Z</published>
+    <updated>2017-04-16T08:41:39.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="XPath的用法"><a href="#XPath的用法" class="headerlink" title="XPath的用法"></a><strong>XPath的用法</strong></h2><h3 id="XPath简介"><a href="#XPath简介" class="headerlink" title="XPath简介"></a><strong>XPath简介</strong></h3><ul>
+<li>XPath 使用路径表达式在 XML / HTML 文档中进行导航</li>
+<li>XPath 包含一个标准函数库</li>
+<li>XPath 是 XSLT 中的主要元素</li>
+<li>XPath 是一个 W3C 标准</li>
+</ul>
+<a id="more"></a>
+<h3 id="XPath术语"><a href="#XPath术语" class="headerlink" title="XPath术语"></a><strong>XPath术语</strong></h3><h4 id="节点（Node）"><a href="#节点（Node）" class="headerlink" title="节点（Node）"></a><strong>节点（Node）</strong></h4><p>在 XPath 中，有七种类型的节点：元素、属性、文本、命名空间、处理指令、注释以及文档（根）节点。XML 文档是被作为节点树来对待的。树的根被称为文档节点或者根节点。</p>
+<p>请看下面这个 XML 文档：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;</div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span>Harry Potter<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">author</span>&gt;</span>J K. Rowling<span class="tag">&lt;/<span class="name">author</span>&gt;</span> </div><div class="line">  <span class="tag">&lt;<span class="name">year</span>&gt;</span>2005<span class="tag">&lt;/<span class="name">year</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>29.99<span class="tag">&lt;/<span class="name">price</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">bookstore</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>上面的XML文档中的节点例子：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span> （文档节点）</div><div class="line"><span class="tag">&lt;<span class="name">author</span>&gt;</span>J K. Rowling<span class="tag">&lt;/<span class="name">author</span>&gt;</span> （元素节点）</div><div class="line">lang="en" （属性节点）</div></pre></td></tr></table></figure>
+<h4 id="基本值（或称原子值，Atomic-value）"><a href="#基本值（或称原子值，Atomic-value）" class="headerlink" title="基本值（或称原子值，Atomic value）"></a><strong>基本值（或称原子值，Atomic value）</strong></h4><p>基本值是无父或无子的节点。</p>
+<p>基本值的例子：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">J K. Rowling</div><div class="line">"en"</div></pre></td></tr></table></figure>
+<h4 id="项目（Item）"><a href="#项目（Item）" class="headerlink" title="项目（Item）"></a><strong>项目（Item）</strong></h4><p>项目是基本值或者节点。</p>
+<h4 id="节点关系"><a href="#节点关系" class="headerlink" title="节点关系"></a><strong>节点关系</strong></h4><p>参考示例：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Harry Potter<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">author</span>&gt;</span>J K. Rowling<span class="tag">&lt;/<span class="name">author</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">year</span>&gt;</span>2005<span class="tag">&lt;/<span class="name">year</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>29.99<span class="tag">&lt;/<span class="name">price</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">bookstore</span>&gt;</span></div></pre></td></tr></table></figure>
+<ul>
+<li><p>父节点（Parent）</p>
+<p>每个元素以及属性都有一个父节点。</p>
+<p>在上面的例子中，book 元素是 title、author、year 以及 price 元素的父节点</p>
+</li>
+<li><p>子节点（Children）</p>
+<p>元素节点可有零个、一个或多个子节点。</p>
+<p>在上面的例子中，title、author、year 以及 price 元素都是 book 元素的子节点</p>
+</li>
+<li><p>同胞节点（Sibling）</p>
+<p>拥有相同的父节点的节点</p>
+<p>在上面的例子中，title、author、year 以及 price 元素都是同胞节点</p>
+</li>
+<li><p>先辈节点（Ancestor）</p>
+<p>某节点的父节点、父节点的父节点，等等。</p>
+<p>在上面的例子中，title 元素的先辈节点是 book 元素和 bookstore 元素</p>
+</li>
+<li><p>后代节点（Descendant）</p>
+<p>某个节点的子节点，子节点的子节点，等等。</p>
+<p>在上面的例子中，bookstore 的后代节点是 book、title、author、year 以及 price 元素</p>
+</li>
+</ul>
+<h3 id="XPath语法"><a href="#XPath语法" class="headerlink" title="XPath语法"></a><strong>XPath语法</strong></h3><p>参考示例：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;</div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span> <span class="attr">lang</span>=<span class="string">"eng"</span>&gt;</span>Harry Potter<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>29.99<span class="tag">&lt;/<span class="name">price</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span> <span class="attr">lang</span>=<span class="string">"eng"</span>&gt;</span>Learning XML<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>39.95<span class="tag">&lt;/<span class="name">price</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">bookstore</span>&gt;</span></div></pre></td></tr></table></figure>
+<h4 id="选取节点"><a href="#选取节点" class="headerlink" title="选取节点"></a><strong>选取节点</strong></h4><p>XPath 使用路径表达式在 XML 文档中选取节点。节点是通过沿着路径或者 step 来选取的。下面列出了最有用的路径表达式：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">表达式</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">nodename</td>
+<td style="text-align:left">选取此节点的所有子节点</td>
+</tr>
+<tr>
+<td style="text-align:left">/</td>
+<td style="text-align:left">从根节点选取</td>
+</tr>
+<tr>
+<td style="text-align:left">//</td>
+<td style="text-align:left">从匹配选择的当前节点选择文档中的节点，而不考虑它们的位置</td>
+</tr>
+<tr>
+<td style="text-align:left">.</td>
+<td style="text-align:left">选取当前节点</td>
+</tr>
+<tr>
+<td style="text-align:left">..</td>
+<td style="text-align:left">选取当前节点的父节点。</td>
+</tr>
+<tr>
+<td style="text-align:left">@</td>
+<td style="text-align:left">选取属性。</td>
+</tr>
+</tbody>
+</table>
+<p>实例：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">路径表达式</th>
+<th style="text-align:left">结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">bookstore</td>
+<td style="text-align:left">选取bookstore元素的所有子节点</td>
+</tr>
+<tr>
+<td style="text-align:left">/bookstore</td>
+<td style="text-align:left">选取根元素bookstore 注释：假如路径起始于正斜杠( / )，则此路径始终代表到某元素的绝对路径！</td>
+</tr>
+<tr>
+<td style="text-align:left">bookstore/book</td>
+<td style="text-align:left">选取属于bookstore的子元素的所有book元素</td>
+</tr>
+<tr>
+<td style="text-align:left">//book</td>
+<td style="text-align:left">选取所有book元素，而不考虑它们的位置</td>
+</tr>
+<tr>
+<td style="text-align:left">bookstore//book</td>
+<td style="text-align:left">选择属于 bookstore 元素的后代的所有 book 元素，而不管它们位于 bookstore 之下的什么位置</td>
+</tr>
+<tr>
+<td style="text-align:left">//@lang</td>
+<td style="text-align:left">选取名为 lang 的所有属性</td>
+</tr>
+</tbody>
+</table>
+<h4 id="谓语（Predicates）"><a href="#谓语（Predicates）" class="headerlink" title="谓语（Predicates）"></a><strong>谓语（Predicates）</strong></h4><p>谓语用来查找某个特定的节点或者包含某个指定的值的节点。</p>
+<p>谓语被嵌在方括号中。</p>
+<p>实例</p>
+<p>在下面的表格中，我们列出了带有谓语的一些路径表达式，以及表达式的结果：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">路径表达式</th>
+<th style="text-align:left">结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">/bookstore/book[1]</td>
+<td style="text-align:left">选取属于 bookstore 子元素的第一个 book 元素</td>
+</tr>
+<tr>
+<td style="text-align:left">/bookstore/book[last()]</td>
+<td style="text-align:left">选取属于 bookstore 子元素的最后一个 book 元素</td>
+</tr>
+<tr>
+<td style="text-align:left">/bookstore/book[last()-1]</td>
+<td style="text-align:left">选取属于 bookstore 子元素的倒数第二个 book 元素</td>
+</tr>
+<tr>
+<td style="text-align:left">/bookstore/book[postion()&lt;3]</td>
+<td style="text-align:left">选取最前面的两个属于 bookstore 元素的子元素的 book 元素</td>
+</tr>
+<tr>
+<td style="text-align:left">//title[@lang]</td>
+<td style="text-align:left">选取所有拥有名为 lang 的属性的 title 元素</td>
+</tr>
+<tr>
+<td style="text-align:left">//title[@lang=’eng’]</td>
+<td style="text-align:left">选取所有 title 元素，且这些元素拥有值为 eng 的 lang 属性</td>
+</tr>
+<tr>
+<td style="text-align:left">/bookstore/book[price&gt;35.00]</td>
+<td style="text-align:left">选取 bookstore 元素的所有 book 元素，且其中的 price 元素的值须大于 35.00</td>
+</tr>
+<tr>
+<td style="text-align:left">/bookstore/book[price&gt;35.00]/title</td>
+<td style="text-align:left">选取 bookstore 元素中的 book 元素的所有 title 元素，且其中的 price 元素的值须大于 35.00</td>
+</tr>
+</tbody>
+</table>
+<h4 id="选取未知节点"><a href="#选取未知节点" class="headerlink" title="选取未知节点"></a><strong>选取未知节点</strong></h4><p>XPath 通配符可用来选取未知的 XML 元素</p>
+<table>
+<thead>
+<tr>
+<th>通配符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>*</td>
+<td>匹配任何元素节点</td>
+</tr>
+<tr>
+<td>@*</td>
+<td>匹配任何属性节点</td>
+</tr>
+<tr>
+<td>node()</td>
+<td>匹配任何节点</td>
+</tr>
+</tbody>
+</table>
+<p>实例</p>
+<p>在下面的表格中，我们列出了一些路径表达式，以及这些表达式的结果：</p>
+<table>
+<thead>
+<tr>
+<th>路径表达式</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/bookstore/*</td>
+<td>选取 bookstore 元素的所有子元素</td>
+</tr>
+<tr>
+<td>//*</td>
+<td>选取文档中的所有元素</td>
+</tr>
+<tr>
+<td>//title[@*]</td>
+<td>选取所有带有属性的 title 元素</td>
+</tr>
+</tbody>
+</table>
+<h4 id="选取若干路径"><a href="#选取若干路径" class="headerlink" title="选取若干路径"></a><strong>选取若干路径</strong></h4><p>通过在路径表达式中使用“|”运算符，您可以选取若干个路径。</p>
+<p>实例</p>
+<p>在下面的表格中，我们列出了一些路径表达式，以及这些表达式的结果：</p>
+<table>
+<thead>
+<tr>
+<th>路径表达式</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>//book/title &#124; //book/price</td>
+<td>选取 book 元素的所有 title 和 price 元素</td>
+</tr>
+<tr>
+<td>//title &#124; //price</td>
+<td>选取文档中的所有 title 和 price 元素</td>
+</tr>
+<tr>
+<td>/bookstore/book/title &#124; //price</td>
+<td>选取属于 bookstore 元素的 book 元素的所有 title 元素，以及文档中所有的 price 元素</td>
+</tr>
+</tbody>
+</table>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;XPath的用法&quot;&gt;&lt;a href=&quot;#XPath的用法&quot; class=&quot;headerlink&quot; title=&quot;XPath的用法&quot;&gt;&lt;/a&gt;&lt;strong&gt;XPath的用法&lt;/strong&gt;&lt;/h2&gt;&lt;h3 id=&quot;XPath简介&quot;&gt;&lt;a href=&quot;#XPath简介&quot; class=&quot;headerlink&quot; title=&quot;XPath简介&quot;&gt;&lt;/a&gt;&lt;strong&gt;XPath简介&lt;/strong&gt;&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;XPath 使用路径表达式在 XML / HTML 文档中进行导航&lt;/li&gt;
+&lt;li&gt;XPath 包含一个标准函数库&lt;/li&gt;
+&lt;li&gt;XPath 是 XSLT 中的主要元素&lt;/li&gt;
+&lt;li&gt;XPath 是一个 W3C 标准&lt;/li&gt;
+&lt;/ul&gt;
+    
+    </summary>
+    
+      <category term="XPath" scheme="http://yoursite.com/categories/XPath/"/>
+    
+    
+      <category term="Scrapy，XPath，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CXPath%EF%BC%8CPython/"/>
     
   </entry>
   
