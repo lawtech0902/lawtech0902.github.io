@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-04-20T13:46:42.000Z</updated>
+  <updated>2017-04-21T13:14:25.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,68 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Items</title>
+    <link href="http://yoursite.com/2017/04/21/scrapy-items/"/>
+    <id>http://yoursite.com/2017/04/21/scrapy-items/</id>
+    <published>2017-04-21T06:18:54.000Z</published>
+    <updated>2017-04-21T13:14:25.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>爬取的主要目标就是从非结构性的数据源提取结构性数据，例如网页。Scrapy 提供 Item 类来满足这样的需求。</p>
+<p>Item 对象是种简单的容器，保存了爬取到得数据。其提供了类似于词典 (dictionary-like) 的API以及用于声明可用字段的简单语法。</p>
+<a id="more"></a>
+<h2 id="声明-Item"><a href="#声明-Item" class="headerlink" title="声明 Item"></a><strong>声明 Item</strong></h2><p>Item 使用简单的 class 定义语法以及 Field 对象来声明。例如:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> scrapy</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ProductItem</span><span class="params">(scrapy.Item)</span>:</span> </div><div class="line">    name = scrapy.Field() </div><div class="line">    price = scrapy.Field() </div><div class="line">    stock = scrapy.Field() </div><div class="line">    last_updated = scrapy.Field(serializer=str)</div></pre></td></tr></table></figure>
+<p>Scrapy Item 的定义方式与 Django Models 很类似，但是没有 Django 那么多不同的字段类型（Field Type）。</p>
+<h2 id="Item-字段（Item-Fields）"><a href="#Item-字段（Item-Fields）" class="headerlink" title="Item 字段（Item Fields）"></a><strong>Item 字段（Item Fields）</strong></h2><p>Field 对象指明了每个字段的元数据（metadata）。例如上面例子中 last_updated 中指明了该字段的序列化函数。</p>
+<p>您可以为每个字段指明任何类型的元数据。Field 对象对接受的值没有任何限制。也正是因为这个原因，文档也无法提供所有可用的元数据的键（key）参考列表。Field 对象中保存的每个键可以由多个组件使用，并且只有这些组件知道这个键的存在。您可以根据自己的需求，定义使用其他的 Field 键。 设置 Field 对象的主要目的就是在一个地方定义好所有的元数据。一般来说，那些依赖某个字段的组件肯定使用了特定的键（key）。您必须查看组件相关的文档，查看其用了哪些元数据键（metadata key）。</p>
+<p>需要注意的是，用来声明 item 的 Field 对象并没有被赋值为 class 的属性。不过您可以通过 Item.fields 属性进 行访问。</p>
+<h2 id="与-Item-配合"><a href="#与-Item-配合" class="headerlink" title="与 Item 配合"></a><strong>与 Item 配合</strong></h2><p>在API这里的操作，和 <code>dict API</code> 非常的相似。</p>
+<h3 id="创建-item"><a href="#创建-item" class="headerlink" title="创建 item"></a><strong>创建 item</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> scrapy</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="class"><span class="keyword">class</span> <span class="title">ProductItem</span><span class="params">(scrapy.Item)</span>:</span></div><div class="line"><span class="meta">... </span>    name = scrapy.Field()</div><div class="line"><span class="meta">... </span>    price = scrapy.Field()</div><div class="line"><span class="meta">... </span>    stock = scrapy.Field()</div><div class="line"><span class="meta">... </span>    last_updated = scrapy.Field(serializer=str)</div><div class="line">...</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>product = ProductItem(name=<span class="string">'Desktop'</span>, price=<span class="number">1000</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(product)</div><div class="line">&#123;<span class="string">'name'</span>: <span class="string">'Desktop'</span>, <span class="string">'price'</span>: <span class="number">1000</span>&#125;</div></pre></td></tr></table></figure>
+<h3 id="获取字段的值"><a href="#获取字段的值" class="headerlink" title="获取字段的值"></a><strong>获取字段的值</strong></h3><p>两种方式：</p>
+<ul>
+<li>键值对</li>
+<li>get()</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 已设定key和value值</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>product[<span class="string">'name'</span>]</div><div class="line"><span class="string">'Desktop'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>product.get(<span class="string">'name'</span>)</div><div class="line"><span class="string">'Desktop'</span></div><div class="line"></div><div class="line"><span class="comment"># 未设定key和value值</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>product[<span class="string">'last_updated'</span>]</div><div class="line">Traceback (most recent call last):</div><div class="line">  File <span class="string">"&lt;stdin&gt;"</span>, line <span class="number">1</span>, <span class="keyword">in</span> &lt;module&gt;</div><div class="line">  File <span class="string">"/Users/lawtech/myvirtualenvs/article_spider/lib/python3.5/site-packages/scrapy/item.py"</span>, line <span class="number">59</span>, <span class="keyword">in</span> __getitem__</div><div class="line">    <span class="keyword">return</span> self._values[key]</div><div class="line">KeyError: <span class="string">'last_updated'</span></div><div class="line">    </div><div class="line"><span class="comment"># 默认返回空值</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>product.get(<span class="string">'last_updated'</span>)</div><div class="line"></div><div class="line"><span class="comment"># 设定返回值</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>product.get(<span class="string">'last_updated'</span>, <span class="string">'not set value'</span>)</div><div class="line"><span class="string">'not set value'</span></div><div class="line"></div><div class="line"><span class="comment"># 未声明的字段</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>product[<span class="string">'lala'</span>]</div><div class="line">Traceback (most recent call last):</div><div class="line">  File <span class="string">"&lt;stdin&gt;"</span>, line <span class="number">1</span>, <span class="keyword">in</span> &lt;module&gt;</div><div class="line">  File <span class="string">"/Users/lawtech/myvirtualenvs/article_spider/lib/python3.5/site-packages/scrapy/item.py"</span>, line <span class="number">59</span>, <span class="keyword">in</span> __getitem__</div><div class="line">    <span class="keyword">return</span> self._values[key]</div><div class="line">KeyError: <span class="string">'lala'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>product.get(<span class="string">'lala'</span>, <span class="string">'not exist'</span>)</div><div class="line"><span class="string">'not exist'</span></div><div class="line"></div><div class="line"><span class="comment"># 字段是否被赋值</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="string">'name'</span> <span class="keyword">in</span> product</div><div class="line"><span class="keyword">True</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="string">'last_updated'</span> <span class="keyword">in</span> product</div><div class="line"><span class="keyword">False</span></div><div class="line"></div><div class="line"><span class="comment"># 字段是否被声明</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="string">'last_updated'</span> <span class="keyword">in</span> product.fields</div><div class="line"><span class="keyword">True</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="string">'lala'</span> <span class="keyword">in</span> product.fields</div><div class="line"><span class="keyword">False</span></div></pre></td></tr></table></figure>
+<h3 id="设置字段的值"><a href="#设置字段的值" class="headerlink" title="设置字段的值"></a><strong>设置字段的值</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 已经声明的字段</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>product[<span class="string">'last_updated'</span>] = <span class="string">'today'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>product[<span class="string">'last_updated'</span>]</div><div class="line"><span class="string">'today'</span></div><div class="line"></div><div class="line"><span class="comment"># 未声明的字段无法赋值</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>product[<span class="string">'lala'</span>] = <span class="string">'test'</span></div><div class="line">Traceback (most recent call last):</div><div class="line">  File <span class="string">"&lt;stdin&gt;"</span>, line <span class="number">1</span>, <span class="keyword">in</span> &lt;module&gt;</div><div class="line">  File <span class="string">"/Users/lawtech/myvirtualenvs/article_spider/lib/python3.5/site-packages/scrapy/item.py"</span>, line <span class="number">66</span>, <span class="keyword">in</span> __setitem__</div><div class="line">    (self.__class__.__name__, key))</div><div class="line">KeyError: <span class="string">'ProductItem does not support field: lala'</span></div></pre></td></tr></table></figure>
+<h3 id="获取所有能够获取到的值"><a href="#获取所有能够获取到的值" class="headerlink" title="获取所有能够获取到的值"></a><strong>获取所有能够获取到的值</strong></h3><p>可以使用 dict API 来获取所有的值:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>product.keys()</div><div class="line">dict_keys([<span class="string">'last_updated'</span>, <span class="string">'price'</span>, <span class="string">'name'</span>])</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>product.items()</div><div class="line">ItemsView(&#123;<span class="string">'last_updated'</span>: <span class="string">'today'</span>, <span class="string">'name'</span>: <span class="string">'Desktop'</span>, <span class="string">'price'</span>: <span class="number">1000</span>&#125;)</div></pre></td></tr></table></figure>
+<h3 id="复制-item"><a href="#复制-item" class="headerlink" title="复制 item"></a><strong>复制 item</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>product2 = ProductItem(product)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(product2)</div><div class="line">&#123;<span class="string">'last_updated'</span>: <span class="string">'today'</span>, <span class="string">'name'</span>: <span class="string">'Desktop'</span>, <span class="string">'price'</span>: <span class="number">1000</span>&#125;</div><div class="line"></div><div class="line"><span class="comment"># 推荐使用第二种方法</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>product3 = product2.copy()</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(product3)</div><div class="line">&#123;<span class="string">'last_updated'</span>: <span class="string">'today'</span>, <span class="string">'name'</span>: <span class="string">'Desktop'</span>, <span class="string">'price'</span>: <span class="number">1000</span>&#125;</div></pre></td></tr></table></figure>
+<h3 id="根据-item-创建字典-dict"><a href="#根据-item-创建字典-dict" class="headerlink" title="根据 item 创建字典(dict)"></a><strong>根据 item 创建字典(dict)</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>dict(product)</div><div class="line">&#123;<span class="string">'price'</span>: <span class="number">1000</span>, <span class="string">'last_updated'</span>: <span class="string">'today'</span>, <span class="string">'name'</span>: <span class="string">'Desktop'</span>&#125;</div></pre></td></tr></table></figure>
+<h3 id="根据字典-dict-创建-item"><a href="#根据字典-dict-创建-item" class="headerlink" title="根据字典(dict)创建 item"></a><strong>根据字典(dict)创建 item</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>ProductItem(&#123;<span class="string">'name'</span>:<span class="string">'laptop pc'</span>, <span class="string">'price'</span>:<span class="number">1500</span>&#125;)</div><div class="line">&#123;<span class="string">'name'</span>: <span class="string">'laptop pc'</span>, <span class="string">'price'</span>: <span class="number">1500</span>&#125;</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>ProductItem(&#123;<span class="string">'name'</span>:<span class="string">'laptop pc'</span>, <span class="string">'lala'</span>:<span class="number">1500</span>&#125;)</div><div class="line">Traceback (most recent call last):</div><div class="line">  File <span class="string">"&lt;stdin&gt;"</span>, line <span class="number">1</span>, <span class="keyword">in</span> &lt;module&gt;</div><div class="line">  File <span class="string">"/Users/lawtech/myvirtualenvs/article_spider/lib/python3.5/site-packages/scrapy/item.py"</span>, line <span class="number">56</span>, <span class="keyword">in</span> __init__</div><div class="line">    self[k] = v</div><div class="line">  File <span class="string">"/Users/lawtech/myvirtualenvs/article_spider/lib/python3.5/site-packages/scrapy/item.py"</span>, line <span class="number">66</span>, <span class="keyword">in</span> __setitem__</div><div class="line">    (self.__class__.__name__, key))</div><div class="line">KeyError: <span class="string">'ProductItem does not support field: lala'</span></div></pre></td></tr></table></figure>
+<h2 id="扩展-Item"><a href="#扩展-Item" class="headerlink" title="扩展 Item"></a><strong>扩展 Item</strong></h2><p>可以通过继承原始的 Item 来扩展 item(添加更多的字段或者修改某些字段的元数据)。</p>
+<ul>
+<li>添加新的字段</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">DiscountedProductItem</span><span class="params">(Product)</span>:</span></div><div class="line">    discount_percent = scrapy.Field(serializer=str)</div><div class="line">    discount_expiration_date = scrapy.Field()</div></pre></td></tr></table></figure>
+<ul>
+<li>使用原字段的元数据</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SpecificProduct</span><span class="params">(Product)</span>:</span></div><div class="line">    name = scrapy.Field(Product.fields[<span class="string">'name'</span>], serializer=my_serializer)</div><div class="line"><span class="comment">#my_serializer 指序列化的类型</span></div></pre></td></tr></table></figure>
+<p>上述代码，在保留了原始的元数据值的情况下，添加（或覆盖）了 <code>name</code> 字段的  <code>serializer</code> 。 存在及覆盖，不存在即添加。</p>
+<h2 id="Item-对象"><a href="#Item-对象" class="headerlink" title="Item 对象"></a><strong>Item 对象</strong></h2><p><code>class scrapy.item.Item([arg])</code></p>
+<p>返回一个根据给定的参数可选初始化的 <code>item</code> 。</p>
+<p><code>Item</code> 复制了标准化的 <code>dict API</code> ，包括初始化函数也是一样。除此之外，唯一添加的额外属性就是 <code>fields</code> 。</p>
+<p><code>fields</code> 是一个包含了 item 所有声明的字段的字典，而不仅仅是获取到的字段。该字典的 key 是字段（field）的名字，值是 Item 声明中使用到的 Field 对象。</p>
+<h2 id="字段（Field）对象"><a href="#字段（Field）对象" class="headerlink" title="字段（Field）对象"></a>字段（Field）对象</h2><p><code>class scrapy.item.Field([arg])</code></p>
+<p><code>Field</code>仅仅是内置的 <code>dict</code> 类的一个别名（继承于 <code>dict</code> ），并没有提供额外的方法或属性。说白了，<code>Field</code>就是完完全全的Python字典，被用来基于类属性的方法支持 <code>Item</code> 声明语法。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;爬取的主要目标就是从非结构性的数据源提取结构性数据，例如网页。Scrapy 提供 Item 类来满足这样的需求。&lt;/p&gt;
+&lt;p&gt;Item 对象是种简单的容器，保存了爬取到得数据。其提供了类似于词典 (dictionary-like) 的API以及用于声明可用字段的简单语法。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
+    
+    
+      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
+    
+  </entry>
   
   <entry>
     <title>Redis学习笔记(六)：数据安全与性能保障——处理系统故障</title>
@@ -539,263 +601,6 @@
   </entry>
   
   <entry>
-    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Xpath教程</title>
-    <link href="http://yoursite.com/2017/04/11/xpath-usage/"/>
-    <id>http://yoursite.com/2017/04/11/xpath-usage/</id>
-    <published>2017-04-11T12:18:54.000Z</published>
-    <updated>2017-04-16T08:41:39.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="XPath的用法"><a href="#XPath的用法" class="headerlink" title="XPath的用法"></a><strong>XPath的用法</strong></h2><h3 id="XPath简介"><a href="#XPath简介" class="headerlink" title="XPath简介"></a><strong>XPath简介</strong></h3><ul>
-<li>XPath 使用路径表达式在 XML / HTML 文档中进行导航</li>
-<li>XPath 包含一个标准函数库</li>
-<li>XPath 是 XSLT 中的主要元素</li>
-<li>XPath 是一个 W3C 标准</li>
-</ul>
-<a id="more"></a>
-<h3 id="XPath术语"><a href="#XPath术语" class="headerlink" title="XPath术语"></a><strong>XPath术语</strong></h3><h4 id="节点（Node）"><a href="#节点（Node）" class="headerlink" title="节点（Node）"></a><strong>节点（Node）</strong></h4><p>在 XPath 中，有七种类型的节点：元素、属性、文本、命名空间、处理指令、注释以及文档（根）节点。XML 文档是被作为节点树来对待的。树的根被称为文档节点或者根节点。</p>
-<p>请看下面这个 XML 文档：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;</div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span>Harry Potter<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">author</span>&gt;</span>J K. Rowling<span class="tag">&lt;/<span class="name">author</span>&gt;</span> </div><div class="line">  <span class="tag">&lt;<span class="name">year</span>&gt;</span>2005<span class="tag">&lt;/<span class="name">year</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>29.99<span class="tag">&lt;/<span class="name">price</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">bookstore</span>&gt;</span></div></pre></td></tr></table></figure>
-<p>上面的XML文档中的节点例子：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span> （文档节点）</div><div class="line"><span class="tag">&lt;<span class="name">author</span>&gt;</span>J K. Rowling<span class="tag">&lt;/<span class="name">author</span>&gt;</span> （元素节点）</div><div class="line">lang="en" （属性节点）</div></pre></td></tr></table></figure>
-<h4 id="基本值（或称原子值，Atomic-value）"><a href="#基本值（或称原子值，Atomic-value）" class="headerlink" title="基本值（或称原子值，Atomic value）"></a><strong>基本值（或称原子值，Atomic value）</strong></h4><p>基本值是无父或无子的节点。</p>
-<p>基本值的例子：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">J K. Rowling</div><div class="line">"en"</div></pre></td></tr></table></figure>
-<h4 id="项目（Item）"><a href="#项目（Item）" class="headerlink" title="项目（Item）"></a><strong>项目（Item）</strong></h4><p>项目是基本值或者节点。</p>
-<h4 id="节点关系"><a href="#节点关系" class="headerlink" title="节点关系"></a><strong>节点关系</strong></h4><p>参考示例：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Harry Potter<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">author</span>&gt;</span>J K. Rowling<span class="tag">&lt;/<span class="name">author</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">year</span>&gt;</span>2005<span class="tag">&lt;/<span class="name">year</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>29.99<span class="tag">&lt;/<span class="name">price</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">bookstore</span>&gt;</span></div></pre></td></tr></table></figure>
-<ul>
-<li><p>父节点（Parent）</p>
-<p>每个元素以及属性都有一个父节点。</p>
-<p>在上面的例子中，book 元素是 title、author、year 以及 price 元素的父节点</p>
-</li>
-<li><p>子节点（Children）</p>
-<p>元素节点可有零个、一个或多个子节点。</p>
-<p>在上面的例子中，title、author、year 以及 price 元素都是 book 元素的子节点</p>
-</li>
-<li><p>同胞节点（Sibling）</p>
-<p>拥有相同的父节点的节点</p>
-<p>在上面的例子中，title、author、year 以及 price 元素都是同胞节点</p>
-</li>
-<li><p>先辈节点（Ancestor）</p>
-<p>某节点的父节点、父节点的父节点，等等。</p>
-<p>在上面的例子中，title 元素的先辈节点是 book 元素和 bookstore 元素</p>
-</li>
-<li><p>后代节点（Descendant）</p>
-<p>某个节点的子节点，子节点的子节点，等等。</p>
-<p>在上面的例子中，bookstore 的后代节点是 book、title、author、year 以及 price 元素</p>
-</li>
-</ul>
-<h3 id="XPath语法"><a href="#XPath语法" class="headerlink" title="XPath语法"></a><strong>XPath语法</strong></h3><p>参考示例：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;</div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span> <span class="attr">lang</span>=<span class="string">"eng"</span>&gt;</span>Harry Potter<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>29.99<span class="tag">&lt;/<span class="name">price</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span> <span class="attr">lang</span>=<span class="string">"eng"</span>&gt;</span>Learning XML<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>39.95<span class="tag">&lt;/<span class="name">price</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">bookstore</span>&gt;</span></div></pre></td></tr></table></figure>
-<h4 id="选取节点"><a href="#选取节点" class="headerlink" title="选取节点"></a><strong>选取节点</strong></h4><p>XPath 使用路径表达式在 XML 文档中选取节点。节点是通过沿着路径或者 step 来选取的。下面列出了最有用的路径表达式：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">表达式</th>
-<th style="text-align:left">描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">nodename</td>
-<td style="text-align:left">选取此节点的所有子节点</td>
-</tr>
-<tr>
-<td style="text-align:left">/</td>
-<td style="text-align:left">从根节点选取</td>
-</tr>
-<tr>
-<td style="text-align:left">//</td>
-<td style="text-align:left">从匹配选择的当前节点选择文档中的节点，而不考虑它们的位置</td>
-</tr>
-<tr>
-<td style="text-align:left">.</td>
-<td style="text-align:left">选取当前节点</td>
-</tr>
-<tr>
-<td style="text-align:left">..</td>
-<td style="text-align:left">选取当前节点的父节点。</td>
-</tr>
-<tr>
-<td style="text-align:left">@</td>
-<td style="text-align:left">选取属性。</td>
-</tr>
-</tbody>
-</table>
-<p>实例：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">路径表达式</th>
-<th style="text-align:left">结果</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">bookstore</td>
-<td style="text-align:left">选取bookstore元素的所有子节点</td>
-</tr>
-<tr>
-<td style="text-align:left">/bookstore</td>
-<td style="text-align:left">选取根元素bookstore 注释：假如路径起始于正斜杠( / )，则此路径始终代表到某元素的绝对路径！</td>
-</tr>
-<tr>
-<td style="text-align:left">bookstore/book</td>
-<td style="text-align:left">选取属于bookstore的子元素的所有book元素</td>
-</tr>
-<tr>
-<td style="text-align:left">//book</td>
-<td style="text-align:left">选取所有book元素，而不考虑它们的位置</td>
-</tr>
-<tr>
-<td style="text-align:left">bookstore//book</td>
-<td style="text-align:left">选择属于 bookstore 元素的后代的所有 book 元素，而不管它们位于 bookstore 之下的什么位置</td>
-</tr>
-<tr>
-<td style="text-align:left">//@lang</td>
-<td style="text-align:left">选取名为 lang 的所有属性</td>
-</tr>
-</tbody>
-</table>
-<h4 id="谓语（Predicates）"><a href="#谓语（Predicates）" class="headerlink" title="谓语（Predicates）"></a><strong>谓语（Predicates）</strong></h4><p>谓语用来查找某个特定的节点或者包含某个指定的值的节点。</p>
-<p>谓语被嵌在方括号中。</p>
-<p>实例</p>
-<p>在下面的表格中，我们列出了带有谓语的一些路径表达式，以及表达式的结果：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">路径表达式</th>
-<th style="text-align:left">结果</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">/bookstore/book[1]</td>
-<td style="text-align:left">选取属于 bookstore 子元素的第一个 book 元素</td>
-</tr>
-<tr>
-<td style="text-align:left">/bookstore/book[last()]</td>
-<td style="text-align:left">选取属于 bookstore 子元素的最后一个 book 元素</td>
-</tr>
-<tr>
-<td style="text-align:left">/bookstore/book[last()-1]</td>
-<td style="text-align:left">选取属于 bookstore 子元素的倒数第二个 book 元素</td>
-</tr>
-<tr>
-<td style="text-align:left">/bookstore/book[postion()&lt;3]</td>
-<td style="text-align:left">选取最前面的两个属于 bookstore 元素的子元素的 book 元素</td>
-</tr>
-<tr>
-<td style="text-align:left">//title[@lang]</td>
-<td style="text-align:left">选取所有拥有名为 lang 的属性的 title 元素</td>
-</tr>
-<tr>
-<td style="text-align:left">//title[@lang=’eng’]</td>
-<td style="text-align:left">选取所有 title 元素，且这些元素拥有值为 eng 的 lang 属性</td>
-</tr>
-<tr>
-<td style="text-align:left">/bookstore/book[price&gt;35.00]</td>
-<td style="text-align:left">选取 bookstore 元素的所有 book 元素，且其中的 price 元素的值须大于 35.00</td>
-</tr>
-<tr>
-<td style="text-align:left">/bookstore/book[price&gt;35.00]/title</td>
-<td style="text-align:left">选取 bookstore 元素中的 book 元素的所有 title 元素，且其中的 price 元素的值须大于 35.00</td>
-</tr>
-</tbody>
-</table>
-<h4 id="选取未知节点"><a href="#选取未知节点" class="headerlink" title="选取未知节点"></a><strong>选取未知节点</strong></h4><p>XPath 通配符可用来选取未知的 XML 元素</p>
-<table>
-<thead>
-<tr>
-<th>通配符</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>*</td>
-<td>匹配任何元素节点</td>
-</tr>
-<tr>
-<td>@*</td>
-<td>匹配任何属性节点</td>
-</tr>
-<tr>
-<td>node()</td>
-<td>匹配任何节点</td>
-</tr>
-</tbody>
-</table>
-<p>实例</p>
-<p>在下面的表格中，我们列出了一些路径表达式，以及这些表达式的结果：</p>
-<table>
-<thead>
-<tr>
-<th>路径表达式</th>
-<th>结果</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>/bookstore/*</td>
-<td>选取 bookstore 元素的所有子元素</td>
-</tr>
-<tr>
-<td>//*</td>
-<td>选取文档中的所有元素</td>
-</tr>
-<tr>
-<td>//title[@*]</td>
-<td>选取所有带有属性的 title 元素</td>
-</tr>
-</tbody>
-</table>
-<h4 id="选取若干路径"><a href="#选取若干路径" class="headerlink" title="选取若干路径"></a><strong>选取若干路径</strong></h4><p>通过在路径表达式中使用“|”运算符，您可以选取若干个路径。</p>
-<p>实例</p>
-<p>在下面的表格中，我们列出了一些路径表达式，以及这些表达式的结果：</p>
-<table>
-<thead>
-<tr>
-<th>路径表达式</th>
-<th>结果</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>//book/title &#124; //book/price</td>
-<td>选取 book 元素的所有 title 和 price 元素</td>
-</tr>
-<tr>
-<td>//title &#124; //price</td>
-<td>选取文档中的所有 title 和 price 元素</td>
-</tr>
-<tr>
-<td>/bookstore/book/title &#124; //price</td>
-<td>选取属于 bookstore 元素的 book 元素的所有 title 元素，以及文档中所有的 price 元素</td>
-</tr>
-</tbody>
-</table>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;XPath的用法&quot;&gt;&lt;a href=&quot;#XPath的用法&quot; class=&quot;headerlink&quot; title=&quot;XPath的用法&quot;&gt;&lt;/a&gt;&lt;strong&gt;XPath的用法&lt;/strong&gt;&lt;/h2&gt;&lt;h3 id=&quot;XPath简介&quot;&gt;&lt;a href=&quot;#XPath简介&quot; class=&quot;headerlink&quot; title=&quot;XPath简介&quot;&gt;&lt;/a&gt;&lt;strong&gt;XPath简介&lt;/strong&gt;&lt;/h3&gt;&lt;ul&gt;
-&lt;li&gt;XPath 使用路径表达式在 XML / HTML 文档中进行导航&lt;/li&gt;
-&lt;li&gt;XPath 包含一个标准函数库&lt;/li&gt;
-&lt;li&gt;XPath 是 XSLT 中的主要元素&lt;/li&gt;
-&lt;li&gt;XPath 是一个 W3C 标准&lt;/li&gt;
-&lt;/ul&gt;
-    
-    </summary>
-    
-      <category term="XPath" scheme="http://yoursite.com/categories/XPath/"/>
-    
-    
-      <category term="Scrapy，XPath，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CXPath%EF%BC%8CPython/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Python分布式爬虫打造搜索引擎项目学习笔记——Python正则表达式</title>
     <link href="http://yoursite.com/2017/04/11/regex/"/>
     <id>http://yoursite.com/2017/04/11/regex/</id>
@@ -1302,6 +1107,263 @@
     
     
       <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Xpath教程</title>
+    <link href="http://yoursite.com/2017/04/11/xpath-usage/"/>
+    <id>http://yoursite.com/2017/04/11/xpath-usage/</id>
+    <published>2017-04-11T12:18:54.000Z</published>
+    <updated>2017-04-16T08:41:39.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="XPath的用法"><a href="#XPath的用法" class="headerlink" title="XPath的用法"></a><strong>XPath的用法</strong></h2><h3 id="XPath简介"><a href="#XPath简介" class="headerlink" title="XPath简介"></a><strong>XPath简介</strong></h3><ul>
+<li>XPath 使用路径表达式在 XML / HTML 文档中进行导航</li>
+<li>XPath 包含一个标准函数库</li>
+<li>XPath 是 XSLT 中的主要元素</li>
+<li>XPath 是一个 W3C 标准</li>
+</ul>
+<a id="more"></a>
+<h3 id="XPath术语"><a href="#XPath术语" class="headerlink" title="XPath术语"></a><strong>XPath术语</strong></h3><h4 id="节点（Node）"><a href="#节点（Node）" class="headerlink" title="节点（Node）"></a><strong>节点（Node）</strong></h4><p>在 XPath 中，有七种类型的节点：元素、属性、文本、命名空间、处理指令、注释以及文档（根）节点。XML 文档是被作为节点树来对待的。树的根被称为文档节点或者根节点。</p>
+<p>请看下面这个 XML 文档：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;</div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span>Harry Potter<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">author</span>&gt;</span>J K. Rowling<span class="tag">&lt;/<span class="name">author</span>&gt;</span> </div><div class="line">  <span class="tag">&lt;<span class="name">year</span>&gt;</span>2005<span class="tag">&lt;/<span class="name">year</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>29.99<span class="tag">&lt;/<span class="name">price</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">bookstore</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>上面的XML文档中的节点例子：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span> （文档节点）</div><div class="line"><span class="tag">&lt;<span class="name">author</span>&gt;</span>J K. Rowling<span class="tag">&lt;/<span class="name">author</span>&gt;</span> （元素节点）</div><div class="line">lang="en" （属性节点）</div></pre></td></tr></table></figure>
+<h4 id="基本值（或称原子值，Atomic-value）"><a href="#基本值（或称原子值，Atomic-value）" class="headerlink" title="基本值（或称原子值，Atomic value）"></a><strong>基本值（或称原子值，Atomic value）</strong></h4><p>基本值是无父或无子的节点。</p>
+<p>基本值的例子：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">J K. Rowling</div><div class="line">"en"</div></pre></td></tr></table></figure>
+<h4 id="项目（Item）"><a href="#项目（Item）" class="headerlink" title="项目（Item）"></a><strong>项目（Item）</strong></h4><p>项目是基本值或者节点。</p>
+<h4 id="节点关系"><a href="#节点关系" class="headerlink" title="节点关系"></a><strong>节点关系</strong></h4><p>参考示例：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Harry Potter<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">author</span>&gt;</span>J K. Rowling<span class="tag">&lt;/<span class="name">author</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">year</span>&gt;</span>2005<span class="tag">&lt;/<span class="name">year</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>29.99<span class="tag">&lt;/<span class="name">price</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">bookstore</span>&gt;</span></div></pre></td></tr></table></figure>
+<ul>
+<li><p>父节点（Parent）</p>
+<p>每个元素以及属性都有一个父节点。</p>
+<p>在上面的例子中，book 元素是 title、author、year 以及 price 元素的父节点</p>
+</li>
+<li><p>子节点（Children）</p>
+<p>元素节点可有零个、一个或多个子节点。</p>
+<p>在上面的例子中，title、author、year 以及 price 元素都是 book 元素的子节点</p>
+</li>
+<li><p>同胞节点（Sibling）</p>
+<p>拥有相同的父节点的节点</p>
+<p>在上面的例子中，title、author、year 以及 price 元素都是同胞节点</p>
+</li>
+<li><p>先辈节点（Ancestor）</p>
+<p>某节点的父节点、父节点的父节点，等等。</p>
+<p>在上面的例子中，title 元素的先辈节点是 book 元素和 bookstore 元素</p>
+</li>
+<li><p>后代节点（Descendant）</p>
+<p>某个节点的子节点，子节点的子节点，等等。</p>
+<p>在上面的例子中，bookstore 的后代节点是 book、title、author、year 以及 price 元素</p>
+</li>
+</ul>
+<h3 id="XPath语法"><a href="#XPath语法" class="headerlink" title="XPath语法"></a><strong>XPath语法</strong></h3><p>参考示例：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;</div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span> <span class="attr">lang</span>=<span class="string">"eng"</span>&gt;</span>Harry Potter<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>29.99<span class="tag">&lt;/<span class="name">price</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span> <span class="attr">lang</span>=<span class="string">"eng"</span>&gt;</span>Learning XML<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>39.95<span class="tag">&lt;/<span class="name">price</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">bookstore</span>&gt;</span></div></pre></td></tr></table></figure>
+<h4 id="选取节点"><a href="#选取节点" class="headerlink" title="选取节点"></a><strong>选取节点</strong></h4><p>XPath 使用路径表达式在 XML 文档中选取节点。节点是通过沿着路径或者 step 来选取的。下面列出了最有用的路径表达式：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">表达式</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">nodename</td>
+<td style="text-align:left">选取此节点的所有子节点</td>
+</tr>
+<tr>
+<td style="text-align:left">/</td>
+<td style="text-align:left">从根节点选取</td>
+</tr>
+<tr>
+<td style="text-align:left">//</td>
+<td style="text-align:left">从匹配选择的当前节点选择文档中的节点，而不考虑它们的位置</td>
+</tr>
+<tr>
+<td style="text-align:left">.</td>
+<td style="text-align:left">选取当前节点</td>
+</tr>
+<tr>
+<td style="text-align:left">..</td>
+<td style="text-align:left">选取当前节点的父节点。</td>
+</tr>
+<tr>
+<td style="text-align:left">@</td>
+<td style="text-align:left">选取属性。</td>
+</tr>
+</tbody>
+</table>
+<p>实例：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">路径表达式</th>
+<th style="text-align:left">结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">bookstore</td>
+<td style="text-align:left">选取bookstore元素的所有子节点</td>
+</tr>
+<tr>
+<td style="text-align:left">/bookstore</td>
+<td style="text-align:left">选取根元素bookstore 注释：假如路径起始于正斜杠( / )，则此路径始终代表到某元素的绝对路径！</td>
+</tr>
+<tr>
+<td style="text-align:left">bookstore/book</td>
+<td style="text-align:left">选取属于bookstore的子元素的所有book元素</td>
+</tr>
+<tr>
+<td style="text-align:left">//book</td>
+<td style="text-align:left">选取所有book元素，而不考虑它们的位置</td>
+</tr>
+<tr>
+<td style="text-align:left">bookstore//book</td>
+<td style="text-align:left">选择属于 bookstore 元素的后代的所有 book 元素，而不管它们位于 bookstore 之下的什么位置</td>
+</tr>
+<tr>
+<td style="text-align:left">//@lang</td>
+<td style="text-align:left">选取名为 lang 的所有属性</td>
+</tr>
+</tbody>
+</table>
+<h4 id="谓语（Predicates）"><a href="#谓语（Predicates）" class="headerlink" title="谓语（Predicates）"></a><strong>谓语（Predicates）</strong></h4><p>谓语用来查找某个特定的节点或者包含某个指定的值的节点。</p>
+<p>谓语被嵌在方括号中。</p>
+<p>实例</p>
+<p>在下面的表格中，我们列出了带有谓语的一些路径表达式，以及表达式的结果：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">路径表达式</th>
+<th style="text-align:left">结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">/bookstore/book[1]</td>
+<td style="text-align:left">选取属于 bookstore 子元素的第一个 book 元素</td>
+</tr>
+<tr>
+<td style="text-align:left">/bookstore/book[last()]</td>
+<td style="text-align:left">选取属于 bookstore 子元素的最后一个 book 元素</td>
+</tr>
+<tr>
+<td style="text-align:left">/bookstore/book[last()-1]</td>
+<td style="text-align:left">选取属于 bookstore 子元素的倒数第二个 book 元素</td>
+</tr>
+<tr>
+<td style="text-align:left">/bookstore/book[postion()&lt;3]</td>
+<td style="text-align:left">选取最前面的两个属于 bookstore 元素的子元素的 book 元素</td>
+</tr>
+<tr>
+<td style="text-align:left">//title[@lang]</td>
+<td style="text-align:left">选取所有拥有名为 lang 的属性的 title 元素</td>
+</tr>
+<tr>
+<td style="text-align:left">//title[@lang=’eng’]</td>
+<td style="text-align:left">选取所有 title 元素，且这些元素拥有值为 eng 的 lang 属性</td>
+</tr>
+<tr>
+<td style="text-align:left">/bookstore/book[price&gt;35.00]</td>
+<td style="text-align:left">选取 bookstore 元素的所有 book 元素，且其中的 price 元素的值须大于 35.00</td>
+</tr>
+<tr>
+<td style="text-align:left">/bookstore/book[price&gt;35.00]/title</td>
+<td style="text-align:left">选取 bookstore 元素中的 book 元素的所有 title 元素，且其中的 price 元素的值须大于 35.00</td>
+</tr>
+</tbody>
+</table>
+<h4 id="选取未知节点"><a href="#选取未知节点" class="headerlink" title="选取未知节点"></a><strong>选取未知节点</strong></h4><p>XPath 通配符可用来选取未知的 XML 元素</p>
+<table>
+<thead>
+<tr>
+<th>通配符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>*</td>
+<td>匹配任何元素节点</td>
+</tr>
+<tr>
+<td>@*</td>
+<td>匹配任何属性节点</td>
+</tr>
+<tr>
+<td>node()</td>
+<td>匹配任何节点</td>
+</tr>
+</tbody>
+</table>
+<p>实例</p>
+<p>在下面的表格中，我们列出了一些路径表达式，以及这些表达式的结果：</p>
+<table>
+<thead>
+<tr>
+<th>路径表达式</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/bookstore/*</td>
+<td>选取 bookstore 元素的所有子元素</td>
+</tr>
+<tr>
+<td>//*</td>
+<td>选取文档中的所有元素</td>
+</tr>
+<tr>
+<td>//title[@*]</td>
+<td>选取所有带有属性的 title 元素</td>
+</tr>
+</tbody>
+</table>
+<h4 id="选取若干路径"><a href="#选取若干路径" class="headerlink" title="选取若干路径"></a><strong>选取若干路径</strong></h4><p>通过在路径表达式中使用“|”运算符，您可以选取若干个路径。</p>
+<p>实例</p>
+<p>在下面的表格中，我们列出了一些路径表达式，以及这些表达式的结果：</p>
+<table>
+<thead>
+<tr>
+<th>路径表达式</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>//book/title &#124; //book/price</td>
+<td>选取 book 元素的所有 title 和 price 元素</td>
+</tr>
+<tr>
+<td>//title &#124; //price</td>
+<td>选取文档中的所有 title 和 price 元素</td>
+</tr>
+<tr>
+<td>/bookstore/book/title &#124; //price</td>
+<td>选取属于 bookstore 元素的 book 元素的所有 title 元素，以及文档中所有的 price 元素</td>
+</tr>
+</tbody>
+</table>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;XPath的用法&quot;&gt;&lt;a href=&quot;#XPath的用法&quot; class=&quot;headerlink&quot; title=&quot;XPath的用法&quot;&gt;&lt;/a&gt;&lt;strong&gt;XPath的用法&lt;/strong&gt;&lt;/h2&gt;&lt;h3 id=&quot;XPath简介&quot;&gt;&lt;a href=&quot;#XPath简介&quot; class=&quot;headerlink&quot; title=&quot;XPath简介&quot;&gt;&lt;/a&gt;&lt;strong&gt;XPath简介&lt;/strong&gt;&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;XPath 使用路径表达式在 XML / HTML 文档中进行导航&lt;/li&gt;
+&lt;li&gt;XPath 包含一个标准函数库&lt;/li&gt;
+&lt;li&gt;XPath 是 XSLT 中的主要元素&lt;/li&gt;
+&lt;li&gt;XPath 是一个 W3C 标准&lt;/li&gt;
+&lt;/ul&gt;
+    
+    </summary>
+    
+      <category term="XPath" scheme="http://yoursite.com/categories/XPath/"/>
+    
+    
+      <category term="Scrapy，XPath，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CXPath%EF%BC%8CPython/"/>
     
   </entry>
   
