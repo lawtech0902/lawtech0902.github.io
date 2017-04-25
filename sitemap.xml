@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2017/04/25/css-selector/</loc>
+    
+    <lastmod>2017-04-25T13:13:49.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2017/04/22/scrapy-spiders/</loc>
+    
+    <lastmod>2017-04-22T11:34:40.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2017/04/21/scrapy-items/</loc>
     
     <lastmod>2017-04-21T13:14:25.000Z</lastmod>
