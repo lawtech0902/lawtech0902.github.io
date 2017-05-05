@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-04-26T07:58:33.000Z</updated>
+  <updated>2017-05-05T12:51:02.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,191 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Selectors</title>
+    <link href="http://yoursite.com/2017/05/05/scrapy-selectors/"/>
+    <id>http://yoursite.com/2017/05/05/scrapy-selectors/</id>
+    <published>2017-05-05T06:18:54.000Z</published>
+    <updated>2017-05-05T12:51:02.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>当抓取网页时，你做的最常见的任务是从 HTML 源码中提取数据。现有的一些库可以达到这个目的： </p>
+<ul>
+<li><a href="http://beautifulsoup.readthedocs.io/zh_CN/latest/" target="_blank" rel="external">BeautifulSoup</a> 是在程序员间非常流行的网页分析库，它基于 HTML 代码的结构来构造一个 Python 对象，对不良标记的处理也非常合理，但它有一个缺点：慢。 </li>
+<li><a href="http://lxml.de/index.html" target="_blank" rel="external">lxml</a> 是一个基于 ElementTree（不是 Python 标准库的一部分）的 python 化的 XML 解析库（也可以解析 HTML）。</li>
+</ul>
+<p>Scrapy 提取数据有自己的一套机制。它们被称作选择器（seletors），因为他们通过特定的 XPath 或者 CSS 表达式来“选择” HTML 文件中的某个部分。</p>
+<a id="more"></a>
+<p>XPath 是一门用来在 XML 文件中选择节点的语言，也可以用在 HTML 上。</p>
+<p>CSS 是一门将 HTML 文档样式化的语言。选择器由它定义，并与特定的 HTML 元素的样式相关连。 </p>
+<p>Scrapy 选择器构建于 lxml 库之上，这意味着它们在速度和解析准确性上非常相似。 </p>
+<p>本文解释了选择器如何工作，并描述了相应的 API。不同于 lxml API 的臃肿，该 API 短小而简洁。这是因为 lxml 库除了用来选择标记化文档外，还可以用到许多任务上。</p>
+<h2 id="使用选择器"><a href="#使用选择器" class="headerlink" title="使用选择器"></a><strong>使用选择器</strong></h2><h3 id="构造选择器"><a href="#构造选择器" class="headerlink" title="构造选择器"></a><strong>构造选择器</strong></h3><p>Scrapy selectors是 <code>Selector</code> 类的实例，通过传入 text 或 <code>TextResponse</code> 来创建，它自动根据传入的类型选择解析规则（XML or HTML）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; from scrapy.selector import Selector </div><div class="line">&gt;&gt;&gt; from scrapy.http import HtmlResponse</div></pre></td></tr></table></figure>
+<p>以文字构造（都以 xpath 和 css 两种方法解析字段内容，加深理解）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; body = &apos;&lt;html&gt;&lt;body&gt;&lt;span&gt;good&lt;/span&gt;&lt;/body&gt;&lt;/html&gt;&apos;</div><div class="line">&gt;&gt;&gt; Selector(text=body).xpath(&quot;//span/text()&quot;).extract()</div><div class="line">[&apos;good&apos;]</div><div class="line">&gt;&gt;&gt; Selector(text=body).css(&quot;html body span::text&quot;).extract()</div><div class="line">[&apos;good&apos;]</div></pre></td></tr></table></figure>
+<p>以 response 构造：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; response = HtmlResponse(url=&apos;http://example.com&apos;, body=body, encoding=&apos;utf-8&apos;)</div><div class="line">&gt;&gt;&gt; Selector(response=response).xpath(&apos;//span/text()&apos;).extract()</div><div class="line">[&apos;good&apos;]</div><div class="line">&gt;&gt;&gt; Selector(response=response).css(&quot;html body span::text&quot;).extract()</div><div class="line">[&apos;good&apos;]</div></pre></td></tr></table></figure>
+<p>response 对象以 <em>.selector</em> 属性提供了一个 selector ， 可以随时使用该快捷方法:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; response.selector.xpath(&apos;//span/text()&apos;).extract()</div><div class="line">[&apos;good&apos;]</div><div class="line">&gt;&gt;&gt; response.selector.css(&quot;html body span::text&quot;).extract()</div><div class="line">[&apos;good&apos;]</div></pre></td></tr></table></figure>
+<h3 id="使用选择器-1"><a href="#使用选择器-1" class="headerlink" title="使用选择器"></a><strong>使用选择器</strong></h3><p>我们将使用 Scrapy shell （提供交互测试）和位于 Scrapy 文档服务器的一个样例页面，来解释如何使用选择器：</p>
+<p><code>http://doc.scrapy.org/en/latest/_static/selectors-sample1.html</code></p>
+<p>该页面源码如下：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></div><div class="line"> <span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">base</span> <span class="attr">href</span>=<span class="string">'http://example.com/'</span> /&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Example website<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line"> <span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line"> <span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">'images'</span>&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">'image1.html'</span>&gt;</span>Name: My image 1 <span class="tag">&lt;<span class="name">br</span> /&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">'image1_thumb.jpg'</span> /&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">'image2.html'</span>&gt;</span>Name: My image 2 <span class="tag">&lt;<span class="name">br</span> /&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">'image2_thumb.jpg'</span> /&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">'image3.html'</span>&gt;</span>Name: My image 3 <span class="tag">&lt;<span class="name">br</span> /&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">'image3_thumb.jpg'</span> /&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">'image4.html'</span>&gt;</span>Name: My image 4 <span class="tag">&lt;<span class="name">br</span> /&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">'image4_thumb.jpg'</span> /&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">'image5.html'</span>&gt;</span>Name: My image 5 <span class="tag">&lt;<span class="name">br</span> /&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">'image5_thumb.jpg'</span> /&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"> <span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>首先，打开 scrapy shell，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">scrapy shell http://doc.scrapy.org/en/latest/_static/selectors-sample1.html</div></pre></td></tr></table></figure>
+<p>当 shell 载入后，您将获得名为 <code>response</code> 的 shell 变量，其为响应的 response，并且在其 <code>response.selector</code> 属性上绑定了一个 selector。</p>
+<p>因为我们处理的是 HTML，选择器将自动使用 HTML 语法分析。 那么，通过查看该页面的源码，我们构建一个 XPath 来选择 title 标签内的文字:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; response.selector.xpath(&quot;//title/text()&quot;)</div><div class="line">&gt;&gt;&gt; [&lt;Selector xpath=&apos;//title/text()&apos; data=&apos;Example website&apos;&gt;]</div></pre></td></tr></table></figure>
+<p>由于在 response 中使用 XPath、CSS 查询十分普遍，因此，Scrapy 提供了两个实用的快捷方式：response.xpath() 及 response.css() ：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; response.xpath(&quot;//title/text()&quot;)</div><div class="line">&gt;&gt;&gt; [&lt;Selector xpath=&apos;//title/text()&apos; data=&apos;Example website&apos;&gt;]</div><div class="line"></div><div class="line">&gt;&gt;&gt; response.css(&quot;title::text&quot;)</div><div class="line">&gt;&gt;&gt; [&lt;Selector xpath=&apos;descendant-or-self::title/text()&apos; data=&apos;Example website&apos;&gt;]</div></pre></td></tr></table></figure>
+<p>现在我们将得到根 URL（base URL）和一些图片链接:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; response.xpath(<span class="string">'//base/@href'</span>).extract() </div><div class="line">[<span class="string">'http://example.com/'</span>]</div><div class="line"></div><div class="line">&gt;&gt;&gt; response.css(<span class="string">'base::attr(href)'</span>).extract() </div><div class="line">[<span class="string">'http://example.com/'</span>]</div><div class="line"></div><div class="line">&gt;&gt;&gt; response.xpath(<span class="string">'//a[contains(@href, "image")]/@href'</span>).extract() </div><div class="line">[<span class="string">'image1.html'</span>, <span class="string">'image2.html'</span>, <span class="string">'image3.html'</span>, <span class="string">'image4.html'</span>, <span class="string">'image5.html'</span>]</div><div class="line"></div><div class="line">&gt;&gt;&gt; response.css(<span class="string">'a[href*=image]::attr(href)'</span>).extract() </div><div class="line">[<span class="string">'image1.html'</span>, <span class="string">'image2.html'</span>, <span class="string">'image3.html'</span>, <span class="string">'image4.html'</span>, <span class="string">'image5.html'</span>]</div><div class="line"></div><div class="line">&gt;&gt;&gt; response.xpath(<span class="string">'//a[contains(@href, "image")]/img/@src'</span>).extract() </div><div class="line">[<span class="string">'image1_thumb.jpg'</span>, <span class="string">'image2_thumb.jpg'</span>, <span class="string">'image3_thumb.jpg'</span>, <span class="string">'image4_thumb.jpg'</span>, <span class="string">'image5_thumb.jpg'</span>]</div><div class="line"></div><div class="line">&gt;&gt;&gt; response.css(<span class="string">'a[href*=image] img::attr(src)'</span>).extract() </div><div class="line">[<span class="string">'image1_thumb.jpg'</span>, <span class="string">'image2_thumb.jpg'</span>, <span class="string">'image3_thumb.jpg'</span>, <span class="string">'image4_thumb.jpg'</span>, <span class="string">'image5_thumb.jpg'</span>]</div></pre></td></tr></table></figure>
+<h3 id="嵌套选择器"><a href="#嵌套选择器" class="headerlink" title="嵌套选择器"></a><strong>嵌套选择器</strong></h3><p>选择器方法（ .xpath() or .css() ）返回相同类型的选择器列表，因此你也可以对这些选择器调用选择器方法。下面是一个例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; links = response.xpath(&quot;//a[contains(@href,&apos;image&apos;)]&quot;)</div><div class="line"></div><div class="line">&gt;&gt;&gt; links.extract()</div><div class="line">[&apos;&lt;a href=&quot;image1.html&quot;&gt;Name: My image 1 &lt;br&gt;&lt;img src=&quot;image1_thumb.jpg&quot;&gt;&lt;/a&gt;&apos;,</div><div class="line"> &apos;&lt;a href=&quot;image2.html&quot;&gt;Name: My image 2 &lt;br&gt;&lt;img src=&quot;image2_thumb.jpg&quot;&gt;&lt;/a&gt;&apos;,</div><div class="line"> &apos;&lt;a href=&quot;image3.html&quot;&gt;Name: My image 3 &lt;br&gt;&lt;img src=&quot;image3_thumb.jpg&quot;&gt;&lt;/a&gt;&apos;,</div><div class="line"> &apos;&lt;a href=&quot;image4.html&quot;&gt;Name: My image 4 &lt;br&gt;&lt;img src=&quot;image4_thumb.jpg&quot;&gt;&lt;/a&gt;&apos;,</div><div class="line"> &apos;&lt;a href=&quot;image5.html&quot;&gt;Name: My image 5 &lt;br&gt;&lt;img src=&quot;image5_thumb.jpg&quot;&gt;&lt;/a&gt;&apos;]</div><div class="line"></div><div class="line">&gt;&gt;&gt; for index, link in enumerate(links):</div><div class="line">...:     args = (index, link.xpath(&apos;@href&apos;).extract(), link.xpath(&apos;img/@src&apos;).extract())</div><div class="line">...:     print(&apos;Link number %d points to url %s and image %s&apos; % args)</div><div class="line">...:</div><div class="line">Link number 0 points to url [&apos;image1.html&apos;] and image [&apos;image1_thumb.jpg&apos;]</div><div class="line">Link number 1 points to url [&apos;image2.html&apos;] and image [&apos;image2_thumb.jpg&apos;]</div><div class="line">Link number 2 points to url [&apos;image3.html&apos;] and image [&apos;image3_thumb.jpg&apos;]</div><div class="line">Link number 3 points to url [&apos;image4.html&apos;] and image [&apos;image4_thumb.jpg&apos;]</div><div class="line">Link number 4 points to url [&apos;image5.html&apos;] and image [&apos;image5_thumb.jpg&apos;]</div></pre></td></tr></table></figure>
+<h3 id="结合正则表达式使用选择器"><a href="#结合正则表达式使用选择器" class="headerlink" title="结合正则表达式使用选择器"></a><strong>结合正则表达式使用选择器</strong></h3><p>Selector 也有一个 .re() 方法，用来通过正则表达式来提取数据。然而，不同于使用 .xpath() 或者 .css() 方法，.re()方法返回 unicode 字符串的列表。所以你无法构造嵌套式的 .re() 调用。 </p>
+<p>下面是一个例子，从上面的 html 源码中提取图像名字：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; response.xpath(&quot;//a[contains(@href, &apos;image&apos;)]/text()&quot;).re(r&apos;Name:\s*(.*)&apos;)</div><div class="line">[&apos;My image 1 &apos;, &apos;My image 2 &apos;, &apos;My image 3 &apos;, &apos;My image 4 &apos;, &apos;My image 5 &apos;]</div></pre></td></tr></table></figure>
+<h3 id="使用相对-XPaths"><a href="#使用相对-XPaths" class="headerlink" title="使用相对 XPaths"></a><strong>使用相对 XPaths</strong></h3><p>记住如果你使用嵌套的选择器，并使用起始为 <code>/</code> 的 XPath，那么该 XPath 将对文档使用绝对路径，而且对于你调用的 <code>Selector</code> 不是相对路径。</p>
+<p>比如，假设你想提取在 <code>&lt;div&gt;</code> 元素中的所有 <code>&lt;p&gt;</code> 元素。首先，你将先得到所有的 <code>&lt;div&gt;</code> 元素：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; divs = response.xpath(&quot;//div&quot;)</div></pre></td></tr></table></figure>
+<p>开始时，你可能会尝试使用下面的错误的方法，因为它其实是从整篇文档中，而不仅仅是从那些 <code>&lt;div&gt;</code> 元素内部提取所有的 <code>&lt;p&gt;</code> 元素：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; for p in divs.xpath(&apos;//p&apos;): # this is wrong - gets all &lt;p&gt; from the whole document </div><div class="line">...		print p.extract()</div></pre></td></tr></table></figure>
+<p>下面是比较合适的处理方法(注意 .//p XPath 的点前缀)：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; for p in divs.xpath(&apos;.//p&apos;): # extracts all &lt;p&gt; inside </div><div class="line">... 	print p.extract()</div></pre></td></tr></table></figure>
+<p>另一种常见的情况将是提取所有直系 <code>&lt;p&gt;</code> 的结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; for p in divs.xpath(&apos;p&apos;): </div><div class="line">... 	print p.extract()</div></pre></td></tr></table></figure>
+<h3 id="使用-EXSLT-扩展"><a href="#使用-EXSLT-扩展" class="headerlink" title="使用 EXSLT 扩展"></a><strong>使用 EXSLT 扩展</strong></h3><p>因建于 lxml 之上，Scrapy 选择器也支持一些 EXSLT 扩展，可以在 XPath 表达式中使用这些预先制定的命名空间：</p>
+<table>
+<thead>
+<tr>
+<th>前缀</th>
+<th>命名空间</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>re</td>
+<td><a href="http://exslt.org/regular-expressions" target="_blank" rel="external">http://exslt.org/regular-expressions</a></td>
+<td>正则表达式</td>
+</tr>
+<tr>
+<td>set</td>
+<td><a href="http://exslt.org/sets" target="_blank" rel="external">http://exslt.org/sets</a></td>
+<td>集合操作</td>
+</tr>
+</tbody>
+</table>
+<h3 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a><strong>正则表达式</strong></h3><p>例如在XPath的 <code>starts-with()</code> 或 <code>contains()</code> 无法满足需求时， <code>test()</code> 函数可以非常有用。</p>
+<p>例如在列表中选择有”class”元素且结尾为一个数字的链接：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; from scrapy import Selector</div><div class="line">&gt;&gt;&gt; doc = &quot;&quot;&quot;</div><div class="line">... &lt;div&gt;</div><div class="line">...      &lt;ul&gt;</div><div class="line">...          &lt;li class=&quot;item-0&quot;&gt;&lt;a href=&quot;link1.html&quot;&gt;first item&lt;/a&gt;&lt;/li&gt;</div><div class="line">...          &lt;li class=&quot;item-1&quot;&gt;&lt;a href=&quot;link2.html&quot;&gt;second item&lt;/a&gt;&lt;/li&gt;</div><div class="line">...          &lt;li class=&quot;item-inactive&quot;&gt;&lt;a href=&quot;link3.html&quot;&gt;third item&lt;/a&gt;&lt;/li&gt;</div><div class="line">...          &lt;li class=&quot;item-1&quot;&gt;&lt;a href=&quot;link4.html&quot;&gt;fourth item&lt;/a&gt;&lt;/li&gt;</div><div class="line">...         &lt;li class=&quot;item-0&quot;&gt;&lt;a href=&quot;link5.html&quot;&gt;fifth item&lt;/a&gt;&lt;/li&gt;</div><div class="line">...       &lt;/ul&gt;</div><div class="line">... &lt;/div&gt;</div><div class="line">...  &quot;&quot;&quot;</div><div class="line">&gt;&gt;&gt; sel = Selector(text=doc, type=&quot;html&quot;)</div><div class="line">&gt;&gt;&gt; sel.xpath(&quot;//li//@href&quot;).extract()</div><div class="line">[&apos;link1.html&apos;, &apos;link2.html&apos;, &apos;link3.html&apos;, &apos;link4.html&apos;, &apos;link5.html&apos;]</div><div class="line">&gt;&gt;&gt; sel.xpath(&quot;//li[re:test(@class, &apos;item-\d$&apos;)]//@href&quot;).extract()</div><div class="line">[&apos;link1.html&apos;, &apos;link2.html&apos;, &apos;link4.html&apos;, &apos;link5.html&apos;]</div></pre></td></tr></table></figure>
+<p>注意：C语言库 <code>libxslt</code> 不原生支持EXSLT正则表达式，因此 lxml 在实现时使用了Python  <code>re</code>  模块的钩子。 因此，在 XPath 表达式中使用 regexp 函数可能会牺牲少量的性能。</p>
+<h3 id="集合操作"><a href="#集合操作" class="headerlink" title="集合操作"></a><strong>集合操作</strong></h3><p>集合操作可以方便地用于在提取文字元素前从文档树中去除一些部分。 </p>
+<p>例如使用 itemscopes 组和对应的 itemprops 来提取微数据（来自 <a href="http://schema.org/Product" target="_blank" rel="external">http://schema.org/Product</a> 的样本内容）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div></pre></td><td class="code"><pre><div class="line">&gt;&gt;&gt; doc = &quot;&quot;&quot;</div><div class="line">... &lt;div itemscope itemtype=&quot;http://schema.org/Product&quot;&gt;</div><div class="line">...   &lt;span itemprop=&quot;name&quot;&gt;Kenmore White 17&quot; Microwave&lt;/span&gt;</div><div class="line">...   ![](kenmore-microwave-17in.jpg)</div><div class="line">...   &lt;div itemprop=&quot;aggregateRating&quot;</div><div class="line">...     itemscope itemtype=&quot;http://schema.org/AggregateRating&quot;&gt;</div><div class="line">...    Rated &lt;span itemprop=&quot;ratingValue&quot;&gt;3.5&lt;/span&gt;/5</div><div class="line">...    based on &lt;span itemprop=&quot;reviewCount&quot;&gt;11&lt;/span&gt; customer reviews</div><div class="line">...   &lt;/div&gt;</div><div class="line">...</div><div class="line">...   &lt;div itemprop=&quot;offers&quot; itemscope itemtype=&quot;http://schema.org/Offer&quot;&gt;</div><div class="line">...     &lt;span itemprop=&quot;price&quot;&gt;$55.00&lt;/span&gt;</div><div class="line">...     &lt;link itemprop=&quot;availability&quot; href=&quot;http://schema.org/InStock&quot; /&gt;In stock</div><div class="line">...   &lt;/div&gt;</div><div class="line">...</div><div class="line">...   Product description:</div><div class="line">...   &lt;span itemprop=&quot;description&quot;&gt;0.7 cubic feet countertop microwave.</div><div class="line">...   Has six preset cooking categories and convenience features like</div><div class="line">...   Add-A-Minute and Child Lock.&lt;/span&gt;</div><div class="line">...</div><div class="line">...   Customer reviews:</div><div class="line">...</div><div class="line">...   &lt;div itemprop=&quot;review&quot; itemscope itemtype=&quot;http://schema.org/Review&quot;&gt;</div><div class="line">...     &lt;span itemprop=&quot;name&quot;&gt;Not a happy camper&lt;/span&gt; -</div><div class="line">...     by &lt;span itemprop=&quot;author&quot;&gt;Ellie&lt;/span&gt;,</div><div class="line">...     &lt;meta itemprop=&quot;datePublished&quot; content=&quot;2011-04-01&quot;&gt;April 1, 2011</div><div class="line">...     &lt;div itemprop=&quot;reviewRating&quot; itemscope itemtype=&quot;http://schema.org/Rating&quot;&gt;</div><div class="line">...       &lt;meta itemprop=&quot;worstRating&quot; content = &quot;1&quot;&gt;</div><div class="line">...       &lt;span itemprop=&quot;ratingValue&quot;&gt;1&lt;/span&gt;/</div><div class="line">...       &lt;span itemprop=&quot;bestRating&quot;&gt;5&lt;/span&gt;stars</div><div class="line">...     &lt;/div&gt;</div><div class="line">...     &lt;span itemprop=&quot;description&quot;&gt;The lamp burned out and now I have to replace</div><div class="line">...     it. &lt;/span&gt;</div><div class="line">...   &lt;/div&gt;</div><div class="line">...</div><div class="line">...   &lt;div itemprop=&quot;review&quot; itemscope itemtype=&quot;http://schema.org/Review&quot;&gt;</div><div class="line">...     &lt;span itemprop=&quot;name&quot;&gt;Value purchase&lt;/span&gt; -</div><div class="line">...     by &lt;span itemprop=&quot;author&quot;&gt;Lucas&lt;/span&gt;,</div><div class="line">...     &lt;meta itemprop=&quot;datePublished&quot; content=&quot;2011-03-25&quot;&gt;March 25, 2011</div><div class="line">...     &lt;div itemprop=&quot;reviewRating&quot; itemscope itemtype=&quot;http://schema.org/Rating&quot;&gt;</div><div class="line">...       &lt;meta itemprop=&quot;worstRating&quot; content = &quot;1&quot;/&gt;</div><div class="line">...       &lt;span itemprop=&quot;ratingValue&quot;&gt;4&lt;/span&gt;/</div><div class="line">...       &lt;span itemprop=&quot;bestRating&quot;&gt;5&lt;/span&gt;stars</div><div class="line">...     &lt;/div&gt;</div><div class="line">...     &lt;span itemprop=&quot;description&quot;&gt;Great microwave for the price. It is small and</div><div class="line">...     fits in my apartment.&lt;/span&gt;</div><div class="line">...   &lt;/div&gt;</div><div class="line">...   ...</div><div class="line">... &lt;/div&gt;</div><div class="line">... &quot;&quot;&quot;</div><div class="line">&gt;&gt;&gt; sel = Selector(text=doc, type=&quot;html&quot;)</div><div class="line">&gt;&gt;&gt; for scope in sel.xpath(&apos;//div[@itemscope]&apos;):</div><div class="line">...     print &quot;current scope:&quot;, scope.xpath(&apos;@itemtype&apos;).extract()</div><div class="line">...     props = scope.xpath(&apos;&apos;&apos;</div><div class="line">...                 set:difference(./descendant::*/@itemprop,</div><div class="line">...                                .//*[@itemscope]/*/@itemprop)&apos;&apos;&apos;)</div><div class="line">...     print &quot;    properties:&quot;, props.extract()</div><div class="line">...     print</div><div class="line"></div><div class="line">current scope: [u&apos;http://schema.org/Product&apos;]</div><div class="line">    properties: [u&apos;name&apos;, u&apos;aggregateRating&apos;, u&apos;offers&apos;, u&apos;description&apos;, u&apos;review&apos;, u&apos;review&apos;]</div><div class="line"></div><div class="line">current scope: [u&apos;http://schema.org/AggregateRating&apos;]</div><div class="line">    properties: [u&apos;ratingValue&apos;, u&apos;reviewCount&apos;]</div><div class="line"></div><div class="line">current scope: [u&apos;http://schema.org/Offer&apos;]</div><div class="line">    properties: [u&apos;price&apos;, u&apos;availability&apos;]</div><div class="line"></div><div class="line">current scope: [u&apos;http://schema.org/Review&apos;]</div><div class="line">    properties: [u&apos;name&apos;, u&apos;author&apos;, u&apos;datePublished&apos;, u&apos;reviewRating&apos;, u&apos;description&apos;]</div><div class="line"></div><div class="line">current scope: [u&apos;http://schema.org/Rating&apos;]</div><div class="line">    properties: [u&apos;worstRating&apos;, u&apos;ratingValue&apos;, u&apos;bestRating&apos;]</div><div class="line"></div><div class="line">current scope: [u&apos;http://schema.org/Review&apos;]</div><div class="line">    properties: [u&apos;name&apos;, u&apos;author&apos;, u&apos;datePublished&apos;, u&apos;reviewRating&apos;, u&apos;description&apos;]</div><div class="line"></div><div class="line">current scope: [u&apos;http://schema.org/Rating&apos;]</div><div class="line">    properties: [u&apos;worstRating&apos;, u&apos;ratingValue&apos;, u&apos;bestRating&apos;]</div></pre></td></tr></table></figure>
+<p>这里我们先迭代 <code>itemscope</code> 元素，对于每一个元素，我们寻找所有 <code>itemprops</code> 元素，并排除那些在另一个元素内部的元素 <code>itemscope</code> 。</p>
+<h2 id="内置选择器参考"><a href="#内置选择器参考" class="headerlink" title="内置选择器参考"></a>内置选择器参考</h2><h3 id="Selector-实例"><a href="#Selector-实例" class="headerlink" title="Selector 实例"></a><strong>Selector 实例</strong></h3><figure class="highlight fortran"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">class</span> scrapy.selector.Selector(response=<span class="keyword">None</span>, text=<span class="keyword">None</span>, <span class="keyword">type</span>=<span class="keyword">None</span>)</div></pre></td></tr></table></figure>
+<p>一个实例<code>Selector</code>是一个包装器响应来选择其内容的某些部分。</p>
+<p>response是一个<code>HtmlResponse</code>或一个<code>XmlResponse</code>将被用于选择和提取的数据对象。</p>
+<p><code>text</code>是一个<code>unicode</code>字符串或<code>utf-8</code>编码的文本，当一个 <code>response</code>不可用时。使用<code>text</code>和<code>response</code>一起是未定义的行为。</p>
+<p><code>type</code>定义选择器类型，它可以是<code>&quot;html&quot;</code>，<code>&quot;xml&quot;</code>或<code>None（默认）</code>。</p>
+<p>如果<code>type</code>是<code>None</code>，选择器将根据<code>response</code>类型（见下文）自动选择最佳类型，或者默认<code>&quot;html&quot;</code>情况下与选项一起使用<code>text</code>。</p>
+<p>如果<code>type</code>是<code>None</code>和<code>response</code>传递，选择器类型从响应类型推断如下：</p>
+<ul>
+<li><code>&quot;html&quot;</code>对于HtmlResponse类型</li>
+<li><code>&quot;xml&quot;</code>对于XmlResponse类型</li>
+<li><code>&quot;html&quot;</code>为任何其他</li>
+</ul>
+<p>否则，如果<code>type</code>设置，选择器类型将被强制，并且不会发生检测。</p>
+<h4 id="xpath（查询）"><a href="#xpath（查询）" class="headerlink" title="xpath（查询）"></a><strong>xpath（查询）</strong></h4><p>查找与<code>xpath</code>匹配的节点<code>query</code>，并将结果作为 <code>SelectorList</code>实例将所有元素展平。列表元素也实现<code>Selector</code>接口。</p>
+<p><code>query</code> 是一个包含要应用的XPATH查询的字符串。</p>
+<p><strong>注意</strong></p>
+<blockquote>
+<p>为了方便起见，这种方法可以称为 response.xpath()</p>
+</blockquote>
+<h4 id="css（查询）"><a href="#css（查询）" class="headerlink" title="css（查询）"></a><strong>css（查询）</strong></h4><p>应用给定的CSS选择器并返回一个SelectorList实例。</p>
+<p>query 是一个包含要应用的CSS选择器的字符串。</p>
+<p>在后台，CSS查询使用cssselect库和run .xpath()方法转换为XPath查询 。</p>
+<p><strong>注意</strong></p>
+<blockquote>
+<p>为了方便起见，该方法可以称为 response.css()</p>
+</blockquote>
+<h4 id="extract（）"><a href="#extract（）" class="headerlink" title="extract（）"></a><strong>extract（）</strong></h4><p>序列化并返回匹配的节点作为unicode字符串列表。编码内容的百分比未引用。</p>
+<h4 id="re（regex）"><a href="#re（regex）" class="headerlink" title="re（regex）"></a><strong>re（regex）</strong></h4><p>应用给定的正则表达式并返回一个包含匹配项的unicode字符串的列表。</p>
+<p><code>regex</code>可以是编译的正则表达式或将被编译为正则表达式的字符串 <code>re.compile(regex)</code></p>
+<p><strong>注意</strong></p>
+<blockquote>
+<p>注意，re()和re_first()解码HTML实体（除\&lt;和\&amp;）。</p>
+</blockquote>
+<h4 id="register-namespace（prefix，uri）"><a href="#register-namespace（prefix，uri）" class="headerlink" title="register_namespace（prefix，uri）"></a><strong>register_namespace（prefix，uri）</strong></h4><p>注册在此使用的给定命名空间Selector。如果不注册命名空间，则无法从非标准命名空间中选择或提取数据。参见下面的例子。</p>
+<h4 id="remove-namespaces（）"><a href="#remove-namespaces（）" class="headerlink" title="remove_namespaces（）"></a><strong>remove_namespaces（）</strong></h4><p>删除所有命名空间，允许使用无命名空间的xpaths遍历文档。参见下面的例子。</p>
+<h4 id="nonzero（）"><a href="#nonzero（）" class="headerlink" title="nonzero（）"></a><strong>nonzero（）</strong></h4><p>返回True如果有选择或任何实际的内容False 除外。换句话说，a的布尔值Selector由它选择的内容给出。</p>
+<h3 id="SelectorList对象"><a href="#SelectorList对象" class="headerlink" title="SelectorList对象"></a>SelectorList对象</h3><p><code>class scrapy.selector.SelectorList</code></p>
+<p>本SelectorList类是内置的一个子list 类，它提供了几个方法。</p>
+<h4 id="xpath（查询）-1"><a href="#xpath（查询）-1" class="headerlink" title="xpath（查询）"></a><strong>xpath（查询）</strong></h4><p>调用.xpath()此列表中每个元素的方法，并将其结果作为另一个返回SelectorList。</p>
+<p>query 是同一个参数 Selector.xpath()</p>
+<h4 id="css（查询）-1"><a href="#css（查询）-1" class="headerlink" title="css（查询）"></a><strong>css（查询）</strong></h4><p>调用.css()此列表中每个元素的方法，并将其结果作为另一个返回SelectorList。</p>
+<p>query 是同一个参数 Selector.css()</p>
+<h4 id="extract（）-1"><a href="#extract（）-1" class="headerlink" title="extract（）"></a><strong>extract（）</strong></h4><p>调用.extract()此列表中每个元素的方法，并将其结果作为unicode字符串列表返回展平。</p>
+<h4 id="re（）"><a href="#re（）" class="headerlink" title="re（）"></a><strong>re（）</strong></h4><p>调用.re()此列表中每个元素的方法，并将其结果作为unicode字符串列表返回展平。</p>
+<h4 id="nonzero（）-1"><a href="#nonzero（）-1" class="headerlink" title="nonzero（）"></a><strong>nonzero（）</strong></h4><p>如果列表不为空，则返回True，否则返回False。</p>
+<h3 id="HTML响应的选择器示例"><a href="#HTML响应的选择器示例" class="headerlink" title="HTML响应的选择器示例"></a><strong>HTML响应的选择器示例</strong></h3><p>这里有几个Selector例子来说明几个概念。在所有情况下，我们假设已经Selector实例化了一个HtmlResponse对象，如下：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">sel</span> = Selector(html_response)</div></pre></td></tr></table></figure>
+<ol>
+<li><code>&lt;h1&gt;</code>从HTML响应主体中选择所有元素，返回Selector对象列表 （即SelectorList对象）：</li>
+</ol>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sel.<span class="keyword">xpath</span>(<span class="string">"//h1"</span>)</div></pre></td></tr></table></figure>
+<ol>
+<li><code>&lt;h1&gt;</code>从HTML响应正文中提取所有元素的文本，返回unicode字符串</li>
+</ol>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sel.<span class="keyword">xpath</span>(<span class="string">"//h1"</span>).extract()         <span class="comment"># this includes the h1 tag</span></div><div class="line">sel.<span class="keyword">xpath</span>(<span class="string">"//h1/text()"</span>).extract()  <span class="comment"># this excludes the h1 tag</span></div></pre></td></tr></table></figure>
+<ol>
+<li>迭代所有<code>&lt;p&gt;</code>标签并打印其类属性：</li>
+</ol>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">for <span class="keyword">node</span> <span class="title">in</span> sel.<span class="keyword">xpath</span>(<span class="string">"//p"</span>):</div><div class="line">    print <span class="keyword">node</span>.<span class="title">xpath</span>(<span class="string">"@class"</span>).extract()</div></pre></td></tr></table></figure>
+<h3 id="XML响应的选择器示例"><a href="#XML响应的选择器示例" class="headerlink" title="XML响应的选择器示例"></a><strong>XML响应的选择器示例</strong></h3><p>这里有几个例子来说明几个概念。在这两种情况下，我们假设已经Selector实例化了一个 XmlResponse对象，像这样：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attr">sel</span> = Selector(xml_response)</div></pre></td></tr></table></figure>
+<ol>
+<li><product>从XML响应主体中选择所有元素，返回Selector对象列表（即SelectorList对象）：</product></li>
+</ol>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sel.<span class="keyword">xpath</span>(<span class="string">"//product"</span>)</div></pre></td></tr></table></figure>
+<ol>
+<li>从需要注册命名空间的<a href="https://support.google.com/merchants/answer/160589?hl=en&amp;ref_topic=2473799" target="_blank" rel="external">Google Base XML Feed</a>中提取所有价格：</li>
+</ol>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">sel</span><span class="selector-class">.register_namespace</span>(<span class="string">"g"</span>, <span class="string">"http://base.google.com/ns/1.0"</span>)</div><div class="line"><span class="selector-tag">sel</span><span class="selector-class">.xpath</span>(<span class="string">"//g:price"</span>)<span class="selector-class">.extract</span>()</div></pre></td></tr></table></figure>
+<h3 id="删除名称空间"><a href="#删除名称空间" class="headerlink" title="删除名称空间"></a><strong>删除名称空间</strong></h3><p>当处理抓取项目时，通常很方便地完全删除命名空间，只需处理元素名称，编写更简单/方便的XPath。你可以使用的 Selector.remove_namespaces()方法。</p>
+<p>让我们展示一个例子，用GitHub博客atom feed来说明这一点。</p>
+<p>首先，我们打开shell和我们想要抓取的url：</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ scrapy <span class="keyword">shell</span> http<span class="variable">s:</span>//github.<span class="keyword">com</span>/blog.atom</div></pre></td></tr></table></figure>
+<p>一旦在shell中，我们可以尝试选择所有<link>对象，并看到它不工作（因为Atom XML命名空间模糊了这些节点）：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;</span>&gt; response.xpath(<span class="string">"//link"</span>)</div><div class="line">[]</div></pre></td></tr></table></figure>
+<p>但是一旦我们调用该Selector.remove_namespaces()方法，所有节点都可以直接通过他们的名字访问：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>response.selector.remove_namespaces()</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>response.xpath(<span class="string">"//link"</span>)</div><div class="line">[&lt;Selector xpath=<span class="string">'//link'</span> data=<span class="string">u'&lt;link xmlns="http://www.w3.org/2005/Atom'</span>&gt;,</div><div class="line"> &lt;Selector xpath=<span class="string">'//link'</span> data=<span class="string">u'&lt;link xmlns="http://www.w3.org/2005/Atom'</span>&gt;,</div><div class="line"> ...</div></pre></td></tr></table></figure>
+<p>如果你想知道为什么默认情况下不调用命名空间删除过程，而不是手动调用它，这是因为两个原因，按照相关性的顺序：</p>
+<ol>
+<li>删除命名空间需要迭代和修改文档中的所有节点，这对于Scrapy爬取的所有文档来说是一个相当昂贵的操作</li>
+<li>可能有一些情况下，实际上需要使用命名空间，以防某些元素名称在命名空间之间冲突。这些情况非常罕见。</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;当抓取网页时，你做的最常见的任务是从 HTML 源码中提取数据。现有的一些库可以达到这个目的： &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://beautifulsoup.readthedocs.io/zh_CN/latest/&quot;&gt;BeautifulSoup&lt;/a&gt; 是在程序员间非常流行的网页分析库，它基于 HTML 代码的结构来构造一个 Python 对象，对不良标记的处理也非常合理，但它有一个缺点：慢。 &lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://lxml.de/index.html&quot;&gt;lxml&lt;/a&gt; 是一个基于 ElementTree（不是 Python 标准库的一部分）的 python 化的 XML 解析库（也可以解析 HTML）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Scrapy 提取数据有自己的一套机制。它们被称作选择器（seletors），因为他们通过特定的 XPath 或者 CSS 表达式来“选择” HTML 文件中的某个部分。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
+    
+    
+      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
+    
+  </entry>
   
   <entry>
     <title>Python分布式爬虫打造搜索引擎项目学习笔记——编写Spider爬取伯乐在线所有文章</title>
@@ -1198,64 +1383,6 @@
   </entry>
   
   <entry>
-    <title>Python分布式爬虫打造搜索引擎项目学习笔记——爬虫基础知识回顾</title>
-    <link href="http://yoursite.com/2017/04/11/scrapy-project-basic/"/>
-    <id>http://yoursite.com/2017/04/11/scrapy-project-basic/</id>
-    <published>2017-04-11T12:18:54.000Z</published>
-    <updated>2017-04-11T07:49:05.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a><strong>基础知识</strong></h2><h3 id="技术选型：scrapy-vs-requests-beautifulsoup"><a href="#技术选型：scrapy-vs-requests-beautifulsoup" class="headerlink" title="技术选型：scrapy vs requests + beautifulsoup"></a><strong>技术选型：<a href="https://scrapy-chs.readthedocs.io/zh_CN/1.0/" target="_blank" rel="external">scrapy</a> vs <a href="http://docs.python-requests.org/zh_CN/latest/index.html" target="_blank" rel="external">requests</a> + <a href="http://beautifulsoup.readthedocs.io/zh_CN/latest/" target="_blank" rel="external">beautifulsoup</a></strong></h3><a id="more"></a>
-<ul>
-<li>requests和beautifulsoup都是库，scrapy是框架</li>
-<li>scrapy框架中可以加入requests和beautifulsoup</li>
-<li>scrapy基于<a href="https://www.gitbook.com/book/likebeta/twisted-intro-cn/details" target="_blank" rel="external">twisted</a>，性能是最大的优势</li>
-<li>scrapy方便扩展，提供了很多内置的功能</li>
-<li>scrapy内置的css和xpath selector非常方便，beautifulsoup最大的缺点就是慢</li>
-</ul>
-<h3 id="网页分类"><a href="#网页分类" class="headerlink" title="网页分类"></a><strong>网页分类</strong></h3><ul>
-<li>静态网页</li>
-<li>动态网页</li>
-<li>webservice（<a href="http://www.restapitutorial.com" target="_blank" rel="external">restapi</a>）</li>
-</ul>
-<h3 id="爬虫能做什么"><a href="#爬虫能做什么" class="headerlink" title="爬虫能做什么"></a><strong>爬虫能做什么</strong></h3><p>爬虫的作用</p>
-<ul>
-<li>搜索引擎——百度、谷歌、垂直领域搜索引擎</li>
-<li>推荐引擎——今日头条</li>
-<li>机器学习的数据样本</li>
-<li>数据分析、舆情分析等</li>
-</ul>
-<h3 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a><strong>正则表达式</strong></h3><p>详见另一篇博客</p>
-<h3 id="网站url结构"><a href="#网站url结构" class="headerlink" title="网站url结构"></a><strong>网站url结构</strong></h3><p><img src="https://ww1.sinaimg.cn/large/006tNc79gy1fehiknw0gbj315k0j0jth.jpg" alt=""></p>
-<p><img src="https://ww2.sinaimg.cn/large/006tNc79gy1fehikzuhq5j31300jo0v3.jpg" alt=""></p>
-<h3 id="深度优先遍历和广度优先遍历"><a href="#深度优先遍历和广度优先遍历" class="headerlink" title="深度优先遍历和广度优先遍历"></a><strong>深度优先遍历和广度优先遍历</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># _*_ coding: utf-8 _*_</span></div><div class="line"><span class="string">"""</span></div><div class="line">__author__ = 'lawtech'</div><div class="line">__date__ = '2017/4/10 下午1:41'</div><div class="line">"""</div><div class="line"></div><div class="line"><span class="string">"""</span></div><div class="line">深度优先遍历和广度优先遍历</div><div class="line">"""</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Graph</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, *args, **kwargs)</span>:</span></div><div class="line">        self.node_neighbors = &#123;&#125;</div><div class="line">        self.visited = &#123;&#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_nodes</span><span class="params">(self, nodelist)</span>:</span></div><div class="line"></div><div class="line">        <span class="keyword">for</span> node <span class="keyword">in</span> nodelist:</div><div class="line">            self.add_node(node)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_node</span><span class="params">(self, node)</span>:</span></div><div class="line">        <span class="keyword">if</span> node <span class="keyword">not</span> <span class="keyword">in</span> self.nodes():</div><div class="line">            self.node_neighbors[node] = []</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_edge</span><span class="params">(self, edge)</span>:</span></div><div class="line">        u, v = edge</div><div class="line">        <span class="keyword">if</span> (v <span class="keyword">not</span> <span class="keyword">in</span> self.node_neighbors[u]) <span class="keyword">and</span> (u <span class="keyword">not</span> <span class="keyword">in</span> self.node_neighbors[v]):</div><div class="line">            self.node_neighbors[u].append(v)</div><div class="line">            <span class="keyword">if</span> u != v:</div><div class="line">                self.node_neighbors[v].append(u)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">nodes</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.node_neighbors.keys()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">depth_first_search</span><span class="params">(self, root=None)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        队列</div><div class="line">        :param root: </div><div class="line">        :return: </div><div class="line">        """</div><div class="line">        order = []</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(node)</span>:</span></div><div class="line">            self.visited[node] = <span class="keyword">True</span></div><div class="line">            order.append(node)</div><div class="line">            <span class="keyword">for</span> n <span class="keyword">in</span> self.node_neighbors[node]:</div><div class="line">                <span class="keyword">if</span> n <span class="keyword">not</span> <span class="keyword">in</span> self.visited:</div><div class="line">                    dfs(n)</div><div class="line"></div><div class="line">        <span class="keyword">if</span> root:</div><div class="line">            dfs(root)</div><div class="line"></div><div class="line">        <span class="keyword">for</span> node <span class="keyword">in</span> self.nodes():</div><div class="line">            <span class="keyword">if</span> node <span class="keyword">not</span> <span class="keyword">in</span> self.visited:</div><div class="line">                dfs(node)</div><div class="line"></div><div class="line">        print(order)</div><div class="line">        <span class="keyword">return</span> order</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">breadth_first_search</span><span class="params">(self, root=None)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        递归</div><div class="line">        :param root: </div><div class="line">        :return: </div><div class="line">        """</div><div class="line">        queue = []</div><div class="line">        order = []</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">def</span> <span class="title">bfs</span><span class="params">()</span>:</span></div><div class="line">            <span class="keyword">while</span> len(queue) &gt; <span class="number">0</span>:</div><div class="line">                node = queue.pop(<span class="number">0</span>)</div><div class="line">                self.visited[node] = <span class="keyword">True</span></div><div class="line"></div><div class="line">                <span class="keyword">for</span> n <span class="keyword">in</span> self.node_neighbors[node]:</div><div class="line">                    <span class="keyword">if</span> (n <span class="keyword">not</span> <span class="keyword">in</span> self.visited) <span class="keyword">and</span> (n <span class="keyword">not</span> <span class="keyword">in</span> queue):</div><div class="line">                        queue.append(n)</div><div class="line">                        order.append(n)</div><div class="line"></div><div class="line">        <span class="keyword">if</span> root:</div><div class="line">            queue.append(root)</div><div class="line">            order.append(root)</div><div class="line">            bfs()</div><div class="line"></div><div class="line">        <span class="keyword">for</span> node <span class="keyword">in</span> self.nodes():</div><div class="line">            <span class="keyword">if</span> node <span class="keyword">not</span> <span class="keyword">in</span> self.visited:</div><div class="line">                queue.append(node)</div><div class="line">                order.append(node)</div><div class="line">                bfs()</div><div class="line"></div><div class="line">        print(order)</div><div class="line">        <span class="keyword">return</span> order</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    g = Graph()</div><div class="line">    g.add_nodes(nodelist=[i + <span class="number">1</span> <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">8</span>)])</div><div class="line">    g.add_edge((<span class="number">1</span>, <span class="number">2</span>))</div><div class="line">    g.add_edge((<span class="number">1</span>, <span class="number">3</span>))</div><div class="line">    g.add_edge((<span class="number">2</span>, <span class="number">4</span>))</div><div class="line">    g.add_edge((<span class="number">2</span>, <span class="number">5</span>))</div><div class="line">    g.add_edge((<span class="number">4</span>, <span class="number">8</span>))</div><div class="line">    g.add_edge((<span class="number">5</span>, <span class="number">8</span>))</div><div class="line">    g.add_edge((<span class="number">3</span>, <span class="number">6</span>))</div><div class="line">    g.add_edge((<span class="number">3</span>, <span class="number">7</span>))</div><div class="line">    g.add_edge((<span class="number">6</span>, <span class="number">7</span>))</div><div class="line">    print(<span class="string">"nodes:"</span>, g.nodes())</div><div class="line"></div><div class="line">    g.breadth_first_search(<span class="number">1</span>)</div><div class="line">    g.depth_first_search(<span class="number">1</span>)</div></pre></td></tr></table></figure>
-<p>运行结果：</p>
-<p>​    (‘nodes:’, [1, 2, 3, 4, 5, 6, 7, 8])</p>
-<p>​    [1, 2, 3, 4, 5, 6, 7, 8]</p>
-<p>​    [1, 2, 4, 8, 5, 3, 6, 7]</p>
-<h3 id="爬虫去重策略"><a href="#爬虫去重策略" class="headerlink" title="爬虫去重策略"></a><strong>爬虫去重策略</strong></h3><ul>
-<li>将访问过的url保存到数据库中</li>
-<li>将访问过的url保存到set中，只需要O(1)的代价就可以查询url</li>
-<li>url经过md5等方法哈希后保存到set中</li>
-<li>用bitmap方法，将访问过的url通过hash函数映射到某一位</li>
-<li>bloomfilter方法对bitmap进行改进，多重hash函数降低冲突</li>
-</ul>
-<h3 id="Python字符串编码"><a href="#Python字符串编码" class="headerlink" title="Python字符串编码"></a><strong>Python字符串编码</strong></h3><p>详见另一篇博客</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;基础知识&quot;&gt;&lt;a href=&quot;#基础知识&quot; class=&quot;headerlink&quot; title=&quot;基础知识&quot;&gt;&lt;/a&gt;&lt;strong&gt;基础知识&lt;/strong&gt;&lt;/h2&gt;&lt;h3 id=&quot;技术选型：scrapy-vs-requests-beautifulsoup&quot;&gt;&lt;a href=&quot;#技术选型：scrapy-vs-requests-beautifulsoup&quot; class=&quot;headerlink&quot; title=&quot;技术选型：scrapy vs requests + beautifulsoup&quot;&gt;&lt;/a&gt;&lt;strong&gt;技术选型：&lt;a href=&quot;https://scrapy-chs.readthedocs.io/zh_CN/1.0/&quot;&gt;scrapy&lt;/a&gt; vs &lt;a href=&quot;http://docs.python-requests.org/zh_CN/latest/index.html&quot;&gt;requests&lt;/a&gt; + &lt;a href=&quot;http://beautifulsoup.readthedocs.io/zh_CN/latest/&quot;&gt;beautifulsoup&lt;/a&gt;&lt;/strong&gt;&lt;/h3&gt;
-    
-    </summary>
-    
-      <category term="Basic knowledge" scheme="http://yoursite.com/categories/Basic-knowledge/"/>
-    
-    
-      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy安装及调试</title>
     <link href="http://yoursite.com/2017/04/11/scrapy-install/"/>
     <id>http://yoursite.com/2017/04/11/scrapy-install/</id>
@@ -1317,7 +1444,7 @@
 <a id="more"></a>
 <h3 id="XPath术语"><a href="#XPath术语" class="headerlink" title="XPath术语"></a><strong>XPath术语</strong></h3><h4 id="节点（Node）"><a href="#节点（Node）" class="headerlink" title="节点（Node）"></a><strong>节点（Node）</strong></h4><p>在 XPath 中，有七种类型的节点：元素、属性、文本、命名空间、处理指令、注释以及文档（根）节点。XML 文档是被作为节点树来对待的。树的根被称为文档节点或者根节点。</p>
 <p>请看下面这个 XML 文档：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;</div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span>Harry Potter<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">author</span>&gt;</span>J K. Rowling<span class="tag">&lt;/<span class="name">author</span>&gt;</span> </div><div class="line">  <span class="tag">&lt;<span class="name">year</span>&gt;</span>2005<span class="tag">&lt;/<span class="name">year</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>29.99<span class="tag">&lt;/<span class="name">price</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">bookstore</span>&gt;</span></div></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"ISO-8859-1"</span><span class="meta">?&gt;</span></span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span>Harry Potter<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">author</span>&gt;</span>J K. Rowling<span class="tag">&lt;/<span class="name">author</span>&gt;</span> </div><div class="line">  <span class="tag">&lt;<span class="name">year</span>&gt;</span>2005<span class="tag">&lt;/<span class="name">year</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>29.99<span class="tag">&lt;/<span class="name">price</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">bookstore</span>&gt;</span></div></pre></td></tr></table></figure>
 <p>上面的XML文档中的节点例子：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span> （文档节点）</div><div class="line"><span class="tag">&lt;<span class="name">author</span>&gt;</span>J K. Rowling<span class="tag">&lt;/<span class="name">author</span>&gt;</span> （元素节点）</div><div class="line">lang="en" （属性节点）</div></pre></td></tr></table></figure>
 <h4 id="基本值（或称原子值，Atomic-value）"><a href="#基本值（或称原子值，Atomic-value）" class="headerlink" title="基本值（或称原子值，Atomic value）"></a><strong>基本值（或称原子值，Atomic value）</strong></h4><p>基本值是无父或无子的节点。</p>
@@ -1349,7 +1476,7 @@
 </li>
 </ul>
 <h3 id="XPath语法"><a href="#XPath语法" class="headerlink" title="XPath语法"></a><strong>XPath语法</strong></h3><p>参考示例：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;</div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span> <span class="attr">lang</span>=<span class="string">"eng"</span>&gt;</span>Harry Potter<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>29.99<span class="tag">&lt;/<span class="name">price</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span> <span class="attr">lang</span>=<span class="string">"eng"</span>&gt;</span>Learning XML<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>39.95<span class="tag">&lt;/<span class="name">price</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">bookstore</span>&gt;</span></div></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"ISO-8859-1"</span><span class="meta">?&gt;</span></span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span> <span class="attr">lang</span>=<span class="string">"eng"</span>&gt;</span>Harry Potter<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>29.99<span class="tag">&lt;/<span class="name">price</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span> <span class="attr">lang</span>=<span class="string">"eng"</span>&gt;</span>Learning XML<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>39.95<span class="tag">&lt;/<span class="name">price</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">bookstore</span>&gt;</span></div></pre></td></tr></table></figure>
 <h4 id="选取节点"><a href="#选取节点" class="headerlink" title="选取节点"></a><strong>选取节点</strong></h4><p>XPath 使用路径表达式在 XML 文档中选取节点。节点是通过沿着路径或者 step 来选取的。下面列出了最有用的路径表达式：</p>
 <table>
 <thead>
@@ -1555,6 +1682,64 @@
     
     
       <category term="Scrapy，XPath，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CXPath%EF%BC%8CPython/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Python分布式爬虫打造搜索引擎项目学习笔记——爬虫基础知识回顾</title>
+    <link href="http://yoursite.com/2017/04/11/scrapy-project-basic/"/>
+    <id>http://yoursite.com/2017/04/11/scrapy-project-basic/</id>
+    <published>2017-04-11T12:18:54.000Z</published>
+    <updated>2017-04-11T07:49:05.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a><strong>基础知识</strong></h2><h3 id="技术选型：scrapy-vs-requests-beautifulsoup"><a href="#技术选型：scrapy-vs-requests-beautifulsoup" class="headerlink" title="技术选型：scrapy vs requests + beautifulsoup"></a><strong>技术选型：<a href="https://scrapy-chs.readthedocs.io/zh_CN/1.0/" target="_blank" rel="external">scrapy</a> vs <a href="http://docs.python-requests.org/zh_CN/latest/index.html" target="_blank" rel="external">requests</a> + <a href="http://beautifulsoup.readthedocs.io/zh_CN/latest/" target="_blank" rel="external">beautifulsoup</a></strong></h3><a id="more"></a>
+<ul>
+<li>requests和beautifulsoup都是库，scrapy是框架</li>
+<li>scrapy框架中可以加入requests和beautifulsoup</li>
+<li>scrapy基于<a href="https://www.gitbook.com/book/likebeta/twisted-intro-cn/details" target="_blank" rel="external">twisted</a>，性能是最大的优势</li>
+<li>scrapy方便扩展，提供了很多内置的功能</li>
+<li>scrapy内置的css和xpath selector非常方便，beautifulsoup最大的缺点就是慢</li>
+</ul>
+<h3 id="网页分类"><a href="#网页分类" class="headerlink" title="网页分类"></a><strong>网页分类</strong></h3><ul>
+<li>静态网页</li>
+<li>动态网页</li>
+<li>webservice（<a href="http://www.restapitutorial.com" target="_blank" rel="external">restapi</a>）</li>
+</ul>
+<h3 id="爬虫能做什么"><a href="#爬虫能做什么" class="headerlink" title="爬虫能做什么"></a><strong>爬虫能做什么</strong></h3><p>爬虫的作用</p>
+<ul>
+<li>搜索引擎——百度、谷歌、垂直领域搜索引擎</li>
+<li>推荐引擎——今日头条</li>
+<li>机器学习的数据样本</li>
+<li>数据分析、舆情分析等</li>
+</ul>
+<h3 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a><strong>正则表达式</strong></h3><p>详见另一篇博客</p>
+<h3 id="网站url结构"><a href="#网站url结构" class="headerlink" title="网站url结构"></a><strong>网站url结构</strong></h3><p><img src="https://ww1.sinaimg.cn/large/006tNc79gy1fehiknw0gbj315k0j0jth.jpg" alt=""></p>
+<p><img src="https://ww2.sinaimg.cn/large/006tNc79gy1fehikzuhq5j31300jo0v3.jpg" alt=""></p>
+<h3 id="深度优先遍历和广度优先遍历"><a href="#深度优先遍历和广度优先遍历" class="headerlink" title="深度优先遍历和广度优先遍历"></a><strong>深度优先遍历和广度优先遍历</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># _*_ coding: utf-8 _*_</span></div><div class="line"><span class="string">"""</span></div><div class="line">__author__ = 'lawtech'</div><div class="line">__date__ = '2017/4/10 下午1:41'</div><div class="line">"""</div><div class="line"></div><div class="line"><span class="string">"""</span></div><div class="line">深度优先遍历和广度优先遍历</div><div class="line">"""</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Graph</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, *args, **kwargs)</span>:</span></div><div class="line">        self.node_neighbors = &#123;&#125;</div><div class="line">        self.visited = &#123;&#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_nodes</span><span class="params">(self, nodelist)</span>:</span></div><div class="line"></div><div class="line">        <span class="keyword">for</span> node <span class="keyword">in</span> nodelist:</div><div class="line">            self.add_node(node)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_node</span><span class="params">(self, node)</span>:</span></div><div class="line">        <span class="keyword">if</span> node <span class="keyword">not</span> <span class="keyword">in</span> self.nodes():</div><div class="line">            self.node_neighbors[node] = []</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_edge</span><span class="params">(self, edge)</span>:</span></div><div class="line">        u, v = edge</div><div class="line">        <span class="keyword">if</span> (v <span class="keyword">not</span> <span class="keyword">in</span> self.node_neighbors[u]) <span class="keyword">and</span> (u <span class="keyword">not</span> <span class="keyword">in</span> self.node_neighbors[v]):</div><div class="line">            self.node_neighbors[u].append(v)</div><div class="line">            <span class="keyword">if</span> u != v:</div><div class="line">                self.node_neighbors[v].append(u)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">nodes</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.node_neighbors.keys()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">depth_first_search</span><span class="params">(self, root=None)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        队列</div><div class="line">        :param root: </div><div class="line">        :return: </div><div class="line">        """</div><div class="line">        order = []</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(node)</span>:</span></div><div class="line">            self.visited[node] = <span class="keyword">True</span></div><div class="line">            order.append(node)</div><div class="line">            <span class="keyword">for</span> n <span class="keyword">in</span> self.node_neighbors[node]:</div><div class="line">                <span class="keyword">if</span> n <span class="keyword">not</span> <span class="keyword">in</span> self.visited:</div><div class="line">                    dfs(n)</div><div class="line"></div><div class="line">        <span class="keyword">if</span> root:</div><div class="line">            dfs(root)</div><div class="line"></div><div class="line">        <span class="keyword">for</span> node <span class="keyword">in</span> self.nodes():</div><div class="line">            <span class="keyword">if</span> node <span class="keyword">not</span> <span class="keyword">in</span> self.visited:</div><div class="line">                dfs(node)</div><div class="line"></div><div class="line">        print(order)</div><div class="line">        <span class="keyword">return</span> order</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">breadth_first_search</span><span class="params">(self, root=None)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        递归</div><div class="line">        :param root: </div><div class="line">        :return: </div><div class="line">        """</div><div class="line">        queue = []</div><div class="line">        order = []</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">def</span> <span class="title">bfs</span><span class="params">()</span>:</span></div><div class="line">            <span class="keyword">while</span> len(queue) &gt; <span class="number">0</span>:</div><div class="line">                node = queue.pop(<span class="number">0</span>)</div><div class="line">                self.visited[node] = <span class="keyword">True</span></div><div class="line"></div><div class="line">                <span class="keyword">for</span> n <span class="keyword">in</span> self.node_neighbors[node]:</div><div class="line">                    <span class="keyword">if</span> (n <span class="keyword">not</span> <span class="keyword">in</span> self.visited) <span class="keyword">and</span> (n <span class="keyword">not</span> <span class="keyword">in</span> queue):</div><div class="line">                        queue.append(n)</div><div class="line">                        order.append(n)</div><div class="line"></div><div class="line">        <span class="keyword">if</span> root:</div><div class="line">            queue.append(root)</div><div class="line">            order.append(root)</div><div class="line">            bfs()</div><div class="line"></div><div class="line">        <span class="keyword">for</span> node <span class="keyword">in</span> self.nodes():</div><div class="line">            <span class="keyword">if</span> node <span class="keyword">not</span> <span class="keyword">in</span> self.visited:</div><div class="line">                queue.append(node)</div><div class="line">                order.append(node)</div><div class="line">                bfs()</div><div class="line"></div><div class="line">        print(order)</div><div class="line">        <span class="keyword">return</span> order</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    g = Graph()</div><div class="line">    g.add_nodes(nodelist=[i + <span class="number">1</span> <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">8</span>)])</div><div class="line">    g.add_edge((<span class="number">1</span>, <span class="number">2</span>))</div><div class="line">    g.add_edge((<span class="number">1</span>, <span class="number">3</span>))</div><div class="line">    g.add_edge((<span class="number">2</span>, <span class="number">4</span>))</div><div class="line">    g.add_edge((<span class="number">2</span>, <span class="number">5</span>))</div><div class="line">    g.add_edge((<span class="number">4</span>, <span class="number">8</span>))</div><div class="line">    g.add_edge((<span class="number">5</span>, <span class="number">8</span>))</div><div class="line">    g.add_edge((<span class="number">3</span>, <span class="number">6</span>))</div><div class="line">    g.add_edge((<span class="number">3</span>, <span class="number">7</span>))</div><div class="line">    g.add_edge((<span class="number">6</span>, <span class="number">7</span>))</div><div class="line">    print(<span class="string">"nodes:"</span>, g.nodes())</div><div class="line"></div><div class="line">    g.breadth_first_search(<span class="number">1</span>)</div><div class="line">    g.depth_first_search(<span class="number">1</span>)</div></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<p>​    (‘nodes:’, [1, 2, 3, 4, 5, 6, 7, 8])</p>
+<p>​    [1, 2, 3, 4, 5, 6, 7, 8]</p>
+<p>​    [1, 2, 4, 8, 5, 3, 6, 7]</p>
+<h3 id="爬虫去重策略"><a href="#爬虫去重策略" class="headerlink" title="爬虫去重策略"></a><strong>爬虫去重策略</strong></h3><ul>
+<li>将访问过的url保存到数据库中</li>
+<li>将访问过的url保存到set中，只需要O(1)的代价就可以查询url</li>
+<li>url经过md5等方法哈希后保存到set中</li>
+<li>用bitmap方法，将访问过的url通过hash函数映射到某一位</li>
+<li>bloomfilter方法对bitmap进行改进，多重hash函数降低冲突</li>
+</ul>
+<h3 id="Python字符串编码"><a href="#Python字符串编码" class="headerlink" title="Python字符串编码"></a><strong>Python字符串编码</strong></h3><p>详见另一篇博客</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;基础知识&quot;&gt;&lt;a href=&quot;#基础知识&quot; class=&quot;headerlink&quot; title=&quot;基础知识&quot;&gt;&lt;/a&gt;&lt;strong&gt;基础知识&lt;/strong&gt;&lt;/h2&gt;&lt;h3 id=&quot;技术选型：scrapy-vs-requests-beautifulsoup&quot;&gt;&lt;a href=&quot;#技术选型：scrapy-vs-requests-beautifulsoup&quot; class=&quot;headerlink&quot; title=&quot;技术选型：scrapy vs requests + beautifulsoup&quot;&gt;&lt;/a&gt;&lt;strong&gt;技术选型：&lt;a href=&quot;https://scrapy-chs.readthedocs.io/zh_CN/1.0/&quot;&gt;scrapy&lt;/a&gt; vs &lt;a href=&quot;http://docs.python-requests.org/zh_CN/latest/index.html&quot;&gt;requests&lt;/a&gt; + &lt;a href=&quot;http://beautifulsoup.readthedocs.io/zh_CN/latest/&quot;&gt;beautifulsoup&lt;/a&gt;&lt;/strong&gt;&lt;/h3&gt;
+    
+    </summary>
+    
+      <category term="Basic knowledge" scheme="http://yoursite.com/categories/Basic-knowledge/"/>
+    
+    
+      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
     
   </entry>
   
@@ -2654,257 +2839,6 @@
     <summary type="html">
     
       &lt;h2 id=&quot;redis-py简介&quot;&gt;&lt;a href=&quot;#redis-py简介&quot; class=&quot;headerlink&quot; title=&quot;redis-py简介&quot;&gt;&lt;/a&gt;&lt;strong&gt;redis-py简介&lt;/strong&gt;&lt;/h2&gt;&lt;h3 id=&quot;安装&quot;&gt;&lt;a href=&quot;#安装&quot; class=&quot;headerlink&quot; title=&quot;安装&quot;&gt;&lt;/a&gt;&lt;strong&gt;安装&lt;/strong&gt;&lt;/h3&gt;&lt;p&gt;在之前的学习笔记(一)中已经安装过&lt;a href=&quot;https://github.com/andymccurdy/redis-py&quot;&gt;redis-py&lt;/a&gt;，我的Python版本是3.5.2&lt;br&gt;
-    
-    </summary>
-    
-      <category term="Redis" scheme="http://yoursite.com/categories/Redis/"/>
-    
-    
-      <category term="Redis, Python" scheme="http://yoursite.com/tags/Redis-Python/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Redis学习笔记(一)：初识Redis</title>
-    <link href="http://yoursite.com/2017/03/25/Redis-1/"/>
-    <id>http://yoursite.com/2017/03/25/Redis-1/</id>
-    <published>2017-03-25T12:18:54.000Z</published>
-    <updated>2017-03-27T09:12:22.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="Redis简介"><a href="#Redis简介" class="headerlink" title="Redis简介"></a><strong>Redis简介</strong></h2><p>Redis是一个速度极快的非关系数据库，也就是我们所说的NoSQL数据库(non-relational database)，它可以存储键(key)与5种不同类型的值(value)之间的映射(mapping)，可以将存储在内存的键值对数据持久化到硬盘，可以使用复制特性来扩展读性能，还可以使用客户端分片来扩展性能，并且它还提供了多种语言的API。<br><a id="more"></a></p>
-<h2 id="Redis与memcached及其他类型数据库对比"><a href="#Redis与memcached及其他类型数据库对比" class="headerlink" title="Redis与memcached及其他类型数据库对比"></a><strong>Redis与memcached及其他类型数据库对比</strong></h2><p>Redis经常被拿来与memcached进行比较，两者都可用于存储键值映射，性能也相差无几，但是Redis能够自动以两种不同的方式将数据写入硬盘，而且Redis除了能存储普通的字符串键，还能存储其他4种数据结构，使得Redis可以用于解决更为广泛的问题，并且即可以作为主数据库使用，又可以作为其他存储系统的辅助数据库。</p>
-<p>下表展示了Redis与memcached，MySQL以及MongoDB的特性与功能。</p>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>类型</th>
-<th>数据存储选项</th>
-<th>查询类型</th>
-<th>附加功能</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Redis</td>
-<td>使用内存存储的非关系数据库</td>
-<td>字符串、列表、集合、散列表、有序集合</td>
-<td>每种数据类型专属的命令，以及批量操作和不完全的事务支持</td>
-<td>发布与订阅，主从复制，持久化，脚本</td>
-</tr>
-<tr>
-<td>memcached</td>
-<td>使用内存存储的键值缓存</td>
-<td>键值之间的映射</td>
-<td>创建、读取、删除、更新等命令</td>
-<td>多线程服务器，用于提升性能</td>
-</tr>
-<tr>
-<td>MySQL</td>
-<td>关系数据库</td>
-<td>每个数据库可以包含多个表，每个表可以包含多个行；可以处理多个表的视图；支持空间和第三方扩展</td>
-<td>SELECT、INSERT、UPDATE、DELETE、函数、存储过程</td>
-<td>支持ACID性质(需要使用InnoDB)，主从复制，主主复制</td>
-</tr>
-<tr>
-<td>MongoDB</td>
-<td>使用硬盘存储(on-disk)的非关系文档存储</td>
-<td>每个数据库可以包含多个表，每个表可以包含多个无schema的BSON文档</td>
-<td>创建、读取、更新、删除、条件查询等命令</td>
-<td>支持map-reduce操作，主从复制，分片，空间索引</td>
-</tr>
-</tbody>
-</table>
-<h2 id="Redis安装-mac"><a href="#Redis安装-mac" class="headerlink" title="Redis安装(mac)"></a><strong>Redis安装(mac)</strong></h2><p>首先下载用于安装Rudix的引导脚本，并安装Rudix<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ curl -O http://rudix.google.code.com/hg/Ports/rudix/rudix.Py</div><div class="line">$ sudo python rudix.py install rudix</div></pre></td></tr></table></figure></p>
-<p>然后使用命令Rudix安装Redis，若能成功启动Redis服务器则安装成功<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ sudo rudix install redis</div><div class="line">$ redis-server</div></pre></td></tr></table></figure></p>
-<p>最后用pip为Python安装Redis客户端库<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo pip install redis</div></pre></td></tr></table></figure></p>
-<h2 id="Redis数据结构简介"><a href="#Redis数据结构简介" class="headerlink" title="Redis数据结构简介"></a><strong>Redis数据结构简介</strong></h2><p>Redis可以存储键与5种不同数据结构类型之间的映射，分别是STRING(字符串)、LIST(列表)、SET(集合)、HASH(散列)、ZSET(有序集合)。有一部分命令对于这5种数据结构是通用的，如DEL、TYPE、RENAME等；但也有一部分命令只能对特定的一种或者两种结构使用。</p>
-<p>下表从结构存储的值及读写能力对比了Redis的5种数据结构。</p>
-<table>
-<thead>
-<tr>
-<th>结构类型</th>
-<th>结构存储的值</th>
-<th>结构的读写能力</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>STRING</td>
-<td>字符串、整数或者浮点数</td>
-<td>对整个字符串或者字符串的其中一部分执行操作；对整数和浮点数进行自增或自减操作</td>
-</tr>
-<tr>
-<td>LIST</td>
-<td>一个链表，链表上的每个节点都包含了一个字符串</td>
-<td>从链表两端推入或弹出元素；根据偏移量对链表进行修剪(trim)；读取单个或多个元素；根据值查找或移除元素</td>
-</tr>
-<tr>
-<td>SET</td>
-<td>包含字符串的无序收集器，并且被包含的每个字符串互不相同</td>
-<td>添加、获取、移除单个元素；检查一个元素是否存在于集合中；计算交集、并集、差集；从集合里面随机获取元素</td>
-</tr>
-<tr>
-<td>HASH</td>
-<td>包含键值对的无序散列表</td>
-<td>添加、获取、移除单个键值对；获取所有键值对</td>
-</tr>
-<tr>
-<td>ZSET</td>
-<td>字符串成员(member)与浮点数分值(score)之间的有序映射，元素的排列顺序由分值的大小决定</td>
-<td>添加、获取、删除单个元素；根据分值范围(range)或者成员来获取元素</td>
-</tr>
-</tbody>
-</table>
-<h3 id="Redis字符串"><a href="#Redis字符串" class="headerlink" title="Redis字符串"></a><strong>Redis字符串</strong></h3><p>下表展示了3种简单的字符串命令：</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>行为</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>GET</td>
-<td>获取存储在给定键中的值</td>
-</tr>
-<tr>
-<td>SET</td>
-<td>设置存储在给定键中的值</td>
-</tr>
-<tr>
-<td>DEL</td>
-<td>删除存储在给定键中的值(该命令可用于所有类型)</td>
-</tr>
-</tbody>
-</table>
-<p>SET、GET、DEL的使用示例：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ redis-cli</div><div class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> hello world</div><div class="line">OK</div><div class="line">127.0.0.1:6379&gt; get hello</div><div class="line"><span class="string">"world"</span></div><div class="line">127.0.0.1:6379&gt; del hello</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; get hello</div><div class="line">(nil)</div><div class="line">127.0.0.1:6379&gt;</div></pre></td></tr></table></figure></p>
-<p>SET命令在执行成功时返回OK，Python客户端会将这个OK转换为True；DEL命令在执行成功时将会返回被成功删除的值的数量；GET命令在尝试得到不存在的值时，将会返回一个nil，Python客户端会将这个nil转换为None。</p>
-<h3 id="Redis列表"><a href="#Redis列表" class="headerlink" title="Redis列表"></a><strong>Redis列表</strong></h3><p>下表展示了6种简单的列表命令：</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>行为</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>LPUSH(RPUSH)</td>
-<td>将给定值推入列表的左端(右端)</td>
-</tr>
-<tr>
-<td>LPOP(RPOP)</td>
-<td>从列表的左端(右端)弹出一个值，并返回被弹出的值</td>
-</tr>
-<tr>
-<td>LINDEX</td>
-<td>获取列表在给定位置上的单个值</td>
-</tr>
-<tr>
-<td>LRANGE</td>
-<td>获取列表在给定范围上的所有值</td>
-</tr>
-</tbody>
-</table>
-<p>RPUSH、LRANGE、LINDEX、LPOP的使用示例<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">$ redis-cli</div><div class="line">127.0.0.1:6379&gt; rpush list-key item</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; rpush list-key item2</div><div class="line">(<span class="built_in">integer</span>) 2</div><div class="line">127.0.0.1:6379&gt; rpush list-key item</div><div class="line">(<span class="built_in">integer</span>) 3</div><div class="line">127.0.0.1:6379&gt; lrange list-key 0 -1</div><div class="line">1) <span class="string">"item"</span></div><div class="line">2) <span class="string">"item2"</span></div><div class="line">3) <span class="string">"item"</span></div><div class="line">127.0.0.1:6379&gt; lindex list-key 1</div><div class="line"><span class="string">"item2"</span></div><div class="line">127.0.0.1:6379&gt; lpop list-key </div><div class="line"><span class="string">"item"</span></div><div class="line">127.0.0.1:6379&gt; lrange list-key 0 -1</div><div class="line">1) <span class="string">"item2"</span></div><div class="line">2) <span class="string">"item"</span></div><div class="line">127.0.0.1:6379&gt;</div></pre></td></tr></table></figure></p>
-<p>RPUSH和LPUSH命令在执行成功后会返回当前列表的长度；列表索引范围从0开始，到-1结束，可以取出列表包含的所有元素；使用LINDEX可以从列表中取出单个元素。</p>
-<h3 id="Redis集合"><a href="#Redis集合" class="headerlink" title="Redis集合"></a><strong>Redis集合</strong></h3><p>Redis的集合和列表都可以存储多个字符串，它们的不同之处在于，列表可以存储多个相同的字符串，而集合则通过散列表来保证自己存储的每个字符串都是不同的(这些散列表只有键)。</p>
-<p>下表展示了6种简单的集合命令：</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>行为</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SADD</td>
-<td>将给定元素添加到集合</td>
-</tr>
-<tr>
-<td>SMEMBERS</td>
-<td>返回集合包含的所有元素</td>
-</tr>
-<tr>
-<td>SISMEMBER</td>
-<td>检查给定元素是否存在于集合中</td>
-</tr>
-<tr>
-<td>SREM</td>
-<td>如果给定的元素存在于集合中，那么移除这个元素</td>
-</tr>
-</tbody>
-</table>
-<p>SADD、SMEMBERS、SISMEMBER、SREM的使用示例<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">$ redis-cli</div><div class="line">127.0.0.1:6379&gt; sadd <span class="built_in">set</span>-key item</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; sadd <span class="built_in">set</span>-key item2</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; sadd <span class="built_in">set</span>-key item3</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; sadd <span class="built_in">set</span>-key item</div><div class="line">(<span class="built_in">integer</span>) 0</div><div class="line">127.0.0.1:6379&gt; smembers <span class="built_in">set</span>-key</div><div class="line">1) <span class="string">"item2"</span></div><div class="line">2) <span class="string">"item3"</span></div><div class="line">3) <span class="string">"item"</span></div><div class="line">127.0.0.1:6379&gt; sismember <span class="built_in">set</span>-key item4</div><div class="line">(<span class="built_in">integer</span>) 0</div><div class="line">127.0.0.1:6379&gt; sismember <span class="built_in">set</span>-key item</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; srem <span class="built_in">set</span>-key item2</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; srem <span class="built_in">set</span>-key item2</div><div class="line">(<span class="built_in">integer</span>) 0</div><div class="line">127.0.0.1:6379&gt; smembers <span class="built_in">set</span>-key</div><div class="line">1) <span class="string">"item3"</span></div><div class="line">2) <span class="string">"item"</span></div><div class="line">127.0.0.1:6379&gt;</div></pre></td></tr></table></figure></p>
-<p>SADD命令返回1表示成功添加到集合中，返回0表示该元素已存在于集合中；SMEMBERS命令获取到的元素组成的序列将会被Python客户端转换为Python集合；Python客户端会返回一个布尔值来表示SISMEMBER命令的检查结果；SREM命令会返回被移除元素的数量。</p>
-<h3 id="Redis散列"><a href="#Redis散列" class="headerlink" title="Redis散列"></a><strong>Redis散列</strong></h3><p>Redis的散列就像一个微型Redis，它可以存储多个键值对之间的映射。和字符串一样，散列存储的值既可以是字符串也可以是数值。可以将散列看做文档数据库里面的文档，还可以看做是关系数据库里面的行，因为散列、文档和行都允许用户同时访问或修改一个或多个域(field)。</p>
-<p>下表展示了4种简单的列表命令：</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>行为</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>HSET</td>
-<td>在散列里面关联给定的键值对</td>
-</tr>
-<tr>
-<td>HGET</td>
-<td>获取指定散列键的值</td>
-</tr>
-<tr>
-<td>HGETALL</td>
-<td>获取散列包含的所有键值对</td>
-</tr>
-<tr>
-<td>HDEL</td>
-<td>如果给定键存在于散列里面，那么移除这个键</td>
-</tr>
-</tbody>
-</table>
-<p>HSET、HGET、HGETALL、HDEL的使用示例<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">$ redis-cli</div><div class="line">127.0.0.1:6379&gt; hset <span class="built_in">hash</span>-key sub-key1 value1</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; hset <span class="built_in">hash</span>-key sub-key2 value2</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; hset <span class="built_in">hash</span>-key sub-key1 value1</div><div class="line">(<span class="built_in">integer</span>) 0</div><div class="line">127.0.0.1:6379&gt; hgetall <span class="built_in">hash</span>-key</div><div class="line">1) <span class="string">"sub-key1"</span></div><div class="line">2) <span class="string">"value1"</span></div><div class="line">3) <span class="string">"sub-key2"</span></div><div class="line">4) <span class="string">"value2"</span></div><div class="line">127.0.0.1:6379&gt; hdel <span class="built_in">hash</span>-key sub-key2</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; hdel <span class="built_in">hash</span>-key sub-key2</div><div class="line">(<span class="built_in">integer</span>) 0</div><div class="line">127.0.0.1:6379&gt; hget <span class="built_in">hash</span>-key sub-key1</div><div class="line"><span class="string">"value1"</span></div><div class="line">127.0.0.1:6379&gt; hgetall <span class="built_in">hash</span>-key</div><div class="line">1) <span class="string">"sub-key1"</span></div><div class="line">2) <span class="string">"value1"</span></div><div class="line">127.0.0.1:6379&gt;</div></pre></td></tr></table></figure></p>
-<p>HSET返回一个值来表示给定的键是否已经存在于散列里面；Python客户端会把HGETALL命令获取的整个散列转换为一个Python字典；HDEL命令执行后会返回一个值来表示给定的键在移除之前是否存在于散列里面。</p>
-<h3 id="Redis有序集合"><a href="#Redis有序集合" class="headerlink" title="Redis有序集合"></a><strong>Redis有序集合</strong></h3><p>有序集合和散列一样，都用于存储键值对：其中有序集合的每个键称为成员（member），都是独一无二的，而有序集合的每个值称为分值（score），都必须是浮点数。有序集合是Redis里面唯一既可以根据成员访问元素（这一点和散列一样），又可以根据分值以及分值的排列顺序来访问元素的结构。</p>
-<p>下表展示了4种简单的有序集合命令：</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>行为</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ZADD</td>
-<td>将一个带有给定分值的成员添加到有序集合里面</td>
-</tr>
-<tr>
-<td>ZRANGE</td>
-<td>根据元素在有序排列中所处的位置，从有序集合里获取多个元素</td>
-</tr>
-<tr>
-<td>ZRANGEBYSCORE</td>
-<td>获取有序集合在给定分值范围内的所有元素</td>
-</tr>
-<tr>
-<td>ZREM</td>
-<td>如果给定成员存在于有序集合，那么移除这个成员</td>
-</tr>
-</tbody>
-</table>
-<p>ZADD、ZRANGE、ZRANGEBYSCORE、ZREM的使用示例<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">$ redis-cli</div><div class="line">127.0.0.1:6379&gt; zadd zset-key 728 member1</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; zadd zset-key 982 member0</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; zadd zset-key 982 member0</div><div class="line">(<span class="built_in">integer</span>) 0</div><div class="line">127.0.0.1:6379&gt; zrange zset-key 0 -1 withscores</div><div class="line">1) <span class="string">"member1"</span></div><div class="line">2) <span class="string">"728"</span></div><div class="line">3) <span class="string">"member0"</span></div><div class="line">4) <span class="string">"982"</span></div><div class="line">127.0.0.1:6379&gt; zrangebyscore zset-key 0 800 withscores</div><div class="line">1) <span class="string">"member1"</span></div><div class="line">2) <span class="string">"728"</span></div><div class="line">127.0.0.1:6379&gt; zrem zset-key member1</div><div class="line">(<span class="built_in">integer</span>) 1</div><div class="line">127.0.0.1:6379&gt; zrem zset-key member1</div><div class="line">(<span class="built_in">integer</span>) 0</div><div class="line">127.0.0.1:6379&gt; zrange zset-key 0 -1 withscores</div><div class="line">1) <span class="string">"member0"</span></div><div class="line">2) <span class="string">"982"</span></div><div class="line">127.0.0.1:6379&gt;</div></pre></td></tr></table></figure></p>
-<p>在尝试向有序集合添加元素的时候，ZADD命令会返回新添加元素的数量；ZRANGE命令获取有序集合包含的所有元素，这些元素会按照分值进行排序，Python客户端会将这些分值转换成浮点数；ZRANGEBYSCORE命令也可以根据分值来获取有序集合的其中一部分元素；ZREM命令在移除有序集合元素的时候，命令会返回被移除元素的数量。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;Redis简介&quot;&gt;&lt;a href=&quot;#Redis简介&quot; class=&quot;headerlink&quot; title=&quot;Redis简介&quot;&gt;&lt;/a&gt;&lt;strong&gt;Redis简介&lt;/strong&gt;&lt;/h2&gt;&lt;p&gt;Redis是一个速度极快的非关系数据库，也就是我们所说的NoSQL数据库(non-relational database)，它可以存储键(key)与5种不同类型的值(value)之间的映射(mapping)，可以将存储在内存的键值对数据持久化到硬盘，可以使用复制特性来扩展读性能，还可以使用客户端分片来扩展性能，并且它还提供了多种语言的API。&lt;br&gt;
     
     </summary>
     
