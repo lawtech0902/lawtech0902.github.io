@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-05-05T12:51:02.000Z</updated>
+  <updated>2017-05-05T13:22:41.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,39 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Python分布式爬虫打造搜索引擎项目学习笔记——items设计</title>
+    <link href="http://yoursite.com/2017/05/05/scrapy-items-design/"/>
+    <id>http://yoursite.com/2017/05/05/scrapy-items-design/</id>
+    <published>2017-05-05T06:18:54.000Z</published>
+    <updated>2017-05-05T13:22:41.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Scrapy的Item是进行数据保存不可缺少的步骤，通过它进行数据的整理并通过Pipelines进行数据的数据库保存，图片下载等，它只有一种类型 <code>scrapy.Field()</code> 。<br>由于需要添加一个封面图，对上面的爬虫添加一个 <code>front_image_url</code> 字段对 <code>parse</code> 函数进行修改：</p>
+<a id="more"></a>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    1. 获取文章列表页中的文章url并交给解析函数进行具体字段的解析</div><div class="line">    2. 获取下一页的url并交给scrapy进行下载</div><div class="line">    :param response: </div><div class="line">    :return: </div><div class="line">    """</div><div class="line"></div><div class="line">    <span class="comment"># 解析列表页中的所有文章url并交给解析函数进行具体字段的解析</span></div><div class="line">    post_nodes = response.css(<span class="string">"#archive .floated-thumb .post-thumb a"</span>)</div><div class="line">    <span class="keyword">for</span> post_node <span class="keyword">in</span> post_nodes:</div><div class="line">        image_url = post_node.css(<span class="string">"img::attr(src)"</span>).extract_first(<span class="string">""</span>)</div><div class="line">        post_url = post_node.css(<span class="string">"::attr(href)"</span>).extract_first(<span class="string">""</span>)</div><div class="line">        <span class="keyword">yield</span> Request(url=parse.urljoin(response.url, post_url), meta=&#123;<span class="string">"front_image_url"</span>: image_url&#125;, callback=self.parse_detail)</div></pre></td></tr></table></figure>
+<p>其中的 <code>meta</code> 字段是传递值的方法。在调试时返回的 <code>response</code> 中会出现 <code>meta</code> 的内容，它是一个字典，故在传递时可以直接通过 <code>response.meta[&#39;front_image_url&#39;]</code> 进行引用（也可以使用get的方法，附默认值防止出现异常）：</p>
+<p><img src="http://ww1.sinaimg.cn/large/006tNc79gy1ffaslwq4mqj30l1058t9b.jpg" alt=""></p>
+<p>在 <code>items.py</code> 文件中，定义一个item并声明其字段：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">JobBoleArticleItem</span><span class="params">(scrapy.Item)</span>:</span></div><div class="line">    title = scrapy.Field()</div><div class="line">    create_date = scrapy.Field()</div><div class="line">    url = scrapy.Field()</div><div class="line">    url_object_id = scrapy.Field()</div><div class="line">    front_image_url = scrapy.Field()</div><div class="line">    front_image_path = scrapy.Field()</div><div class="line">    praise_nums = scrapy.Field()</div><div class="line">    comment_nums = scrapy.Field()</div><div class="line">    fav_nums = scrapy.Field()</div><div class="line">    tags = scrapy.Field()</div><div class="line">    content = scrapy.Field()</div></pre></td></tr></table></figure>
+<p>在 <code>jobbole.py</code> 中添加 <code>from ArticleSpider.items import JobBoleArticleItem</code> 对item进行引用，然后在 <code>parse_detail</code> 中进行初始化 <code>article_item = JobBoleArticleItem()</code> ，之后将获取到的字段内容存入初始化的item中，最终代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse_detail</span><span class="params">(self, response)</span>:</span></div><div class="line">    article_item = JobBoleArticleItem()</div><div class="line"></div><div class="line">    <span class="comment"># 通过css选择器提取字段</span></div><div class="line">    front_image_url = response.meta.get(<span class="string">"front_image_url"</span>, <span class="string">""</span>)  <span class="comment"># 文章封面图</span></div><div class="line">    title = response.css(<span class="string">".entry-header h1::text"</span>).extract()[<span class="number">0</span>]</div><div class="line">    create_date = response.css(<span class="string">"p.entry-meta-hide-on-mobile::text"</span>).extract()[<span class="number">0</span>].strip().replace(<span class="string">"·"</span>, <span class="string">""</span>).strip()</div><div class="line">    praise_nums = int(response.css(<span class="string">".vote-post-up h10::text"</span>).extract()[<span class="number">0</span>])</div><div class="line">    fav_nums = response.css(<span class="string">".bookmark-btn::text"</span>).extract()[<span class="number">0</span>]</div><div class="line">    match_re = re.match(<span class="string">".*?(\d+).*?"</span>, fav_nums)</div><div class="line">    <span class="keyword">if</span> match_re:</div><div class="line">        fav_nums = int(match_re.group(<span class="number">1</span>))</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        fav_nums = <span class="number">0</span></div><div class="line">    comment_nums = response.css(<span class="string">"a[href='#article-comment'] span::text"</span>).extract()[<span class="number">0</span>]</div><div class="line">    match_re = re.match(<span class="string">".*?(\d+).*?"</span>, comment_nums)</div><div class="line">    <span class="keyword">if</span> match_re:</div><div class="line">        comment_nums = int(match_re.group(<span class="number">1</span>))</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        comment_nums = <span class="number">0</span></div><div class="line">    content = response.css(<span class="string">"div.entry"</span>).extract()[<span class="number">0</span>]</div><div class="line">    tag_list = response.css(<span class="string">"p.entry-meta-hide-on-mobile a::text"</span>).extract()</div><div class="line">    tag_list = [element <span class="keyword">for</span> element <span class="keyword">in</span> tag_list <span class="keyword">if</span> <span class="keyword">not</span> element.strip().endswith(<span class="string">"评论"</span>)]</div><div class="line">    tags = <span class="string">","</span>.join(tag_list)</div><div class="line"></div><div class="line">    article_item[<span class="string">"title"</span>] = title</div><div class="line">    article_item[<span class="string">"url"</span>] = response.url</div><div class="line">    article_item[<span class="string">"create_date"</span>] = create_date</div><div class="line">    article_item[<span class="string">"front_image_url"</span>] = front_image_url</div><div class="line">    article_item[<span class="string">"praise_nums"</span>] = praise_nums</div><div class="line">    article_item[<span class="string">"comment_nums"</span>] = comment_nums</div><div class="line">    article_item[<span class="string">"fav_nums"</span>] = fav_nums</div><div class="line">    article_item[<span class="string">"content"</span>] = content</div><div class="line">    article_item[<span class="string">"tags"</span>] = tags</div><div class="line">    </div><div class="line">    <span class="keyword">yield</span> article_item</div></pre></td></tr></table></figure>
+<p>其中 <code>yield article_item</code> 会自动提交到 <code>settings</code> 中的 <code>ITEM_PIPELINES</code> 进行处理。<br>此时在 <code>pipelines.py</code> 中设置断点调试，可以看到 <code>article_item</code> 中的值已经传递到这里了。</p>
+<p><img src="http://ww3.sinaimg.cn/large/006tNc79gy1ffasxu8jauj31ge0my46y.jpg" alt=""></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Scrapy的Item是进行数据保存不可缺少的步骤，通过它进行数据的整理并通过Pipelines进行数据的数据库保存，图片下载等，它只有一种类型 &lt;code&gt;scrapy.Field()&lt;/code&gt; 。&lt;br&gt;由于需要添加一个封面图，对上面的爬虫添加一个 &lt;code&gt;front_image_url&lt;/code&gt; 字段对 &lt;code&gt;parse&lt;/code&gt; 函数进行修改：&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
+    
+    
+      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
+    
+  </entry>
   
   <entry>
     <title>Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Selectors</title>
@@ -977,6 +1010,309 @@
   </entry>
   
   <entry>
+    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Xpath教程</title>
+    <link href="http://yoursite.com/2017/04/11/xpath-usage/"/>
+    <id>http://yoursite.com/2017/04/11/xpath-usage/</id>
+    <published>2017-04-11T12:18:54.000Z</published>
+    <updated>2017-04-16T08:41:39.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="XPath的用法"><a href="#XPath的用法" class="headerlink" title="XPath的用法"></a><strong>XPath的用法</strong></h2><h3 id="XPath简介"><a href="#XPath简介" class="headerlink" title="XPath简介"></a><strong>XPath简介</strong></h3><ul>
+<li>XPath 使用路径表达式在 XML / HTML 文档中进行导航</li>
+<li>XPath 包含一个标准函数库</li>
+<li>XPath 是 XSLT 中的主要元素</li>
+<li>XPath 是一个 W3C 标准</li>
+</ul>
+<a id="more"></a>
+<h3 id="XPath术语"><a href="#XPath术语" class="headerlink" title="XPath术语"></a><strong>XPath术语</strong></h3><h4 id="节点（Node）"><a href="#节点（Node）" class="headerlink" title="节点（Node）"></a><strong>节点（Node）</strong></h4><p>在 XPath 中，有七种类型的节点：元素、属性、文本、命名空间、处理指令、注释以及文档（根）节点。XML 文档是被作为节点树来对待的。树的根被称为文档节点或者根节点。</p>
+<p>请看下面这个 XML 文档：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"ISO-8859-1"</span><span class="meta">?&gt;</span></span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span>Harry Potter<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">author</span>&gt;</span>J K. Rowling<span class="tag">&lt;/<span class="name">author</span>&gt;</span> </div><div class="line">  <span class="tag">&lt;<span class="name">year</span>&gt;</span>2005<span class="tag">&lt;/<span class="name">year</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>29.99<span class="tag">&lt;/<span class="name">price</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">bookstore</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>上面的XML文档中的节点例子：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span> （文档节点）</div><div class="line"><span class="tag">&lt;<span class="name">author</span>&gt;</span>J K. Rowling<span class="tag">&lt;/<span class="name">author</span>&gt;</span> （元素节点）</div><div class="line">lang="en" （属性节点）</div></pre></td></tr></table></figure>
+<h4 id="基本值（或称原子值，Atomic-value）"><a href="#基本值（或称原子值，Atomic-value）" class="headerlink" title="基本值（或称原子值，Atomic value）"></a><strong>基本值（或称原子值，Atomic value）</strong></h4><p>基本值是无父或无子的节点。</p>
+<p>基本值的例子：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">J K. Rowling</div><div class="line">"en"</div></pre></td></tr></table></figure>
+<h4 id="项目（Item）"><a href="#项目（Item）" class="headerlink" title="项目（Item）"></a><strong>项目（Item）</strong></h4><p>项目是基本值或者节点。</p>
+<h4 id="节点关系"><a href="#节点关系" class="headerlink" title="节点关系"></a><strong>节点关系</strong></h4><p>参考示例：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Harry Potter<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">author</span>&gt;</span>J K. Rowling<span class="tag">&lt;/<span class="name">author</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">year</span>&gt;</span>2005<span class="tag">&lt;/<span class="name">year</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>29.99<span class="tag">&lt;/<span class="name">price</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">bookstore</span>&gt;</span></div></pre></td></tr></table></figure>
+<ul>
+<li><p>父节点（Parent）</p>
+<p>每个元素以及属性都有一个父节点。</p>
+<p>在上面的例子中，book 元素是 title、author、year 以及 price 元素的父节点</p>
+</li>
+<li><p>子节点（Children）</p>
+<p>元素节点可有零个、一个或多个子节点。</p>
+<p>在上面的例子中，title、author、year 以及 price 元素都是 book 元素的子节点</p>
+</li>
+<li><p>同胞节点（Sibling）</p>
+<p>拥有相同的父节点的节点</p>
+<p>在上面的例子中，title、author、year 以及 price 元素都是同胞节点</p>
+</li>
+<li><p>先辈节点（Ancestor）</p>
+<p>某节点的父节点、父节点的父节点，等等。</p>
+<p>在上面的例子中，title 元素的先辈节点是 book 元素和 bookstore 元素</p>
+</li>
+<li><p>后代节点（Descendant）</p>
+<p>某个节点的子节点，子节点的子节点，等等。</p>
+<p>在上面的例子中，bookstore 的后代节点是 book、title、author、year 以及 price 元素</p>
+</li>
+</ul>
+<h3 id="XPath语法"><a href="#XPath语法" class="headerlink" title="XPath语法"></a><strong>XPath语法</strong></h3><p>参考示例：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"ISO-8859-1"</span><span class="meta">?&gt;</span></span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span> <span class="attr">lang</span>=<span class="string">"eng"</span>&gt;</span>Harry Potter<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>29.99<span class="tag">&lt;/<span class="name">price</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span> <span class="attr">lang</span>=<span class="string">"eng"</span>&gt;</span>Learning XML<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>39.95<span class="tag">&lt;/<span class="name">price</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">bookstore</span>&gt;</span></div></pre></td></tr></table></figure>
+<h4 id="选取节点"><a href="#选取节点" class="headerlink" title="选取节点"></a><strong>选取节点</strong></h4><p>XPath 使用路径表达式在 XML 文档中选取节点。节点是通过沿着路径或者 step 来选取的。下面列出了最有用的路径表达式：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">表达式</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">nodename</td>
+<td style="text-align:left">选取此节点的所有子节点</td>
+</tr>
+<tr>
+<td style="text-align:left">/</td>
+<td style="text-align:left">从根节点选取</td>
+</tr>
+<tr>
+<td style="text-align:left">//</td>
+<td style="text-align:left">从匹配选择的当前节点选择文档中的节点，而不考虑它们的位置</td>
+</tr>
+<tr>
+<td style="text-align:left">.</td>
+<td style="text-align:left">选取当前节点</td>
+</tr>
+<tr>
+<td style="text-align:left">..</td>
+<td style="text-align:left">选取当前节点的父节点。</td>
+</tr>
+<tr>
+<td style="text-align:left">@</td>
+<td style="text-align:left">选取属性。</td>
+</tr>
+</tbody>
+</table>
+<p>实例：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">路径表达式</th>
+<th style="text-align:left">结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">bookstore</td>
+<td style="text-align:left">选取bookstore元素的所有子节点</td>
+</tr>
+<tr>
+<td style="text-align:left">/bookstore</td>
+<td style="text-align:left">选取根元素bookstore 注释：假如路径起始于正斜杠( / )，则此路径始终代表到某元素的绝对路径！</td>
+</tr>
+<tr>
+<td style="text-align:left">bookstore/book</td>
+<td style="text-align:left">选取属于bookstore的子元素的所有book元素</td>
+</tr>
+<tr>
+<td style="text-align:left">//book</td>
+<td style="text-align:left">选取所有book元素，而不考虑它们的位置</td>
+</tr>
+<tr>
+<td style="text-align:left">bookstore//book</td>
+<td style="text-align:left">选择属于 bookstore 元素的后代的所有 book 元素，而不管它们位于 bookstore 之下的什么位置</td>
+</tr>
+<tr>
+<td style="text-align:left">//@lang</td>
+<td style="text-align:left">选取名为 lang 的所有属性</td>
+</tr>
+</tbody>
+</table>
+<h4 id="谓语（Predicates）"><a href="#谓语（Predicates）" class="headerlink" title="谓语（Predicates）"></a><strong>谓语（Predicates）</strong></h4><p>谓语用来查找某个特定的节点或者包含某个指定的值的节点。</p>
+<p>谓语被嵌在方括号中。</p>
+<p>实例</p>
+<p>在下面的表格中，我们列出了带有谓语的一些路径表达式，以及表达式的结果：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">路径表达式</th>
+<th style="text-align:left">结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">/bookstore/book[1]</td>
+<td style="text-align:left">选取属于 bookstore 子元素的第一个 book 元素</td>
+</tr>
+<tr>
+<td style="text-align:left">/bookstore/book[last()]</td>
+<td style="text-align:left">选取属于 bookstore 子元素的最后一个 book 元素</td>
+</tr>
+<tr>
+<td style="text-align:left">/bookstore/book[last()-1]</td>
+<td style="text-align:left">选取属于 bookstore 子元素的倒数第二个 book 元素</td>
+</tr>
+<tr>
+<td style="text-align:left">/bookstore/book[postion()&lt;3]</td>
+<td style="text-align:left">选取最前面的两个属于 bookstore 元素的子元素的 book 元素</td>
+</tr>
+<tr>
+<td style="text-align:left">//title[@lang]</td>
+<td style="text-align:left">选取所有拥有名为 lang 的属性的 title 元素</td>
+</tr>
+<tr>
+<td style="text-align:left">//title[@lang=’eng’]</td>
+<td style="text-align:left">选取所有 title 元素，且这些元素拥有值为 eng 的 lang 属性</td>
+</tr>
+<tr>
+<td style="text-align:left">/bookstore/book[price&gt;35.00]</td>
+<td style="text-align:left">选取 bookstore 元素的所有 book 元素，且其中的 price 元素的值须大于 35.00</td>
+</tr>
+<tr>
+<td style="text-align:left">/bookstore/book[price&gt;35.00]/title</td>
+<td style="text-align:left">选取 bookstore 元素中的 book 元素的所有 title 元素，且其中的 price 元素的值须大于 35.00</td>
+</tr>
+</tbody>
+</table>
+<h4 id="选取未知节点"><a href="#选取未知节点" class="headerlink" title="选取未知节点"></a><strong>选取未知节点</strong></h4><p>XPath 通配符可用来选取未知的 XML 元素</p>
+<table>
+<thead>
+<tr>
+<th>通配符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>*</td>
+<td>匹配任何元素节点</td>
+</tr>
+<tr>
+<td>@*</td>
+<td>匹配任何属性节点</td>
+</tr>
+<tr>
+<td>node()</td>
+<td>匹配任何节点</td>
+</tr>
+</tbody>
+</table>
+<p>实例</p>
+<p>在下面的表格中，我们列出了一些路径表达式，以及这些表达式的结果：</p>
+<table>
+<thead>
+<tr>
+<th>路径表达式</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/bookstore/*</td>
+<td>选取 bookstore 元素的所有子元素</td>
+</tr>
+<tr>
+<td>//*</td>
+<td>选取文档中的所有元素</td>
+</tr>
+<tr>
+<td>//title[@*]</td>
+<td>选取所有带有属性的 title 元素</td>
+</tr>
+</tbody>
+</table>
+<h4 id="选取若干路径"><a href="#选取若干路径" class="headerlink" title="选取若干路径"></a><strong>选取若干路径</strong></h4><p>通过在路径表达式中使用“|”运算符，您可以选取若干个路径。</p>
+<p>实例</p>
+<p>在下面的表格中，我们列出了一些路径表达式，以及这些表达式的结果：</p>
+<table>
+<thead>
+<tr>
+<th>路径表达式</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>//book/title &#124; //book/price</td>
+<td>选取 book 元素的所有 title 和 price 元素</td>
+</tr>
+<tr>
+<td>//title &#124; //price</td>
+<td>选取文档中的所有 title 和 price 元素</td>
+</tr>
+<tr>
+<td>/bookstore/book/title &#124; //price</td>
+<td>选取属于 bookstore 元素的 book 元素的所有 title 元素，以及文档中所有的 price 元素</td>
+</tr>
+</tbody>
+</table>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;XPath的用法&quot;&gt;&lt;a href=&quot;#XPath的用法&quot; class=&quot;headerlink&quot; title=&quot;XPath的用法&quot;&gt;&lt;/a&gt;&lt;strong&gt;XPath的用法&lt;/strong&gt;&lt;/h2&gt;&lt;h3 id=&quot;XPath简介&quot;&gt;&lt;a href=&quot;#XPath简介&quot; class=&quot;headerlink&quot; title=&quot;XPath简介&quot;&gt;&lt;/a&gt;&lt;strong&gt;XPath简介&lt;/strong&gt;&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;XPath 使用路径表达式在 XML / HTML 文档中进行导航&lt;/li&gt;
+&lt;li&gt;XPath 包含一个标准函数库&lt;/li&gt;
+&lt;li&gt;XPath 是 XSLT 中的主要元素&lt;/li&gt;
+&lt;li&gt;XPath 是一个 W3C 标准&lt;/li&gt;
+&lt;/ul&gt;
+    
+    </summary>
+    
+      <category term="XPath" scheme="http://yoursite.com/categories/XPath/"/>
+    
+    
+      <category term="Scrapy，XPath，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CXPath%EF%BC%8CPython/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy安装及调试</title>
+    <link href="http://yoursite.com/2017/04/11/scrapy-install/"/>
+    <id>http://yoursite.com/2017/04/11/scrapy-install/</id>
+    <published>2017-04-11T12:18:54.000Z</published>
+    <updated>2017-04-11T07:48:50.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a><strong>环境搭建</strong></h2><a id="more"></a>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ mkvirtualenv article_spider</div><div class="line">$ pip install -i https://pypi.douban.com/simple/ scrapy</div></pre></td></tr></table></figure>
+<h2 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a><strong>创建项目</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$ workon article_spider</div><div class="line">$ scrapy startproject ArticleSpider</div><div class="line">New Scrapy project &apos;ArticleSpider&apos;, using template directory &apos;/Users/lawtech/myvirtualenvs/article_spider/lib/python3.5/site-packages/scrapy/templates/project&apos;, created in:</div><div class="line">    /Users/lawtech/PycharmProjects/ArticleSpider</div><div class="line"></div><div class="line">You can start your first spider with:</div><div class="line">    cd ArticleSpider</div><div class="line">    scrapy genspider example example.com</div><div class="line">    </div><div class="line">$ cd ArticleSpider</div><div class="line">$ scrapy genspider jobbole blog.jobbole.com</div><div class="line">Created spider &apos;jobbole&apos; using template &apos;basic&apos; in module:</div><div class="line">  ArticleSpider.spiders.jobbole</div></pre></td></tr></table></figure>
+<h2 id="项目目录介绍"><a href="#项目目录介绍" class="headerlink" title="项目目录介绍"></a><strong>项目目录介绍</strong></h2><p>首先先要回答一个问题。</p>
+<p>问：把网站装进爬虫里，总共分几步？<br>答案很简单，四步：</p>
+<ul>
+<li>新建项目 (Project)：新建一个新的爬虫项目</li>
+<li>明确目标（Items）：明确你想要抓取的目标</li>
+<li>制作爬虫（Spider）：制作爬虫开始爬取网页</li>
+<li>存储内容（Pipeline）：设计管道存储爬取内容</li>
+</ul>
+<p>创建好AticleSpider项目之后，可以看到将会创建一个AticleSpider文件夹，目录结构如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">ArticleSpider/  </div><div class="line">    scrapy.cfg  </div><div class="line">    ArticleSpider/  </div><div class="line">        __init__.py  </div><div class="line">        items.py  </div><div class="line">        pipelines.py  </div><div class="line">        settings.py  </div><div class="line">        spiders/  </div><div class="line">            __init__.py  </div><div class="line">            jobbole.py</div></pre></td></tr></table></figure>
+<p>下面来简单介绍一下各个文件的作用：</p>
+<ul>
+<li>scrapy.cfg：项目的配置文件</li>
+<li>ArticleSpider/：项目的 Python 模块，将会从这里引用代码</li>
+<li>ArticleSpider/items.py：项目的 items 文件</li>
+<li>ArticleSpider/pipelines.py：项目的 pipelines 文件</li>
+<li>ArticleSpider/settings.py：项目的设置文件</li>
+<li>ArticleSpider/spiders/：存储爬虫的目录</li>
+</ul>
+<h2 id="pycharm-调试-scrapy-执行流程"><a href="#pycharm-调试-scrapy-执行流程" class="headerlink" title="pycharm 调试 scrapy 执行流程"></a><strong>pycharm 调试 scrapy 执行流程</strong></h2><p>在项目根目录下新建 main.py 文件，添加如下代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> scrapy.cmdline <span class="keyword">import</span> execute</div><div class="line"></div><div class="line"><span class="keyword">import</span> sys</div><div class="line"><span class="keyword">import</span> os</div><div class="line"></div><div class="line"><span class="comment"># __file__ 表示当前py文件</span></div><div class="line">sys.path.append(os.path.dirname(os.path.abspath(__file__)))</div><div class="line"><span class="comment"># 将实际命令拆分</span></div><div class="line">execute([<span class="string">"scrapy"</span>, <span class="string">"crawl"</span>, <span class="string">"spiders文件夹下的py文件名称"</span>])</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;环境搭建&quot;&gt;&lt;a href=&quot;#环境搭建&quot; class=&quot;headerlink&quot; title=&quot;环境搭建&quot;&gt;&lt;/a&gt;&lt;strong&gt;环境搭建&lt;/strong&gt;&lt;/h2&gt;
+    
+    </summary>
+    
+      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
+    
+    
+      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Python分布式爬虫打造搜索引擎项目学习笔记——Python正则表达式</title>
     <link href="http://yoursite.com/2017/04/11/regex/"/>
     <id>http://yoursite.com/2017/04/11/regex/</id>
@@ -1379,309 +1715,6 @@
     
     
       <category term="Scrapy，Regular Expression，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CRegular-Expression%EF%BC%8CPython/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy安装及调试</title>
-    <link href="http://yoursite.com/2017/04/11/scrapy-install/"/>
-    <id>http://yoursite.com/2017/04/11/scrapy-install/</id>
-    <published>2017-04-11T12:18:54.000Z</published>
-    <updated>2017-04-11T07:48:50.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a><strong>环境搭建</strong></h2><a id="more"></a>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ mkvirtualenv article_spider</div><div class="line">$ pip install -i https://pypi.douban.com/simple/ scrapy</div></pre></td></tr></table></figure>
-<h2 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a><strong>创建项目</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$ workon article_spider</div><div class="line">$ scrapy startproject ArticleSpider</div><div class="line">New Scrapy project &apos;ArticleSpider&apos;, using template directory &apos;/Users/lawtech/myvirtualenvs/article_spider/lib/python3.5/site-packages/scrapy/templates/project&apos;, created in:</div><div class="line">    /Users/lawtech/PycharmProjects/ArticleSpider</div><div class="line"></div><div class="line">You can start your first spider with:</div><div class="line">    cd ArticleSpider</div><div class="line">    scrapy genspider example example.com</div><div class="line">    </div><div class="line">$ cd ArticleSpider</div><div class="line">$ scrapy genspider jobbole blog.jobbole.com</div><div class="line">Created spider &apos;jobbole&apos; using template &apos;basic&apos; in module:</div><div class="line">  ArticleSpider.spiders.jobbole</div></pre></td></tr></table></figure>
-<h2 id="项目目录介绍"><a href="#项目目录介绍" class="headerlink" title="项目目录介绍"></a><strong>项目目录介绍</strong></h2><p>首先先要回答一个问题。</p>
-<p>问：把网站装进爬虫里，总共分几步？<br>答案很简单，四步：</p>
-<ul>
-<li>新建项目 (Project)：新建一个新的爬虫项目</li>
-<li>明确目标（Items）：明确你想要抓取的目标</li>
-<li>制作爬虫（Spider）：制作爬虫开始爬取网页</li>
-<li>存储内容（Pipeline）：设计管道存储爬取内容</li>
-</ul>
-<p>创建好AticleSpider项目之后，可以看到将会创建一个AticleSpider文件夹，目录结构如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">ArticleSpider/  </div><div class="line">    scrapy.cfg  </div><div class="line">    ArticleSpider/  </div><div class="line">        __init__.py  </div><div class="line">        items.py  </div><div class="line">        pipelines.py  </div><div class="line">        settings.py  </div><div class="line">        spiders/  </div><div class="line">            __init__.py  </div><div class="line">            jobbole.py</div></pre></td></tr></table></figure>
-<p>下面来简单介绍一下各个文件的作用：</p>
-<ul>
-<li>scrapy.cfg：项目的配置文件</li>
-<li>ArticleSpider/：项目的 Python 模块，将会从这里引用代码</li>
-<li>ArticleSpider/items.py：项目的 items 文件</li>
-<li>ArticleSpider/pipelines.py：项目的 pipelines 文件</li>
-<li>ArticleSpider/settings.py：项目的设置文件</li>
-<li>ArticleSpider/spiders/：存储爬虫的目录</li>
-</ul>
-<h2 id="pycharm-调试-scrapy-执行流程"><a href="#pycharm-调试-scrapy-执行流程" class="headerlink" title="pycharm 调试 scrapy 执行流程"></a><strong>pycharm 调试 scrapy 执行流程</strong></h2><p>在项目根目录下新建 main.py 文件，添加如下代码</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> scrapy.cmdline <span class="keyword">import</span> execute</div><div class="line"></div><div class="line"><span class="keyword">import</span> sys</div><div class="line"><span class="keyword">import</span> os</div><div class="line"></div><div class="line"><span class="comment"># __file__ 表示当前py文件</span></div><div class="line">sys.path.append(os.path.dirname(os.path.abspath(__file__)))</div><div class="line"><span class="comment"># 将实际命令拆分</span></div><div class="line">execute([<span class="string">"scrapy"</span>, <span class="string">"crawl"</span>, <span class="string">"spiders文件夹下的py文件名称"</span>])</div></pre></td></tr></table></figure>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;环境搭建&quot;&gt;&lt;a href=&quot;#环境搭建&quot; class=&quot;headerlink&quot; title=&quot;环境搭建&quot;&gt;&lt;/a&gt;&lt;strong&gt;环境搭建&lt;/strong&gt;&lt;/h2&gt;
-    
-    </summary>
-    
-      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
-    
-    
-      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Xpath教程</title>
-    <link href="http://yoursite.com/2017/04/11/xpath-usage/"/>
-    <id>http://yoursite.com/2017/04/11/xpath-usage/</id>
-    <published>2017-04-11T12:18:54.000Z</published>
-    <updated>2017-04-16T08:41:39.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="XPath的用法"><a href="#XPath的用法" class="headerlink" title="XPath的用法"></a><strong>XPath的用法</strong></h2><h3 id="XPath简介"><a href="#XPath简介" class="headerlink" title="XPath简介"></a><strong>XPath简介</strong></h3><ul>
-<li>XPath 使用路径表达式在 XML / HTML 文档中进行导航</li>
-<li>XPath 包含一个标准函数库</li>
-<li>XPath 是 XSLT 中的主要元素</li>
-<li>XPath 是一个 W3C 标准</li>
-</ul>
-<a id="more"></a>
-<h3 id="XPath术语"><a href="#XPath术语" class="headerlink" title="XPath术语"></a><strong>XPath术语</strong></h3><h4 id="节点（Node）"><a href="#节点（Node）" class="headerlink" title="节点（Node）"></a><strong>节点（Node）</strong></h4><p>在 XPath 中，有七种类型的节点：元素、属性、文本、命名空间、处理指令、注释以及文档（根）节点。XML 文档是被作为节点树来对待的。树的根被称为文档节点或者根节点。</p>
-<p>请看下面这个 XML 文档：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"ISO-8859-1"</span><span class="meta">?&gt;</span></span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span>Harry Potter<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">author</span>&gt;</span>J K. Rowling<span class="tag">&lt;/<span class="name">author</span>&gt;</span> </div><div class="line">  <span class="tag">&lt;<span class="name">year</span>&gt;</span>2005<span class="tag">&lt;/<span class="name">year</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>29.99<span class="tag">&lt;/<span class="name">price</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">bookstore</span>&gt;</span></div></pre></td></tr></table></figure>
-<p>上面的XML文档中的节点例子：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span> （文档节点）</div><div class="line"><span class="tag">&lt;<span class="name">author</span>&gt;</span>J K. Rowling<span class="tag">&lt;/<span class="name">author</span>&gt;</span> （元素节点）</div><div class="line">lang="en" （属性节点）</div></pre></td></tr></table></figure>
-<h4 id="基本值（或称原子值，Atomic-value）"><a href="#基本值（或称原子值，Atomic-value）" class="headerlink" title="基本值（或称原子值，Atomic value）"></a><strong>基本值（或称原子值，Atomic value）</strong></h4><p>基本值是无父或无子的节点。</p>
-<p>基本值的例子：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">J K. Rowling</div><div class="line">"en"</div></pre></td></tr></table></figure>
-<h4 id="项目（Item）"><a href="#项目（Item）" class="headerlink" title="项目（Item）"></a><strong>项目（Item）</strong></h4><p>项目是基本值或者节点。</p>
-<h4 id="节点关系"><a href="#节点关系" class="headerlink" title="节点关系"></a><strong>节点关系</strong></h4><p>参考示例：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Harry Potter<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">author</span>&gt;</span>J K. Rowling<span class="tag">&lt;/<span class="name">author</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">year</span>&gt;</span>2005<span class="tag">&lt;/<span class="name">year</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>29.99<span class="tag">&lt;/<span class="name">price</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">bookstore</span>&gt;</span></div></pre></td></tr></table></figure>
-<ul>
-<li><p>父节点（Parent）</p>
-<p>每个元素以及属性都有一个父节点。</p>
-<p>在上面的例子中，book 元素是 title、author、year 以及 price 元素的父节点</p>
-</li>
-<li><p>子节点（Children）</p>
-<p>元素节点可有零个、一个或多个子节点。</p>
-<p>在上面的例子中，title、author、year 以及 price 元素都是 book 元素的子节点</p>
-</li>
-<li><p>同胞节点（Sibling）</p>
-<p>拥有相同的父节点的节点</p>
-<p>在上面的例子中，title、author、year 以及 price 元素都是同胞节点</p>
-</li>
-<li><p>先辈节点（Ancestor）</p>
-<p>某节点的父节点、父节点的父节点，等等。</p>
-<p>在上面的例子中，title 元素的先辈节点是 book 元素和 bookstore 元素</p>
-</li>
-<li><p>后代节点（Descendant）</p>
-<p>某个节点的子节点，子节点的子节点，等等。</p>
-<p>在上面的例子中，bookstore 的后代节点是 book、title、author、year 以及 price 元素</p>
-</li>
-</ul>
-<h3 id="XPath语法"><a href="#XPath语法" class="headerlink" title="XPath语法"></a><strong>XPath语法</strong></h3><p>参考示例：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"ISO-8859-1"</span><span class="meta">?&gt;</span></span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span> <span class="attr">lang</span>=<span class="string">"eng"</span>&gt;</span>Harry Potter<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>29.99<span class="tag">&lt;/<span class="name">price</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">title</span> <span class="attr">lang</span>=<span class="string">"eng"</span>&gt;</span>Learning XML<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>39.95<span class="tag">&lt;/<span class="name">price</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">bookstore</span>&gt;</span></div></pre></td></tr></table></figure>
-<h4 id="选取节点"><a href="#选取节点" class="headerlink" title="选取节点"></a><strong>选取节点</strong></h4><p>XPath 使用路径表达式在 XML 文档中选取节点。节点是通过沿着路径或者 step 来选取的。下面列出了最有用的路径表达式：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">表达式</th>
-<th style="text-align:left">描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">nodename</td>
-<td style="text-align:left">选取此节点的所有子节点</td>
-</tr>
-<tr>
-<td style="text-align:left">/</td>
-<td style="text-align:left">从根节点选取</td>
-</tr>
-<tr>
-<td style="text-align:left">//</td>
-<td style="text-align:left">从匹配选择的当前节点选择文档中的节点，而不考虑它们的位置</td>
-</tr>
-<tr>
-<td style="text-align:left">.</td>
-<td style="text-align:left">选取当前节点</td>
-</tr>
-<tr>
-<td style="text-align:left">..</td>
-<td style="text-align:left">选取当前节点的父节点。</td>
-</tr>
-<tr>
-<td style="text-align:left">@</td>
-<td style="text-align:left">选取属性。</td>
-</tr>
-</tbody>
-</table>
-<p>实例：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">路径表达式</th>
-<th style="text-align:left">结果</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">bookstore</td>
-<td style="text-align:left">选取bookstore元素的所有子节点</td>
-</tr>
-<tr>
-<td style="text-align:left">/bookstore</td>
-<td style="text-align:left">选取根元素bookstore 注释：假如路径起始于正斜杠( / )，则此路径始终代表到某元素的绝对路径！</td>
-</tr>
-<tr>
-<td style="text-align:left">bookstore/book</td>
-<td style="text-align:left">选取属于bookstore的子元素的所有book元素</td>
-</tr>
-<tr>
-<td style="text-align:left">//book</td>
-<td style="text-align:left">选取所有book元素，而不考虑它们的位置</td>
-</tr>
-<tr>
-<td style="text-align:left">bookstore//book</td>
-<td style="text-align:left">选择属于 bookstore 元素的后代的所有 book 元素，而不管它们位于 bookstore 之下的什么位置</td>
-</tr>
-<tr>
-<td style="text-align:left">//@lang</td>
-<td style="text-align:left">选取名为 lang 的所有属性</td>
-</tr>
-</tbody>
-</table>
-<h4 id="谓语（Predicates）"><a href="#谓语（Predicates）" class="headerlink" title="谓语（Predicates）"></a><strong>谓语（Predicates）</strong></h4><p>谓语用来查找某个特定的节点或者包含某个指定的值的节点。</p>
-<p>谓语被嵌在方括号中。</p>
-<p>实例</p>
-<p>在下面的表格中，我们列出了带有谓语的一些路径表达式，以及表达式的结果：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">路径表达式</th>
-<th style="text-align:left">结果</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">/bookstore/book[1]</td>
-<td style="text-align:left">选取属于 bookstore 子元素的第一个 book 元素</td>
-</tr>
-<tr>
-<td style="text-align:left">/bookstore/book[last()]</td>
-<td style="text-align:left">选取属于 bookstore 子元素的最后一个 book 元素</td>
-</tr>
-<tr>
-<td style="text-align:left">/bookstore/book[last()-1]</td>
-<td style="text-align:left">选取属于 bookstore 子元素的倒数第二个 book 元素</td>
-</tr>
-<tr>
-<td style="text-align:left">/bookstore/book[postion()&lt;3]</td>
-<td style="text-align:left">选取最前面的两个属于 bookstore 元素的子元素的 book 元素</td>
-</tr>
-<tr>
-<td style="text-align:left">//title[@lang]</td>
-<td style="text-align:left">选取所有拥有名为 lang 的属性的 title 元素</td>
-</tr>
-<tr>
-<td style="text-align:left">//title[@lang=’eng’]</td>
-<td style="text-align:left">选取所有 title 元素，且这些元素拥有值为 eng 的 lang 属性</td>
-</tr>
-<tr>
-<td style="text-align:left">/bookstore/book[price&gt;35.00]</td>
-<td style="text-align:left">选取 bookstore 元素的所有 book 元素，且其中的 price 元素的值须大于 35.00</td>
-</tr>
-<tr>
-<td style="text-align:left">/bookstore/book[price&gt;35.00]/title</td>
-<td style="text-align:left">选取 bookstore 元素中的 book 元素的所有 title 元素，且其中的 price 元素的值须大于 35.00</td>
-</tr>
-</tbody>
-</table>
-<h4 id="选取未知节点"><a href="#选取未知节点" class="headerlink" title="选取未知节点"></a><strong>选取未知节点</strong></h4><p>XPath 通配符可用来选取未知的 XML 元素</p>
-<table>
-<thead>
-<tr>
-<th>通配符</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>*</td>
-<td>匹配任何元素节点</td>
-</tr>
-<tr>
-<td>@*</td>
-<td>匹配任何属性节点</td>
-</tr>
-<tr>
-<td>node()</td>
-<td>匹配任何节点</td>
-</tr>
-</tbody>
-</table>
-<p>实例</p>
-<p>在下面的表格中，我们列出了一些路径表达式，以及这些表达式的结果：</p>
-<table>
-<thead>
-<tr>
-<th>路径表达式</th>
-<th>结果</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>/bookstore/*</td>
-<td>选取 bookstore 元素的所有子元素</td>
-</tr>
-<tr>
-<td>//*</td>
-<td>选取文档中的所有元素</td>
-</tr>
-<tr>
-<td>//title[@*]</td>
-<td>选取所有带有属性的 title 元素</td>
-</tr>
-</tbody>
-</table>
-<h4 id="选取若干路径"><a href="#选取若干路径" class="headerlink" title="选取若干路径"></a><strong>选取若干路径</strong></h4><p>通过在路径表达式中使用“|”运算符，您可以选取若干个路径。</p>
-<p>实例</p>
-<p>在下面的表格中，我们列出了一些路径表达式，以及这些表达式的结果：</p>
-<table>
-<thead>
-<tr>
-<th>路径表达式</th>
-<th>结果</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>//book/title &#124; //book/price</td>
-<td>选取 book 元素的所有 title 和 price 元素</td>
-</tr>
-<tr>
-<td>//title &#124; //price</td>
-<td>选取文档中的所有 title 和 price 元素</td>
-</tr>
-<tr>
-<td>/bookstore/book/title &#124; //price</td>
-<td>选取属于 bookstore 元素的 book 元素的所有 title 元素，以及文档中所有的 price 元素</td>
-</tr>
-</tbody>
-</table>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;XPath的用法&quot;&gt;&lt;a href=&quot;#XPath的用法&quot; class=&quot;headerlink&quot; title=&quot;XPath的用法&quot;&gt;&lt;/a&gt;&lt;strong&gt;XPath的用法&lt;/strong&gt;&lt;/h2&gt;&lt;h3 id=&quot;XPath简介&quot;&gt;&lt;a href=&quot;#XPath简介&quot; class=&quot;headerlink&quot; title=&quot;XPath简介&quot;&gt;&lt;/a&gt;&lt;strong&gt;XPath简介&lt;/strong&gt;&lt;/h3&gt;&lt;ul&gt;
-&lt;li&gt;XPath 使用路径表达式在 XML / HTML 文档中进行导航&lt;/li&gt;
-&lt;li&gt;XPath 包含一个标准函数库&lt;/li&gt;
-&lt;li&gt;XPath 是 XSLT 中的主要元素&lt;/li&gt;
-&lt;li&gt;XPath 是一个 W3C 标准&lt;/li&gt;
-&lt;/ul&gt;
-    
-    </summary>
-    
-      <category term="XPath" scheme="http://yoursite.com/categories/XPath/"/>
-    
-    
-      <category term="Scrapy，XPath，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CXPath%EF%BC%8CPython/"/>
     
   </entry>
   
@@ -2250,595 +2283,6 @@
     <summary type="html">
     
       &lt;p&gt;在之前的学习笔记中，还有许多Redis的命令没有涉及，这一篇主要用来简要地补充，当然，详细的命令还得参考Redis的&lt;a href=&quot;http://www.redis.cn/commands.html&quot;&gt;官方命令文档&lt;/a&gt;。&lt;br&gt;
-    
-    </summary>
-    
-      <category term="Redis" scheme="http://yoursite.com/categories/Redis/"/>
-    
-    
-      <category term="Redis, Python" scheme="http://yoursite.com/tags/Redis-Python/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Redis学习笔记(二)：Redis命令及其Python API</title>
-    <link href="http://yoursite.com/2017/03/27/Redis-2/"/>
-    <id>http://yoursite.com/2017/03/27/Redis-2/</id>
-    <published>2017-03-27T08:18:54.000Z</published>
-    <updated>2017-03-30T12:17:22.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="redis-py简介"><a href="#redis-py简介" class="headerlink" title="redis-py简介"></a><strong>redis-py简介</strong></h2><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a><strong>安装</strong></h3><p>在之前的学习笔记(一)中已经安装过<a href="https://github.com/andymccurdy/redis-py" target="_blank" rel="external">redis-py</a>，我的Python版本是3.5.2<br><a id="more"></a><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ pip3 install redis</div></pre></td></tr></table></figure></p>
-<h3 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a><strong>快速开始</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> redis</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r = redis.StrictRedis(host=<span class="string">'localhost'</span>, port=<span class="number">6379</span>, db=<span class="number">0</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.set(<span class="string">'key'</span>, <span class="string">'value'</span>)</div><div class="line"><span class="keyword">True</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.get(<span class="string">'key'</span>)</div><div class="line"><span class="string">b'value'</span></div></pre></td></tr></table></figure>
-<h3 id="API参考"><a href="#API参考" class="headerlink" title="API参考"></a><strong>API参考</strong></h3><p>Redis的<a href="http://www.redis.cn/commands.html" target="_blank" rel="external">官方命令文档</a>很好地解释了每个命令的详细信息。 redis-py公开了实现这些命令的两个客户端类。 </p>
-<p>第一，StrictRedis类试图遵守官方命令语法， 但是有些一些例外：</p>
-<ul>
-<li>SELECT: 没有实现，考虑到线程安全的原因。</li>
-<li>DEL: 由于del是python语法关键字，所用delete来代替。</li>
-<li>CONFIG GET|SET: 分开用 config_get or config_set来代替</li>
-<li>MULTI/EXEC: 事务作为Pipeline类的其中一部分的实现。Pipeline默认保证了MULTI,EXEC声明。但是你可以指定transaction=False来禁用这一行为。</li>
-<li>SUBSCRIBE/LISTEN:PubSub作为一个独立的类来实现发布订阅机制。</li>
-<li>SCAN/SSCAN/HSCAN/ZSCAN:每个命令都对应一个等价的迭代器方法scan_iter/sscan_iter/hscan_iter/zscan_iter methods for this behavior。</li>
-</ul>
-<p>第二，Redis类是StrictRedis的子类，提供redis-py版本向后的兼容性。</p>
-<p>关于StrictRedis与Redis的区别：(官方推荐使用StrictRedis.)</p>
-<p>以下几个方法在StrictRedis和Redis类中的参数顺序不同。</p>
-<ul>
-<li>LREM: 在Redis类中是这样的：<br>lrem(self, name, value, num=0)<br>在StrictRedis类中是这样的：<br>lrem(self, name, count, value)</li>
-<li>ZADD: 在Redis类中是这样的：<br>zadd(‘my-key’, ‘name1’, 1.1, ‘name2’, 2.2, name3=3.3, name4=4.4)<br>在StrictRedis中是这样的：<br>zadd(‘my-key’, 1.1, ‘name1’, 2.2, ‘name2’, name3=3.3, name4=4.4)</li>
-<li>SETEX: 在Redis类中是这样的：<br>setex(self, name, value, time)<br>而在StrictRedis中是这样的：<br>setex(self, name, time, value)</li>
-</ul>
-<h3 id="连接池"><a href="#连接池" class="headerlink" title="连接池"></a><strong>连接池</strong></h3><p> redis-py使用connection pool来管理对一个redis server的所有连接，避免每次建立、释放连接的开销。默认情况下，每个Redis实例都会依次创建并维护一个自己的连接池。我们可以直接建立一个连接池，然后传递给Redis或StrictRedis连接命令作为参数，这样就可以实现多个Redis实例共享一个连接池，以实现客户端分片，或者对连接的管理方式进行更高精度的控制。<br> <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>pool = redis.ConnectionPool(host=<span class="string">'localhost'</span>, port=<span class="number">6379</span>, db=<span class="number">0</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r = redis.StrictRedis(connection_pool=pool)</div></pre></td></tr></table></figure></p>
-<p> 我们也可以创建自己的Connection子类，用于控制异步框架中的套接字行为，要使用自己的连接实例化客户端类，需要创建一个连接池，将类传递给connection_class参数。<br> <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>pool = redis.ConnectionPool(connection_class=YourConnectionClass,your_arg=<span class="string">'...'</span>, ...)</div></pre></td></tr></table></figure></p>
-<p> 释放连接回到连接池：可以使用Redis类的reset()方法，或者使用with上下文管理语法。</p>
-<p> 解析器：解析器控制如何解析Redis-server的响应内容，redis-py提供两种方式的解析器类支持PythonParser和HiredisParser(需要单独安装)。它优先选用HiredisParser,如果不存在，则选用PythonParser. Hiredis是redis核心团队开发的一个高性能c库，能够提高10x的解析速度。</p>
-<p>响应回调：The client class使用一系列的callbacks来完成响应到对应python类型的映射。这些响应回调，定义在 Redis client class中的RESPONSE_CALLBACKS字典中。你可以使用set_response_callback 方法来添加自定义回调类。这个方法接受两个参数：一个命令名字，一个回调类。回调类接受至少一个参数：响应内容，关键字参数作为命令调用时的参数。</p>
-<h3 id="线程安全性"><a href="#线程安全性" class="headerlink" title="线程安全性"></a><strong>线程安全性</strong></h3><p>Redis客户端实例可以安全地在线程之间共享。 在内部，连接实例只在命令执行期间从连接池检索，并在执行后直接返回到池中。 命令执行过程从不修改客户端实例上的状态。</p>
-<p>但是，有一个警告：Redis SELECT命令。 SELECT命令允许您切换连接正在使用的数据库。 该数据库保持选中，直到选择另一个或连接关闭为止。 这会创建一个问题，因为可以将连接返回到连接到不同数据库的池。</p>
-<p>因此，redis-py不会在客户端实例上实现SELECT命令。 如果在同一应用程序中使用多个Redis数据库，则应为每个数据库创建一个单独的客户机实例（也可能是单独的连接池）。</p>
-<p>在线程之间传递PubSub或Pipeline对象是不安全的。</p>
-<h2 id="Redis命令及其对应redis-py-API"><a href="#Redis命令及其对应redis-py-API" class="headerlink" title="Redis命令及其对应redis-py API"></a><strong>Redis命令及其对应redis-py API</strong></h2><p>由于Redis<a href="http://www.redis.cn/commands.html" target="_blank" rel="external">官方命令文档</a>很好地解释了每个命令的详细信息，所以我这里只对最常用的Redis命令进行整理，并给出其redis-py API。</p>
-<h3 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a><strong>字符串</strong></h3><p>下表展示了对Redis字符串执行自增和自减操作的命令及其redis-py API。</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>用例</th>
-<th>描述</th>
-<th>redis-py API</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>INCR</td>
-<td>INCR key-name</td>
-<td>将键存储的值加1</td>
-<td>incr(name, amount=1)</td>
-</tr>
-<tr>
-<td>DECR</td>
-<td>DECR key-name</td>
-<td>将键存储的值减1</td>
-<td>decr(name, amount=1)</td>
-</tr>
-<tr>
-<td>INCRBY</td>
-<td>INCRBY key-name amount</td>
-<td>将键存储的值加整数amount</td>
-<td>incr(name, amount=1)</td>
-</tr>
-<tr>
-<td>DECRBY</td>
-<td>DECRBY key-name amount</td>
-<td>将键存储的值减整数amount</td>
-<td>decr(name, amount=1)</td>
-</tr>
-<tr>
-<td>INCRBYFLOAT</td>
-<td>INCRBYFLOAT key-name amount</td>
-<td>将键存储的值加浮点数amount</td>
-<td>incrbyfloat(name, amount=1.0)</td>
-</tr>
-</tbody>
-</table>
-<p>在redis-py内部，使用了INCRBY和DECRBY命令来实现incr()和decr()方法，并且第二个参数amount是可选的，默认为1。</p>
-<p>下面这个交互示例展示了Redis的INCR和DECR操作<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.get(<span class="string">'key'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.incr(<span class="string">'key'</span>)</div><div class="line"><span class="number">1</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.incr(<span class="string">'key'</span>, <span class="number">15</span>)</div><div class="line"><span class="number">16</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.get(<span class="string">'key'</span>)</div><div class="line"><span class="string">b'16'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.decr(<span class="string">'key'</span>, <span class="number">5</span>)</div><div class="line"><span class="number">11</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.set(<span class="string">'key'</span>, <span class="number">13</span>)</div><div class="line"><span class="keyword">True</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.incr(<span class="string">'key'</span>)</div><div class="line"><span class="number">14</span></div></pre></td></tr></table></figure></p>
-<p>当用户将一个值存储到Redis字符串中时，如果这个值可以被解释(interpet)为十进制整数或者浮点数，那么Redis会允许用户对这个字符串执行各种INCR<em>和DECR</em>操作。如果用户对一个不存在的键或者一个保存了空串的键执行自增或自减操作，Redis会自动将这个键的值当作是0来处理。若非上述情况，则Redis将会返回一个错误。</p>
-<p>除了自增和自减操作，Redis还可以对字节串进行读取和写入的操作。</p>
-<p>下表展示了Redis用来处理字符串子串和二进制位的命令及其redis-py API。</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>用例</th>
-<th>描述</th>
-<th>redis-py API</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>APPEND</td>
-<td>APPEND key-name value</td>
-<td>将值value追加到给定键key-name当前存储的值的末尾</td>
-<td>append(key, value)</td>
-</tr>
-<tr>
-<td>GETRANGE</td>
-<td>GETRANGE key-name start end</td>
-<td>获取一个偏移量从start到end的子串，包含start和end</td>
-<td>getrange(key, start, end)</td>
-</tr>
-<tr>
-<td>SETRANGE</td>
-<td>SETRANGE key-name offset value</td>
-<td>将从start开始的子串设置为给定值</td>
-<td>setrange(name, offset, value)</td>
-</tr>
-<tr>
-<td>GETBIT</td>
-<td>GETBIT key-name offset</td>
-<td>将字节串看作是二进制位串，并返回位串中偏移量为offset的二进制位的值</td>
-<td>getbit(name, offset)</td>
-</tr>
-<tr>
-<td>SETBIT</td>
-<td>SETBIT key-name offset value</td>
-<td>将字节串看作是二进制位串，并将位串中偏移量为offset的二进制位的值设为value</td>
-<td>setbit(name, offset, value)</td>
-</tr>
-<tr>
-<td>BITCOUNT</td>
-<td>BITCOUNT key-name [start end]</td>
-<td>统计字符串被设置为1的bit数，通过指定额外的 start 或 end 参数，可以让计数只在特定的位上进行</td>
-<td>bitcount(key, start=None, end=None)</td>
-</tr>
-<tr>
-<td>BITOP</td>
-<td>BITOP operation dest-key key-name [key-name …]</td>
-<td>对一个或多个保存二进制位的字符串 key 进行位元操作，并将结果保存到 destkey 上。</td>
-<td>bitop(operation, dest, *keys)</td>
-</tr>
-</tbody>
-</table>
-<p>在执行SETRANGE或者SETBIT命令时，如果offset比当前key对应string还要长，那这个string后面就补空字节(null)以达到offset。使用GETRANGE时超出字符串末尾的数据会被认为是空字符串，而使用GETBIT时超出字符串末尾的二进制位会被视为是0。</p>
-<p>下面这个交互示例展示了Redis的子串操作和二进制位操作<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.append(<span class="string">'new-string-key'</span>, <span class="string">'hello '</span>)</div><div class="line"><span class="number">6</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.append(<span class="string">'new-string-key'</span>, <span class="string">'world!'</span>)</div><div class="line"><span class="number">12</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.substr(<span class="string">'new-string-key'</span>, <span class="number">3</span>, <span class="number">7</span>)</div><div class="line"><span class="string">b'lo wo'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.getrange(<span class="string">'new-string-key'</span>, <span class="number">3</span>, <span class="number">7</span>)</div><div class="line"><span class="string">b'lo wo'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.setrange(<span class="string">'new-string-key'</span>, <span class="number">0</span>, <span class="string">'H'</span>)</div><div class="line"><span class="number">12</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.get(<span class="string">'new-string-key'</span>)</div><div class="line"><span class="string">b'Hello world!'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.setrange(<span class="string">'new-string-key'</span>, <span class="number">11</span>, <span class="string">', how are you?'</span>)</div><div class="line"><span class="number">25</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.get(<span class="string">'new-string-key'</span>)</div><div class="line"><span class="string">b'Hello world, how are you?'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.setbit(<span class="string">'another-key'</span>, <span class="number">2</span>, <span class="number">1</span>)</div><div class="line"><span class="number">0</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.setbit(<span class="string">'another-key'</span>, <span class="number">7</span>, <span class="number">1</span>)</div><div class="line"><span class="number">0</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.getbit(<span class="string">'another-key'</span>, <span class="number">1</span>)</div><div class="line"><span class="number">0</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.get(<span class="string">'another-key'</span>)</div><div class="line"><span class="string">b'!'</span></div></pre></td></tr></table></figure></p>
-<p>Redis现在的GETRANGE命令是由以前的SUBSTR命令改名而来，所以现在redis-py中两者仍然都可以使用，但是最好还是使用getrange()方法来获取子串。</p>
-<h3 id="列表"><a href="#列表" class="headerlink" title="列表"></a><strong>列表</strong></h3><p>下表展示了一些之前介绍过的常用列表命令</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>用例</th>
-<th>描述</th>
-<th>redis-py API</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>RPUSH</td>
-<td>RPUSH key value [value …]</td>
-<td>向存于key的列表的尾部插入所有指定的值</td>
-<td>rpush(name, *values)</td>
-</tr>
-<tr>
-<td>LPUSH</td>
-<td>LPUSH key value [value …]</td>
-<td>将所有指定的值插入到存于key的列表的头部</td>
-<td>lpush(name, *values)</td>
-</tr>
-<tr>
-<td>RPOP</td>
-<td>RPOP key</td>
-<td>移除并返回key对应的list的最后一个元素</td>
-<td>rpop(name)</td>
-</tr>
-<tr>
-<td>LPOP</td>
-<td>LPOP key</td>
-<td>移除并返回key对应的list的第一个元素</td>
-<td>lpop(name)</td>
-</tr>
-<tr>
-<td>LINDEX</td>
-<td>LINDEX key index</td>
-<td>返回列表索引位置的元素</td>
-<td>lindex(name, index)</td>
-</tr>
-<tr>
-<td>LRANGE</td>
-<td>LRANGE key start stop</td>
-<td>返回存储在key的列表里指定范围内的元素</td>
-<td>lrange(name, start, end)</td>
-</tr>
-<tr>
-<td>LTRIM</td>
-<td>LTRIM key start stop</td>
-<td>修剪(trim)一个已存在的list，这样list就会只包含指定范围的指定元素</td>
-<td>ltrim(name, start, end)</td>
-</tr>
-</tbody>
-</table>
-<p>下面这个交互示例展示了Redis列表的推入和弹出操作<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.rpush(<span class="string">'list-key'</span>, <span class="string">'last'</span>)</div><div class="line"><span class="number">1</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.lpush(<span class="string">'list-key'</span>, <span class="string">'first'</span>)</div><div class="line"><span class="number">2</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.rpush(<span class="string">'list-key'</span>, <span class="string">'new last'</span>)</div><div class="line"><span class="number">3</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.lrange(<span class="string">'list-key'</span>, <span class="number">0</span>, <span class="number">-1</span>)</div><div class="line">[<span class="string">b'first'</span>, <span class="string">b'last'</span>, <span class="string">b'new last'</span>]</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.lpop(<span class="string">'list-key'</span>)</div><div class="line"><span class="string">b'first'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.lpop(<span class="string">'list-key'</span>)</div><div class="line"><span class="string">b'last'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.lrange(<span class="string">'list-key'</span>, <span class="number">0</span>, <span class="number">-1</span>)</div><div class="line">[<span class="string">b'new last'</span>]</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.rpush(<span class="string">'list-key'</span>, <span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>)</div><div class="line"><span class="number">4</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.lrange(<span class="string">'list-key'</span>, <span class="number">0</span>, <span class="number">-1</span>)</div><div class="line">[<span class="string">b'new last'</span>, <span class="string">b'a'</span>, <span class="string">b'b'</span>, <span class="string">b'c'</span>]</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.ltrim(<span class="string">'list-key'</span>, <span class="number">2</span>, <span class="number">-1</span>)</div><div class="line"><span class="keyword">True</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.lrange(<span class="string">'list-key'</span>, <span class="number">0</span>, <span class="number">-1</span>)</div><div class="line">[<span class="string">b'b'</span>, <span class="string">b'c'</span>]</div></pre></td></tr></table></figure></p>
-<p>还有几个列表命令能将元素从一个列表移动到另一个列表，或者阻塞(block)执行命令的客户端直到有其他客户端给列表添加元素为止。</p>
-<p>下表列出了这些阻塞弹出命令以及列表之间移动元素的命令</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>用例</th>
-<th>描述</th>
-<th>redis-py API</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>BLPOP</td>
-<td>BLPOP key [key …] timeout</td>
-<td>弹出第一个非空列表的头元素，或在timeout秒内阻塞并等待可弹出的元素出现</td>
-<td>blpop(keys, timeout=0)</td>
-</tr>
-<tr>
-<td>BRPOP</td>
-<td>BRPOP key [key …] timeout</td>
-<td>弹出第一个非空列表的末尾元素，或在timeout秒内阻塞并等待可弹出的元素出现</td>
-<td>brpop(keys, timeout=0)</td>
-</tr>
-<tr>
-<td>RPOPLPUSH</td>
-<td>RPOPLPUSH source destination</td>
-<td>原子性地返回并移除存储在source的列表的最后一个元素(列表尾部元素)， 并把该元素放入存储在destination的列表的第一个元素位置(列表头部)</td>
-<td>rpoplpush(src, dst)</td>
-</tr>
-<tr>
-<td>BRPOPLPUSH</td>
-<td>BRPOPLPUSH source destination timeout</td>
-<td>BRPOPLPUSH 是 RPOPLPUSH 的阻塞版本。 当 source 包含元素的时候，这个命令表现得跟 RPOPLPUSH 一模一样。 当 source 是空的时候，Redis将会阻塞这个连接，直到另一个客户端 push 元素进入或者达到 timeout 时限。</td>
-<td>brpoplpush(src, dst, timeout=0)</td>
-</tr>
-</tbody>
-</table>
-<p>注：原子性是指命令正在都区或者修改数据的时候，其他客户端不能读取或修改相同的数据。</p>
-<p>下面这个交互示例展示了Redis列表的阻塞弹出命令以及元素移动命令<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.rpush(<span class="string">'list'</span>, <span class="string">'item1'</span>)</div><div class="line"><span class="number">1</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.rpush(<span class="string">'list'</span>, <span class="string">'item2'</span>)</div><div class="line"><span class="number">2</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.rpush(<span class="string">'list2'</span>, <span class="string">'item3'</span>)</div><div class="line"><span class="number">1</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.brpoplpush(<span class="string">'list2'</span>, <span class="string">'list'</span>, <span class="number">1</span>)</div><div class="line"><span class="string">b'item3'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.brpoplpush(<span class="string">'list2'</span>, <span class="string">'list'</span>, <span class="number">1</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.lrange(<span class="string">'list'</span>, <span class="number">0</span>, <span class="number">-1</span>)</div><div class="line">[<span class="string">b'item3'</span>, <span class="string">b'item1'</span>, <span class="string">b'item2'</span>]</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.brpoplpush(<span class="string">'list'</span>, <span class="string">'list2'</span>, <span class="number">1</span>)</div><div class="line"><span class="string">b'item2'</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.blpop([<span class="string">'list'</span>, <span class="string">'list2'</span>], <span class="number">1</span>)</div><div class="line">(<span class="string">b'list'</span>, <span class="string">b'item3'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.blpop([<span class="string">'list'</span>, <span class="string">'list2'</span>], <span class="number">1</span>)</div><div class="line">(<span class="string">b'list'</span>, <span class="string">b'item1'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.blpop([<span class="string">'list'</span>, <span class="string">'list2'</span>], <span class="number">1</span>)</div><div class="line">(<span class="string">b'list2'</span>, <span class="string">b'item2'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.blpop([<span class="string">'list'</span>, <span class="string">'list2'</span>], <span class="number">1</span>)</div></pre></td></tr></table></figure></p>
-<p>对于阻塞弹出命令和弹出并推入命令，最常见的用例就是消息传递(messaging)和任务队列(task queue)。</p>
-<h3 id="集合"><a href="#集合" class="headerlink" title="集合"></a><strong>集合</strong></h3><p>下表展示了一部分最常用的集合命令</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>用例</th>
-<th>描述</th>
-<th>redis-py API</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SADD</td>
-<td>SADD key member [member …]</td>
-<td>添加一个或多个指定的member元素到key集合中</td>
-<td>sadd(name, *values)</td>
-</tr>
-<tr>
-<td>SREM</td>
-<td>SREM key member [member …]</td>
-<td>在key集合中移除指定的元素</td>
-<td>srem(name, *values)</td>
-</tr>
-<tr>
-<td>SISMEMBER</td>
-<td>SISMEMBER key member</td>
-<td>返回成员member是否是存储的集合key的成员</td>
-<td>sismember(name, value)</td>
-</tr>
-<tr>
-<td>SCARD</td>
-<td>SCARD key</td>
-<td>返回集合包含元素的数量</td>
-<td>scard(name)</td>
-</tr>
-<tr>
-<td>SMEMBERS</td>
-<td>SMEMBERS key</td>
-<td>返回key集合所有的元素</td>
-<td>smembers(name)</td>
-</tr>
-<tr>
-<td>SRANDMEMBER</td>
-<td>SRANDMEMBER key [count]</td>
-<td>仅提供key参数,那么随机返回key集合中的一个元素，返回含有 count 个不同的元素的数组，对count分情况处理</td>
-<td>srandmember(name, number=None)</td>
-</tr>
-<tr>
-<td>SPOP</td>
-<td>SPOP key [count]</td>
-<td>从key对应集合中返回并删除一个或多个元素</td>
-<td>spop(name)</td>
-</tr>
-<tr>
-<td>SMOVE</td>
-<td>SMOVE source destination member</td>
-<td>将member从source集合移动到destination集合中</td>
-<td>smove(src, dst, value)</td>
-</tr>
-</tbody>
-</table>
-<p>下面这个交互示例展示了这些常用的集合命令<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.sadd(<span class="string">'set-key'</span>, <span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>)</div><div class="line"><span class="number">3</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.srem(<span class="string">'set-key'</span>, <span class="string">'c'</span>, <span class="string">'d'</span>)</div><div class="line"><span class="number">1</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.srem(<span class="string">'set-key'</span>, <span class="string">'c'</span>, <span class="string">'d'</span>)</div><div class="line"><span class="number">0</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.scard(<span class="string">'set-key'</span>)</div><div class="line"><span class="number">2</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.smembers(<span class="string">'set-key'</span>)</div><div class="line">&#123;<span class="string">b'b'</span>, <span class="string">b'a'</span>&#125;</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.smove(<span class="string">'set-key'</span>, <span class="string">'set-key2'</span>, <span class="string">'a'</span>)</div><div class="line"><span class="keyword">True</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.smove(<span class="string">'set-key'</span>, <span class="string">'set-key2'</span>, <span class="string">'c'</span>)</div><div class="line"><span class="keyword">False</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.smembers(<span class="string">'set-key2'</span>)</div><div class="line">&#123;<span class="string">b'a'</span>&#125;</div></pre></td></tr></table></figure></p>
-<p>但是集合真正厉害的地方在于组合和关联多个集合，下表展示了相关的Redis命令</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>用例</th>
-<th>描述</th>
-<th>redis-py API</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SDIFF</td>
-<td>SDIFF key [key …]</td>
-<td>返回一个集合与给定集合的差集的元素</td>
-<td>sdiff(keys, *args)</td>
-</tr>
-<tr>
-<td>SDIFFSTORE</td>
-<td>SDIFFSTORE destination key [key …]</td>
-<td>类似于 SDIFF，不同之处在于该命令不返回结果集，而是将结果存放在destination集合中，如果destination已经存在, 则将其覆盖重写</td>
-<td>sdiffstore(dest, keys, *args)</td>
-</tr>
-<tr>
-<td>SINTER</td>
-<td>SINTER key [key …]</td>
-<td>返回指定所有的集合的成员的交集</td>
-<td>sinter(keys, *args)</td>
-</tr>
-<tr>
-<td>SINTERSTORE</td>
-<td>SINTERSTORE destination key [key …]</td>
-<td>与SINTER命令类似，但是它并不是直接返回结果集，而是将结果保存在 destination集合中，如果destination集合存在, 则会被重写</td>
-<td>sinterstore(dest, keys, *args)</td>
-</tr>
-<tr>
-<td>SUNION</td>
-<td>SUNION key [key …]</td>
-<td>返回给定的多个集合的并集中的所有成员</td>
-<td>sunion(keys, *args)</td>
-</tr>
-<tr>
-<td>SUNIONSTORE</td>
-<td>SUNIONSTORE destination key [key …]</td>
-<td>类似于SUNION命令，不同的是它并不返回结果集，而是将结果存储在destination集合中，如果destination已经存在，则将其覆盖.</td>
-<td>sunionstore(dest, keys, *args)</td>
-</tr>
-</tbody>
-</table>
-<p>这些命令分别是并集运算、交集运算和差集运算这三个基本集合操作的“返回结果”版本和“存储结果”版本，下面这个交互示例展示了这些命令的基本使用<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.sadd(<span class="string">'skey1'</span>, <span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>, <span class="string">'d'</span>)</div><div class="line"><span class="number">4</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.sadd(<span class="string">'skey2'</span>, <span class="string">'c'</span>, <span class="string">'d'</span>, <span class="string">'e'</span>, <span class="string">'f'</span>)</div><div class="line"><span class="number">4</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.sdiff(<span class="string">'skey1'</span>, <span class="string">'skey2'</span>)</div><div class="line">&#123;<span class="string">b'b'</span>, <span class="string">b'a'</span>&#125;</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.sinter(<span class="string">'skey1'</span>, <span class="string">'skey2'</span>)</div><div class="line">&#123;<span class="string">b'c'</span>, <span class="string">b'd'</span>&#125;</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.sunion(<span class="string">'skey1'</span>, <span class="string">'skey2'</span>)</div><div class="line">&#123;<span class="string">b'd'</span>, <span class="string">b'a'</span>, <span class="string">b'f'</span>, <span class="string">b'e'</span>, <span class="string">b'c'</span>, <span class="string">b'b'</span>&#125;</div></pre></td></tr></table></figure></p>
-<p>和Python的集合相比，Redis的集合除了可以被多个客户端远程地进行访问之外，其他的语义和功能基本都是相同的。</p>
-<h3 id="散列"><a href="#散列" class="headerlink" title="散列"></a><strong>散列</strong></h3><p>首先介绍一些常用的添加和删除键值对的Redis散列命令</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>用例</th>
-<th>描述</th>
-<th>redis-py API</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>HMGET</td>
-<td>HMGET key field [field …]</td>
-<td>返回key指定的散列中指定字段的值</td>
-<td>hmget(name, keys, *args)</td>
-</tr>
-<tr>
-<td>HMSET</td>
-<td>HMSET key field value [field value …]</td>
-<td>设置key指定的散列中指定字段的值，该命令将重写所有在散列中存在的字段，如果key指定的散列不存在，会创建一个新的散列并与key关联</td>
-<td>hmset(name, mapping)</td>
-</tr>
-<tr>
-<td>HDEL</td>
-<td>HDEL key field [field …]</td>
-<td>从key指定的散列中移除指定的域，在散列中不存在的域将被忽略，如果key指定的散列不存在，它将被认为是一个空的散列，该命令将返回0</td>
-<td>hdel(name, *keys)</td>
-</tr>
-<tr>
-<td>HLEN</td>
-<td>HLEN key</td>
-<td>返回key指定的散列包含的字段的数量</td>
-<td>hlen(name)</td>
-</tr>
-</tbody>
-</table>
-<p>其中，HDEL命令已经介绍过了，而HLEN以及用于一次读取或设置多个键的HMGET和HMSET则是新出现的命令。它们既可以给用户带来方便，又可以通过减少命令的调用次数以及客户端与Redis之间的通信往返次数来提升Redis的性能。</p>
-<p>下面这个交互示例展示了这些命令的使用方法<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.hmset(<span class="string">'hash-key'</span>, &#123;<span class="string">'k1'</span>:<span class="string">'v1'</span>,<span class="string">'k2'</span>:<span class="string">'v2'</span>,<span class="string">'k3'</span>:<span class="string">'v3'</span>&#125;)</div><div class="line"><span class="keyword">True</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.hmget(<span class="string">'hash-key'</span>, [<span class="string">'k2'</span>, <span class="string">'k3'</span>])</div><div class="line">[<span class="string">b'v2'</span>, <span class="string">b'v3'</span>]</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.hlen(<span class="string">'hash-key'</span>)</div><div class="line"><span class="number">3</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.hdel(<span class="string">'hash-key'</span>, <span class="string">'k1'</span>, <span class="string">'k3'</span>)</div><div class="line"><span class="number">2</span></div></pre></td></tr></table></figure></p>
-<p>之前的学习笔记(一)介绍的HGET命令和HSET命令分别是HMGET和HMSET命令的单参数版本。因为HDEL已经可以同时删除多个键值对了，所以Redis没有实现HMDEL命令。</p>
-<p>下表列出了散列的其他几个批量操作命令，以及一些和字符串操作类似的散列命令。</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>用例</th>
-<th>描述</th>
-<th>redis-py API</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>HEXISTS</td>
-<td>HEXISTS key field</td>
-<td>检查给定键是否存在于散列中</td>
-<td>hexists(name, key)</td>
-</tr>
-<tr>
-<td>HKEYS</td>
-<td>HKEYS key</td>
-<td>返回散列包含的所有键</td>
-<td>hkeys(name)</td>
-</tr>
-<tr>
-<td>HVALS</td>
-<td>HVALS key</td>
-<td>返回散列包含的所有值</td>
-<td>hvals(name)</td>
-</tr>
-<tr>
-<td>HGETALL</td>
-<td>HGETALL key</td>
-<td>返回散列包含的所有键值对</td>
-<td>hgetall(name)</td>
-</tr>
-<tr>
-<td>HINCRBY</td>
-<td>HINCRBY key field increment</td>
-<td>将键存储的值加上整数increment</td>
-<td>hincrby(name, key, amount=1)</td>
-</tr>
-<tr>
-<td>HINCRBYFLOAT</td>
-<td>HINCRBYFLOAT key field increment</td>
-<td>将键存储的值加上浮点数increment</td>
-<td>hincrbyfloat(name, key, amount=1.0)</td>
-</tr>
-</tbody>
-</table>
-<p>下面这个交互示例展示了这些命令的使用方法<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.hmset(<span class="string">'hash-key2'</span>, &#123;<span class="string">'short'</span>:<span class="string">'hello'</span>, <span class="string">'long'</span>:<span class="number">1000</span>*<span class="number">1</span>&#125;)</div><div class="line"><span class="keyword">True</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.hkeys(<span class="string">'hash-key2'</span>)</div><div class="line">[<span class="string">b'short'</span>, <span class="string">b'long'</span>]</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.hexists(<span class="string">'hash-key2'</span>, <span class="string">'num'</span>)</div><div class="line"><span class="keyword">False</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.hincrby(<span class="string">'hash-key2'</span>, <span class="string">'num'</span>)</div><div class="line"><span class="number">1</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.hexists(<span class="string">'hash-key2'</span>, <span class="string">'num'</span>)</div><div class="line"><span class="keyword">True</span></div></pre></td></tr></table></figure></p>
-<p>在对散列进行处理时，如果键值对的值的体积非常大，那么用户可以先用HKEYS获取散列的所有键，然后只获取必要的值，这样可以有效地减少需要传输的数据量，避免服务器阻塞。</p>
-<h3 id="有序集合"><a href="#有序集合" class="headerlink" title="有序集合"></a><strong>有序集合</strong></h3><p>下表展示了一些常用的有序集合命令，大部分在第一章都有介绍</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>用例</th>
-<th>描述</th>
-<th>redis-py API</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ZADD</td>
-<td>ZADD key score member [score member …]</td>
-<td>将带有给定分值的成员添加到有序集合中</td>
-<td>zadd(name, <em>args, *</em>kwargs)</td>
-</tr>
-<tr>
-<td>ZREM</td>
-<td>ZREM key member [member …]</td>
-<td>移除给定的成员，并返回被移除成员的数量</td>
-<td>zrem(name, *values)</td>
-</tr>
-<tr>
-<td>ZCARD</td>
-<td>ZCARD key</td>
-<td>返回有序集合包含的成员数量</td>
-<td>zcard(name)</td>
-</tr>
-<tr>
-<td>ZINCRBY</td>
-<td>ZINCRBY key increment member</td>
-<td>将member成员的分值加上increment</td>
-<td>zincrby(name, value, amount=1)</td>
-</tr>
-<tr>
-<td>ZCOUNT</td>
-<td>ZCOUNT key min max</td>
-<td>返回分值介于min和max之间的成员数量</td>
-<td>zcount(name, min, max)</td>
-</tr>
-<tr>
-<td>ZRANK</td>
-<td>ZRANK key member</td>
-<td>返回成员member在有序集合中的排名</td>
-<td>zrank(name, value)</td>
-</tr>
-<tr>
-<td>ZSCORE</td>
-<td>ZSCORE key member</td>
-<td>返回成员member的分值</td>
-<td>zscore(name, value)</td>
-</tr>
-<tr>
-<td>ZRANGE</td>
-<td>ZRANGE key start stop [WITHSCORES]</td>
-<td>返回排名介于start和stop之间的成员，如果给定了可选的WITHSCORES选项，那么命令会将成员的分值也一并返回</td>
-<td>zrange(name, start, end, desc=False, withscores=False, score_cast_func=<class 'float'="">)</class></td>
-</tr>
-</tbody>
-</table>
-<p>下面这个交互示例展示了Redis中的一些常用的有序集合命令<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.zadd(<span class="string">'zset-key'</span>, <span class="number">3</span>, <span class="string">'a'</span>, <span class="number">2</span>, <span class="string">'b'</span>, <span class="number">1</span>, <span class="string">'c'</span>)</div><div class="line"><span class="number">3</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.zcard(<span class="string">'zset-key'</span>)</div><div class="line"><span class="number">3</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.zincrby(<span class="string">'zset-key'</span>, <span class="string">'c'</span>, <span class="number">3</span>)</div><div class="line"><span class="number">4.0</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.zscore(<span class="string">'zset-key'</span>, <span class="string">'b'</span>)</div><div class="line"><span class="number">2.0</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.zrank(<span class="string">'zset-key'</span>, <span class="string">'c'</span>)</div><div class="line"><span class="number">2</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.zcount(<span class="string">'zset-key'</span>, <span class="number">0</span>, <span class="number">3</span>)</div><div class="line"><span class="number">2</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.zrem(<span class="string">'zset-key'</span>, <span class="string">'b'</span>)</div><div class="line"><span class="number">1</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.zrange(<span class="string">'zset-key'</span>, <span class="number">0</span>, <span class="number">-1</span>, withscores=<span class="keyword">True</span>)</div><div class="line">[(<span class="string">b'a'</span>, <span class="number">3.0</span>), (<span class="string">b'c'</span>, <span class="number">4.0</span>)]</div></pre></td></tr></table></figure></p>
-<p>其中在Python客户端用StrictRedis客户端类执行ZADD命令需要先输入分值，再输入成员，这也是Redis的标准，而Redis客户端类则截然相反。</p>
-<p>下表展示了另外一下非常有用的有序集合命令</p>
-<table>
-<thead>
-<tr>
-<th>命令</th>
-<th>用例</th>
-<th>描述</th>
-<th>redis-py API</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ZREVRANK</td>
-<td>ZREVRANK key member</td>
-<td>返回有序集合里成员member的排名，成员按照分值从大到小排列</td>
-<td>zrevrank(name, value)</td>
-</tr>
-<tr>
-<td>ZREVRANGE</td>
-<td>ZREVRANGE key start stop [WITHSCORES]</td>
-<td>返回有序集合给定排名范围内的成员，成员按照分值从大到小排列</td>
-<td>zrevrange(name, start, end, withscores=False, score_cast_func=<class 'float'="">)</class></td>
-</tr>
-<tr>
-<td>ZRANGEBYSCORE</td>
-<td>ZRANGEBYSCORE key min max [WITHSCORES] [LIMIT offset count]</td>
-<td>返回有序集合中指定分数区间内的成员</td>
-<td>zrangebyscore(name, min, max, start=None, num=None, withscores=False, score_cast_func=<class 'float'="">)</class></td>
-</tr>
-<tr>
-<td>ZREVRANGEBYSCORE</td>
-<td>ZREVRANGEBYSCORE key max min [WITHSCORES][LIMIT offset count]</td>
-<td>返回有序集合中指定分数区间内的成员，分数由高到低排序。</td>
-<td>zrevrangebyscore(name, max, min, start=None, num=None, withscores=False, score_cast_func=<class 'float'="">)</class></td>
-</tr>
-<tr>
-<td>ZREMRANGEBYRANK</td>
-<td>ZREMRANGEBYRANK key start stop</td>
-<td>移除有序集key中，指定排名(rank)区间内的所有成员</td>
-<td>zremrangebyrank(name, min, max)</td>
-</tr>
-<tr>
-<td>ZREMRANGEBYSCORE</td>
-<td>ZREMRANGEBYSCORE key min max</td>
-<td>移除有序集key中，所有score值介于min和max之间(包括等于min或max)的成员</td>
-<td>zremrangebyscore(name, min, max)</td>
-</tr>
-<tr>
-<td>ZINTERSTORE</td>
-<td>ZINTERSTORE destination numkeys key [key …] [WEIGHTS weight] [SUM</td>
-<td>MIN</td>
-<td>MAX]</td>
-<td>计算给定的numkeys个有序集合的交集，并且把结果放到destination中</td>
-<td>zinterstore(dest, keys, aggregate=None)</td>
-</tr>
-<tr>
-<td>ZUNIONSTORE</td>
-<td>ZUNIONSTORE destination numkeys key [key …] [WEIGHTS weight] [SUM</td>
-<td>MIN</td>
-<td>MAX]</td>
-<td>计算给定的numkeys个有序集合的并集，并且把结果放到destination中。</td>
-<td>zunionstore(dest, keys, aggregate=None)</td>
-</tr>
-</tbody>
-</table>
-<p>其中有几个是没有介绍过的新命令，除了使用逆序来处理有序集合之外，ZREV*命令的工作方式和相对应的非逆序命令的工作方式完全一样(逆序就是指元素按照分值从大到小地排列)。</p>
-<p>下面这个交互示例展示了ZINTERSTORE和ZUNIONSTORE命令的用法<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.zadd(<span class="string">'zset-1'</span>, <span class="number">1</span>, <span class="string">'a'</span>, <span class="number">2</span>, <span class="string">'b'</span>, <span class="number">3</span>, <span class="string">'c'</span>)</div><div class="line"><span class="number">3</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.zadd(<span class="string">'zset-2'</span>, <span class="number">4</span>, <span class="string">'b'</span>, <span class="number">1</span>, <span class="string">'c'</span>, <span class="number">0</span>, <span class="string">'d'</span>)</div><div class="line"><span class="number">3</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.zinterstore(<span class="string">'zset-i'</span>, [<span class="string">'zset-1'</span>, <span class="string">'zset-2'</span>])</div><div class="line"><span class="number">2</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.zrange(<span class="string">'zset-i'</span>, <span class="number">0</span>, <span class="number">-1</span>, withscores=<span class="keyword">True</span>)</div><div class="line">[(<span class="string">b'c'</span>, <span class="number">4.0</span>), (<span class="string">b'b'</span>, <span class="number">6.0</span>)]</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.zunionstore(<span class="string">'zset-u'</span>, [<span class="string">'zset-1'</span>, <span class="string">'zset-2'</span>], aggregate=<span class="string">'min'</span>)</div><div class="line"><span class="number">4</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.zrange(<span class="string">'zset-u'</span>, <span class="number">0</span>, <span class="number">-1</span>, withscores=<span class="keyword">True</span>)</div><div class="line">[(<span class="string">b'd'</span>, <span class="number">0.0</span>), (<span class="string">b'a'</span>, <span class="number">1.0</span>), (<span class="string">b'c'</span>, <span class="number">1.0</span>), (<span class="string">b'b'</span>, <span class="number">2.0</span>)]</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.sadd(<span class="string">'set-1'</span>, <span class="string">'a'</span>, <span class="string">'d'</span>)</div><div class="line"><span class="number">2</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.zunionstore(<span class="string">'zset-u2'</span>, [<span class="string">'zset-1'</span>, <span class="string">'zset-2'</span>, <span class="string">'set-1'</span>])</div><div class="line"><span class="number">4</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>r.zrange(<span class="string">'zset-u2'</span>, <span class="number">0</span>, <span class="number">-1</span>, withscores=<span class="keyword">True</span>)</div><div class="line">[(<span class="string">b'd'</span>, <span class="number">1.0</span>), (<span class="string">b'a'</span>, <span class="number">2.0</span>), (<span class="string">b'c'</span>, <span class="number">4.0</span>), (<span class="string">b'b'</span>, <span class="number">6.0</span>)]</div></pre></td></tr></table></figure></p>
-<p>用户可以在执行交并运算时传入不同的聚合函数，共有sum、min、max三种可选；用户还可以把集合作为输入传给ZINTERSTORE和ZUNIONSTORE，命令会将集合看作是成员分值全为1的有序集合来处理。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;redis-py简介&quot;&gt;&lt;a href=&quot;#redis-py简介&quot; class=&quot;headerlink&quot; title=&quot;redis-py简介&quot;&gt;&lt;/a&gt;&lt;strong&gt;redis-py简介&lt;/strong&gt;&lt;/h2&gt;&lt;h3 id=&quot;安装&quot;&gt;&lt;a href=&quot;#安装&quot; class=&quot;headerlink&quot; title=&quot;安装&quot;&gt;&lt;/a&gt;&lt;strong&gt;安装&lt;/strong&gt;&lt;/h3&gt;&lt;p&gt;在之前的学习笔记(一)中已经安装过&lt;a href=&quot;https://github.com/andymccurdy/redis-py&quot;&gt;redis-py&lt;/a&gt;，我的Python版本是3.5.2&lt;br&gt;
     
     </summary>
     
