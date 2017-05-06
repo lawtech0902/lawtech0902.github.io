@@ -72,7 +72,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Redis, Python," />
+  <meta name="keywords" content="Scrapy，Python," />
 
 
 
@@ -90,18 +90,21 @@
 
 
 
-<meta name="description" content="复制（replication），可以让其他服务器拥有一个不断更新的数据副本，从而使得拥有数据副本的服务器可以用于处理客户端发送的读请求。对于高负载应用来说，复制是不可或缺的一个特性。">
+<meta name="description" content="实现爬虫时最经常提到的需求就是能合适的保存爬取到的数据，或者说，生成一个带有爬取数据的”输出文件”（通常叫做”输出 feed”），来供其他系统使用。
+Scrapy 自带了 Feed 输出，并且支持多种序列化格式（serialization format）及存储方式（storage backends）。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Redis学习笔记(五)：数据安全与性能保障——复制">
-<meta property="og:url" content="http://yoursite.com/2017/04/10/Redis-5/index.html">
+<meta property="og:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Item Pipeline">
+<meta property="og:url" content="http://yoursite.com/2017/05/06/scrapy-feed-exports/index.html">
 <meta property="og:site_name" content="LawTech's Blog">
-<meta property="og:description" content="复制（replication），可以让其他服务器拥有一个不断更新的数据副本，从而使得拥有数据副本的服务器可以用于处理客户端发送的读请求。对于高负载应用来说，复制是不可或缺的一个特性。">
-<meta property="og:image" content="https://redis.io/images/redis-300dpi.png">
-<meta property="og:updated_time" content="2017-04-12T06:16:29.000Z">
+<meta property="og:description" content="实现爬虫时最经常提到的需求就是能合适的保存爬取到的数据，或者说，生成一个带有爬取数据的”输出文件”（通常叫做”输出 feed”），来供其他系统使用。
+Scrapy 自带了 Feed 输出，并且支持多种序列化格式（serialization format）及存储方式（storage backends）。">
+<meta property="og:image" content="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg">
+<meta property="og:updated_time" content="2017-05-06T14:44:14.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Redis学习笔记(五)：数据安全与性能保障——复制">
-<meta name="twitter:description" content="复制（replication），可以让其他服务器拥有一个不断更新的数据副本，从而使得拥有数据副本的服务器可以用于处理客户端发送的读请求。对于高负载应用来说，复制是不可或缺的一个特性。">
-<meta name="twitter:image" content="https://redis.io/images/redis-300dpi.png">
+<meta name="twitter:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Item Pipeline">
+<meta name="twitter:description" content="实现爬虫时最经常提到的需求就是能合适的保存爬取到的数据，或者说，生成一个带有爬取数据的”输出文件”（通常叫做”输出 feed”），来供其他系统使用。
+Scrapy 自带了 Feed 输出，并且支持多种序列化格式（serialization format）及存储方式（storage backends）。">
+<meta name="twitter:image" content="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg">
 
 
 
@@ -129,13 +132,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/04/10/Redis-5/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/05/06/scrapy-feed-exports/"/>
 
 
 
 
 
-  <title> Redis学习笔记(五)：数据安全与性能保障——复制 | LawTech's Blog </title>
+  <title> Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Item Pipeline | LawTech's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -300,7 +303,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/10/Redis-5/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/06/scrapy-feed-exports/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="LawTech.">
@@ -324,7 +327,7 @@
             
             
               
-                Redis学习笔记(五)：数据安全与性能保障——复制
+                Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Item Pipeline
               
             
           </h2>
@@ -339,8 +342,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-10T20:18:54+08:00">
-                2017-04-10
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-06T14:18:54+08:00">
+                2017-05-06
               </time>
             
 
@@ -355,8 +358,8 @@
               
                 <span class="post-meta-item-text">更新于</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2017-04-12T14:16:29+08:00">
-                2017-04-12
+              <time title="更新于" itemprop="dateModified" datetime="2017-05-06T22:44:14+08:00">
+                2017-05-06
               </time>
             
           </span>
@@ -374,8 +377,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Redis/" itemprop="url" rel="index">
-                    <span itemprop="name">Redis</span>
+                  <a href="/categories/Scrapy/" itemprop="url" rel="index">
+                    <span itemprop="name">Scrapy</span>
                   </a>
                 </span>
 
@@ -393,7 +396,7 @@
 
           
           
-             <span id="/2017/04/10/Redis-5/" class="leancloud_visitors" data-flag-title="Redis学习笔记(五)：数据安全与性能保障——复制">
+             <span id="/2017/05/06/scrapy-feed-exports/" class="leancloud_visitors" data-flag-title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Item Pipeline">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -426,9 +429,9 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://redis.io/images/redis-300dpi.png" rel="gallery_cj2dds0x1000b1fqz11ww1s5o"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj2dds0xh000p1fqzk6o9q8lg"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
-                <img src="https://redis.io/images/redis-300dpi.png" itemprop="contentUrl"/>
+                <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
               </a>
             
           
@@ -439,105 +442,142 @@
       
 
       
-        <p>复制（replication），可以让其他服务器拥有一个不断更新的数据副本，从而使得拥有数据副本的服务器可以用于处理客户端发送的读请求。对于高负载应用来说，复制是不可或缺的一个特性。</p>
+        <p>实现爬虫时最经常提到的需求就是能合适的保存爬取到的数据，或者说，生成一个带有爬取数据的”输出文件”（通常叫做”输出 feed”），来供其他系统使用。</p>
+<p>Scrapy 自带了 Feed 输出，并且支持多种序列化格式（serialization format）及存储方式（storage backends）。</p>
 <a id="more"></a>
-<p>关系型数据库通常会使用一个主服务器（master）向多个从服务器（slave）发送更新，并使用从服务器来处理所有读请求。Redis也采用了同样的方法来实现自己的复制特性，并将其用作扩展性能的一种手段。</p>
-<h2 id="复制相关配置选项"><a href="#复制相关配置选项" class="headerlink" title="复制相关配置选项"></a><strong>复制相关配置选项</strong></h2><p>当从服务器连接主服务器时，主服务器会执行BGSAVE操作，为了正确地使用复制特性，用户需要保证服务器已经正确地设置了dir选项和dirname选项。</p>
-<p>配置<code>slaveof host port</code>选项即可连接主服务器。</p>
-<p>下面将演示怎么实现一个简单的复制系统。我们在一台机器上起两个Redis实例，监听不同的端口，其中一个作为主库，另外一个作为从库。首先不加任何参数来启动一个Redis实例作为主数据库：</p>
-<p><img src="https://ww1.sinaimg.cn/large/006tNc79gy1fej0vywpikj30wi0p4why.jpg" alt=""></p>
-<p>主库默认监听6379端口。</p>
-<p>接着新建一个终端，加上slaveof参数启动另一个Redis实例作为从库，并且监听6380端口：</p>
-<p><img src="https://ww1.sinaimg.cn/large/006tNc79gy1fej0wwdiejj30wi0p4n0t.jpg" alt=""></p>
-<p>从控制台输出中可以看到，从库已经连接到主库：126.0.0.1:6379了，我们可以分别在主库和从库中使用<code>info replication</code>命令看一看当前实例在复制系统中的相关信息</p>
-<p><img src="https://ww1.sinaimg.cn/large/006tNc79gy1fej0y3xp1fj30wi0vqwk6.jpg" alt=""></p>
-<p>现在可以测试一下主从库的数据同步了：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ redis-cli -p 6379</div><div class="line">127.0.0.1:6379&gt; set test-replicate lawtech</div><div class="line">OK</div><div class="line">$ redis-cli -p 6380</div><div class="line">127.0.0.1:6380&gt; get test-replicate</div><div class="line">&quot;lawtech&quot;</div><div class="line">127.0.0.1:6380&gt; set x y</div><div class="line">(error) READONLY You can&apos;t write against a read only slave.</div></pre></td></tr></table></figure>
-<p>可以看到，在主库中添加的数据确实同步到了从库中。但是，我们在向从库中写入数据时报错了，这是因为在默认情况下，从库是只读的。我们可以在从库的配置文件中加上如下的配置项允许从库写数据：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">slave-read-only no</div></pre></td></tr></table></figure>
-<p>但是，因为从库中修改的数据不会被同步到任何其他数据库，并且一旦主库修改了数据，从库的数据就会因为自动同步被覆盖，所以一般情况下，不建议将从库设置为可写。</p>
-<p>相同的道理，配置多台从库也使用相同的方法，都在从库的配置文件中加上slaveof参数即可。</p>
-<p>此外，我们可以在客户端使用命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SLAVEOF 新主库地址  新主库端口</div></pre></td></tr></table></figure>
-<p>来修改当前数据库的主库，如果当前数据库已经是其他库的从库， 则当前数据库会停止和原来的数据库的同步而和新的数据库同步。</p>
-<p>最后，从数据库还可以通过运行命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SLAVEOF NO ONE</div></pre></td></tr></table></figure>
-<p>来停止接受来自其他数据库的同步而升级成为主库。</p>
-<h2 id="Redis复制的启动过程"><a href="#Redis复制的启动过程" class="headerlink" title="Redis复制的启动过程"></a>Redis复制的启动过程</h2><p>从服务器连接主服务器时，主服务器会创建一个快照文件并将其发送至从服务器，但这只是主从复制执行过程的其中一步，下表列举出复制过程主从服务器执行的所有操作：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">步骤</th>
-<th style="text-align:center">主服务器操作</th>
-<th style="text-align:center">从服务器操作</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">1</td>
-<td style="text-align:center">（ 等待命令进入）</td>
-<td style="text-align:center">连接(或者重连接)主服务器，发送SYNC命令</td>
-</tr>
-<tr>
-<td style="text-align:center">2</td>
-<td style="text-align:center">开始执行BGSAVE，并使用缓冲区记录BGSAVE之后执行的所有写命令</td>
-<td style="text-align:center">根据配置选项来决定时继续使用现在的数据来处理客户端命令，还是向发送请求的客户端返回错误</td>
-</tr>
-<tr>
-<td style="text-align:center">3</td>
-<td style="text-align:center">BGSAVE执行完毕，向从服务器发送快照文件，并在发送期间继续使用缓冲区记录被执行的写命令</td>
-<td style="text-align:center">丢弃所有旧的数据，开始载入主服务器发来的快照文件</td>
-</tr>
-<tr>
-<td style="text-align:center">4</td>
-<td style="text-align:center">快照文件发送完毕，开始向从服务器发送存储在缓冲区里面的写命令</td>
-<td style="text-align:center">完成对快照文件的解释操作，像往常一样开始接受命令请求</td>
-</tr>
-<tr>
-<td style="text-align:center">5</td>
-<td style="text-align:center">缓冲区存储的写命令发送完毕；从现在开始，没执行一个写命令，就像从服务器发送相同的写命令</td>
-<td style="text-align:center">执行主服务器发来的所有存储在缓冲区里面的写命令；从现在开始，接收并执行主服务器传来的每个写命令</td>
-</tr>
-</tbody>
-</table>
-<p>由上述步骤可以看出，有必要给Redis主服务器留30%~45%的内存用于执行BGSAVE命令和创建记录写命令的缓冲区。另外，从服务器还有一点需要注意的是，从服务器在进行同步时，会清空自己的所有数据，因为第3步中，从服务器会丢弃所有旧数据。</p>
-<p>警告：Redis不支持主主复制（master-master replication）</p>
-<p>当多个从服务器尝试连接同一个主服务器的时候，就会出现下表所示的两种情况中的其中一种：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">当有新的从服务器连接主服务器时</th>
-<th style="text-align:center">主服务器的操作</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">上述步骤3尚未执行</td>
-<td style="text-align:center">所有从服务器都会接收相同的快照文件和相同的缓冲区写命令</td>
-</tr>
-<tr>
-<td style="text-align:center">上述步骤3正在执行或者已经执行</td>
-<td style="text-align:center">当主服务器与较早进行连接的从服务器执行完复制所需的5个步骤之后，主服务器会与新连接的从服务器执行一次新的步骤1至步骤5</td>
-</tr>
-</tbody>
-</table>
-<p>由此可以看出多个从服务器的同步对网络的开销挺大的，有可能会影响到主服务器接收写命令，甚至是与主服务器位于同一网络中的其他硬件。</p>
-<h2 id="主从链"><a href="#主从链" class="headerlink" title="主从链"></a><strong>主从链</strong></h2><p>创建多个从服务器可能造成网络不可用，此时可以使用另外一个解决方案，从服务器拥有自己的从服务器，并由此形成主从链（master/slave chaining）。</p>
-<p>从服务器对从服务器进行复制在操作上和从服务器对主服务器进行复制的唯一区别在于。如果从服务器X拥有从服务器Y，那么当从服务器X在执行启动过程表中步骤4时，X将断开与Y的连接，导致Y需要重新连接并重新同步（resync）。</p>
-<p>当读请求的重要性明显高于写请求的重要性，并且读请求的数量需求远远超出一台Redis服务器可以处理的范围时，用户就需要添加新的从服务器来处理读请求，随着负载不断上升，主服务器可能会无法快速地更新所有从服务器。</p>
-<p>为了缓解这个问题，可以创建一个由Redis主/从节点(master/slave node)组成的中间层来分担主服务器的复制工作，如下图所示：</p>
-<p><img src="https://ww3.sinaimg.cn/large/006tNc79gy1fej1jof0f1j312s0cwgou.jpg" alt=""></p>
-<p>上面这个示例中，树的中层有3个帮助开展复制工作的服务器，底层有9个从服务器。其中，只有3台从服务器和主服务器通信，其他都向从服务器同步数据，从而降低了系统的负载。</p>
-<h2 id="检验硬盘写入"><a href="#检验硬盘写入" class="headerlink" title="检验硬盘写入"></a><strong>检验硬盘写入</strong></h2><p>为了将数据保存在多台机器中，用户首先需要为主服务器设置多个从服务器，然后对每个从服务器设置<code>appendonly yes</code>选项和<code>appendfsync everysec</code>选项（如有需要，也可以对主服务器这样设置），但这只是第一步：因为用户还需要等待主服务器发送的写命令到达从服务器，并且在执行后续操作前，检查数据是否已经被写入了硬盘中。</p>
-<p>整个操作分两个环节：</p>
+<h2 id="序列化方式（serialization-format）"><a href="#序列化方式（serialization-format）" class="headerlink" title="序列化方式（serialization format）"></a><strong>序列化方式（serialization format）</strong></h2><p>feed 输出使用到了 Item exporters 。其自带支持的类型有:</p>
 <ul>
-<li>验证主服务器是否已经将写数据发送至从服务器：用户需要在向主服务器写入真正的数据之后，再向主服务器写入一个唯一的虚构值（unique dummy value），然后通过检查虚构值是否存在于从服务器来判断数据是否已经到达从服务器。</li>
-<li>判断数据是否已经被保存到硬盘中：检查INFO命令的输出结果中<code>aof_pending_bio_fsync</code>属性的值是否为0，如果是，则数据已经被保存到了硬盘中。</li>
+<li>JSON</li>
+<li>JSON lines</li>
+<li>CSV</li>
+<li>XML</li>
 </ul>
-<p>在向主服务器写入数据后，用户可以将主服务器和从服务器的连接作为参数调用下面的代码来自动进行上述操作：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># _*_ coding: utf-8 _*_</span></div><div class="line"><span class="keyword">import</span> uuid</div><div class="line"><span class="keyword">import</span> time</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">wait_for_sync</span><span class="params">(mconn, sconn)</span>:</span></div><div class="line">    identifier = str(uuid.uuid4())</div><div class="line">    <span class="comment"># 将令牌添加至主服务器</span></div><div class="line">    mconn.zadd(<span class="string">'sync:wait'</span>, identifier, time.time())</div><div class="line">    </div><div class="line">    <span class="comment"># 如果有必要的话，等待从服务器完成同步</span></div><div class="line">    <span class="keyword">while</span> <span class="keyword">not</span> sconn.info()[<span class="string">'master_link_status'</span>] != <span class="string">'up'</span>:</div><div class="line">        time.sleep(<span class="number">.001</span>)</div><div class="line">        </div><div class="line">    <span class="comment"># 等待从服务器接收数据更新</span></div><div class="line">    <span class="keyword">while</span> <span class="keyword">not</span> sconn.zscore(<span class="string">'sync:wait'</span>, identifier):</div><div class="line">        time.sleep(<span class="number">.001</span>)</div><div class="line">        </div><div class="line">    <span class="comment"># 最多只等待1秒</span></div><div class="line">    deadline = time.time() + <span class="number">1.01</span></div><div class="line">    </div><div class="line">    <span class="comment"># 检查数据更新是否已经被同步到了硬盘</span></div><div class="line">    <span class="keyword">while</span> time.time() &lt; deadline:</div><div class="line">        <span class="keyword">if</span> sconn.info()[<span class="string">'aof_pending_bio_fsync'</span>] == <span class="number">0</span>:</div><div class="line">            <span class="keyword">break</span></div><div class="line">        time.sleep(<span class="number">.001</span>)</div><div class="line">        </div><div class="line">    <span class="comment"># 清理刚刚创建的新令牌以及之前可能留下的旧令牌</span></div><div class="line">    mconn.zrem(<span class="string">'sync:wait'</span>, identifier)</div><div class="line">    mconn.zremrangebyscore(<span class="string">'sync:wait'</span>, <span class="number">0</span>, time.time() - <span class="number">900</span>)</div></pre></td></tr></table></figure>
-<p>为了确保操作可以正确执行，wait_for_sync()函数会首先确认从服务器已经连接上主服务器，然后检查自己添加到等待同步有序集合（sync wait ZSET）里面的值是否已经存在于从服务器，在发现值存在后，等待从服务器将缓冲区的所有数据写入硬盘里。最后，确认数据已经被保存到硬盘之后，函数会执行一些清理操作。</p>
-<p>通过同时使用复制和AOF持久化，用户可以增强Redis对于系统崩溃的抵抗能力。</p>
+<p>也可以通过 FEED_EXPORTERS 设置扩展支持的属性。</p>
+<p>在 <code>exporters.py</code> 中可以看到所有的 Item exporters：</p>
+<p><img src="http://ww3.sinaimg.cn/large/006tNc79gy1ffbz5887gzj30x603qdge.jpg" alt=""></p>
+<p>下表对主要的 Item exporters进行简要的介绍：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>FEED_FORMAT</th>
+<th>使用的 exporter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>JSON</td>
+<td>json</td>
+<td>JsonItemExporter</td>
+</tr>
+<tr>
+<td>JSON lines</td>
+<td>jsonlines</td>
+<td>JsonLinesItemExporter</td>
+</tr>
+<tr>
+<td>CSV</td>
+<td>csv</td>
+<td>CsvItemExporter</td>
+</tr>
+<tr>
+<td>XML</td>
+<td>xml</td>
+<td>XmlItemExporter</td>
+</tr>
+<tr>
+<td>Pickle</td>
+<td>pickle</td>
+<td>PickleItemExporter</td>
+</tr>
+<tr>
+<td>Marshal</td>
+<td>marshal</td>
+<td>MarshalItemExporter</td>
+</tr>
+</tbody>
+</table>
+<h2 id="存储（Storages）"><a href="#存储（Storages）" class="headerlink" title="存储（Storages）"></a><strong>存储（Storages）</strong></h2><p>使用 feed 输出时您可以通过使用 <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier" target="_blank" rel="external">URI</a>（通过 FEED_URI 设置）来定义存储端。feed 输出支持 URI 方式支持的多种存储后端类型。</p>
+<p>自带支持的存储后端有：</p>
+<ul>
+<li>本地文件系统</li>
+<li>FTP</li>
+<li>S3（需要 boto）</li>
+<li>标准输出</li>
+</ul>
+<p>有些存储后端会因所需的外部库未安装而不可用。例如，S3 只有在 boto 库安装的情况下才可使用。</p>
+<h2 id="存储-URI-参数"><a href="#存储-URI-参数" class="headerlink" title="存储 URI 参数"></a><strong>存储 URI 参数</strong></h2><p>存储 URI 也包含参数。当 feed 被创建时这些参数可以被覆盖：</p>
+<ul>
+<li><code>%(time)s</code> - 当 feed 被创建时被 timestamp 覆盖</li>
+<li><code>%(name)s</code> - 被 spider 的名字覆盖</li>
+</ul>
+<p>其他命名的参数会被 spider 同名的属性所覆盖。例如， 当 feed 被创建时，<code>%(site_id)s</code> 将会被 <code>spider.site_id</code> 属性所覆盖。</p>
+<p>下面用一些例子来说明:</p>
+<ul>
+<li>存储在 FTP，每个 spider 一个目录: <ul>
+<li><code>ftp://user:password@ftp.example.com/scraping/feeds/%(name)s/%(time)s.json</code></li>
+</ul>
+</li>
+<li>存储在 S3，每一个 spider 一个目录:<ul>
+<li><code>s3://mybucket/scraping/feeds/%(name)s/%(time)s.json</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="存储后端（Storage-backends）"><a href="#存储后端（Storage-backends）" class="headerlink" title="存储后端（Storage backends）"></a><strong>存储后端（Storage backends）</strong></h2><h3 id="本地文件系统"><a href="#本地文件系统" class="headerlink" title="本地文件系统"></a><strong>本地文件系统</strong></h3><p>将 feed 存储在本地系统。</p>
+<ul>
+<li>URI scheme: <code>file</code></li>
+<li>URI 样例: <code>file:///tmp/export.csv</code></li>
+<li>需要的外部依赖库: <code>none</code></li>
+</ul>
+<p>注意: (只有)存储在本地文件系统时，您可以指定一个绝对路径 /tmp/export.csv 并忽略协议(scheme)。不过这 仅仅只能在 Unix 系统中工作。</p>
+<h3 id="FTP"><a href="#FTP" class="headerlink" title="FTP"></a><strong>FTP</strong></h3><p>将 feed 存储在 FTP 服务器。</p>
+<ul>
+<li>URI scheme: <code>ftp</code></li>
+<li>URI 样例: <code>ftp://user:pass@ftp.example.com/path/to/export.csv</code></li>
+<li>需要的外部依赖库: <code>none</code></li>
+</ul>
+<h3 id="S3"><a href="#S3" class="headerlink" title="S3"></a><strong>S3</strong></h3><p>将 feed 存储在 Amazon S3 。 </p>
+<ul>
+<li>URI scheme: s3 </li>
+<li>URI 样例: <ul>
+<li>s3://mybucket/path/to/export.csv </li>
+<li>s3://aws_key:aws_secret@mybucket/path/to/export.csv </li>
+</ul>
+</li>
+<li>需要的外部依赖库: <code>boto</code></li>
+</ul>
+<p>您可以通过在 URI 中传递 user/pass 来完成 AWS 认证，或者也可以通过下列的设置来完成: </p>
+<p>AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY</p>
+<h3 id="标准输出"><a href="#标准输出" class="headerlink" title="标准输出"></a><strong>标准输出</strong></h3><p>feed 输出到 Scrapy 进程的标准输出。</p>
+<ul>
+<li>URI scheme: <code>stdout</code></li>
+<li>URI 样例: <code>stdout</code></li>
+<li>需要的外部依赖库: <code>none</code></li>
+</ul>
+<h2 id="设定（Settings）"><a href="#设定（Settings）" class="headerlink" title="设定（Settings）"></a><strong>设定（Settings）</strong></h2><p>这些是配置 feed 输出的设定:</p>
+<ul>
+<li>FEED_URI (必须)</li>
+<li>FEED_FORMAT</li>
+<li>FEED_STORAGES</li>
+<li>FEED_EXPORTERS</li>
+<li>FEED_STORE_EMPTY</li>
+</ul>
+<h3 id="FEED-URI"><a href="#FEED-URI" class="headerlink" title="FEED_URI"></a><strong>FEED_URI</strong></h3><p>Default: <code>None</code> </p>
+<p>输出 feed 的 URI。支持的 URI 协议请参见存储后端。</p>
+<p> 为了启用 feed 输出，该设定是必须的。</p>
+<h3 id="FEED-FORMAT"><a href="#FEED-FORMAT" class="headerlink" title="FEED_FORMAT"></a><strong>FEED_FORMAT</strong></h3><p>输出 feed 的序列化格式。可用的值请参见序列化方式（Serialization formats）。</p>
+<h3 id="FEED-STORE-EMPTY"><a href="#FEED-STORE-EMPTY" class="headerlink" title="FEED_STORE_EMPTY"></a><strong>FEED_STORE_EMPTY</strong></h3><p>Default: <code>False</code> </p>
+<p>是否输出空 feed（没有 item 的 feed）。</p>
+<h3 id="FEED-STORAGES"><a href="#FEED-STORAGES" class="headerlink" title="FEED_STORAGES"></a><strong>FEED_STORAGES</strong></h3><p>Default: <code>{}</code> </p>
+<p>包含项目支持的额外 feed 存储端的字典。 字典的键（key）是 URI 协议（scheme），值是存储类（storage class）的路径。</p>
+<h3 id="FEED-STORAGES-BASE"><a href="#FEED-STORAGES-BASE" class="headerlink" title="FEED_STORAGES_BASE"></a><strong>FEED_STORAGES_BASE</strong></h3><p>Default:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line"><span class="string">''</span>: <span class="string">'scrapy.contrib.feedexport.FileFeedStorage'</span>, </div><div class="line"><span class="string">'file'</span>: <span class="string">'scrapy.contrib.feedexport.FileFeedStorage'</span>, </div><div class="line"><span class="string">'stdout'</span>: <span class="string">'scrapy.contrib.feedexport.StdoutFeedStorage'</span>, </div><div class="line"><span class="string">'s3'</span>: <span class="string">'scrapy.contrib.feedexport.S3FeedStorage'</span>, </div><div class="line"><span class="string">'ftp'</span>: <span class="string">'scrapy.contrib.feedexport.FTPFeedStorage'</span>,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>包含 Scrapy 内置支持的 feed 存储端的字典。</p>
+<h3 id="FEED-EXPORTERS"><a href="#FEED-EXPORTERS" class="headerlink" title="FEED_EXPORTERS"></a><strong>FEED_EXPORTERS</strong></h3><p>Default: <code>{}</code> </p>
+<p>包含项目支持的额外输出器（exporter）的字典。 该字典的键（key）是 URI 协议（scheme），值是 Item 输出器（exp orter）类的路径。</p>
+<h3 id="FEED-EXPORTERS-BASE"><a href="#FEED-EXPORTERS-BASE" class="headerlink" title="FEED_EXPORTERS_BASE"></a><strong>FEED_EXPORTERS_BASE</strong></h3><p>Default:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">FEED_EXPORTERS_BASE = &#123; </div><div class="line">    <span class="string">'json'</span>: <span class="string">'scrapy.contrib.exporter.JsonItemExporter'</span>, </div><div class="line">    <span class="string">'jsonlines'</span>: <span class="string">'scrapy.contrib.exporter.JsonLinesItemExporter'</span>, </div><div class="line">    <span class="string">'csv'</span>: <span class="string">'scrapy.contrib.exporter.CsvItemExporter'</span>, </div><div class="line">    <span class="string">'xml'</span>: <span class="string">'scrapy.contrib.exporter.XmlItemExporter'</span>, </div><div class="line">    <span class="string">'marshal'</span>: <span class="string">'scrapy.contrib.exporter.MarshalItemExporter'</span>,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>包含 Scrapy 内置支持的 feed 输出器（exporter）的字典。</p>
 
       
     </div>
@@ -551,7 +591,7 @@
   
         <div class="post-tags">
           
-            <a href="/tags/Redis-Python/" rel="tag"># Redis, Python</a>
+            <a href="/tags/Scrapy，Python/" rel="tag"># Scrapy，Python</a>
           
         </div>
       
@@ -592,8 +632,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/04/09/Redis-4/" rel="next" title="Redis学习笔记(四)：数据安全与性能保障——持久化">
-                <i class="fa fa-chevron-left"></i> Redis学习笔记(四)：数据安全与性能保障——持久化
+              <a href="/2017/05/06/scrapy-item-pipeline/" rel="next" title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Item Pipeline">
+                <i class="fa fa-chevron-left"></i> Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Item Pipeline
               </a>
             
           </div>
@@ -601,10 +641,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/04/11/xpath-usage/" rel="prev" title="Python分布式爬虫打造搜索引擎项目学习笔记——Xpath教程">
-                Python分布式爬虫打造搜索引擎项目学习笔记——Xpath教程 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -771,7 +807,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#复制相关配置选项"><span class="nav-number">1.</span> <span class="nav-text">复制相关配置选项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis复制的启动过程"><span class="nav-number">2.</span> <span class="nav-text">Redis复制的启动过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#主从链"><span class="nav-number">3.</span> <span class="nav-text">主从链</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#检验硬盘写入"><span class="nav-number">4.</span> <span class="nav-text">检验硬盘写入</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#序列化方式（serialization-format）"><span class="nav-number">1.</span> <span class="nav-text">序列化方式（serialization format）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#存储（Storages）"><span class="nav-number">2.</span> <span class="nav-text">存储（Storages）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#存储-URI-参数"><span class="nav-number">3.</span> <span class="nav-text">存储 URI 参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#存储后端（Storage-backends）"><span class="nav-number">4.</span> <span class="nav-text">存储后端（Storage backends）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#本地文件系统"><span class="nav-number">4.1.</span> <span class="nav-text">本地文件系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FTP"><span class="nav-number">4.2.</span> <span class="nav-text">FTP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#S3"><span class="nav-number">4.3.</span> <span class="nav-text">S3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#标准输出"><span class="nav-number">4.4.</span> <span class="nav-text">标准输出</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设定（Settings）"><span class="nav-number">5.</span> <span class="nav-text">设定（Settings）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#FEED-URI"><span class="nav-number">5.1.</span> <span class="nav-text">FEED_URI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FEED-FORMAT"><span class="nav-number">5.2.</span> <span class="nav-text">FEED_FORMAT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FEED-STORE-EMPTY"><span class="nav-number">5.3.</span> <span class="nav-text">FEED_STORE_EMPTY</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FEED-STORAGES"><span class="nav-number">5.4.</span> <span class="nav-text">FEED_STORAGES</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FEED-STORAGES-BASE"><span class="nav-number">5.5.</span> <span class="nav-text">FEED_STORAGES_BASE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FEED-EXPORTERS"><span class="nav-number">5.6.</span> <span class="nav-text">FEED_EXPORTERS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FEED-EXPORTERS-BASE"><span class="nav-number">5.7.</span> <span class="nav-text">FEED_EXPORTERS_BASE</span></a></li></ol></li></ol></div>
             
 
           </div>
