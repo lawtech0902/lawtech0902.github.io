@@ -72,7 +72,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Django, Python," />
+  <meta name="keywords" content="Scrapy，Python," />
 
 
 
@@ -90,16 +90,21 @@
 
 
 
-<meta name="description" content="拖拖拉拉地学完了imooc的”强力django+杀手级xadmin打造上线标准的在线教育平台”课程，记录一下每一章学习的内容概要。">
+<meta name="description" content="当 Item 在 Spider 中被收集之后，它将会被传递到 Item Pipeline，一些组件会按照一定的顺序执行对 Item 的处理。
+每个 item pipeline 组件（有时称之为“Item Pipeline”）是实现了简单方法的 Python 类。他们接收到 Item 并通过它执行一些行为，同时也决定此 Item 是否继续通过 pipeline，或是被丢弃而不再进行处理。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="MxOnline项目学习总结">
-<meta property="og:url" content="http://yoursite.com/2017/04/07/MxOnline-summary/index.html">
+<meta property="og:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Item Pipeline">
+<meta property="og:url" content="http://yoursite.com/2017/05/06/scrapy-item-pipeline/index.html">
 <meta property="og:site_name" content="LawTech's Blog">
-<meta property="og:description" content="拖拖拉拉地学完了imooc的”强力django+杀手级xadmin打造上线标准的在线教育平台”课程，记录一下每一章学习的内容概要。">
-<meta property="og:updated_time" content="2017-04-07T13:26:06.000Z">
+<meta property="og:description" content="当 Item 在 Spider 中被收集之后，它将会被传递到 Item Pipeline，一些组件会按照一定的顺序执行对 Item 的处理。
+每个 item pipeline 组件（有时称之为“Item Pipeline”）是实现了简单方法的 Python 类。他们接收到 Item 并通过它执行一些行为，同时也决定此 Item 是否继续通过 pipeline，或是被丢弃而不再进行处理。">
+<meta property="og:image" content="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg">
+<meta property="og:updated_time" content="2017-05-06T13:35:25.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="MxOnline项目学习总结">
-<meta name="twitter:description" content="拖拖拉拉地学完了imooc的”强力django+杀手级xadmin打造上线标准的在线教育平台”课程，记录一下每一章学习的内容概要。">
+<meta name="twitter:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Item Pipeline">
+<meta name="twitter:description" content="当 Item 在 Spider 中被收集之后，它将会被传递到 Item Pipeline，一些组件会按照一定的顺序执行对 Item 的处理。
+每个 item pipeline 组件（有时称之为“Item Pipeline”）是实现了简单方法的 Python 类。他们接收到 Item 并通过它执行一些行为，同时也决定此 Item 是否继续通过 pipeline，或是被丢弃而不再进行处理。">
+<meta name="twitter:image" content="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg">
 
 
 
@@ -127,13 +132,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/04/07/MxOnline-summary/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/05/06/scrapy-item-pipeline/"/>
 
 
 
 
 
-  <title> MxOnline项目学习总结 | LawTech's Blog </title>
+  <title> Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Item Pipeline | LawTech's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -298,7 +303,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/07/MxOnline-summary/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/06/scrapy-item-pipeline/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="LawTech.">
@@ -322,7 +327,7 @@
             
             
               
-                MxOnline项目学习总结
+                Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Item Pipeline
               
             
           </h2>
@@ -337,8 +342,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-07T21:18:54+08:00">
-                2017-04-07
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-06T14:18:54+08:00">
+                2017-05-06
               </time>
             
 
@@ -353,8 +358,8 @@
               
                 <span class="post-meta-item-text">更新于</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2017-04-07T21:26:06+08:00">
-                2017-04-07
+              <time title="更新于" itemprop="dateModified" datetime="2017-05-06T21:35:25+08:00">
+                2017-05-06
               </time>
             
           </span>
@@ -372,8 +377,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Django-Python/" itemprop="url" rel="index">
-                    <span itemprop="name">Django, Python</span>
+                  <a href="/categories/Scrapy/" itemprop="url" rel="index">
+                    <span itemprop="name">Scrapy</span>
                   </a>
                 </span>
 
@@ -391,7 +396,7 @@
 
           
           
-             <span id="/2017/04/07/MxOnline-summary/" class="leancloud_visitors" data-flag-title="MxOnline项目学习总结">
+             <span id="/2017/05/06/scrapy-item-pipeline/" class="leancloud_visitors" data-flag-title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Item Pipeline">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -419,73 +424,53 @@
 
       
       
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+          
+          
+            <div class="post-gallery-row">
+              <a class="post-gallery-img fancybox"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj2dbbkm6000sycqz3hcsv34f"
+                 itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
+                <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
+              </a>
+            
+          
+
+          
+          </div>
+        </div>
+      
 
       
-        <p>拖拖拉拉地学完了imooc的”强力django+杀手级xadmin打造上线标准的在线教育平台”课程，记录一下每一章学习的内容概要。<br><a id="more"></a></p>
-<h1 id="MxOnline项目学习总结"><a href="#MxOnline项目学习总结" class="headerlink" title="MxOnline项目学习总结"></a>MxOnline项目学习总结</h1><h2 id="第一、二章"><a href="#第一、二章" class="headerlink" title="第一、二章"></a>第一、二章</h2><ul>
-<li>课程介绍</li>
-<li>开发环境搭建</li>
+        <p>当 Item 在 Spider 中被收集之后，它将会被传递到 Item Pipeline，一些组件会按照一定的顺序执行对 Item 的处理。</p>
+<p>每个 item pipeline 组件（有时称之为“Item Pipeline”）是实现了简单方法的 Python 类。他们接收到 Item 并通过它执行一些行为，同时也决定此 Item 是否继续通过 pipeline，或是被丢弃而不再进行处理。</p>
+<a id="more"></a>
+<p>以下是 item pipeline 的一些典型应用：</p>
+<ul>
+<li>清理 HTML 数据</li>
+<li>验证爬取的数据（检查 item 包含某些字段）</li>
+<li>查重（并丢弃）</li>
+<li>将爬取结果保存到数据库中</li>
 </ul>
-<h2 id="第三章-django基础回顾"><a href="#第三章-django基础回顾" class="headerlink" title="第三章 django基础回顾"></a>第三章 django基础回顾</h2><ul>
-<li>settings.py 设置</li>
-<li>urls.py 配置</li>
-<li>models.py 设计</li>
-<li>views.py 编码</li>
-<li>templates 模板编码</li>
+<h2 id="编写自定义的-Pipeline"><a href="#编写自定义的-Pipeline" class="headerlink" title="编写自定义的 Pipeline"></a><strong>编写自定义的 Pipeline</strong></h2><p>定义一个Python类，然后实现方法 <code>process_item(self, item, spider)</code> 即可，返回一个字典或Item，或者抛出 <code>DropItem</code> 异常丢弃这个Item。</p>
+<p>除此之外，还可以实现以下几个方法：</p>
+<ul>
+<li><code>open_spider(self, spider)</code> ：当spider被开启时，这个方法被调用</li>
+<li><code>close_spider(self, spider)</code> ：当spider被关闭时，这个方法被调用</li>
+<li><code>from_crawler(cls, crawler)</code> ： 可访问核心组件比如配置和信号，并注册钩子函数到Scrapy中</li>
 </ul>
-<h2 id="第四章-数据库设计"><a href="#第四章-数据库设计" class="headerlink" title="第四章 数据库设计"></a>第四章 数据库设计</h2><ul>
-<li>users app model 设计</li>
-<li>organization app model 设计</li>
-<li>course app model 设计</li>
-<li>operation app model 设计</li>
-</ul>
-<h2 id="第五章-后台管理系统开发"><a href="#第五章-后台管理系统开发" class="headerlink" title="第五章 后台管理系统开发"></a>第五章 后台管理系统开发</h2><ul>
-<li>django admin 介绍</li>
-<li>xadmin 安装和 model 注册</li>
-<li>xadmin 全局配置</li>
-</ul>
-<h2 id="第六章-登录、注册、找回密码"><a href="#第六章-登录、注册、找回密码" class="headerlink" title="第六章 登录、注册、找回密码"></a>第六章 登录、注册、找回密码</h2><ul>
-<li>登录（ session 和 cookie 机制）</li>
-<li>注册（ form 表单提交、图片验证码，发送邮件 ）</li>
-<li>找回密码（邮件发送）</li>
-</ul>
-<h2 id="第七章-课程机构功能实现"><a href="#第七章-课程机构功能实现" class="headerlink" title="第七章 课程机构功能实现"></a>第七章 课程机构功能实现</h2><ul>
-<li>机构列表（分页，筛选、排序）</li>
-<li>机构详情页（收藏，富文本展示）</li>
-<li>咨询提交（ modelform 验证和保存）</li>
-</ul>
-<h2 id="第八章-课程功能实现"><a href="#第八章-课程功能实现" class="headerlink" title="第八章 课程功能实现"></a>第八章 课程功能实现</h2><ul>
-<li>课程列表（分页、排序）</li>
-<li>课程详情页（收藏，章节展示、资源展示、评论）</li>
-</ul>
-<h2 id="第九章-讲师功能实现"><a href="#第九章-讲师功能实现" class="headerlink" title="第九章 讲师功能实现"></a>第九章 讲师功能实现</h2><ul>
-<li>讲师列表（分页、排序）</li>
-<li>讲师详情（收藏）</li>
-</ul>
-<h2 id="第十章-个人中心功能实现"><a href="#第十章-个人中心功能实现" class="headerlink" title="第十章 个人中心功能实现"></a>第十章 个人中心功能实现</h2><ul>
-<li>用户信息修改（修改密码、头像、邮箱、基本信息）</li>
-<li>导航栏全局搜索功能</li>
-<li>我的课程</li>
-<li>我的收藏（删除收藏）</li>
-<li>我的消息</li>
-</ul>
-<h2 id="第十一章-全局功能实现"><a href="#第十一章-全局功能实现" class="headerlink" title="第十一章 全局功能实现"></a>第十一章 全局功能实现</h2><ul>
-<li>全局404和500页面配置</li>
-<li>首页开发</li>
-<li>点击数和收藏数修改和退出功能</li>
-</ul>
-<h2 id="第十二章-常见-web-攻击"><a href="#第十二章-常见-web-攻击" class="headerlink" title="第十二章 常见 web 攻击"></a>第十二章 常见 web 攻击</h2><ul>
-<li>sql 注入攻击</li>
-<li>xss 攻击</li>
-<li>csrf 攻击</li>
-</ul>
-<h2 id="第十三章-xadmin-进阶开发"><a href="#第十三章-xadmin-进阶开发" class="headerlink" title="第十三章 xadmin 进阶开发"></a>第十三章 xadmin 进阶开发</h2><ul>
-<li>userprofile 注册和设置</li>
-<li>xadmin 常见功能设置</li>
-<li>inlinemodel 注册、proxy 代理注册</li>
-<li>django ueditor 富文本编辑器继承</li>
-<li>excel 导入插件集成</li>
-</ul>
+<h2 id="Item-Pipeline示例"><a href="#Item-Pipeline示例" class="headerlink" title="Item Pipeline示例"></a><strong>Item Pipeline示例</strong></h2><h3 id="价格验证"><a href="#价格验证" class="headerlink" title="价格验证"></a><strong>价格验证</strong></h3><p>让我们来看一下以下这个假设的 pipeline，它为那些不含税（<code>price_excludes_vat</code> 属性）的item调整了price属性，同时丢弃了那些没有价格item：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> scrapy.exceptions <span class="keyword">import</span> DropItem</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">PricePipeline</span><span class="params">(object)</span>:</span></div><div class="line"></div><div class="line">	vat_factor = <span class="number">1.15</span></div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">def</span> <span class="title">process_item</span><span class="params">(self, item, spider)</span>:</span> </div><div class="line">        <span class="keyword">if</span> item[<span class="string">'price'</span>]: </div><div class="line">            <span class="keyword">if</span> item[<span class="string">'price_excludes_vat'</span>]:</div><div class="line">				item[<span class="string">'price'</span>] = item[<span class="string">'price'</span>] * self.vat_factor </div><div class="line">            <span class="keyword">return</span> item </div><div class="line">        <span class="keyword">else</span>: </div><div class="line">            <span class="keyword">raise</span> DropItem(<span class="string">"Missing price in %s"</span> % item)</div></pre></td></tr></table></figure>
+<h3 id="将item写入Json文件"><a href="#将item写入Json文件" class="headerlink" title="将item写入Json文件"></a><strong>将item写入Json文件</strong></h3><p>下面的这个Pipeline将所有的item写入到一个单独的json文件，，每行包含一个序列化 为 JSON 格式的 item:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> json</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">JsonWriterPipeline</span><span class="params">(object)</span>:</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.file = open(<span class="string">'items.jl'</span>, <span class="string">'wb'</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_item</span><span class="params">(self, item, spider)</span>:</span></div><div class="line">        line = json.dumps(dict(item)) + <span class="string">"\n"</span></div><div class="line">        self.file.write(line)</div><div class="line">        <span class="keyword">return</span> item</div></pre></td></tr></table></figure>
+<p>JsonWriterPipeline 的目的只是为了介绍怎样编写 item pipeline，如果你想要将所有爬取的 item 都保存到同 一个 JSON 文件， 你需要使用 Feed exports 。</p>
+<h3 id="将item存储到MongoDB中"><a href="#将item存储到MongoDB中" class="headerlink" title="将item存储到MongoDB中"></a>将item存储到MongoDB中</h3><p>这个例子使用<a href="http://api.mongodb.org/python/current/" target="_blank" rel="external">pymongo</a>来演示怎样讲item保存到MongoDB中。 MongoDB的地址和数据库名在配置 <code>settings.py</code> 中指定，这个例子主要是向你展示怎样使用<code>from_crawler()</code>方法，以及如何清理资源。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pymongo</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MongoPipeline</span><span class="params">(object)</span>:</span></div><div class="line"></div><div class="line">    collection_name = <span class="string">'scrapy_items'</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, mongo_uri, mongo_db)</span>:</span></div><div class="line">        self.mongo_uri = mongo_uri</div><div class="line">        self.mongo_db = mongo_db</div><div class="line"></div><div class="line"><span class="meta">    @classmethod</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">from_crawler</span><span class="params">(cls, crawler)</span>:</span></div><div class="line">        <span class="keyword">return</span> cls(</div><div class="line">            mongo_uri=crawler.settings.get(<span class="string">'MONGO_URI'</span>),</div><div class="line">            mongo_db=crawler.settings.get(<span class="string">'MONGO_DATABASE'</span>, <span class="string">'items'</span>)</div><div class="line">        )</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">open_spider</span><span class="params">(self, spider)</span>:</span></div><div class="line">        self.client = pymongo.MongoClient(self.mongo_uri)</div><div class="line">        self.db = self.client[self.mongo_db]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">close_spider</span><span class="params">(self, spider)</span>:</span></div><div class="line">        self.client.close()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_item</span><span class="params">(self, item, spider)</span>:</span></div><div class="line">        self.db[self.collection_name].insert(dict(item))</div><div class="line">        <span class="keyword">return</span> item</div></pre></td></tr></table></figure>
+<h3 id="去重"><a href="#去重" class="headerlink" title="去重"></a><strong>去重</strong></h3><p>一个用于去重的过滤器，丢弃那些已经被处理过的 item。让我们假设我们的 item 有一个唯一的 id，但是我们 sp ider 返回的多个 item 中包含有相同的 id:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> scrapy.exceptions <span class="keyword">import</span> DropItem</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">DuplicatesPipeline</span><span class="params">(object)</span>:</span></div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span> </div><div class="line">        self.ids_seen = set()</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">def</span> <span class="title">process_item</span><span class="params">(self, item, spider)</span>:</span> </div><div class="line">        <span class="keyword">if</span> item[<span class="string">'id'</span>] <span class="keyword">in</span> self.ids_seen:</div><div class="line">			<span class="keyword">raise</span> DropItem(<span class="string">"Duplicate item found: %s"</span> % item) </div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            self.ids_seen.add(item[<span class="string">'id'</span>]) </div><div class="line">            <span class="keyword">return</span> item</div></pre></td></tr></table></figure>
+<h2 id="启用一个-Item-Pipeline-组件"><a href="#启用一个-Item-Pipeline-组件" class="headerlink" title="启用一个 Item Pipeline 组件"></a>启用一个 Item Pipeline 组件</h2><p>为了启用一个 Item Pipeline 组件，你必须将它的类添加到 ITEM_PIPELINES 配置，就像下面这个例子:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">ITEM_PIPELINES = &#123; </div><div class="line">    <span class="string">'myproject.pipelines.PricePipeline'</span>: <span class="number">300</span>, </div><div class="line">    <span class="string">'myproject.pipelines.JsonWriterPipeline'</span>: <span class="number">800</span>, </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>分配给每个类的整型值，确定了他们运行的顺序，item 按数字从低到高的顺序，通过 pipeline，通常将这些数字 定义在 0-1000 范围内。</p>
 
       
     </div>
@@ -499,7 +484,7 @@
   
         <div class="post-tags">
           
-            <a href="/tags/Django-Python/" rel="tag"># Django, Python</a>
+            <a href="/tags/Scrapy，Python/" rel="tag"># Scrapy，Python</a>
           
         </div>
       
@@ -540,8 +525,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/04/06/Redis-3/" rel="next" title="Redis学习笔记(三)：Redis命令补充">
-                <i class="fa fa-chevron-left"></i> Redis学习笔记(三)：Redis命令补充
+              <a href="/2017/05/05/scrapy-items-design/" rel="next" title="Python分布式爬虫打造搜索引擎项目学习笔记——items设计">
+                <i class="fa fa-chevron-left"></i> Python分布式爬虫打造搜索引擎项目学习笔记——items设计
               </a>
             
           </div>
@@ -549,10 +534,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/04/09/Redis-4/" rel="prev" title="Redis学习笔记(四)：数据安全与性能保障——持久化">
-                Redis学习笔记(四)：数据安全与性能保障——持久化 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -719,7 +700,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#MxOnline项目学习总结"><span class="nav-number">1.</span> <span class="nav-text">MxOnline项目学习总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#第一、二章"><span class="nav-number">1.1.</span> <span class="nav-text">第一、二章</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三章-django基础回顾"><span class="nav-number">1.2.</span> <span class="nav-text">第三章 django基础回顾</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第四章-数据库设计"><span class="nav-number">1.3.</span> <span class="nav-text">第四章 数据库设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第五章-后台管理系统开发"><span class="nav-number">1.4.</span> <span class="nav-text">第五章 后台管理系统开发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第六章-登录、注册、找回密码"><span class="nav-number">1.5.</span> <span class="nav-text">第六章 登录、注册、找回密码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第七章-课程机构功能实现"><span class="nav-number">1.6.</span> <span class="nav-text">第七章 课程机构功能实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第八章-课程功能实现"><span class="nav-number">1.7.</span> <span class="nav-text">第八章 课程功能实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第九章-讲师功能实现"><span class="nav-number">1.8.</span> <span class="nav-text">第九章 讲师功能实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第十章-个人中心功能实现"><span class="nav-number">1.9.</span> <span class="nav-text">第十章 个人中心功能实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第十一章-全局功能实现"><span class="nav-number">1.10.</span> <span class="nav-text">第十一章 全局功能实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第十二章-常见-web-攻击"><span class="nav-number">1.11.</span> <span class="nav-text">第十二章 常见 web 攻击</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第十三章-xadmin-进阶开发"><span class="nav-number">1.12.</span> <span class="nav-text">第十三章 xadmin 进阶开发</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#编写自定义的-Pipeline"><span class="nav-number">1.</span> <span class="nav-text">编写自定义的 Pipeline</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Item-Pipeline示例"><span class="nav-number">2.</span> <span class="nav-text">Item Pipeline示例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#价格验证"><span class="nav-number">2.1.</span> <span class="nav-text">价格验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#将item写入Json文件"><span class="nav-number">2.2.</span> <span class="nav-text">将item写入Json文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#将item存储到MongoDB中"><span class="nav-number">2.3.</span> <span class="nav-text">将item存储到MongoDB中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#去重"><span class="nav-number">2.4.</span> <span class="nav-text">去重</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启用一个-Item-Pipeline-组件"><span class="nav-number">3.</span> <span class="nav-text">启用一个 Item Pipeline 组件</span></a></li></ol></div>
             
 
           </div>
