@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-05-06T13:35:25.000Z</updated>
+  <updated>2017-05-08T07:02:35.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,205 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Item Loaders机制介绍与实例</title>
+    <link href="http://yoursite.com/2017/05/08/scrapy-item-loader/"/>
+    <id>http://yoursite.com/2017/05/08/scrapy-item-loader/</id>
+    <published>2017-05-08T06:18:54.000Z</published>
+    <updated>2017-05-08T07:02:35.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Item Loaders 提供了一种便捷的方式填充抓取到的 Items 。虽然 Items 可以使用自带的类字典形式 API 填充，但是 Items Loaders 提供了更便捷的 API，可以分析原始数据并对 Item 进行赋值。 </p>
+<p>从另一方面来说，Items 提供保存抓取数据的容器，而 Item Loaders 提供的是填充容器的机制。</p>
+<p>Item Loaders 提供的是一种灵活，高效的机制，可以更方便的被 spider 或 source format （HTML，XML，etc）扩展，并 override 更易于维护的、不同的内容分析规则。</p>
+<a id="more"></a>
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><h3 id="使用-Item-Loaders-来填充-Items"><a href="#使用-Item-Loaders-来填充-Items" class="headerlink" title="使用 Item Loaders 来填充 Items"></a><strong>使用 Item Loaders 来填充 Items</strong></h3><p>要使用 Item Loader, 你必须先将它实例化。你可以使用类似字典的对象(例如: Item or dict)来进行实例化，或者不使用对象也可以，当不用对象进行实例化的时候，Item 会自动使用 <code>ItemLoader.default\_item_class</code> 属性中指定的 Item 类在 <code>Item Loader constructor</code> 中实例化。 </p>
+<p>然后，你开始收集数值到 Item Loader 时，通常使用 Selectors。你可以在同一个 item field 里面添加多个数 值；Item Loader 将知道如何用合适的处理函数来“添加”这些数值。 下面是在 Spider 中典型的 Item Loader 的用法，使用 <code>Items chapter</code> 中声明的 <code>Product item</code> ：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> scrapy.contrib.loader <span class="keyword">import</span> ItemLoader </div><div class="line"><span class="keyword">from</span> myproject.items <span class="keyword">import</span> Product</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span> </div><div class="line">    l = ItemLoader(item=Product(), response=response) </div><div class="line">    l.add_xpath(<span class="string">'name'</span>, <span class="string">'//div[@class="product_name"]'</span>) </div><div class="line">    l.add_xpath(<span class="string">'name'</span>, <span class="string">'//div[@class="product_title"]'</span>) </div><div class="line">    l.add_xpath(<span class="string">'price'</span>, <span class="string">'//p[@id="price"]'</span>) </div><div class="line">    l.add_css(<span class="string">'stock'</span>, <span class="string">'p#stock]'</span>) </div><div class="line">    l.add_value(<span class="string">'last_updated'</span>, <span class="string">'today'</span>) <span class="comment"># you can also use literal values </span></div><div class="line">    <span class="keyword">return</span> l.load_item()</div></pre></td></tr></table></figure>
+<p>快速查看这些代码之后，我们可以看到发现 name 字段被从页面中两个不同的 XPath 位置提取：</p>
+<ol>
+<li><code>//div[@class=&quot;product_name&quot;]</code></li>
+<li><code>//div[@class=&quot;product_title&quot;]</code></li>
+</ol>
+<p>换言之,数据通过用 <code>add_xpath()</code> 的方法，把从两个不同的 XPath 位置提取的数据收集起来。这是将在以后分配给 <code>name</code> 字段中的数据?</p>
+<p>之后，类似的请求被用于 price 和 stock 字段 （后者使用 <code>CSS selector</code> 和 <code>add_css()</code> 方法）， 最后使用不同的方法 <code>add_value()</code> 对 <code>last_update</code> 填充文本值( today )。 最终，当所有数据被收集起来之后，调用 <code>ItemLoader.load_item()</code> 方法，实际上填充并且返回了之前通过调用 <code>add_xpath()</code>，<code>add_css()</code> ，<code>add_value()</code> 所提取和收集到的数据的 Item。</p>
+<h3 id="输入和输出处理器"><a href="#输入和输出处理器" class="headerlink" title="输入和输出处理器"></a><strong>输入和输出处理器</strong></h3><p>Item Loader 在每个（Item）字段中都包含了一个输入处理器和一个输出处理器。输入处理器收到数据时立刻提取数据 （通过  <code>add_xpath()</code>， <code>add_css()</code>  或者  <code>add_value()</code>方法）之后输入处理器的结果被收集起来并且保存在ItemLoader内。收集到所有的数据后，调用 <code>ItemLoader.load_item()</code> 方法来填充，并得到填充后的 Item 对象。这是当输出处理器被和之前收集到的数据（和用输入处理器处理的）被调用。输出处理器的结果是被分配到Item的最终值。</p>
+<p>让我们看一个例子来说明如何输入和输出处理器被一个特定的字段调用（同样适用于其他field）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">l = ItemLoader(Product(), some_selector)</div><div class="line">l.add_xpath(<span class="string">'name'</span>, xpath1) <span class="comment"># (1)</span></div><div class="line">l.add_xpath(<span class="string">'name'</span>, xpath2) <span class="comment"># (2)</span></div><div class="line">l.add_css(<span class="string">'name'</span>, css) <span class="comment"># (3)</span></div><div class="line">l.add_value(<span class="string">'name'</span>, <span class="string">'test'</span>) <span class="comment"># (4)</span></div><div class="line"><span class="keyword">return</span> l.load_item() <span class="comment"># (5)</span></div></pre></td></tr></table></figure>
+<p>发生了这些事情:</p>
+<ol>
+<li>从 <code>xpath1</code> 提取出的数据,传递给 <em>输入处理器</em> 的 <code>name</code> 字段.输入处理器的结果被收集和保存在Item Loader中(但尚未分配给该Item)｡</li>
+<li>从 <code>xpath2</code> 提取出来的数据,传递给(1)中使用的相同的 <em>输入处理器</em> .输入处理器的结果被附加到在(1)中收集的数据(如果有的话) ｡</li>
+<li>和之前相似，只不过这里的数据是通过 <code>css</code> CSS selector抽取，之后传输到在(1)和(2)使用 的<em>input processor</em> 中。最终输入处理器的结果被附加到在(1)和(2)中收集的数据之后 (如果存在数据的话)。</li>
+<li>这里的处理方式也和之前相似，但是此处的值是通过add_value直接赋予的， 而不是利用XPath表达式或CSS selector获取。得到的值仍然是被传送到输入处理器。 在这里例程中，因为得到的值并非可迭代，所以在传输到输入处理器之前需要将其 转化为可迭代的单个元素，这才是它所接受的形式。</li>
+<li>在之前步骤中所收集到的数据被传送到 <em>output processor</em> 的 <code>name</code> field中。 输出处理器的结果就是赋到item中 <code>name</code> field的值。</li>
+</ol>
+<p><strong>理解：</strong></p>
+<p>就是在使用Item Loader 时候，会有一个输入处理器，一个输出处理器，首先是收集好同一个字段的结果，传入到<strong>输入处理器</strong>当中，然后收集完后，会传递给<strong>输出处理器</strong>进行处理。输出处理器的处理结果，就是填充到item的结果。</p>
+<p>需要注意的是：输入处理器的返回值会是内部收集的，然后被传递给输出处理器，来填充fields。</p>
+<h4 id="Scrapy-内部的处理器"><a href="#Scrapy-内部的处理器" class="headerlink" title="Scrapy 内部的处理器"></a><strong>Scrapy 内部的处理器</strong></h4><p>Scrapy内部，已经有一些设置好的<a href="http://scrapy-chs.readthedocs.io/zh_CN/latest/topics/loaders.html#topics-loaders-available-processors" target="_blank" rel="external">内置处理器</a></p>
+<ul>
+<li>Identity<br>这是最简单的一个处理器，实际上就是什么都不做，传入多少个字段，就存储多少个字段，以list形式。<code>&gt;&gt;&gt; from scrapy.contrib.loader.processor import Identity
+\&gt;&gt;&gt; proc = Identity()
+\&gt;&gt;&gt; proc([&#39;one&#39;, &#39;two&#39;, &#39;three&#39;])
+[&#39;one&#39;, &#39;two&#39;, &#39;three&#39;]</code> </li>
+<li>TakeFirst<br>从接受到的list中返回第一个非null/非空的值，<code>&gt;&gt;&gt; from scrapy.contrib.loader.processor import TakeFirst
+\&gt;&gt;&gt; proc = TakeFirst()
+\&gt;&gt;&gt; proc([&#39;&#39;, &#39;one&#39;, &#39;two&#39;, &#39;three&#39;])
+&#39;one&#39;</code> </li>
+<li>Join<br>返回用分隔符（separator）作为间隔的连接形成的字符串。若不传入separator，则默认使用’ ‘（空格）。<code>&gt;&gt;&gt; from scrapy.contrib.loader.processor import Join
+\&gt;&gt;&gt; proc = Join()
+\&gt;&gt;&gt; proc([&#39;one&#39;, &#39;two&#39;, &#39;three&#39;])
+u&#39;one two three&#39;
+\&gt;&gt;&gt; proc = Join(&#39;&lt;br&gt;&#39;)
+\&gt;&gt;&gt; proc([&#39;one&#39;, &#39;two&#39;, &#39;three&#39;])
+u&#39;one&lt;br&gt;two&lt;br&gt;three&#39;</code> </li>
+<li>另外还有Compose以及MapCompose，这里不一一详述。</li>
+</ul>
+<hr>
+<h3 id="声明-Item-Loaders"><a href="#声明-Item-Loaders" class="headerlink" title="声明 Item Loaders"></a><strong>声明 Item Loaders</strong></h3><p>声明ItemLoaders 和声明Item类似，使用Class语法，例子：</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="title">from</span> scrapy.contrib.loader <span class="keyword">import</span> ItemLoader</div><div class="line"><span class="title">from</span> scrapy.contrib.loader.processor <span class="keyword">import</span> TakeFirst, MapCompose, Join</div><div class="line"><span class="class"></span></div><div class="line"><span class="keyword">class</span> <span class="type">ProductLoader</span>(<span class="type">ItemLoader</span>):</div><div class="line"></div><div class="line">    default_output_processor = <span class="type">TakeFirst</span>()</div><div class="line"></div><div class="line">    name_in = <span class="type">MapCompose</span>(<span class="title">unicode</span>.<span class="title">title</span>)</div><div class="line">    name_out = <span class="type">Join</span>()</div><div class="line"></div><div class="line">    price_in = <span class="type">MapCompose</span>(<span class="title">unicode</span>.<span class="title">strip</span>)</div><div class="line"></div><div class="line">    # ...</div></pre></td></tr></table></figure>
+<p>上述代码中:</p>
+<ul>
+<li>输出处理器，被声明为 <code>_in</code> 前缀，而输出处理器被声明为 <code>_out</code> 前缀。</li>
+<li>设置默认处理器 <a href="http://scrapy-chs.readthedocs.io/zh_CN/latest/topics/loaders.html#scrapy.contrib.loader.ItemLoader.default_input_processor" target="_blank" rel="external"><code>ItemLoader.default_input_processor</code></a>  and  <a href="http://scrapy-chs.readthedocs.io/zh_CN/latest/topics/loaders.html#scrapy.contrib.loader.ItemLoader.default_output_processor" target="_blank" rel="external"><code>ItemLoader.default_output_processor</code></a></li>
+</ul>
+<h3 id="声明输入、输出处理器"><a href="#声明输入、输出处理器" class="headerlink" title="声明输入、输出处理器"></a><strong>声明输入、输出处理器</strong></h3><p>输入、输出可以被如上方那样被声明，这也是最正常的方式。另外，我们也可以在另外的一个地方去声明输入和输出处理器：在item Field，元数据中。</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> scrapy</div><div class="line"><span class="title">from</span> scrapy.contrib.loader.processor <span class="keyword">import</span> Join, MapCompose, TakeFirst</div><div class="line"><span class="title">from</span> w3lib.html <span class="keyword">import</span> remove_tags</div><div class="line"></div><div class="line"><span class="title">def</span> filter_price(value):</div><div class="line">    <span class="keyword">if</span> value.isdigit():</div><div class="line">        return value</div><div class="line"><span class="class"></span></div><div class="line"><span class="keyword">class</span> <span class="type">Product</span>(<span class="title">scrapy</span>.<span class="type">Item</span>):</div><div class="line">    name = scrapy.<span class="type">Field</span>(</div><div class="line">        <span class="title">input_processor</span>=<span class="type">MapCompose(remove_tags)</span>,</div><div class="line">        <span class="title">output_processor</span>=<span class="type">Join</span>(),</div><div class="line">    )</div><div class="line">    price = scrapy.<span class="type">Field</span>(</div><div class="line">        <span class="title">input_processor</span>=<span class="type">MapCompose</span>(<span class="title">remove_tags</span>, <span class="title">filter_price</span>),</div><div class="line">        output_processor=<span class="type">TakeFirst</span>(),</div><div class="line">    )</div></pre></td></tr></table></figure>
+<p>输出和输出处理器的优先级如下：</p>
+<ol>
+<li>Item Loader field 指定的<code>field_in</code> 和 <code>field_out</code>（最优先）</li>
+<li>Field 元数据中(input_processor 和 output_processor key)</li>
+<li>item loader 默认。 <a href="http://scrapy-chs.readthedocs.io/zh_CN/latest/topics/loaders.html#scrapy.contrib.loader.ItemLoader.default_input_processor" target="_blank" rel="external"><code>ItemLoader.default_input_processor()</code></a> and<a href="http://scrapy-chs.readthedocs.io/zh_CN/latest/topics/loaders.html#scrapy.contrib.loader.ItemLoader.default_output_processor" target="_blank" rel="external"><code>ItemLoader.default_output_processor()</code></a> (least precedence)</li>
+</ol>
+<hr>
+<p>最后，给出Item Loader的官方说明API：</p>
+<p><a href="http://scrapy-chs.readthedocs.io/zh_CN/latest/topics/loaders.html#itemloader-objects" target="_blank" rel="external">ItemLoader objects</a></p>
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a><strong>实例</strong></h2><h3 id="通过-Item-loader-加载-Item"><a href="#通过-Item-loader-加载-Item" class="headerlink" title="通过 Item loader 加载 Item"></a><strong>通过 Item loader 加载 Item</strong></h3><p>首先在 <code>jobbole.py</code> 中引入 <code>from scrapy.loader import ItemLoader</code></p>
+<p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">item_loader = ItemLoader(item=JobBoleArticleItem(), response=response)</div><div class="line">item_loader.add_css(<span class="string">"title"</span>, <span class="string">".entry-header h1::text"</span>)</div><div class="line">item_loader.add_value(<span class="string">"url"</span>, response.url)</div><div class="line">item_loader.add_value(<span class="string">"url_object_id"</span>, get_md5(response.url))</div><div class="line">item_loader.add_css(<span class="string">"create_date"</span>, <span class="string">"p.entry-meta-hide-on-mobile::text"</span>)</div><div class="line">front_image_url = response.meta.get(<span class="string">"front_image_url"</span>, <span class="string">""</span>)  <span class="comment"># 文章封面图</span></div><div class="line">item_loader.add_value(<span class="string">"front_image_url"</span>, [front_image_url])</div><div class="line">item_loader.add_css(<span class="string">"praise_nums"</span>, <span class="string">".vote-post-up h10::text"</span>)</div><div class="line">item_loader.add_css(<span class="string">"comment_nums"</span>, <span class="string">"a[href='#article-comment'] span::text"</span>)</div><div class="line">item_loader.add_css(<span class="string">"fav_nums"</span>, <span class="string">".bookmark-btn::text"</span>)</div><div class="line">item_loader.add_css(<span class="string">"tags"</span>, <span class="string">"p.entry-meta-hide-on-mobile a::text"</span>)</div><div class="line">item_loader.add_css(<span class="string">"content"</span>, <span class="string">"div.entry"</span>)</div><div class="line"></div><div class="line">article_item = item_loader.load_item()</div></pre></td></tr></table></figure>
+<p>其中第一行中 <code>JobBoleArticleItem()</code> 为在 <code>items.py</code> 中声明的实例，<code>response</code> 为返回的响应。这属于固定写法。<br><code>add_css()</code>中第一个值为 <code>items.py</code> 中定义的值，第二个值为css选择器规则，类似的方法还有 <code>add_xpath()</code>，根据场景进行选择。</p>
+<p>同理，<code>add_value()</code>为添加确定值的方法。这里通过值传递附给 <code>front_image_url</code> 再通过add_value的方法，加入到最终的item中。</p>
+<p>最后通过调用 <code>load_item()</code> 方法对结果进行解析，所有的结果都是一个list并保存到 <code>article_item</code> 中。</p>
+<p>断点调试结果如图：</p>
+<p><img src="http://ww2.sinaimg.cn/large/006tNc79gy1ffdwrwwdu2j31kw1ax1a5.jpg" alt=""></p>
+<p>发现获取到的所有值都是一个list，这样很不方便，但使得代码可读性更高，可维护性更强。</p>
+<h3 id="通过-items-py-处理数据"><a href="#通过-items-py-处理数据" class="headerlink" title="通过 items.py 处理数据"></a><strong>通过 items.py 处理数据</strong></h3><p>在 <code>items.py</code> 中引入 <code>from scrapy.loader.processors import MapCompose</code> ，然后可以在定义 <code>scrapy.Field()</code> 时可以加入处理函数（可以使匿名函数），例如：</p>
+<p><img src="http://ww3.sinaimg.cn/large/006tNc79gy1ffdx4319hjj30x009kq4b.jpg" alt=""></p>
+<p>在 <code>MapCompose()</code> 中可以加入多个函数，在 <code>jobbole.py</code> 中断点调试结果如图：</p>
+<p><img src="http://ww3.sinaimg.cn/large/006tNc79gy1ffdx56xexcj31kw0c37aq.jpg" alt=""></p>
+<p>在title的结果后面出现了我们想要的后缀。</p>
+<p>另外，可以看到，结果都是 <code>list</code>，我们每次都需要提取第一个值。Scrapy给我们提供了 <code>TakeFirst</code> 方法。</p>
+<p>同样引入 <code>from scrapy.loader.processors import MapCompose,TakeFirst</code> ，修改代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">title = scrapy.Field(</div><div class="line">        input_processor = MapCompose(<span class="keyword">lambda</span> x:x+<span class="string">"-jobbole"</span>, add_jobbole),</div><div class="line">        output_processor = TakeFirst()</div><div class="line">	)</div></pre></td></tr></table></figure>
+<p>即可以得到第一个值。由于每一个结果都是取第一个值，每个值全部调用这个方法重复代码过多，可以通过自定义Item loader重载的方法解决。引入 <code>from scrapy.loader import ItemLoader</code> ，这个类提供了以下方法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ItemLoader</span><span class="params">(object)</span>:</span></div><div class="line"></div><div class="line">    default_item_class = Item</div><div class="line">    default_input_processor = Identity()</div><div class="line">    default_output_processor = Identity()</div><div class="line">    default_selector_class = Selector</div></pre></td></tr></table></figure>
+<p>我们自定义的Item loader需要继承这个类：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ArticleItemLoader</span><span class="params">(ItemLoader)</span>:</span></div><div class="line">    default_output_processor = TakeFirst()</div></pre></td></tr></table></figure>
+<p>然后在 <code>jobbole.py</code> 文件中，把<br> <code>item_loader = ItemLoader(item=JobBoleArticleItem(), response=response)</code> 中的 <code>ItemLoader</code> 变为 <code>ArticleItemLoader</code>，即：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">item_loader = ArticleItemLoader(item=JobBoleArticleItem(), response=response)</div></pre></td></tr></table></figure>
+<p>这样得到的结果就是一个str而不是list了。</p>
+<p><img src="http://ww4.sinaimg.cn/large/006tNc79gy1ffdyhajhdvj31kw0bz445.jpg" alt=""></p>
+<p>不过在上图是可以看到，它的tags也取了第一个值，但实际上它的值是三个，不满足我们的需要。<br>引入Join方法 <code>from scrapy.loader.processors import MapCompose, TakeFirst, Join</code>，同时不使用自定义的item loader即可。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">tags = scrapy.Field(</div><div class="line">        output_processor=Join(<span class="string">','</span>),</div><div class="line">	)</div></pre></td></tr></table></figure>
+<p><img src="http://ww3.sinaimg.cn/large/006tNc79gy1ffdyj0tk9lj30oe00sdg0.jpg" alt=""></p>
+<p>和前面一样，有时候tags会有 <code>评论</code> 的不符合要求的tags，还需要自定义函数把相应的字段去掉。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">remove_comment</span><span class="params">(value)</span>:</span></div><div class="line">    <span class="keyword">if</span> <span class="string">'评论'</span> <span class="keyword">in</span> value:</div><div class="line">        <span class="keyword">return</span> <span class="string">''</span></div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="keyword">return</span> value</div></pre></td></tr></table></figure>
+<p>在处理图片时，使用pipelines需要传递的是一个列表，这里经过处理后，变成了str。可以通过一个默认函数不让默认的TakeFirst处理即可。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">return_value</span><span class="params">(value)</span>:</span></div><div class="line">    <span class="keyword">return</span> value</div></pre></td></tr></table></figure>
+<p>调用方法是：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">front_image_url = scrapy.Field(</div><div class="line">        output_processor=MapCompose(return_value),</div><div class="line">    )</div></pre></td></tr></table></figure>
+<p>最后，我们在之前还用正则表达式来清洗点赞数，收藏数，评论数这些数据，在item loader中我们也可以用函数处理：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_nums</span><span class="params">(value)</span>:</span></div><div class="line">    match_re = re.match(<span class="string">".*?(\d+).*?"</span>, value)</div><div class="line">    <span class="keyword">if</span> match_re:</div><div class="line">        nums = int(match_re.group(<span class="number">1</span>))</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        nums = <span class="number">0</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> nums</div><div class="line"></div><div class="line">praise_nums = scrapy.Field(</div><div class="line">        input_processor=MapCompose(get_nums),</div><div class="line">    )</div><div class="line">    comment_nums = scrapy.Field(</div><div class="line">        input_processor=MapCompose(get_nums),</div><div class="line">    )</div><div class="line">    fav_nums = scrapy.Field(</div><div class="line">        input_processor=MapCompose(get_nums),</div><div class="line">    )</div></pre></td></tr></table></figure>
+<p>调试结果中str就变成int类型了：</p>
+<p><img src="http://ww4.sinaimg.cn/large/006tNc79gy1ffdynb5xtsj31kw0c9afc.jpg" alt=""></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Item Loaders 提供了一种便捷的方式填充抓取到的 Items 。虽然 Items 可以使用自带的类字典形式 API 填充，但是 Items Loaders 提供了更便捷的 API，可以分析原始数据并对 Item 进行赋值。 &lt;/p&gt;
+&lt;p&gt;从另一方面来说，Items 提供保存抓取数据的容器，而 Item Loaders 提供的是填充容器的机制。&lt;/p&gt;
+&lt;p&gt;Item Loaders 提供的是一种灵活，高效的机制，可以更方便的被 spider 或 source format （HTML，XML，etc）扩展，并 override 更易于维护的、不同的内容分析规则。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
+    
+    
+      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Python分布式爬虫打造搜索引擎项目学习笔记——保存item到json文件</title>
+    <link href="http://yoursite.com/2017/05/07/scrapy-item-json/"/>
+    <id>http://yoursite.com/2017/05/07/scrapy-item-json/</id>
+    <published>2017-05-07T06:18:54.000Z</published>
+    <updated>2017-05-07T05:05:09.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>在Scrapy中，所有item数据都会通过pipelines进行处理，想要保存为json格式文件，只需要在piplines中进行相应的处理即可。</p>
+<a id="more"></a>
+<h2 id="使用系统-exporter-导出为-JSON-文件"><a href="#使用系统-exporter-导出为-JSON-文件" class="headerlink" title="使用系统 exporter 导出为 JSON 文件"></a><strong>使用系统 exporter 导出为 JSON 文件</strong></h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> scrapy.exporters <span class="keyword">import</span> JsonItemExporter</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">JsonExporterPipeline</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="comment"># 调用Scrapy提供的json exporter导出json文件</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.file = open(<span class="string">'article.json'</span>, <span class="string">'wb'</span>)</div><div class="line">        self.exporter = JsonItemExporter(self.file, encoding=<span class="string">"utf-8"</span>, ensure_ascii=<span class="keyword">False</span>)</div><div class="line">        self.exporter.start_exporting()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">close_spider</span><span class="params">(self, spider)</span>:</span></div><div class="line">        self.exporter.finish_exporting()</div><div class="line">        self.file.close()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_item</span><span class="params">(self, item, spider)</span>:</span></div><div class="line">        self.exporter.export_item(item)</div><div class="line">        <span class="keyword">return</span> item</div></pre></td></tr></table></figure>
+<h2 id="自定义-Pipeline-导出为-JSON-文件"><a href="#自定义-Pipeline-导出为-JSON-文件" class="headerlink" title="自定义 Pipeline 导出为 JSON 文件"></a><strong>自定义 Pipeline 导出为 JSON 文件</strong></h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">JsonWithEncodingPipeline</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="comment"># 自定义json文件的导出</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.file = codecs.open(<span class="string">'article.json'</span>, <span class="string">'w'</span>, encoding=<span class="string">"utf-8"</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_item</span><span class="params">(self, item, spider)</span>:</span></div><div class="line">        lines = json.dumps(dict(item), ensure_ascii=<span class="keyword">False</span>) + <span class="string">"\n"</span></div><div class="line">        self.file.write(lines)</div><div class="line">        <span class="keyword">return</span> item</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">spider_closed</span><span class="params">(self, spider)</span>:</span></div><div class="line">        self.file.close()</div></pre></td></tr></table></figure>
+<h2 id="函数说明"><a href="#函数说明" class="headerlink" title="函数说明"></a><strong>函数说明</strong></h2><p><code>codecs</code> ：避免打开文件时出现编码错误。<br><code>json.dumps</code> ：dict转成str<br><code>json.loads</code> ：str转成dict<br><code>ensure_ascii=False</code> ：避免处理英文以外语言时出错<br><code>return item</code> ：交给下一个pipeline处理</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在Scrapy中，所有item数据都会通过pipelines进行处理，想要保存为json格式文件，只需要在piplines中进行相应的处理即可。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
+    
+    
+      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Python分布式爬虫打造搜索引擎项目学习笔记——通过Pipeline保存数据到MySQL</title>
+    <link href="http://yoursite.com/2017/05/07/scrapy-item-mysql/"/>
+    <id>http://yoursite.com/2017/05/07/scrapy-item-mysql/</id>
+    <published>2017-05-07T06:18:54.000Z</published>
+    <updated>2017-05-07T11:36:20.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>将数据保存到MySQL数据库，需要用到 <code>mysqlclient</code> 模块，需要在我们的虚拟环境中用 <code>pip</code> 进行安装。</p>
+<a id="more"></a>
+<h2 id="设计数据表"><a href="#设计数据表" class="headerlink" title="设计数据表"></a><strong>设计数据表</strong></h2><p>需要根据之前Item来设计我们的数据表 <code>jobbole_article</code> ，数据库取名为 <code>article_spider</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">JobBoleArticleItem</span><span class="params">(scrapy.Item)</span>:</span></div><div class="line">    title = scrapy.Field()</div><div class="line">    create_date = scrapy.Field()</div><div class="line">    url = scrapy.Field()</div><div class="line">    url_object_id = scrapy.Field()</div><div class="line">    front_image_url = scrapy.Field()</div><div class="line">    front_image_path = scrapy.Field()</div><div class="line">    praise_nums = scrapy.Field()</div><div class="line">    comment_nums = scrapy.Field()</div><div class="line">    fav_nums = scrapy.Field()</div><div class="line">    tags = scrapy.Field()</div><div class="line">    content = scrapy.Field()</div></pre></td></tr></table></figure>
+<p>初步设计的数据表如下，在后面使用时还会进行必要的改动：</p>
+<p><img src="http://ww1.sinaimg.cn/large/006tNc79gy1ffcueufjwhj317e0kwwib.jpg" alt=""></p>
+<h2 id="采用同步机制写入MySQL"><a href="#采用同步机制写入MySQL" class="headerlink" title="采用同步机制写入MySQL"></a><strong>采用同步机制写入MySQL</strong></h2><p>首先在 <code>pipelines.py</code> 中引入数据库连接模块 <code>import MySQLdb</code> ，然后完善 <code>MysqlPipeline</code> 类的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MysqlPipeline</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="comment"># 采用同步的机制写入mysql</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.conn = MySQLdb.connect(<span class="string">'127.0.0.1'</span>, <span class="string">'root'</span>, <span class="string">'12'</span>, <span class="string">'article_spider'</span>,</div><div class="line">                                    charset=<span class="string">'utf8'</span>, use_unicode=<span class="keyword">True</span>)</div><div class="line">        self.cursor = self.conn.cursor()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_item</span><span class="params">(self, item, spider)</span>:</span></div><div class="line">        insert_sql = <span class="string">"""</span></div><div class="line">                    insert into jobbole_article(title, url, create_date, fav_nums)</div><div class="line">                    VALUES (%s, %s, %s, %s)</div><div class="line">        """</div><div class="line">        self.cursor.execute(insert_sql, (item[<span class="string">"title"</span>], item[<span class="string">"url"</span>], item[<span class="string">"create_date"</span>], item[<span class="string">"fav_nums"</span>]))</div><div class="line">        self.conn.commit()</div></pre></td></tr></table></figure>
+<p><code>__init__</code> 方法是对数据进行初始化，定义连接信息如host，数据库用户名、密码、数据库名称、数据库编码<br>在 <code>process_item</code> 方法中进行插入数据操作，格式都是固定的。</p>
+<p>最后在 <code>settings.py</code> 中把 <code>MysqlPipeline()</code> 加入到 <code>ITEM_PIPELINES</code> 的配置中。</p>
+<h2 id="采用异步机制写入MySQL"><a href="#采用异步机制写入MySQL" class="headerlink" title="采用异步机制写入MySQL"></a><strong>采用异步机制写入MySQL</strong></h2><p>在上面的同步机制写入数据库中，我们把连接信息 <code>MySQLdb.connect(&#39;127.0.0.1&#39;, &#39;root&#39;, &#39;12&#39;, &#39;article_spider&#39;, charset=&#39;utf8&#39;, use_unicode=True)</code> 直接定义在函数中，如果不经常改动的话，可以把相关信息放到 <code>settings.py</code> 中进行调用。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">MYSQL_HOST = <span class="string">'127.0.0.1'</span></div><div class="line">MYSQL_DBNAME = <span class="string">'article_spider'</span></div><div class="line">MYSQL_USER = <span class="string">'root'</span></div><div class="line">MYSQL_PASSWORD = <span class="string">'12'</span></div></pre></td></tr></table></figure>
+<p>在 <code>pipelines.py</code> 中新建 <code>MysqlTwistedPipeline</code> ，写入如下代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MysqlTwistedPipeline</span><span class="params">(object)</span>:</span></div><div class="line"><span class="meta">    @classmethod</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">from_settings</span><span class="params">(cls, settings)</span>:</span></div><div class="line">        host = settings[<span class="string">'MYSQL_HOST'</span>]</div><div class="line">        <span class="keyword">pass</span></div></pre></td></tr></table></figure>
+<p>在 <code>from_settings</code> 这个类方法中，我们获取到了settings配置中的 <code>MYSQL_HOST</code> ，这个方法在Scrapy初始化的时候就会被调用，会将Scrapy的settings对象传递进来，我们在这里进行断点调试，查看是否获取到了这个对象：</p>
+<p><img src="http://ww3.sinaimg.cn/large/006tNc79gy1ffcv0p0d3xj31kw0ejqcr.jpg" alt=""></p>
+<p><img src="http://ww2.sinaimg.cn/large/006tNc79gy1ffcv1i1po9j319w04kgmy.jpg" alt=""></p>
+<p>发现在settings的attributes这个字典中，确实有我们定义的各种属性。</p>
+<p>我们的异步操作需要引入twisted，代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> twisted.enterprise <span class="keyword">import</span> adbapi</div><div class="line"><span class="keyword">import</span> MySQLdb</div><div class="line"><span class="keyword">import</span> MySQLdb.cursors</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MysqlTwistedPipeline</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, dbpool)</span>:</span></div><div class="line">        self.dbpool = dbpool</div><div class="line"></div><div class="line"><span class="meta">    @classmethod</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">from_settings</span><span class="params">(cls, settings)</span>:</span></div><div class="line">        dbparams = dict(</div><div class="line">            host=settings[<span class="string">'MYSQL_HOST'</span>],</div><div class="line">            db=settings[<span class="string">'MYSQL_DBNAME'</span>],</div><div class="line">            user=settings[<span class="string">'MYSQL_USER'</span>],</div><div class="line">            passwd=settings[<span class="string">'MYSQL_PASSWORD'</span>],</div><div class="line">            charset=<span class="string">'utf8'</span>,</div><div class="line">            cursorclass=MySQLdb.cursors.DictCursor,</div><div class="line">            use_unicode=<span class="keyword">True</span>,</div><div class="line">        )</div><div class="line">        dbpool = adbapi.ConnectionPool(<span class="string">"MySQLdb"</span>, **dbparams)</div><div class="line"></div><div class="line">        <span class="keyword">return</span> cls(dbpool)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_item</span><span class="params">(self, item, spider)</span>:</span></div><div class="line">        <span class="comment"># 使用twisted将mysql插入变成异步执行</span></div><div class="line">        query = self.dbpool.runInteraction(self.do_insert, item)</div><div class="line">        query.addErrback(self.handle_error)  <span class="comment"># 处理异常</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">handle_error</span><span class="params">(self, failure)</span>:</span></div><div class="line">        <span class="comment"># 处理异步插入异常</span></div><div class="line">        print(failure)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">do_insert</span><span class="params">(self, cursor, item)</span>:</span></div><div class="line">        <span class="comment"># 执行具体的插入</span></div><div class="line">        insert_sql = <span class="string">"""</span></div><div class="line">                            insert into jobbole_article(title, url, create_date, fav_nums)</div><div class="line">                            VALUES (%s, %s, %s, %s)</div><div class="line">                """</div><div class="line">        cursor.execute(insert_sql, (item[<span class="string">"title"</span>], item[<span class="string">"url"</span>], item[<span class="string">"create_date"</span>], item[<span class="string">"fav_nums"</span>]))</div></pre></td></tr></table></figure>
+<p>我们在使用时，绝大部分代码无须变动，只要修改 <code>do_insert</code> 方法中的插入内容，以及自己的信息即可。</p>
+<p>在数据量不大时，用同步插入即可。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;将数据保存到MySQL数据库，需要用到 &lt;code&gt;mysqlclient&lt;/code&gt; 模块，需要在我们的虚拟环境中用 &lt;code&gt;pip&lt;/code&gt; 进行安装。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
+    
+    
+      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
+    
+  </entry>
   
   <entry>
     <title>Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Item Pipeline</title>
@@ -227,55 +426,6 @@
   </entry>
   
   <entry>
-    <title>Python分布式爬虫打造搜索引擎项目学习笔记——items设计</title>
-    <link href="http://yoursite.com/2017/05/05/scrapy-items-design/"/>
-    <id>http://yoursite.com/2017/05/05/scrapy-items-design/</id>
-    <published>2017-05-05T06:18:54.000Z</published>
-    <updated>2017-05-06T10:36:18.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>Scrapy的item是进行数据保存不可缺少的步骤，通过它进行数据的整理并通过Pipelines进行数据的数据库保存，图片下载等，它只有一种类型 <code>scrapy.Field()</code> 。</p>
-<a id="more"></a>
-<h2 id="定义-items"><a href="#定义-items" class="headerlink" title="定义 items"></a><strong>定义 items</strong></h2><p>由于需要添加一个封面图，对上面的爬虫添加一个 <code>front_image_url</code> 字段对 <code>parse</code> 函数进行修改：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    1. 获取文章列表页中的文章url并交给解析函数进行具体字段的解析</div><div class="line">    2. 获取下一页的url并交给scrapy进行下载</div><div class="line">    :param response: </div><div class="line">    :return: </div><div class="line">    """</div><div class="line"></div><div class="line">    <span class="comment"># 解析列表页中的所有文章url并交给解析函数进行具体字段的解析</span></div><div class="line">    post_nodes = response.css(<span class="string">"#archive .floated-thumb .post-thumb a"</span>)</div><div class="line">    <span class="keyword">for</span> post_node <span class="keyword">in</span> post_nodes:</div><div class="line">        image_url = post_node.css(<span class="string">"img::attr(src)"</span>).extract_first(<span class="string">""</span>)</div><div class="line">        post_url = post_node.css(<span class="string">"::attr(href)"</span>).extract_first(<span class="string">""</span>)</div><div class="line">        <span class="keyword">yield</span> Request(url=parse.urljoin(response.url, post_url), meta=&#123;<span class="string">"front_image_url"</span>: image_url&#125;, callback=self.parse_detail)</div></pre></td></tr></table></figure>
-<p>其中的 <code>meta</code> 字段是传递值的方法。在调试时返回的 <code>response</code> 中会出现 <code>meta</code> 的内容，它是一个字典，故在传递时可以直接通过 <code>response.meta[&#39;front_image_url&#39;]</code> 进行引用（也可以使用get的方法，附默认值防止出现异常）：</p>
-<p><img src="http://ww1.sinaimg.cn/large/006tNc79gy1ffaslwq4mqj30l1058t9b.jpg" alt=""></p>
-<p>在 <code>items.py</code> 文件中，定义一个item并声明其字段：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">JobBoleArticleItem</span><span class="params">(scrapy.Item)</span>:</span></div><div class="line">    title = scrapy.Field()</div><div class="line">    create_date = scrapy.Field()</div><div class="line">    url = scrapy.Field()</div><div class="line">    url_object_id = scrapy.Field()</div><div class="line">    front_image_url = scrapy.Field()</div><div class="line">    front_image_path = scrapy.Field()</div><div class="line">    praise_nums = scrapy.Field()</div><div class="line">    comment_nums = scrapy.Field()</div><div class="line">    fav_nums = scrapy.Field()</div><div class="line">    tags = scrapy.Field()</div><div class="line">    content = scrapy.Field()</div></pre></td></tr></table></figure>
-<p>在 <code>jobbole.py</code> 中添加 <code>from ArticleSpider.items import JobBoleArticleItem</code> 对item进行引用，然后在 <code>parse_detail</code> 中进行初始化 <code>article_item = JobBoleArticleItem()</code> ，之后将获取到的字段内容存入初始化的item中，最终代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse_detail</span><span class="params">(self, response)</span>:</span></div><div class="line">    article_item = JobBoleArticleItem()</div><div class="line"></div><div class="line">    <span class="comment"># 通过css选择器提取字段</span></div><div class="line">    front_image_url = response.meta.get(<span class="string">"front_image_url"</span>, <span class="string">""</span>)  <span class="comment"># 文章封面图</span></div><div class="line">    title = response.css(<span class="string">".entry-header h1::text"</span>).extract()[<span class="number">0</span>]</div><div class="line">    create_date = response.css(<span class="string">"p.entry-meta-hide-on-mobile::text"</span>).extract()[<span class="number">0</span>].strip().replace(<span class="string">"·"</span>, <span class="string">""</span>).strip()</div><div class="line">    praise_nums = int(response.css(<span class="string">".vote-post-up h10::text"</span>).extract()[<span class="number">0</span>])</div><div class="line">    fav_nums = response.css(<span class="string">".bookmark-btn::text"</span>).extract()[<span class="number">0</span>]</div><div class="line">    match_re = re.match(<span class="string">".*?(\d+).*?"</span>, fav_nums)</div><div class="line">    <span class="keyword">if</span> match_re:</div><div class="line">        fav_nums = int(match_re.group(<span class="number">1</span>))</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        fav_nums = <span class="number">0</span></div><div class="line">    comment_nums = response.css(<span class="string">"a[href='#article-comment'] span::text"</span>).extract()[<span class="number">0</span>]</div><div class="line">    match_re = re.match(<span class="string">".*?(\d+).*?"</span>, comment_nums)</div><div class="line">    <span class="keyword">if</span> match_re:</div><div class="line">        comment_nums = int(match_re.group(<span class="number">1</span>))</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        comment_nums = <span class="number">0</span></div><div class="line">    content = response.css(<span class="string">"div.entry"</span>).extract()[<span class="number">0</span>]</div><div class="line">    tag_list = response.css(<span class="string">"p.entry-meta-hide-on-mobile a::text"</span>).extract()</div><div class="line">    tag_list = [element <span class="keyword">for</span> element <span class="keyword">in</span> tag_list <span class="keyword">if</span> <span class="keyword">not</span> element.strip().endswith(<span class="string">"评论"</span>)]</div><div class="line">    tags = <span class="string">","</span>.join(tag_list)</div><div class="line"></div><div class="line">    article_item[<span class="string">"title"</span>] = title</div><div class="line">    article_item[<span class="string">"url"</span>] = response.url</div><div class="line">    article_item[<span class="string">"create_date"</span>] = create_date</div><div class="line">    article_item[<span class="string">"front_image_url"</span>] = front_image_url</div><div class="line">    article_item[<span class="string">"praise_nums"</span>] = praise_nums</div><div class="line">    article_item[<span class="string">"comment_nums"</span>] = comment_nums</div><div class="line">    article_item[<span class="string">"fav_nums"</span>] = fav_nums</div><div class="line">    article_item[<span class="string">"content"</span>] = content</div><div class="line">    article_item[<span class="string">"tags"</span>] = tags</div><div class="line">    </div><div class="line">    <span class="keyword">yield</span> article_item</div></pre></td></tr></table></figure>
-<p>其中 <code>yield article_item</code> 会自动提交到 <code>settings</code> 中的 <code>ITEM_PIPELINES</code> 进行处理。<br>此时在 <code>pipelines.py</code> 中设置断点调试，可以看到 <code>article_item</code> 中的值已经传递到这里了。</p>
-<p><img src="http://ww3.sinaimg.cn/large/006tNc79gy1ffasxu8jauj31ge0my46y.jpg" alt=""></p>
-<h2 id="自定义-Pipelines"><a href="#自定义-Pipelines" class="headerlink" title="自定义 Pipelines"></a><strong>自定义 Pipelines</strong></h2><p>在 <code>settings.py</code> 中有一个ITEM_PIPELINES的选项，把它的注释去掉增加下载图片的代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Configure item pipelines</span></div><div class="line"><span class="comment"># See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html</span></div><div class="line">ITEM_PIPELINES = &#123;</div><div class="line">    <span class="string">'ArticleSpider.pipelines.ArticlespiderPipeline'</span>: <span class="number">300</span>,</div><div class="line">    <span class="string">'scrapy.pipelines.images.ImagesPipeline'</span>: <span class="number">1</span>,</div><div class="line">&#125;</div><div class="line">IMAGES_URLS_FIELD = <span class="string">"front_image_url"</span></div><div class="line">project_dir = os.path.abspath(os.path.dirname(__file__))</div><div class="line">IMAGES_STORE = os.path.join(project_dir, <span class="string">'images'</span>)</div></pre></td></tr></table></figure>
-<p>上面的代码启用了下载图片piplines，并定义了存储地址及想要存储的图片地址。<br>在settings.py同级目录下建立文件夹 <code>images</code> 用来保存图片。当运行爬虫时，图片就会自动下载图片并保存到本地。<br>如果想要得到存储的图片路径的话，需要自定义pipelines。</p>
-<p>首先，在 <code>pipeines.py</code> 中引入 <code>from scrapy.pipelines.images import ImagesPipeline</code> ， 然后自定义一个pipeline对ImagesPipeline进行重载：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ArticleImagePipeline</span><span class="params">(ImagesPipeline)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">item_completed</span><span class="params">(self, results, item, info)</span>:</span></div><div class="line">        <span class="keyword">pass</span></div></pre></td></tr></table></figure>
-<p>进行断点调试，查看results中的信息：</p>
-<p><img src="http://ww4.sinaimg.cn/large/006tNc79gy1ffblwnn93tj31aq0t2wmq.jpg" alt=""></p>
-<p>调试结果中，results是一个list，第一个值是一个bool值表示图片是否获取成功，第二个值是一个字典，保存了图片路径，图片地址等信息。</p>
-<p>最终自定义的pipeline代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ArticleImagePipeline</span><span class="params">(ImagesPipeline)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">item_completed</span><span class="params">(self, results, item, info)</span>:</span></div><div class="line">        <span class="keyword">for</span> ok, value <span class="keyword">in</span> results:</div><div class="line">            image_file_path = value[<span class="string">"path"</span>]</div><div class="line">        item[<span class="string">"front_image_path"</span>] = image_file_path</div><div class="line">        <span class="keyword">return</span> item</div></pre></td></tr></table></figure>
-<p>上面代码得到image_path保存到 <code>item[&quot;front_image_path&quot;]</code> 中并返回，这时会根据pipelines的顺序进行下一个pipelines进行处理。通过断点调试可以得到想要的结果。</p>
-<p><img src="http://ww3.sinaimg.cn/large/006tNc79gy1ffbpccuulfj31kw0w7dqk.jpg" alt=""></p>
-<h2 id="完善-items-获取"><a href="#完善-items-获取" class="headerlink" title="完善 items 获取"></a><strong>完善 items 获取</strong></h2><p>对之前定义的items中的 <code>url_object_id</code> 字段，需要对url进行md5处理，因此在 <code>items.py</code> 同级目录下新建一个名为 <code>utils</code> 的 <code>python package</code>，新建 <code>common.py</code> ，代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> hashlib</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_md5</span><span class="params">(url)</span>:</span></div><div class="line">    <span class="keyword">if</span> isinstance(url, str):</div><div class="line">        url = url.encode(<span class="string">"utf-8"</span>)</div><div class="line">    m = hashlib.md5()</div><div class="line">    m.update(url)</div><div class="line">    <span class="keyword">return</span> m.hexdigest()</div></pre></td></tr></table></figure>
-<p>然后在 <code>jobbole.py</code> 下引入 <code>from ArticleSpider.utils.common import get_md5</code> ，在item内容填充时加上 <code>article_item[&quot;url_object_id&quot;] = get_md5(response.url)</code> 即可。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;Scrapy的item是进行数据保存不可缺少的步骤，通过它进行数据的整理并通过Pipelines进行数据的数据库保存，图片下载等，它只有一种类型 &lt;code&gt;scrapy.Field()&lt;/code&gt; 。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
-    
-    
-      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Selectors</title>
     <link href="http://yoursite.com/2017/05/05/scrapy-selectors/"/>
     <id>http://yoursite.com/2017/05/05/scrapy-selectors/</id>
@@ -450,6 +600,55 @@
 &lt;li&gt;&lt;a href=&quot;http://lxml.de/index.html&quot;&gt;lxml&lt;/a&gt; 是一个基于 ElementTree（不是 Python 标准库的一部分）的 python 化的 XML 解析库（也可以解析 HTML）。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Scrapy 提取数据有自己的一套机制。它们被称作选择器（seletors），因为他们通过特定的 XPath 或者 CSS 表达式来“选择” HTML 文件中的某个部分。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
+    
+    
+      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Python分布式爬虫打造搜索引擎项目学习笔记——items设计</title>
+    <link href="http://yoursite.com/2017/05/05/scrapy-items-design/"/>
+    <id>http://yoursite.com/2017/05/05/scrapy-items-design/</id>
+    <published>2017-05-05T06:18:54.000Z</published>
+    <updated>2017-05-06T10:36:18.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Scrapy的item是进行数据保存不可缺少的步骤，通过它进行数据的整理并通过Pipelines进行数据的数据库保存，图片下载等，它只有一种类型 <code>scrapy.Field()</code> 。</p>
+<a id="more"></a>
+<h2 id="定义-items"><a href="#定义-items" class="headerlink" title="定义 items"></a><strong>定义 items</strong></h2><p>由于需要添加一个封面图，对上面的爬虫添加一个 <code>front_image_url</code> 字段对 <code>parse</code> 函数进行修改：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    1. 获取文章列表页中的文章url并交给解析函数进行具体字段的解析</div><div class="line">    2. 获取下一页的url并交给scrapy进行下载</div><div class="line">    :param response: </div><div class="line">    :return: </div><div class="line">    """</div><div class="line"></div><div class="line">    <span class="comment"># 解析列表页中的所有文章url并交给解析函数进行具体字段的解析</span></div><div class="line">    post_nodes = response.css(<span class="string">"#archive .floated-thumb .post-thumb a"</span>)</div><div class="line">    <span class="keyword">for</span> post_node <span class="keyword">in</span> post_nodes:</div><div class="line">        image_url = post_node.css(<span class="string">"img::attr(src)"</span>).extract_first(<span class="string">""</span>)</div><div class="line">        post_url = post_node.css(<span class="string">"::attr(href)"</span>).extract_first(<span class="string">""</span>)</div><div class="line">        <span class="keyword">yield</span> Request(url=parse.urljoin(response.url, post_url), meta=&#123;<span class="string">"front_image_url"</span>: image_url&#125;, callback=self.parse_detail)</div></pre></td></tr></table></figure>
+<p>其中的 <code>meta</code> 字段是传递值的方法。在调试时返回的 <code>response</code> 中会出现 <code>meta</code> 的内容，它是一个字典，故在传递时可以直接通过 <code>response.meta[&#39;front_image_url&#39;]</code> 进行引用（也可以使用get的方法，附默认值防止出现异常）：</p>
+<p><img src="http://ww1.sinaimg.cn/large/006tNc79gy1ffaslwq4mqj30l1058t9b.jpg" alt=""></p>
+<p>在 <code>items.py</code> 文件中，定义一个item并声明其字段：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">JobBoleArticleItem</span><span class="params">(scrapy.Item)</span>:</span></div><div class="line">    title = scrapy.Field()</div><div class="line">    create_date = scrapy.Field()</div><div class="line">    url = scrapy.Field()</div><div class="line">    url_object_id = scrapy.Field()</div><div class="line">    front_image_url = scrapy.Field()</div><div class="line">    front_image_path = scrapy.Field()</div><div class="line">    praise_nums = scrapy.Field()</div><div class="line">    comment_nums = scrapy.Field()</div><div class="line">    fav_nums = scrapy.Field()</div><div class="line">    tags = scrapy.Field()</div><div class="line">    content = scrapy.Field()</div></pre></td></tr></table></figure>
+<p>在 <code>jobbole.py</code> 中添加 <code>from ArticleSpider.items import JobBoleArticleItem</code> 对item进行引用，然后在 <code>parse_detail</code> 中进行初始化 <code>article_item = JobBoleArticleItem()</code> ，之后将获取到的字段内容存入初始化的item中，最终代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse_detail</span><span class="params">(self, response)</span>:</span></div><div class="line">    article_item = JobBoleArticleItem()</div><div class="line"></div><div class="line">    <span class="comment"># 通过css选择器提取字段</span></div><div class="line">    front_image_url = response.meta.get(<span class="string">"front_image_url"</span>, <span class="string">""</span>)  <span class="comment"># 文章封面图</span></div><div class="line">    title = response.css(<span class="string">".entry-header h1::text"</span>).extract()[<span class="number">0</span>]</div><div class="line">    create_date = response.css(<span class="string">"p.entry-meta-hide-on-mobile::text"</span>).extract()[<span class="number">0</span>].strip().replace(<span class="string">"·"</span>, <span class="string">""</span>).strip()</div><div class="line">    praise_nums = int(response.css(<span class="string">".vote-post-up h10::text"</span>).extract()[<span class="number">0</span>])</div><div class="line">    fav_nums = response.css(<span class="string">".bookmark-btn::text"</span>).extract()[<span class="number">0</span>]</div><div class="line">    match_re = re.match(<span class="string">".*?(\d+).*?"</span>, fav_nums)</div><div class="line">    <span class="keyword">if</span> match_re:</div><div class="line">        fav_nums = int(match_re.group(<span class="number">1</span>))</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        fav_nums = <span class="number">0</span></div><div class="line">    comment_nums = response.css(<span class="string">"a[href='#article-comment'] span::text"</span>).extract()[<span class="number">0</span>]</div><div class="line">    match_re = re.match(<span class="string">".*?(\d+).*?"</span>, comment_nums)</div><div class="line">    <span class="keyword">if</span> match_re:</div><div class="line">        comment_nums = int(match_re.group(<span class="number">1</span>))</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        comment_nums = <span class="number">0</span></div><div class="line">    content = response.css(<span class="string">"div.entry"</span>).extract()[<span class="number">0</span>]</div><div class="line">    tag_list = response.css(<span class="string">"p.entry-meta-hide-on-mobile a::text"</span>).extract()</div><div class="line">    tag_list = [element <span class="keyword">for</span> element <span class="keyword">in</span> tag_list <span class="keyword">if</span> <span class="keyword">not</span> element.strip().endswith(<span class="string">"评论"</span>)]</div><div class="line">    tags = <span class="string">","</span>.join(tag_list)</div><div class="line"></div><div class="line">    article_item[<span class="string">"title"</span>] = title</div><div class="line">    article_item[<span class="string">"url"</span>] = response.url</div><div class="line">    article_item[<span class="string">"create_date"</span>] = create_date</div><div class="line">    article_item[<span class="string">"front_image_url"</span>] = front_image_url</div><div class="line">    article_item[<span class="string">"praise_nums"</span>] = praise_nums</div><div class="line">    article_item[<span class="string">"comment_nums"</span>] = comment_nums</div><div class="line">    article_item[<span class="string">"fav_nums"</span>] = fav_nums</div><div class="line">    article_item[<span class="string">"content"</span>] = content</div><div class="line">    article_item[<span class="string">"tags"</span>] = tags</div><div class="line">    </div><div class="line">    <span class="keyword">yield</span> article_item</div></pre></td></tr></table></figure>
+<p>其中 <code>yield article_item</code> 会自动提交到 <code>settings</code> 中的 <code>ITEM_PIPELINES</code> 进行处理。<br>此时在 <code>pipelines.py</code> 中设置断点调试，可以看到 <code>article_item</code> 中的值已经传递到这里了。</p>
+<p><img src="http://ww3.sinaimg.cn/large/006tNc79gy1ffasxu8jauj31ge0my46y.jpg" alt=""></p>
+<h2 id="自定义-Pipelines"><a href="#自定义-Pipelines" class="headerlink" title="自定义 Pipelines"></a><strong>自定义 Pipelines</strong></h2><p>在 <code>settings.py</code> 中有一个ITEM_PIPELINES的选项，把它的注释去掉增加下载图片的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Configure item pipelines</span></div><div class="line"><span class="comment"># See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html</span></div><div class="line">ITEM_PIPELINES = &#123;</div><div class="line">    <span class="string">'ArticleSpider.pipelines.ArticlespiderPipeline'</span>: <span class="number">300</span>,</div><div class="line">    <span class="string">'scrapy.pipelines.images.ImagesPipeline'</span>: <span class="number">1</span>,</div><div class="line">&#125;</div><div class="line">IMAGES_URLS_FIELD = <span class="string">"front_image_url"</span></div><div class="line">project_dir = os.path.abspath(os.path.dirname(__file__))</div><div class="line">IMAGES_STORE = os.path.join(project_dir, <span class="string">'images'</span>)</div></pre></td></tr></table></figure>
+<p>上面的代码启用了下载图片piplines，并定义了存储地址及想要存储的图片地址。<br>在settings.py同级目录下建立文件夹 <code>images</code> 用来保存图片。当运行爬虫时，图片就会自动下载图片并保存到本地。<br>如果想要得到存储的图片路径的话，需要自定义pipelines。</p>
+<p>首先，在 <code>pipeines.py</code> 中引入 <code>from scrapy.pipelines.images import ImagesPipeline</code> ， 然后自定义一个pipeline对ImagesPipeline进行重载：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ArticleImagePipeline</span><span class="params">(ImagesPipeline)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">item_completed</span><span class="params">(self, results, item, info)</span>:</span></div><div class="line">        <span class="keyword">pass</span></div></pre></td></tr></table></figure>
+<p>进行断点调试，查看results中的信息：</p>
+<p><img src="http://ww4.sinaimg.cn/large/006tNc79gy1ffblwnn93tj31aq0t2wmq.jpg" alt=""></p>
+<p>调试结果中，results是一个list，第一个值是一个bool值表示图片是否获取成功，第二个值是一个字典，保存了图片路径，图片地址等信息。</p>
+<p>最终自定义的pipeline代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ArticleImagePipeline</span><span class="params">(ImagesPipeline)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">item_completed</span><span class="params">(self, results, item, info)</span>:</span></div><div class="line">        <span class="keyword">for</span> ok, value <span class="keyword">in</span> results:</div><div class="line">            image_file_path = value[<span class="string">"path"</span>]</div><div class="line">        item[<span class="string">"front_image_path"</span>] = image_file_path</div><div class="line">        <span class="keyword">return</span> item</div></pre></td></tr></table></figure>
+<p>上面代码得到image_path保存到 <code>item[&quot;front_image_path&quot;]</code> 中并返回，这时会根据pipelines的顺序进行下一个pipelines进行处理。通过断点调试可以得到想要的结果。</p>
+<p><img src="http://ww3.sinaimg.cn/large/006tNc79gy1ffbpccuulfj31kw0w7dqk.jpg" alt=""></p>
+<h2 id="完善-items-获取"><a href="#完善-items-获取" class="headerlink" title="完善 items 获取"></a><strong>完善 items 获取</strong></h2><p>对之前定义的items中的 <code>url_object_id</code> 字段，需要对url进行md5处理，因此在 <code>items.py</code> 同级目录下新建一个名为 <code>utils</code> 的 <code>python package</code>，新建 <code>common.py</code> ，代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> hashlib</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_md5</span><span class="params">(url)</span>:</span></div><div class="line">    <span class="keyword">if</span> isinstance(url, str):</div><div class="line">        url = url.encode(<span class="string">"utf-8"</span>)</div><div class="line">    m = hashlib.md5()</div><div class="line">    m.update(url)</div><div class="line">    <span class="keyword">return</span> m.hexdigest()</div></pre></td></tr></table></figure>
+<p>然后在 <code>jobbole.py</code> 下引入 <code>from ArticleSpider.utils.common import get_md5</code> ，在item内容填充时加上 <code>article_item[&quot;url_object_id&quot;] = get_md5(response.url)</code> 即可。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Scrapy的item是进行数据保存不可缺少的步骤，通过它进行数据的整理并通过Pipelines进行数据的数据库保存，图片下载等，它只有一种类型 &lt;code&gt;scrapy.Field()&lt;/code&gt; 。&lt;/p&gt;
     
     </summary>
     
@@ -1701,52 +1900,6 @@
   </entry>
   
   <entry>
-    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy安装及调试</title>
-    <link href="http://yoursite.com/2017/04/11/scrapy-install/"/>
-    <id>http://yoursite.com/2017/04/11/scrapy-install/</id>
-    <published>2017-04-11T12:18:54.000Z</published>
-    <updated>2017-04-11T07:48:50.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a><strong>环境搭建</strong></h2><a id="more"></a>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ mkvirtualenv article_spider</div><div class="line">$ pip install -i https://pypi.douban.com/simple/ scrapy</div></pre></td></tr></table></figure>
-<h2 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a><strong>创建项目</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$ workon article_spider</div><div class="line">$ scrapy startproject ArticleSpider</div><div class="line">New Scrapy project &apos;ArticleSpider&apos;, using template directory &apos;/Users/lawtech/myvirtualenvs/article_spider/lib/python3.5/site-packages/scrapy/templates/project&apos;, created in:</div><div class="line">    /Users/lawtech/PycharmProjects/ArticleSpider</div><div class="line"></div><div class="line">You can start your first spider with:</div><div class="line">    cd ArticleSpider</div><div class="line">    scrapy genspider example example.com</div><div class="line">    </div><div class="line">$ cd ArticleSpider</div><div class="line">$ scrapy genspider jobbole blog.jobbole.com</div><div class="line">Created spider &apos;jobbole&apos; using template &apos;basic&apos; in module:</div><div class="line">  ArticleSpider.spiders.jobbole</div></pre></td></tr></table></figure>
-<h2 id="项目目录介绍"><a href="#项目目录介绍" class="headerlink" title="项目目录介绍"></a><strong>项目目录介绍</strong></h2><p>首先先要回答一个问题。</p>
-<p>问：把网站装进爬虫里，总共分几步？<br>答案很简单，四步：</p>
-<ul>
-<li>新建项目 (Project)：新建一个新的爬虫项目</li>
-<li>明确目标（Items）：明确你想要抓取的目标</li>
-<li>制作爬虫（Spider）：制作爬虫开始爬取网页</li>
-<li>存储内容（Pipeline）：设计管道存储爬取内容</li>
-</ul>
-<p>创建好AticleSpider项目之后，可以看到将会创建一个AticleSpider文件夹，目录结构如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">ArticleSpider/  </div><div class="line">    scrapy.cfg  </div><div class="line">    ArticleSpider/  </div><div class="line">        __init__.py  </div><div class="line">        items.py  </div><div class="line">        pipelines.py  </div><div class="line">        settings.py  </div><div class="line">        spiders/  </div><div class="line">            __init__.py  </div><div class="line">            jobbole.py</div></pre></td></tr></table></figure>
-<p>下面来简单介绍一下各个文件的作用：</p>
-<ul>
-<li>scrapy.cfg：项目的配置文件</li>
-<li>ArticleSpider/：项目的 Python 模块，将会从这里引用代码</li>
-<li>ArticleSpider/items.py：项目的 items 文件</li>
-<li>ArticleSpider/pipelines.py：项目的 pipelines 文件</li>
-<li>ArticleSpider/settings.py：项目的设置文件</li>
-<li>ArticleSpider/spiders/：存储爬虫的目录</li>
-</ul>
-<h2 id="pycharm-调试-scrapy-执行流程"><a href="#pycharm-调试-scrapy-执行流程" class="headerlink" title="pycharm 调试 scrapy 执行流程"></a><strong>pycharm 调试 scrapy 执行流程</strong></h2><p>在项目根目录下新建 main.py 文件，添加如下代码</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> scrapy.cmdline <span class="keyword">import</span> execute</div><div class="line"></div><div class="line"><span class="keyword">import</span> sys</div><div class="line"><span class="keyword">import</span> os</div><div class="line"></div><div class="line"><span class="comment"># __file__ 表示当前py文件</span></div><div class="line">sys.path.append(os.path.dirname(os.path.abspath(__file__)))</div><div class="line"><span class="comment"># 将实际命令拆分</span></div><div class="line">execute([<span class="string">"scrapy"</span>, <span class="string">"crawl"</span>, <span class="string">"spiders文件夹下的py文件名称"</span>])</div></pre></td></tr></table></figure>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;环境搭建&quot;&gt;&lt;a href=&quot;#环境搭建&quot; class=&quot;headerlink&quot; title=&quot;环境搭建&quot;&gt;&lt;/a&gt;&lt;strong&gt;环境搭建&lt;/strong&gt;&lt;/h2&gt;
-    
-    </summary>
-    
-      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
-    
-    
-      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Python分布式爬虫打造搜索引擎项目学习笔记——Xpath教程</title>
     <link href="http://yoursite.com/2017/04/11/xpath-usage/"/>
     <id>http://yoursite.com/2017/04/11/xpath-usage/</id>
@@ -2000,248 +2153,6 @@
     
     
       <category term="Scrapy，XPath，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CXPath%EF%BC%8CPython/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Redis学习笔记(五)：数据安全与性能保障——复制</title>
-    <link href="http://yoursite.com/2017/04/10/Redis-5/"/>
-    <id>http://yoursite.com/2017/04/10/Redis-5/</id>
-    <published>2017-04-10T12:18:54.000Z</published>
-    <updated>2017-04-12T06:16:29.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>复制（replication），可以让其他服务器拥有一个不断更新的数据副本，从而使得拥有数据副本的服务器可以用于处理客户端发送的读请求。对于高负载应用来说，复制是不可或缺的一个特性。</p>
-<a id="more"></a>
-<p>关系型数据库通常会使用一个主服务器（master）向多个从服务器（slave）发送更新，并使用从服务器来处理所有读请求。Redis也采用了同样的方法来实现自己的复制特性，并将其用作扩展性能的一种手段。</p>
-<h2 id="复制相关配置选项"><a href="#复制相关配置选项" class="headerlink" title="复制相关配置选项"></a><strong>复制相关配置选项</strong></h2><p>当从服务器连接主服务器时，主服务器会执行BGSAVE操作，为了正确地使用复制特性，用户需要保证服务器已经正确地设置了dir选项和dirname选项。</p>
-<p>配置<code>slaveof host port</code>选项即可连接主服务器。</p>
-<p>下面将演示怎么实现一个简单的复制系统。我们在一台机器上起两个Redis实例，监听不同的端口，其中一个作为主库，另外一个作为从库。首先不加任何参数来启动一个Redis实例作为主数据库：</p>
-<p><img src="https://ww1.sinaimg.cn/large/006tNc79gy1fej0vywpikj30wi0p4why.jpg" alt=""></p>
-<p>主库默认监听6379端口。</p>
-<p>接着新建一个终端，加上slaveof参数启动另一个Redis实例作为从库，并且监听6380端口：</p>
-<p><img src="https://ww1.sinaimg.cn/large/006tNc79gy1fej0wwdiejj30wi0p4n0t.jpg" alt=""></p>
-<p>从控制台输出中可以看到，从库已经连接到主库：126.0.0.1:6379了，我们可以分别在主库和从库中使用<code>info replication</code>命令看一看当前实例在复制系统中的相关信息</p>
-<p><img src="https://ww1.sinaimg.cn/large/006tNc79gy1fej0y3xp1fj30wi0vqwk6.jpg" alt=""></p>
-<p>现在可以测试一下主从库的数据同步了：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ redis-cli -p 6379</div><div class="line">127.0.0.1:6379&gt; set test-replicate lawtech</div><div class="line">OK</div><div class="line">$ redis-cli -p 6380</div><div class="line">127.0.0.1:6380&gt; get test-replicate</div><div class="line">&quot;lawtech&quot;</div><div class="line">127.0.0.1:6380&gt; set x y</div><div class="line">(error) READONLY You can&apos;t write against a read only slave.</div></pre></td></tr></table></figure>
-<p>可以看到，在主库中添加的数据确实同步到了从库中。但是，我们在向从库中写入数据时报错了，这是因为在默认情况下，从库是只读的。我们可以在从库的配置文件中加上如下的配置项允许从库写数据：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">slave-read-only no</div></pre></td></tr></table></figure>
-<p>但是，因为从库中修改的数据不会被同步到任何其他数据库，并且一旦主库修改了数据，从库的数据就会因为自动同步被覆盖，所以一般情况下，不建议将从库设置为可写。</p>
-<p>相同的道理，配置多台从库也使用相同的方法，都在从库的配置文件中加上slaveof参数即可。</p>
-<p>此外，我们可以在客户端使用命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SLAVEOF 新主库地址  新主库端口</div></pre></td></tr></table></figure>
-<p>来修改当前数据库的主库，如果当前数据库已经是其他库的从库， 则当前数据库会停止和原来的数据库的同步而和新的数据库同步。</p>
-<p>最后，从数据库还可以通过运行命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SLAVEOF NO ONE</div></pre></td></tr></table></figure>
-<p>来停止接受来自其他数据库的同步而升级成为主库。</p>
-<h2 id="Redis复制的启动过程"><a href="#Redis复制的启动过程" class="headerlink" title="Redis复制的启动过程"></a>Redis复制的启动过程</h2><p>从服务器连接主服务器时，主服务器会创建一个快照文件并将其发送至从服务器，但这只是主从复制执行过程的其中一步，下表列举出复制过程主从服务器执行的所有操作：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">步骤</th>
-<th style="text-align:center">主服务器操作</th>
-<th style="text-align:center">从服务器操作</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">1</td>
-<td style="text-align:center">（ 等待命令进入）</td>
-<td style="text-align:center">连接(或者重连接)主服务器，发送SYNC命令</td>
-</tr>
-<tr>
-<td style="text-align:center">2</td>
-<td style="text-align:center">开始执行BGSAVE，并使用缓冲区记录BGSAVE之后执行的所有写命令</td>
-<td style="text-align:center">根据配置选项来决定时继续使用现在的数据来处理客户端命令，还是向发送请求的客户端返回错误</td>
-</tr>
-<tr>
-<td style="text-align:center">3</td>
-<td style="text-align:center">BGSAVE执行完毕，向从服务器发送快照文件，并在发送期间继续使用缓冲区记录被执行的写命令</td>
-<td style="text-align:center">丢弃所有旧的数据，开始载入主服务器发来的快照文件</td>
-</tr>
-<tr>
-<td style="text-align:center">4</td>
-<td style="text-align:center">快照文件发送完毕，开始向从服务器发送存储在缓冲区里面的写命令</td>
-<td style="text-align:center">完成对快照文件的解释操作，像往常一样开始接受命令请求</td>
-</tr>
-<tr>
-<td style="text-align:center">5</td>
-<td style="text-align:center">缓冲区存储的写命令发送完毕；从现在开始，没执行一个写命令，就像从服务器发送相同的写命令</td>
-<td style="text-align:center">执行主服务器发来的所有存储在缓冲区里面的写命令；从现在开始，接收并执行主服务器传来的每个写命令</td>
-</tr>
-</tbody>
-</table>
-<p>由上述步骤可以看出，有必要给Redis主服务器留30%~45%的内存用于执行BGSAVE命令和创建记录写命令的缓冲区。另外，从服务器还有一点需要注意的是，从服务器在进行同步时，会清空自己的所有数据，因为第3步中，从服务器会丢弃所有旧数据。</p>
-<p>警告：Redis不支持主主复制（master-master replication）</p>
-<p>当多个从服务器尝试连接同一个主服务器的时候，就会出现下表所示的两种情况中的其中一种：</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">当有新的从服务器连接主服务器时</th>
-<th style="text-align:center">主服务器的操作</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">上述步骤3尚未执行</td>
-<td style="text-align:center">所有从服务器都会接收相同的快照文件和相同的缓冲区写命令</td>
-</tr>
-<tr>
-<td style="text-align:center">上述步骤3正在执行或者已经执行</td>
-<td style="text-align:center">当主服务器与较早进行连接的从服务器执行完复制所需的5个步骤之后，主服务器会与新连接的从服务器执行一次新的步骤1至步骤5</td>
-</tr>
-</tbody>
-</table>
-<p>由此可以看出多个从服务器的同步对网络的开销挺大的，有可能会影响到主服务器接收写命令，甚至是与主服务器位于同一网络中的其他硬件。</p>
-<h2 id="主从链"><a href="#主从链" class="headerlink" title="主从链"></a><strong>主从链</strong></h2><p>创建多个从服务器可能造成网络不可用，此时可以使用另外一个解决方案，从服务器拥有自己的从服务器，并由此形成主从链（master/slave chaining）。</p>
-<p>从服务器对从服务器进行复制在操作上和从服务器对主服务器进行复制的唯一区别在于。如果从服务器X拥有从服务器Y，那么当从服务器X在执行启动过程表中步骤4时，X将断开与Y的连接，导致Y需要重新连接并重新同步（resync）。</p>
-<p>当读请求的重要性明显高于写请求的重要性，并且读请求的数量需求远远超出一台Redis服务器可以处理的范围时，用户就需要添加新的从服务器来处理读请求，随着负载不断上升，主服务器可能会无法快速地更新所有从服务器。</p>
-<p>为了缓解这个问题，可以创建一个由Redis主/从节点(master/slave node)组成的中间层来分担主服务器的复制工作，如下图所示：</p>
-<p><img src="https://ww3.sinaimg.cn/large/006tNc79gy1fej1jof0f1j312s0cwgou.jpg" alt=""></p>
-<p>上面这个示例中，树的中层有3个帮助开展复制工作的服务器，底层有9个从服务器。其中，只有3台从服务器和主服务器通信，其他都向从服务器同步数据，从而降低了系统的负载。</p>
-<h2 id="检验硬盘写入"><a href="#检验硬盘写入" class="headerlink" title="检验硬盘写入"></a><strong>检验硬盘写入</strong></h2><p>为了将数据保存在多台机器中，用户首先需要为主服务器设置多个从服务器，然后对每个从服务器设置<code>appendonly yes</code>选项和<code>appendfsync everysec</code>选项（如有需要，也可以对主服务器这样设置），但这只是第一步：因为用户还需要等待主服务器发送的写命令到达从服务器，并且在执行后续操作前，检查数据是否已经被写入了硬盘中。</p>
-<p>整个操作分两个环节：</p>
-<ul>
-<li>验证主服务器是否已经将写数据发送至从服务器：用户需要在向主服务器写入真正的数据之后，再向主服务器写入一个唯一的虚构值（unique dummy value），然后通过检查虚构值是否存在于从服务器来判断数据是否已经到达从服务器。</li>
-<li>判断数据是否已经被保存到硬盘中：检查INFO命令的输出结果中<code>aof_pending_bio_fsync</code>属性的值是否为0，如果是，则数据已经被保存到了硬盘中。</li>
-</ul>
-<p>在向主服务器写入数据后，用户可以将主服务器和从服务器的连接作为参数调用下面的代码来自动进行上述操作：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># _*_ coding: utf-8 _*_</span></div><div class="line"><span class="keyword">import</span> uuid</div><div class="line"><span class="keyword">import</span> time</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">wait_for_sync</span><span class="params">(mconn, sconn)</span>:</span></div><div class="line">    identifier = str(uuid.uuid4())</div><div class="line">    <span class="comment"># 将令牌添加至主服务器</span></div><div class="line">    mconn.zadd(<span class="string">'sync:wait'</span>, identifier, time.time())</div><div class="line">    </div><div class="line">    <span class="comment"># 如果有必要的话，等待从服务器完成同步</span></div><div class="line">    <span class="keyword">while</span> <span class="keyword">not</span> sconn.info()[<span class="string">'master_link_status'</span>] != <span class="string">'up'</span>:</div><div class="line">        time.sleep(<span class="number">.001</span>)</div><div class="line">        </div><div class="line">    <span class="comment"># 等待从服务器接收数据更新</span></div><div class="line">    <span class="keyword">while</span> <span class="keyword">not</span> sconn.zscore(<span class="string">'sync:wait'</span>, identifier):</div><div class="line">        time.sleep(<span class="number">.001</span>)</div><div class="line">        </div><div class="line">    <span class="comment"># 最多只等待1秒</span></div><div class="line">    deadline = time.time() + <span class="number">1.01</span></div><div class="line">    </div><div class="line">    <span class="comment"># 检查数据更新是否已经被同步到了硬盘</span></div><div class="line">    <span class="keyword">while</span> time.time() &lt; deadline:</div><div class="line">        <span class="keyword">if</span> sconn.info()[<span class="string">'aof_pending_bio_fsync'</span>] == <span class="number">0</span>:</div><div class="line">            <span class="keyword">break</span></div><div class="line">        time.sleep(<span class="number">.001</span>)</div><div class="line">        </div><div class="line">    <span class="comment"># 清理刚刚创建的新令牌以及之前可能留下的旧令牌</span></div><div class="line">    mconn.zrem(<span class="string">'sync:wait'</span>, identifier)</div><div class="line">    mconn.zremrangebyscore(<span class="string">'sync:wait'</span>, <span class="number">0</span>, time.time() - <span class="number">900</span>)</div></pre></td></tr></table></figure>
-<p>为了确保操作可以正确执行，wait_for_sync()函数会首先确认从服务器已经连接上主服务器，然后检查自己添加到等待同步有序集合（sync wait ZSET）里面的值是否已经存在于从服务器，在发现值存在后，等待从服务器将缓冲区的所有数据写入硬盘里。最后，确认数据已经被保存到硬盘之后，函数会执行一些清理操作。</p>
-<p>通过同时使用复制和AOF持久化，用户可以增强Redis对于系统崩溃的抵抗能力。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;复制（replication），可以让其他服务器拥有一个不断更新的数据副本，从而使得拥有数据副本的服务器可以用于处理客户端发送的读请求。对于高负载应用来说，复制是不可或缺的一个特性。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Redis" scheme="http://yoursite.com/categories/Redis/"/>
-    
-    
-      <category term="Redis, Python" scheme="http://yoursite.com/tags/Redis-Python/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Redis学习笔记(四)：数据安全与性能保障——持久化</title>
-    <link href="http://yoursite.com/2017/04/09/Redis-4/"/>
-    <id>http://yoursite.com/2017/04/09/Redis-4/</id>
-    <published>2017-04-09T15:12:54.000Z</published>
-    <updated>2017-04-09T15:12:58.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="什么是持久化？"><a href="#什么是持久化？" class="headerlink" title="什么是持久化？"></a><strong>什么是持久化？</strong></h2><p>持久化（Persistence），即把数据（如内存中的对象）保存到可永久保存的存储设备中（如磁盘）。持久化的主要应用是将内存中的对象存储在数据库中，或者存储在磁盘文件中、XML数据文件中等等。</p>
-<a id="more"></a>
-<p>持久化是将程序数据在持久状态和瞬时状态间转换的机制。</p>
-<p>JDBC就是一种持久化机制。文件IO也是一种持久化机制。</p>
-<p>我们这样理解：在一定周期内保持不变就是持久化，持久化是针对时间来说的。数据库中的数据就是持久化了的数据，只要你不去删除或修改。</p>
-<h2 id="持久化选项"><a href="#持久化选项" class="headerlink" title="持久化选项"></a><strong>持久化选项</strong></h2><p>Redis提供了两种不同的持久化方法来将数据存储到硬盘中，保证数据在Redis重启后仍然存在：</p>
-<ul>
-<li>RDB持久化：在指定的时间间隔内生成数据集的时间点快照（point-in-time snapshot），也就是将存在于某一时刻的所有数据都写入硬盘里面，所以也叫作快照持久化。</li>
-<li>AOF持久化：全称是 append-only file（只追加文件）， 它记录服务器执行的所有写操作命令，并在服务器启动时，通过重新执行这些命令来还原数据集。 AOF 文件中的命令全部以 Redis 协议的格式来保存，新命令会被追加到文件的末尾。 Redis 还可以在后台对 AOF 文件进行重写（rewrite），使得 AOF 文件的体积不会超出保存数据集状态所需的实际大小。</li>
-</ul>
-<p>这两种持久化的方式既可以单独使用，也可以同时使用，具体选择哪种方式需要根据用户的数据及应用进行选择。</p>
-<p>下面的代码示例展示了Redis对于两种持久化选项提供的配置选项</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 快照持久化选项</span></div><div class="line">save <span class="number">60</span> <span class="number">1000</span>  <span class="comment"># 60秒内有1000次写入操作的时候执行快照的创建</span></div><div class="line">stop-writes-on-bgsave-error no  <span class="comment"># 创建快照失败的时候是否仍然继续执行写命令</span></div><div class="line">rdbcompression yes  <span class="comment"># 是否对快照文件进行压缩</span></div><div class="line">dbfilename dump.rdb  <span class="comment"># 如何命名硬盘上的快照文件</span></div><div class="line">dir ./  <span class="comment"># 快照所保存的位置</span></div><div class="line"></div><div class="line"><span class="comment"># AOF持久化选项</span></div><div class="line">appendonly no  <span class="comment"># 是否使用AOF持久化</span></div><div class="line">appendfsync everysec  <span class="comment"># 多久才将写入的内容同步到硬盘</span></div><div class="line">no-appendfsync-on-rewrite no  <span class="comment"># 在对AOF进行压缩(compaction)的时候能否执行同步操作</span></div><div class="line">auto-aof-rewrite-percentage <span class="number">100</span>  <span class="comment"># 多久执行一次AOF压缩</span></div><div class="line">auto-aof-rewrite-min-size <span class="number">64</span>mb  <span class="comment"># 多久执行一次AOF压缩</span></div><div class="line">dir ./  <span class="comment"># AOF所保存的位置</span></div></pre></td></tr></table></figure>
-<h2 id="快照持久化（RDB）"><a href="#快照持久化（RDB）" class="headerlink" title="快照持久化（RDB）"></a><strong>快照持久化（RDB）</strong></h2><h3 id="创建快照的办法"><a href="#创建快照的办法" class="headerlink" title="创建快照的办法"></a><strong>创建快照的办法</strong></h3><ul>
-<li><p>客户端通过向Redis发送BGSAVE命令来创建快照。</p>
-<p>如果平台支持（除了Windows），那么Redis会调用fork来创建一个子进程，然后子进程负责将快照写到硬盘中，而父进程则继续处理命令请求。</p>
-<p><strong>使用场景：</strong></p>
-<p>如果用户使用了save设置，例如：<code>save 60 1000</code> ,那么从Redis最近一次创建快照之后开始计算，当“60秒之内有1000次写入操作”这个条件满足的时候，Redis就会自动触发BGSAVE命令。</p>
-<p>如果用户使用了多个save设置，那么当任意一个save配置满足条件的时候，Redis都会触发一次BGSAVE命令。</p>
-</li>
-<li><p>客户端通过向Redis发SAVE命令来创建快照。</p>
-<p>接收到SAVE命令的Redis服务器在快照创建完毕之前将不再响应任何其他命令的请求。SAVE命令并不常用，我们通常只在没有足够的内存去执行BGSAVE命令的时候才会使用SAVE命令，或者即使等待持久化操作执行完毕也无所谓的情况下，才会使用这个命令。</p>
-<p><strong>使用场景：</strong></p>
-<p>当Redis通过SHUTDOWN命令接收到关闭服务器的请求时，或者接收到标准的TERM信号时，会执行一次SAVE命令，阻塞所有的客户端，不再执行客户端发送的任何命令，并且在执行完SAVE命令之后关闭服务器。</p>
-</li>
-</ul>
-<h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a><strong>优点</strong></h3><ul>
-<li>RDB 是一个非常紧凑（compact）的文件，它保存了 Redis 在某个时间点上的数据集。 这种文件非常适合用于进行备份： 比如说，你可以在最近的 24 小时内，每小时备份一次快照文件，并且在每个月的每一天，也备份一个快照文件。 这样的话，即使遇到问题，也可以随时将数据集还原到不同的版本。</li>
-<li>RDB 非常适用于灾难恢复（disaster recovery）：它只有一个文件，并且内容都非常紧凑，可以（在加密后）将它传送到别的数据中心。</li>
-<li>RDB 可以最大化 Redis 的性能：父进程在保存快照文件时唯一要做的就是 <code>fork</code> 出一个子进程，然后这个子进程就会处理接下来的所有保存工作，父进程无须执行任何磁盘 I/O 操作。</li>
-<li>RDB 在恢复大数据集时的速度比 AOF 的恢复速度要快。</li>
-</ul>
-<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a><strong>缺点</strong></h3><ul>
-<li>如果在新的快照文件创建好之前，Redis、系统、硬件三者中任意一个发生崩溃，那么Redis将丢失最近一次创建快照之后写入的所有数据。如果你需要尽量避免在服务器故障时丢失数据，那么 RDB 不适合你。</li>
-<li>每次保存 RDB 的时候，Redis 都要 <code>fork()</code> 出一个子进程，并由子进程来进行实际的持久化工作。 在数据集比较庞大时， <code>fork()</code>可能会非常耗时，造成服务器在某某毫秒内停止处理客户端； 如果数据集非常巨大，并且 CPU 时间非常紧张的话，那么这种停止时间甚至可能会长达整整一秒。 虽然 AOF 重写也需要进行 <code>fork()</code> ，但无论 AOF 重写的执行间隔有多长，数据的耐久性都不会有任何损失。</li>
-</ul>
-<h2 id="AOF持久化"><a href="#AOF持久化" class="headerlink" title="AOF持久化"></a><strong>AOF持久化</strong></h2><p>AOF持久化会将被执行的写命令写到AOF文件的末尾，以此来记录数据发生的变化。这样，我们在恢复数据的时候，只需要从头到尾的执行一下AOF文件即可恢复数据。</p>
-<p>我们可以通过<code>appendonly yes</code>命令来打开AOF持久化选项</p>
-<h3 id="appendfsync同步频率"><a href="#appendfsync同步频率" class="headerlink" title="appendfsync同步频率"></a><strong>appendfsync同步频率</strong></h3><p>下表展示了appendfsync选项对AOF文件的同步频率的影响</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">选项</th>
-<th style="text-align:center">同步频率</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">always</td>
-<td style="text-align:center">每个Redis写命令都要同步写入硬盘。这样做会严重降低Redis的速度</td>
-</tr>
-<tr>
-<td style="text-align:center">everysec</td>
-<td style="text-align:center">每秒执行一次同步，显示地将多个写命令同步到硬盘</td>
-</tr>
-<tr>
-<td style="text-align:center">no</td>
-<td style="text-align:center">让操作系统来决定应该何时进行同步</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li><p>always的方式固然可以对没一条数据进行很好的保存，但是这种同步策略需要对硬盘进行大量的写操作，所以Redis处理命令的速度会受到硬盘性能的限制。</p>
-<p>普通的硬盘每秒钟只能处理大约200个写命令，使用固态硬盘SSD每秒可以处理几万个写命令，但是每次只写一个命令，这种只能怪不断地写入很少量的数据的做法有可能引发严重的写入放大问题，这种情况下降严重影响固态硬盘的使用寿命。</p>
-</li>
-<li><p>everysec的方式，Redis以每秒一次的频率大队AOF文件进行同步。这样的话既可以兼顾数据安全也可以兼顾写入性能。</p>
-<p>Redis以每秒同步一次AOF文件的性能和不使用任何持久化特性时的性能相差无几，使用每秒更新一次 的方式，可以保证，即使出现故障，丢失的数据也在一秒之内产生的数据。</p>
-</li>
-<li><p>no的方式，Redis将不对AOF文件执行任何显示的同步操作，而是由操作系统来决定应该何时对AOF文件进行同步。</p>
-<p>这个命令一般不会对Redis的性能造成多大的影响，但是当系统出现故障的时候使用这种选项的Redis服务器丢失不定数量的数据。</p>
-<p>另外，当用户的硬盘处理写入操作的速度不够快的话，那么缓冲区被等待写入硬盘的数据填满时，Redis的写入操作将被阻塞，并导致Redis处理命令请求的速度变慢，因为这个原因，一般不推荐使用这个选项。</p>
-</li>
-</ul>
-<h3 id="重写-压缩AOF文件"><a href="#重写-压缩AOF文件" class="headerlink" title="重写/压缩AOF文件"></a><strong>重写/压缩AOF文件</strong></h3><p>随着数据量的增大，AOF的文件可能会很大，这样在每次进行数据恢复的时候就会进行很长的时间，为了解决日益增大的AOF文件，用户可以向Redis发送BGREWRITEAOF命令，这个命令会通过移除AOF文件中的冗余命令来重写AOF文件，是AOF文件的体积变得尽可能的小。</p>
-<p>BGREWRITEAOF的工作原理和BGSAVE的原理很像：Redis会创建一个子进程，然后由子进程负责对AOF文件的重写操作。</p>
-<p>因为AOF文件重写的时候会创建子进程，所以快照持久化因为创建子进程而导致的性能和内存占用问题同样会出现在AOF文件重写的时候。</p>
-<p>跟快照持久化通过save选项来自动执行BGSAVE一样，AOF通过设置<code>auto-aof-rewrite-percentage</code>和<code>auto-aof-rewrite-min-size</code>选项来自动执行BGREWRITEAOF。</p>
-<p>如下配置</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">auto-aof-rewrite-percentage <span class="number">100</span></div><div class="line">auto-aof-rewrite-min-size <span class="number">64</span>mb</div></pre></td></tr></table></figure>
-<p>表示当前AOF的文件体积大于64MB，并且AOF文件的体积比上一次重写之后的体积变大了至少一倍（100%）的时候，Redis将执行重写BGREWRITEAOF命令。</p>
-<p>如果AOF重写执行的过于频繁的话，可以将<code>auto-aof-rewrite-percentage</code>选项的值设置为100以上，这种最偶发就可以让Redis在AOF文件的体积变得更大之后才执行重写操作，不过，这也使得在进行数据恢复的时候执行的时间变得更加长一些。</p>
-<h3 id="优点-1"><a href="#优点-1" class="headerlink" title="优点"></a><strong>优点</strong></h3><ul>
-<li>使用 AOF 持久化会让 Redis 变得非常耐久（much more durable）：你可以设置不同的 <code>fsync</code> 策略，比如无 <code>fsync</code> ，每秒钟一次 <code>fsync</code> ，或者每次执行写入命令时 <code>fsync</code> 。 AOF 的默认策略为每秒钟 <code>fsync</code> 一次，在这种配置下，Redis 仍然可以保持良好的性能，并且就算发生故障停机，也最多只会丢失一秒钟的数据（ <code>fsync</code> 会在后台线程执行，所以主线程可以继续努力地处理命令请求）。</li>
-<li>AOF 文件是一个只进行追加操作的日志文件（append only log）， 因此对 AOF 文件的写入不需要进行 <code>seek</code> ， 即使日志因为某些原因而包含了未写入完整的命令（比如写入时磁盘已满，写入中途停机，等等）， <code>redis-check-aof</code> 工具也可以轻易地修复这种问题。</li>
-<li>Redis 可以在 AOF 文件体积变得过大时，自动地在后台对 AOF 进行重写： 重写后的新 AOF 文件包含了恢复当前数据集所需的最小命令集合。 整个重写操作是绝对安全的，因为 Redis 在创建新 AOF 文件的过程中，会继续将命令追加到现有的 AOF 文件里面，即使重写过程中发生停机，现有的 AOF 文件也不会丢失。 而一旦新 AOF 文件创建完毕，Redis 就会从旧 AOF 文件切换到新 AOF 文件，并开始对新 AOF 文件进行追加操作。</li>
-<li>AOF 文件有序地保存了对数据库执行的所有写入操作， 这些写入操作以 Redis 协议的格式保存， 因此 AOF 文件的内容非常容易被人读懂， 对文件进行分析（parse）也很轻松。 导出（export） AOF 文件也非常简单： 举个例子， 如果你不小心执行了 <a href="http://redisdoc.com/server/flushall.html#flushall" target="_blank" rel="external">FLUSHALL</a> 命令， 但只要 AOF 文件未被重写， 那么只要停止服务器， 移除 AOF 文件末尾的 <a href="http://redisdoc.com/server/flushall.html#flushall" target="_blank" rel="external">FLUSHALL</a> 命令， 并重启 Redis ， 就可以将数据集恢复到 <a href="http://redisdoc.com/server/flushall.html#flushall" target="_blank" rel="external">FLUSHALL</a> 执行之前的状态。</li>
-</ul>
-<h3 id="缺点-1"><a href="#缺点-1" class="headerlink" title="缺点"></a><strong>缺点</strong></h3><ul>
-<li>对于相同的数据集来说，AOF 文件的体积通常要大于 RDB 文件的体积。</li>
-<li>根据所使用的 <code>fsync</code> 策略，AOF 的速度可能会慢于 RDB 。 在一般情况下， 每秒 <code>fsync</code> 的性能依然非常高， 而关闭 <code>fsync</code> 可以让 AOF 的速度和 RDB 一样快， 即使在高负荷之下也是如此。 不过在处理巨大的写入载入时，RDB 可以提供更有保证的最大延迟时间（latency）。</li>
-<li>AOF 在过去曾经发生过这样的 bug ： 因为个别命令的原因，导致 AOF 文件在重新载入时，无法将数据集恢复成保存时的原样。 （举个例子，阻塞命令 <a href="http://redisdoc.com/list/brpoplpush.html#brpoplpush" target="_blank" rel="external">BRPOPLPUSH</a> 就曾经引起过这样的 bug 。） 测试套件里为这种情况添加了测试： 它们会自动生成随机的、复杂的数据集， 并通过重新载入这些数据来确保一切正常。 虽然这种 bug 在 AOF 文件中并不常见， 但是对比来说， RDB 几乎是不可能出现这种 bug 的。</li>
-</ul>
-<h3 id="如何选择RDB和AOF？"><a href="#如何选择RDB和AOF？" class="headerlink" title="如何选择RDB和AOF？"></a><strong>如何选择RDB和AOF？</strong></h3><p>一般来说， 如果想达到足以媲美 PostgreSQL 的数据安全性， 你应该同时使用两种持久化功能。</p>
-<p>如果你非常关心你的数据， 但仍然可以承受数分钟以内的数据丢失， 那么你可以只使用 RDB 持久化。</p>
-<p>有很多用户都只使用 AOF 持久化， 但我们并不推荐这种方式： 因为定时生成 RDB 快照（snapshot）非常便于进行数据库备份， 并且 RDB 恢复数据集的速度也要比 AOF 恢复的速度要快， 除此之外， 使用 RDB 还可以避免之前提到的 AOF 程序的 bug 。</p>
-<h3 id="RDB-和-AOF-之间的相互作用"><a href="#RDB-和-AOF-之间的相互作用" class="headerlink" title="RDB 和 AOF 之间的相互作用"></a>RDB 和 AOF 之间的相互作用</h3><p>BGSAVE 执行的过程中， 不可以执行 BGREWRITEAOF 。 反过来说， 在 BGREWRITEAOF 执行的过程中， 也不可以执行 BGSAVE 。</p>
-<p>这可以防止两个 Redis 后台进程同时对磁盘进行大量的 I/O 操作。</p>
-<p>如果 BGSAVE 正在执行， 并且用户显示地调用 BGREWRITEAOF 命令， 那么服务器将向用户回复一个 <code>OK</code> 状态， 并告知用户，BGREWRITEAOF 已经被预定执行： 一旦 BGSAVE 执行完毕， BGREWRITEAOF 就会正式开始。</p>
-<p>当 Redis 启动时， 如果 RDB 持久化和 AOF 持久化都被打开了， 那么程序会优先使用 AOF 文件来恢复数据集， 因为 AOF 文件所保存的数据通常是最完整的。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;什么是持久化？&quot;&gt;&lt;a href=&quot;#什么是持久化？&quot; class=&quot;headerlink&quot; title=&quot;什么是持久化？&quot;&gt;&lt;/a&gt;&lt;strong&gt;什么是持久化？&lt;/strong&gt;&lt;/h2&gt;&lt;p&gt;持久化（Persistence），即把数据（如内存中的对象）保存到可永久保存的存储设备中（如磁盘）。持久化的主要应用是将内存中的对象存储在数据库中，或者存储在磁盘文件中、XML数据文件中等等。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Redis" scheme="http://yoursite.com/categories/Redis/"/>
-    
-    
-      <category term="Redis, Python" scheme="http://yoursite.com/tags/Redis-Python/"/>
     
   </entry>
   

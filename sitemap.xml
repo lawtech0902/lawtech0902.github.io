@@ -2,6 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2017/05/08/scrapy-item-loader/</loc>
+    
+    <lastmod>2017-05-08T07:02:35.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2017/05/07/scrapy-item-mysql/</loc>
+    
+    <lastmod>2017-05-07T11:36:20.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2017/05/07/scrapy-item-json/</loc>
+    
+    <lastmod>2017-05-07T05:05:09.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2017/05/06/scrapy-feed-exports/</loc>
     
     <lastmod>2017-05-06T14:46:00.000Z</lastmod>

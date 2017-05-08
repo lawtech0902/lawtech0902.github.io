@@ -90,17 +90,17 @@
 
 
 
-<meta name="description" content="基础知识技术选型：scrapy vs requests + beautifulsoup">
+<meta name="description" content="将数据保存到MySQL数据库，需要用到 mysqlclient 模块，需要在我们的虚拟环境中用 pip 进行安装。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——爬虫基础知识回顾">
-<meta property="og:url" content="http://yoursite.com/2017/04/11/scrapy-project-basic/index.html">
+<meta property="og:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——通过Pipeline保存数据到MySQL">
+<meta property="og:url" content="http://yoursite.com/2017/05/07/scrapy-item-mysql/index.html">
 <meta property="og:site_name" content="LawTech's Blog">
-<meta property="og:description" content="基础知识技术选型：scrapy vs requests + beautifulsoup">
+<meta property="og:description" content="将数据保存到MySQL数据库，需要用到 mysqlclient 模块，需要在我们的虚拟环境中用 pip 进行安装。">
 <meta property="og:image" content="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg">
-<meta property="og:updated_time" content="2017-04-11T07:49:05.000Z">
+<meta property="og:updated_time" content="2017-05-07T11:36:20.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——爬虫基础知识回顾">
-<meta name="twitter:description" content="基础知识技术选型：scrapy vs requests + beautifulsoup">
+<meta name="twitter:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——通过Pipeline保存数据到MySQL">
+<meta name="twitter:description" content="将数据保存到MySQL数据库，需要用到 mysqlclient 模块，需要在我们的虚拟环境中用 pip 进行安装。">
 <meta name="twitter:image" content="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg">
 
 
@@ -129,13 +129,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/04/11/scrapy-project-basic/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/05/07/scrapy-item-mysql/"/>
 
 
 
 
 
-  <title> Python分布式爬虫打造搜索引擎项目学习笔记——爬虫基础知识回顾 | LawTech's Blog </title>
+  <title> Python分布式爬虫打造搜索引擎项目学习笔记——通过Pipeline保存数据到MySQL | LawTech's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -300,7 +300,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/11/scrapy-project-basic/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/07/scrapy-item-mysql/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="LawTech.">
@@ -324,7 +324,7 @@
             
             
               
-                Python分布式爬虫打造搜索引擎项目学习笔记——爬虫基础知识回顾
+                Python分布式爬虫打造搜索引擎项目学习笔记——通过Pipeline保存数据到MySQL
               
             
           </h2>
@@ -339,8 +339,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-11T20:18:54+08:00">
-                2017-04-11
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-07T14:18:54+08:00">
+                2017-05-07
               </time>
             
 
@@ -355,8 +355,8 @@
               
                 <span class="post-meta-item-text">更新于</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2017-04-11T15:49:05+08:00">
-                2017-04-11
+              <time title="更新于" itemprop="dateModified" datetime="2017-05-07T19:36:20+08:00">
+                2017-05-07
               </time>
             
           </span>
@@ -374,8 +374,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Basic-knowledge/" itemprop="url" rel="index">
-                    <span itemprop="name">Basic knowledge</span>
+                  <a href="/categories/Scrapy/" itemprop="url" rel="index">
+                    <span itemprop="name">Scrapy</span>
                   </a>
                 </span>
 
@@ -393,7 +393,7 @@
 
           
           
-             <span id="/2017/04/11/scrapy-project-basic/" class="leancloud_visitors" data-flag-title="Python分布式爬虫打造搜索引擎项目学习笔记——爬虫基础知识回顾">
+             <span id="/2017/05/07/scrapy-item-mysql/" class="leancloud_visitors" data-flag-title="Python分布式爬虫打造搜索引擎项目学习笔记——通过Pipeline保存数据到MySQL">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -426,7 +426,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj2fs5vau001tqzqzr0m08vds"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj2fs5vae001aqzqz9hdsrszt"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
               </a>
@@ -439,42 +439,28 @@
       
 
       
-        <h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a><strong>基础知识</strong></h2><h3 id="技术选型：scrapy-vs-requests-beautifulsoup"><a href="#技术选型：scrapy-vs-requests-beautifulsoup" class="headerlink" title="技术选型：scrapy vs requests + beautifulsoup"></a><strong>技术选型：<a href="https://scrapy-chs.readthedocs.io/zh_CN/1.0/" target="_blank" rel="external">scrapy</a> vs <a href="http://docs.python-requests.org/zh_CN/latest/index.html" target="_blank" rel="external">requests</a> + <a href="http://beautifulsoup.readthedocs.io/zh_CN/latest/" target="_blank" rel="external">beautifulsoup</a></strong></h3><a id="more"></a>
-<ul>
-<li>requests和beautifulsoup都是库，scrapy是框架</li>
-<li>scrapy框架中可以加入requests和beautifulsoup</li>
-<li>scrapy基于<a href="https://www.gitbook.com/book/likebeta/twisted-intro-cn/details" target="_blank" rel="external">twisted</a>，性能是最大的优势</li>
-<li>scrapy方便扩展，提供了很多内置的功能</li>
-<li>scrapy内置的css和xpath selector非常方便，beautifulsoup最大的缺点就是慢</li>
-</ul>
-<h3 id="网页分类"><a href="#网页分类" class="headerlink" title="网页分类"></a><strong>网页分类</strong></h3><ul>
-<li>静态网页</li>
-<li>动态网页</li>
-<li>webservice（<a href="http://www.restapitutorial.com" target="_blank" rel="external">restapi</a>）</li>
-</ul>
-<h3 id="爬虫能做什么"><a href="#爬虫能做什么" class="headerlink" title="爬虫能做什么"></a><strong>爬虫能做什么</strong></h3><p>爬虫的作用</p>
-<ul>
-<li>搜索引擎——百度、谷歌、垂直领域搜索引擎</li>
-<li>推荐引擎——今日头条</li>
-<li>机器学习的数据样本</li>
-<li>数据分析、舆情分析等</li>
-</ul>
-<h3 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a><strong>正则表达式</strong></h3><p>详见另一篇博客</p>
-<h3 id="网站url结构"><a href="#网站url结构" class="headerlink" title="网站url结构"></a><strong>网站url结构</strong></h3><p><img src="https://ww1.sinaimg.cn/large/006tNc79gy1fehiknw0gbj315k0j0jth.jpg" alt=""></p>
-<p><img src="https://ww2.sinaimg.cn/large/006tNc79gy1fehikzuhq5j31300jo0v3.jpg" alt=""></p>
-<h3 id="深度优先遍历和广度优先遍历"><a href="#深度优先遍历和广度优先遍历" class="headerlink" title="深度优先遍历和广度优先遍历"></a><strong>深度优先遍历和广度优先遍历</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># _*_ coding: utf-8 _*_</span></div><div class="line"><span class="string">"""</span></div><div class="line">__author__ = 'lawtech'</div><div class="line">__date__ = '2017/4/10 下午1:41'</div><div class="line">"""</div><div class="line"></div><div class="line"><span class="string">"""</span></div><div class="line">深度优先遍历和广度优先遍历</div><div class="line">"""</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Graph</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, *args, **kwargs)</span>:</span></div><div class="line">        self.node_neighbors = &#123;&#125;</div><div class="line">        self.visited = &#123;&#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_nodes</span><span class="params">(self, nodelist)</span>:</span></div><div class="line"></div><div class="line">        <span class="keyword">for</span> node <span class="keyword">in</span> nodelist:</div><div class="line">            self.add_node(node)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_node</span><span class="params">(self, node)</span>:</span></div><div class="line">        <span class="keyword">if</span> node <span class="keyword">not</span> <span class="keyword">in</span> self.nodes():</div><div class="line">            self.node_neighbors[node] = []</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">add_edge</span><span class="params">(self, edge)</span>:</span></div><div class="line">        u, v = edge</div><div class="line">        <span class="keyword">if</span> (v <span class="keyword">not</span> <span class="keyword">in</span> self.node_neighbors[u]) <span class="keyword">and</span> (u <span class="keyword">not</span> <span class="keyword">in</span> self.node_neighbors[v]):</div><div class="line">            self.node_neighbors[u].append(v)</div><div class="line">            <span class="keyword">if</span> u != v:</div><div class="line">                self.node_neighbors[v].append(u)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">nodes</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.node_neighbors.keys()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">depth_first_search</span><span class="params">(self, root=None)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        队列</div><div class="line">        :param root: </div><div class="line">        :return: </div><div class="line">        """</div><div class="line">        order = []</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">def</span> <span class="title">dfs</span><span class="params">(node)</span>:</span></div><div class="line">            self.visited[node] = <span class="keyword">True</span></div><div class="line">            order.append(node)</div><div class="line">            <span class="keyword">for</span> n <span class="keyword">in</span> self.node_neighbors[node]:</div><div class="line">                <span class="keyword">if</span> n <span class="keyword">not</span> <span class="keyword">in</span> self.visited:</div><div class="line">                    dfs(n)</div><div class="line"></div><div class="line">        <span class="keyword">if</span> root:</div><div class="line">            dfs(root)</div><div class="line"></div><div class="line">        <span class="keyword">for</span> node <span class="keyword">in</span> self.nodes():</div><div class="line">            <span class="keyword">if</span> node <span class="keyword">not</span> <span class="keyword">in</span> self.visited:</div><div class="line">                dfs(node)</div><div class="line"></div><div class="line">        print(order)</div><div class="line">        <span class="keyword">return</span> order</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">breadth_first_search</span><span class="params">(self, root=None)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        递归</div><div class="line">        :param root: </div><div class="line">        :return: </div><div class="line">        """</div><div class="line">        queue = []</div><div class="line">        order = []</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">def</span> <span class="title">bfs</span><span class="params">()</span>:</span></div><div class="line">            <span class="keyword">while</span> len(queue) &gt; <span class="number">0</span>:</div><div class="line">                node = queue.pop(<span class="number">0</span>)</div><div class="line">                self.visited[node] = <span class="keyword">True</span></div><div class="line"></div><div class="line">                <span class="keyword">for</span> n <span class="keyword">in</span> self.node_neighbors[node]:</div><div class="line">                    <span class="keyword">if</span> (n <span class="keyword">not</span> <span class="keyword">in</span> self.visited) <span class="keyword">and</span> (n <span class="keyword">not</span> <span class="keyword">in</span> queue):</div><div class="line">                        queue.append(n)</div><div class="line">                        order.append(n)</div><div class="line"></div><div class="line">        <span class="keyword">if</span> root:</div><div class="line">            queue.append(root)</div><div class="line">            order.append(root)</div><div class="line">            bfs()</div><div class="line"></div><div class="line">        <span class="keyword">for</span> node <span class="keyword">in</span> self.nodes():</div><div class="line">            <span class="keyword">if</span> node <span class="keyword">not</span> <span class="keyword">in</span> self.visited:</div><div class="line">                queue.append(node)</div><div class="line">                order.append(node)</div><div class="line">                bfs()</div><div class="line"></div><div class="line">        print(order)</div><div class="line">        <span class="keyword">return</span> order</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    g = Graph()</div><div class="line">    g.add_nodes(nodelist=[i + <span class="number">1</span> <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">8</span>)])</div><div class="line">    g.add_edge((<span class="number">1</span>, <span class="number">2</span>))</div><div class="line">    g.add_edge((<span class="number">1</span>, <span class="number">3</span>))</div><div class="line">    g.add_edge((<span class="number">2</span>, <span class="number">4</span>))</div><div class="line">    g.add_edge((<span class="number">2</span>, <span class="number">5</span>))</div><div class="line">    g.add_edge((<span class="number">4</span>, <span class="number">8</span>))</div><div class="line">    g.add_edge((<span class="number">5</span>, <span class="number">8</span>))</div><div class="line">    g.add_edge((<span class="number">3</span>, <span class="number">6</span>))</div><div class="line">    g.add_edge((<span class="number">3</span>, <span class="number">7</span>))</div><div class="line">    g.add_edge((<span class="number">6</span>, <span class="number">7</span>))</div><div class="line">    print(<span class="string">"nodes:"</span>, g.nodes())</div><div class="line"></div><div class="line">    g.breadth_first_search(<span class="number">1</span>)</div><div class="line">    g.depth_first_search(<span class="number">1</span>)</div></pre></td></tr></table></figure>
-<p>运行结果：</p>
-<p>​    (‘nodes:’, [1, 2, 3, 4, 5, 6, 7, 8])</p>
-<p>​    [1, 2, 3, 4, 5, 6, 7, 8]</p>
-<p>​    [1, 2, 4, 8, 5, 3, 6, 7]</p>
-<h3 id="爬虫去重策略"><a href="#爬虫去重策略" class="headerlink" title="爬虫去重策略"></a><strong>爬虫去重策略</strong></h3><ul>
-<li>将访问过的url保存到数据库中</li>
-<li>将访问过的url保存到set中，只需要O(1)的代价就可以查询url</li>
-<li>url经过md5等方法哈希后保存到set中</li>
-<li>用bitmap方法，将访问过的url通过hash函数映射到某一位</li>
-<li>bloomfilter方法对bitmap进行改进，多重hash函数降低冲突</li>
-</ul>
-<h3 id="Python字符串编码"><a href="#Python字符串编码" class="headerlink" title="Python字符串编码"></a><strong>Python字符串编码</strong></h3><p>详见另一篇博客</p>
+        <p>将数据保存到MySQL数据库，需要用到 <code>mysqlclient</code> 模块，需要在我们的虚拟环境中用 <code>pip</code> 进行安装。</p>
+<a id="more"></a>
+<h2 id="设计数据表"><a href="#设计数据表" class="headerlink" title="设计数据表"></a><strong>设计数据表</strong></h2><p>需要根据之前Item来设计我们的数据表 <code>jobbole_article</code> ，数据库取名为 <code>article_spider</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">JobBoleArticleItem</span><span class="params">(scrapy.Item)</span>:</span></div><div class="line">    title = scrapy.Field()</div><div class="line">    create_date = scrapy.Field()</div><div class="line">    url = scrapy.Field()</div><div class="line">    url_object_id = scrapy.Field()</div><div class="line">    front_image_url = scrapy.Field()</div><div class="line">    front_image_path = scrapy.Field()</div><div class="line">    praise_nums = scrapy.Field()</div><div class="line">    comment_nums = scrapy.Field()</div><div class="line">    fav_nums = scrapy.Field()</div><div class="line">    tags = scrapy.Field()</div><div class="line">    content = scrapy.Field()</div></pre></td></tr></table></figure>
+<p>初步设计的数据表如下，在后面使用时还会进行必要的改动：</p>
+<p><img src="http://ww1.sinaimg.cn/large/006tNc79gy1ffcueufjwhj317e0kwwib.jpg" alt=""></p>
+<h2 id="采用同步机制写入MySQL"><a href="#采用同步机制写入MySQL" class="headerlink" title="采用同步机制写入MySQL"></a><strong>采用同步机制写入MySQL</strong></h2><p>首先在 <code>pipelines.py</code> 中引入数据库连接模块 <code>import MySQLdb</code> ，然后完善 <code>MysqlPipeline</code> 类的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MysqlPipeline</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="comment"># 采用同步的机制写入mysql</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.conn = MySQLdb.connect(<span class="string">'127.0.0.1'</span>, <span class="string">'root'</span>, <span class="string">'12'</span>, <span class="string">'article_spider'</span>,</div><div class="line">                                    charset=<span class="string">'utf8'</span>, use_unicode=<span class="keyword">True</span>)</div><div class="line">        self.cursor = self.conn.cursor()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_item</span><span class="params">(self, item, spider)</span>:</span></div><div class="line">        insert_sql = <span class="string">"""</span></div><div class="line">                    insert into jobbole_article(title, url, create_date, fav_nums)</div><div class="line">                    VALUES (%s, %s, %s, %s)</div><div class="line">        """</div><div class="line">        self.cursor.execute(insert_sql, (item[<span class="string">"title"</span>], item[<span class="string">"url"</span>], item[<span class="string">"create_date"</span>], item[<span class="string">"fav_nums"</span>]))</div><div class="line">        self.conn.commit()</div></pre></td></tr></table></figure>
+<p><code>__init__</code> 方法是对数据进行初始化，定义连接信息如host，数据库用户名、密码、数据库名称、数据库编码<br>在 <code>process_item</code> 方法中进行插入数据操作，格式都是固定的。</p>
+<p>最后在 <code>settings.py</code> 中把 <code>MysqlPipeline()</code> 加入到 <code>ITEM_PIPELINES</code> 的配置中。</p>
+<h2 id="采用异步机制写入MySQL"><a href="#采用异步机制写入MySQL" class="headerlink" title="采用异步机制写入MySQL"></a><strong>采用异步机制写入MySQL</strong></h2><p>在上面的同步机制写入数据库中，我们把连接信息 <code>MySQLdb.connect(&#39;127.0.0.1&#39;, &#39;root&#39;, &#39;12&#39;, &#39;article_spider&#39;, charset=&#39;utf8&#39;, use_unicode=True)</code> 直接定义在函数中，如果不经常改动的话，可以把相关信息放到 <code>settings.py</code> 中进行调用。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">MYSQL_HOST = <span class="string">'127.0.0.1'</span></div><div class="line">MYSQL_DBNAME = <span class="string">'article_spider'</span></div><div class="line">MYSQL_USER = <span class="string">'root'</span></div><div class="line">MYSQL_PASSWORD = <span class="string">'12'</span></div></pre></td></tr></table></figure>
+<p>在 <code>pipelines.py</code> 中新建 <code>MysqlTwistedPipeline</code> ，写入如下代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MysqlTwistedPipeline</span><span class="params">(object)</span>:</span></div><div class="line"><span class="meta">    @classmethod</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">from_settings</span><span class="params">(cls, settings)</span>:</span></div><div class="line">        host = settings[<span class="string">'MYSQL_HOST'</span>]</div><div class="line">        <span class="keyword">pass</span></div></pre></td></tr></table></figure>
+<p>在 <code>from_settings</code> 这个类方法中，我们获取到了settings配置中的 <code>MYSQL_HOST</code> ，这个方法在Scrapy初始化的时候就会被调用，会将Scrapy的settings对象传递进来，我们在这里进行断点调试，查看是否获取到了这个对象：</p>
+<p><img src="http://ww3.sinaimg.cn/large/006tNc79gy1ffcv0p0d3xj31kw0ejqcr.jpg" alt=""></p>
+<p><img src="http://ww2.sinaimg.cn/large/006tNc79gy1ffcv1i1po9j319w04kgmy.jpg" alt=""></p>
+<p>发现在settings的attributes这个字典中，确实有我们定义的各种属性。</p>
+<p>我们的异步操作需要引入twisted，代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> twisted.enterprise <span class="keyword">import</span> adbapi</div><div class="line"><span class="keyword">import</span> MySQLdb</div><div class="line"><span class="keyword">import</span> MySQLdb.cursors</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MysqlTwistedPipeline</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, dbpool)</span>:</span></div><div class="line">        self.dbpool = dbpool</div><div class="line"></div><div class="line"><span class="meta">    @classmethod</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">from_settings</span><span class="params">(cls, settings)</span>:</span></div><div class="line">        dbparams = dict(</div><div class="line">            host=settings[<span class="string">'MYSQL_HOST'</span>],</div><div class="line">            db=settings[<span class="string">'MYSQL_DBNAME'</span>],</div><div class="line">            user=settings[<span class="string">'MYSQL_USER'</span>],</div><div class="line">            passwd=settings[<span class="string">'MYSQL_PASSWORD'</span>],</div><div class="line">            charset=<span class="string">'utf8'</span>,</div><div class="line">            cursorclass=MySQLdb.cursors.DictCursor,</div><div class="line">            use_unicode=<span class="keyword">True</span>,</div><div class="line">        )</div><div class="line">        dbpool = adbapi.ConnectionPool(<span class="string">"MySQLdb"</span>, **dbparams)</div><div class="line"></div><div class="line">        <span class="keyword">return</span> cls(dbpool)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_item</span><span class="params">(self, item, spider)</span>:</span></div><div class="line">        <span class="comment"># 使用twisted将mysql插入变成异步执行</span></div><div class="line">        query = self.dbpool.runInteraction(self.do_insert, item)</div><div class="line">        query.addErrback(self.handle_error)  <span class="comment"># 处理异常</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">handle_error</span><span class="params">(self, failure)</span>:</span></div><div class="line">        <span class="comment"># 处理异步插入异常</span></div><div class="line">        print(failure)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">do_insert</span><span class="params">(self, cursor, item)</span>:</span></div><div class="line">        <span class="comment"># 执行具体的插入</span></div><div class="line">        insert_sql = <span class="string">"""</span></div><div class="line">                            insert into jobbole_article(title, url, create_date, fav_nums)</div><div class="line">                            VALUES (%s, %s, %s, %s)</div><div class="line">                """</div><div class="line">        cursor.execute(insert_sql, (item[<span class="string">"title"</span>], item[<span class="string">"url"</span>], item[<span class="string">"create_date"</span>], item[<span class="string">"fav_nums"</span>]))</div></pre></td></tr></table></figure>
+<p>我们在使用时，绝大部分代码无须变动，只要修改 <code>do_insert</code> 方法中的插入内容，以及自己的信息即可。</p>
+<p>在数据量不大时，用同步插入即可。</p>
 
       
     </div>
@@ -529,8 +515,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/04/11/regex/" rel="next" title="Python分布式爬虫打造搜索引擎项目学习笔记——Python正则表达式">
-                <i class="fa fa-chevron-left"></i> Python分布式爬虫打造搜索引擎项目学习笔记——Python正则表达式
+              <a href="/2017/05/06/scrapy-item-pipeline/" rel="next" title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Item Pipeline">
+                <i class="fa fa-chevron-left"></i> Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Item Pipeline
               </a>
             
           </div>
@@ -539,8 +525,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/04/12/python-str-encode/" rel="prev" title="Python分布式爬虫打造搜索引擎项目学习笔记——Python字符编码">
-                Python分布式爬虫打造搜索引擎项目学习笔记——Python字符编码 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/05/07/scrapy-item-json/" rel="prev" title="Python分布式爬虫打造搜索引擎项目学习笔记——保存item到json文件">
+                Python分布式爬虫打造搜索引擎项目学习笔记——保存item到json文件 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -708,7 +694,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础知识"><span class="nav-number">1.</span> <span class="nav-text">基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#技术选型：scrapy-vs-requests-beautifulsoup"><span class="nav-number">1.1.</span> <span class="nav-text">技术选型：scrapy vs requests + beautifulsoup</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网页分类"><span class="nav-number">1.2.</span> <span class="nav-text">网页分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#爬虫能做什么"><span class="nav-number">1.3.</span> <span class="nav-text">爬虫能做什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#正则表达式"><span class="nav-number">1.4.</span> <span class="nav-text">正则表达式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网站url结构"><span class="nav-number">1.5.</span> <span class="nav-text">网站url结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#深度优先遍历和广度优先遍历"><span class="nav-number">1.6.</span> <span class="nav-text">深度优先遍历和广度优先遍历</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#爬虫去重策略"><span class="nav-number">1.7.</span> <span class="nav-text">爬虫去重策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python字符串编码"><span class="nav-number">1.8.</span> <span class="nav-text">Python字符串编码</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#设计数据表"><span class="nav-number">1.</span> <span class="nav-text">设计数据表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#采用同步机制写入MySQL"><span class="nav-number">2.</span> <span class="nav-text">采用同步机制写入MySQL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#采用异步机制写入MySQL"><span class="nav-number">3.</span> <span class="nav-text">采用异步机制写入MySQL</span></a></li></ol></div>
             
 
           </div>
