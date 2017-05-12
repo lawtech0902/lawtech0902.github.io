@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2017/05/11/scrapy-login-zhihu/</loc>
+    
+    <lastmod>2017-05-12T08:12:46.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2017/05/11/scrapy-requests-zhihu-login/</loc>
+    
+    <lastmod>2017-05-12T06:55:07.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2017/05/09/scrapy-session-cookie/</loc>
     
     <lastmod>2017-05-09T06:43:11.000Z</lastmod>

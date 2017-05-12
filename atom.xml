@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-05-09T06:43:11.000Z</updated>
+  <updated>2017-05-12T08:12:46.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,123 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy模拟登录知乎</title>
+    <link href="http://yoursite.com/2017/05/11/scrapy-login-zhihu/"/>
+    <id>http://yoursite.com/2017/05/11/scrapy-login-zhihu/</id>
+    <published>2017-05-11T06:18:54.000Z</published>
+    <updated>2017-05-12T08:12:46.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Scrapy登录知乎要解决两个问题</p>
+<ol>
+<li>session的传递，保证处理登录是同一个状态。</li>
+<li>首个登录页面的改变，由直接爬取的页面变为登录页面，再去爬取页面。</li>
+</ol>
+<a id="more"></a>
+<p>话不多说，直接上代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"><span class="keyword">import</span> scrapy</div><div class="line"><span class="keyword">import</span> re</div><div class="line"><span class="keyword">import</span> json</div><div class="line"><span class="keyword">import</span> time</div><div class="line"></div><div class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ZhihuSpider</span><span class="params">(scrapy.Spider)</span>:</span></div><div class="line">    name = <span class="string">"zhihu"</span></div><div class="line">    allowed_domains = [<span class="string">"www.zhihu.com"</span>]</div><div class="line">    start_urls = [<span class="string">'http://www.zhihu.com/'</span>]</div><div class="line">    headers = &#123;</div><div class="line">        <span class="string">"Host"</span>: <span class="string">"www.zhihu.com"</span>,</div><div class="line">        <span class="string">"Referer"</span>: <span class="string">"https://www.zhihu.com/"</span>,</div><div class="line">        <span class="string">'User-Agent'</span>: <span class="string">'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.96 Safari/537.36'</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="keyword">pass</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">start_requests</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> [scrapy.Request(<span class="string">"https://www.zhihu.com/#signin"</span>, headers=self.headers, callback=self.login)]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">login</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        登录</div><div class="line">        :param response: </div><div class="line">        :return: </div><div class="line">        """</div><div class="line">        response_text = response.text</div><div class="line">        match_obj = re.match(<span class="string">'.*name="_xsrf" value="(.*?)"'</span>, response_text, re.DOTALL)</div><div class="line">        xsrf = <span class="string">''</span></div><div class="line">        <span class="keyword">if</span> match_obj:</div><div class="line">            xsrf = match_obj.group(<span class="number">1</span>)</div><div class="line"></div><div class="line">        <span class="keyword">if</span> xsrf:</div><div class="line">            post_data = &#123;</div><div class="line">                <span class="string">"_xsrf"</span>: xsrf,</div><div class="line">                <span class="string">"phone_num"</span>: <span class="string">"18951855817"</span>,</div><div class="line">                <span class="string">"password"</span>: <span class="string">"tracy584563542"</span></div><div class="line">            &#125;</div><div class="line">            t = str(int(time.time() * <span class="number">1000</span>))</div><div class="line">            captcha_url = <span class="string">'https://www.zhihu.com/captcha.gif?r='</span> + t + <span class="string">"&amp;type=login"</span></div><div class="line">            <span class="keyword">yield</span> scrapy.Request(captcha_url, headers=self.headers, meta=&#123;<span class="string">"post_data"</span>: post_data&#125;,</div><div class="line">                                 callback=self.login_after_captcha)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">login_after_captcha</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="keyword">with</span> open(<span class="string">"captcha.jpg"</span>, <span class="string">"wb"</span>) <span class="keyword">as</span> f:</div><div class="line">            f.write(response.body)</div><div class="line">        im = Image.open(<span class="string">'captcha.jpg'</span>)</div><div class="line">        im.show()</div><div class="line">        im.close()</div><div class="line">        captcha = input(<span class="string">"请输入验证码：\n"</span>)</div><div class="line">        post_data = response.meta.get(<span class="string">"post_data"</span>, &#123;&#125;)</div><div class="line">        post_data[<span class="string">"captcha"</span>] = captcha</div><div class="line">        post_url = <span class="string">"https://www.zhihu.com/login/phone_num"</span></div><div class="line">        <span class="keyword">return</span> [scrapy.FormRequest(</div><div class="line">            url=post_url,</div><div class="line">            formdata=post_data,</div><div class="line">            headers=self.headers,</div><div class="line">            callback=self.check_login</div><div class="line">        )]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">check_login</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        验证服务器的返回数据判断登录是否成功</div><div class="line">        :param response: </div><div class="line">        :return: </div><div class="line">        """</div><div class="line">        text_json = json.loads(response.text)</div><div class="line">        <span class="keyword">if</span> <span class="string">'msg'</span> <span class="keyword">in</span> text_json <span class="keyword">and</span> text_json[<span class="string">'msg'</span>] == <span class="string">'登陆成功'</span>:</div><div class="line">            <span class="comment"># 从继承的Spider类中拿的内容，恢复到正确执行</span></div><div class="line">            <span class="keyword">for</span> url <span class="keyword">in</span> self.start_urls:</div><div class="line">                <span class="keyword">yield</span> scrapy.Request(url, dont_filter=<span class="keyword">True</span>, headers=self.headers)</div></pre></td></tr></table></figure>
+<p>首先对 <code>scrapy.Spider</code> 类中的 <code>start_requests(self)</code> 进行重载，改变首先要处理的页面为登录页面。<br>得到登录页面后，获得xsrf，并下载验证码，通过 <code>scrapy.FormRequest</code>构造登录数据，通过check_login回调函数判断登录是否成功。在代码的最后一行转回正常的登录流程。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Scrapy登录知乎要解决两个问题&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;session的传递，保证处理登录是同一个状态。&lt;/li&gt;
+&lt;li&gt;首个登录页面的改变，由直接爬取的页面变为登录页面，再去爬取页面。&lt;/li&gt;
+&lt;/ol&gt;
+    
+    </summary>
+    
+      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
+    
+    
+      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Requests模拟登录知乎</title>
+    <link href="http://yoursite.com/2017/05/11/scrapy-requests-zhihu-login/"/>
+    <id>http://yoursite.com/2017/05/11/scrapy-requests-zhihu-login/</id>
+    <published>2017-05-11T06:18:54.000Z</published>
+    <updated>2017-05-12T06:55:07.000Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="http://docs.python-requests.org/zh_CN/latest/index.html" target="_blank" rel="external">Requests</a> 是以 <a href="http://www.python.org/dev/peps/pep-0020" target="_blank" rel="external">PEP 20</a> 的箴言为中心开发的</p>
+<ol>
+<li>Beautiful is better than ugly.(美丽优于丑陋)</li>
+<li>Explicit is better than implicit.(直白优于含蓄)</li>
+<li>Simple is better than complex.(简单优于复杂)</li>
+<li>Complex is better than complicated.(复杂优于繁琐)</li>
+<li>Readability counts.(可读性很重要)</li>
+</ol>
+<a id="more"></a>
+<h2 id="常见状态码"><a href="#常见状态码" class="headerlink" title="常见状态码"></a><strong>常见状态码</strong></h2><table>
+<thead>
+<tr>
+<th>表达式</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>200</td>
+<td>请求被正确执行</td>
+</tr>
+<tr>
+<td>301/302</td>
+<td>永久性重定向/临时性重定向</td>
+</tr>
+<tr>
+<td>403</td>
+<td>没有权限访问</td>
+</tr>
+<tr>
+<td>404</td>
+<td>没有资源访问</td>
+</tr>
+<tr>
+<td>500</td>
+<td>服务器错误</td>
+</tr>
+<tr>
+<td>503</td>
+<td>服务器停机或正在维护</td>
+</tr>
+</tbody>
+</table>
+<h2 id="登录分析"><a href="#登录分析" class="headerlink" title="登录分析"></a><strong>登录分析</strong></h2><p><img src="http://ww2.sinaimg.cn/large/006tNbRwgy1ffikxe4s70j30lo05sjsg.jpg" alt="">在登录界面，输入手机号和密码，返回的地址为 <code>Request URL:https://www.zhihu.com/login/phone_num</code><br>当输入email地址后返回的地址为 <code>Request URL:https://www.zhihu.com/login/email</code><br>并且在formdata中出现 <code>_xsrf:a71f46d549979fa192c09e11e4a463b5</code> 这样的字符串。</p>
+<p><img src="http://ww1.sinaimg.cn/large/006tNbRwgy1ffiky17f7cj30uk05mabd.jpg" alt=""></p>
+<h2 id="抓取xsrf的值"><a href="#抓取xsrf的值" class="headerlink" title="抓取xsrf的值"></a><strong>抓取xsrf的值</strong></h2><p>正则匹配抓取xsrf需要使用header头来进行源代码的获取：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_xsrf</span><span class="params">()</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    获取xsrf code</div><div class="line">    :return: xsrf code</div><div class="line">    """</div><div class="line">    response = requests.get(<span class="string">"https://www.zhihu.com"</span>, headers=headers)</div><div class="line">    match_obj = re.match(<span class="string">'.*name="_xsrf" value="(.*?)"'</span>, response.text)</div><div class="line">    <span class="keyword">if</span> match_obj:</div><div class="line">        print(match_obj.group(<span class="number">1</span>))</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="keyword">return</span> <span class="string">""</span></div></pre></td></tr></table></figure>
+<h2 id="验证码获取"><a href="#验证码获取" class="headerlink" title="验证码获取"></a><strong>验证码获取</strong></h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_captcha</span><span class="params">()</span>:</span></div><div class="line">    t = str(int(time.time() * <span class="number">1000</span>))</div><div class="line">    captcha_url = <span class="string">'https://www.zhihu.com/captcha.gif?r='</span> + t + <span class="string">"&amp;type=login"</span></div><div class="line">    r = session.get(captcha_url, headers=headers)</div><div class="line">    <span class="keyword">with</span> open(<span class="string">'captcha.jpg'</span>, <span class="string">'wb'</span>) <span class="keyword">as</span> f:</div><div class="line">        f.write(r.content)</div><div class="line">        f.close()</div><div class="line">    im = Image.open(<span class="string">'captcha.jpg'</span>)</div><div class="line">    im.show()</div><div class="line">    im.close()</div><div class="line">    captcha = input(<span class="string">"请输入验证码：\n"</span>)</div><div class="line">    <span class="keyword">return</span> captcha</div></pre></td></tr></table></figure>
+<h2 id="登录逻辑"><a href="#登录逻辑" class="headerlink" title="登录逻辑"></a><strong>登录逻辑</strong></h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">zhihu_login</span><span class="params">(account, password)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    知乎登录</div><div class="line">    :param account: </div><div class="line">    :param password: </div><div class="line">    :return: </div><div class="line">    """</div><div class="line">    <span class="keyword">if</span> re.match(<span class="string">"^1\d&#123;10&#125;$"</span>, account):</div><div class="line">        print(<span class="string">"手机号码登录 \n"</span>)</div><div class="line">        post_url = <span class="string">"https://www.zhihu.com/login/phone_num"</span></div><div class="line">        post_data = &#123;</div><div class="line">            <span class="string">"_xsrf"</span>: get_xsrf(),</div><div class="line">            <span class="string">"phone_num"</span>: account,</div><div class="line">            <span class="string">"password"</span>: password</div><div class="line">        &#125;</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="keyword">if</span> <span class="string">"@"</span> <span class="keyword">in</span> account:</div><div class="line">            print(<span class="string">"邮箱登录 \n"</span>)</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            print(<span class="string">"你的账号输入有问题，请重新登录"</span>)</div><div class="line">            <span class="keyword">return</span> <span class="number">0</span></div><div class="line">        post_url = <span class="string">'https://www.zhihu.com/login/email'</span></div><div class="line">        post_data = &#123;</div><div class="line">            <span class="string">'_xsrf'</span>: get_xsrf(),</div><div class="line">            <span class="string">'password'</span>: password,</div><div class="line">            <span class="string">'email'</span>: account</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    <span class="comment"># 不需要验证码直接登录成功</span></div><div class="line">    login_page = session.post(post_url, post_data, headers=headers)</div><div class="line">    login_code = login_page.json()</div><div class="line">    <span class="keyword">if</span> login_code[<span class="string">'r'</span>] == <span class="number">1</span>:</div><div class="line">        <span class="comment"># 不输入验证码登录失败</span></div><div class="line">        <span class="comment"># 使用需要输入验证码的方式登录</span></div><div class="line">        post_data[<span class="string">"captcha"</span>] = get_captcha()</div><div class="line">        login_page = session.post(post_url, post_data, headers=headers)</div><div class="line">        login_code = login_page.json()</div><div class="line">        print(login_code[<span class="string">'msg'</span>])</div><div class="line">    <span class="comment"># 保存 cookies 到文件，</span></div><div class="line">    <span class="comment"># 下次可以使用 cookie 直接登录，不需要输入账号和密码</span></div><div class="line">    session.cookies.save()</div></pre></td></tr></table></figure>
+<p>以上代码是通过引入requests库，使用它的session方法，进行连接，构造post_data，把自己的用户名密码等信息发送到网站，并通过正则判断发送的是邮箱或是手机进行登录。<br>引入<code>import http.cookiejar as cookielib</code>，通过session.cookies.save()，对cookie进行保存。</p>
+<h2 id="通过Cookie登录"><a href="#通过Cookie登录" class="headerlink" title="通过Cookie登录"></a><strong>通过Cookie登录</strong></h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 使用登录cookie信息</span></div><div class="line">session = requests.session()</div><div class="line">session.cookies = cookielib.LWPCookieJar(filename=<span class="string">"cookies.txt"</span>)</div><div class="line"><span class="keyword">try</span>:</div><div class="line">    session.cookies.load(ignore_discard=<span class="keyword">True</span>)</div><div class="line"><span class="keyword">except</span>:</div><div class="line">    print(<span class="string">"Cookie未能加载"</span>)</div><div class="line">    </div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">is_login</span><span class="params">()</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    通过查看用户个人信息来判断是否已经登录</div><div class="line">    :return: </div><div class="line">    """</div><div class="line">    url = <span class="string">"https://www.zhihu.com/settings/profile"</span></div><div class="line">    response = session.get(url, headers=headers, allow_redirects=<span class="keyword">False</span>)</div><div class="line">    <span class="keyword">if</span> response.status_code == <span class="number">200</span>:</div><div class="line">        <span class="keyword">return</span> <span class="keyword">True</span></div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="keyword">return</span> <span class="keyword">False</span></div></pre></td></tr></table></figure>
+<p>登录只能一次，如果再次登录，可以直接通过查看cookie来判断是否为登录状态。</p>
+<p>首先把cookie通过session.cookies.load装载进来，执行is_login()函数，如果成功可以访问inbox_url页面，则状态码为200表示成功。这里一定要注意allow_redirects=False，当不允许且登录时会自动跳转到登录页面，则状态码是301或者302。</p>
+<h2 id="完整代码示例"><a href="#完整代码示例" class="headerlink" title="完整代码示例"></a><strong>完整代码示例</strong></h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># _*_ coding: utf-8 _*_</span></div><div class="line"><span class="string">"""</span></div><div class="line">__author__ = 'lawtech'</div><div class="line">__date__ = '2017/5/9 下午3:18'</div><div class="line">"""</div><div class="line"></div><div class="line"><span class="keyword">import</span> re</div><div class="line"><span class="keyword">import</span> requests</div><div class="line"><span class="keyword">import</span> time</div><div class="line"></div><div class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</div><div class="line"></div><div class="line"><span class="keyword">try</span>:</div><div class="line">    <span class="keyword">import</span> cookielib</div><div class="line"><span class="keyword">except</span>:</div><div class="line">    <span class="keyword">import</span> http.cookiejar <span class="keyword">as</span> cookielib</div><div class="line"></div><div class="line"><span class="comment"># 构造requests headers</span></div><div class="line">agent = <span class="string">'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.96 Safari/537.36'</span></div><div class="line">headers = &#123;</div><div class="line">    <span class="string">"Host"</span>: <span class="string">"www.zhihu.com"</span>,</div><div class="line">    <span class="string">"Referer"</span>: <span class="string">"https://www.zhihu.com/"</span>,</div><div class="line">    <span class="string">'User-Agent'</span>: agent</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment"># 使用登录cookie信息</span></div><div class="line">session = requests.session()</div><div class="line">session.cookies = cookielib.LWPCookieJar(filename=<span class="string">"cookies.txt"</span>)</div><div class="line"><span class="keyword">try</span>:</div><div class="line">    session.cookies.load(ignore_discard=<span class="keyword">True</span>)</div><div class="line"><span class="keyword">except</span>:</div><div class="line">    print(<span class="string">"Cookie未能加载"</span>)</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_xsrf</span><span class="params">()</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    获取xsrf code</div><div class="line">    :return: xsrf code</div><div class="line">    """</div><div class="line">    response = requests.get(<span class="string">"https://www.zhihu.com"</span>, headers=headers)</div><div class="line">    match_obj = re.match(<span class="string">'.*name="_xsrf" value="(.*?)"'</span>, response.text)</div><div class="line">    <span class="keyword">if</span> match_obj:</div><div class="line">        print(match_obj.group(<span class="number">1</span>))</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="keyword">return</span> <span class="string">""</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_captcha</span><span class="params">()</span>:</span></div><div class="line">    t = str(int(time.time() * <span class="number">1000</span>))</div><div class="line">    captcha_url = <span class="string">'https://www.zhihu.com/captcha.gif?r='</span> + t + <span class="string">"&amp;type=login"</span></div><div class="line">    r = session.get(captcha_url, headers=headers)</div><div class="line">    <span class="keyword">with</span> open(<span class="string">'captcha.jpg'</span>, <span class="string">'wb'</span>) <span class="keyword">as</span> f:</div><div class="line">        f.write(r.content)</div><div class="line">        f.close()</div><div class="line">    im = Image.open(<span class="string">'captcha.jpg'</span>)</div><div class="line">    im.show()</div><div class="line">    im.close()</div><div class="line">    captcha = input(<span class="string">"请输入验证码：\n"</span>)</div><div class="line">    <span class="keyword">return</span> captcha</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">zhihu_login</span><span class="params">(account, password)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    知乎登录</div><div class="line">    :param account: </div><div class="line">    :param password: </div><div class="line">    :return: </div><div class="line">    """</div><div class="line">    <span class="keyword">if</span> re.match(<span class="string">"^1\d&#123;10&#125;$"</span>, account):</div><div class="line">        print(<span class="string">"手机号码登录 \n"</span>)</div><div class="line">        post_url = <span class="string">"https://www.zhihu.com/login/phone_num"</span></div><div class="line">        post_data = &#123;</div><div class="line">            <span class="string">"_xsrf"</span>: get_xsrf(),</div><div class="line">            <span class="string">"phone_num"</span>: account,</div><div class="line">            <span class="string">"password"</span>: password</div><div class="line">        &#125;</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="keyword">if</span> <span class="string">"@"</span> <span class="keyword">in</span> account:</div><div class="line">            print(<span class="string">"邮箱登录 \n"</span>)</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            print(<span class="string">"你的账号输入有问题，请重新登录"</span>)</div><div class="line">            <span class="keyword">return</span> <span class="number">0</span></div><div class="line">        post_url = <span class="string">'https://www.zhihu.com/login/email'</span></div><div class="line">        post_data = &#123;</div><div class="line">            <span class="string">'_xsrf'</span>: get_xsrf(),</div><div class="line">            <span class="string">'password'</span>: password,</div><div class="line">            <span class="string">'email'</span>: account</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    <span class="comment"># 不需要验证码直接登录成功</span></div><div class="line">    login_page = session.post(post_url, post_data, headers=headers)</div><div class="line">    login_code = login_page.json()</div><div class="line">    <span class="keyword">if</span> login_code[<span class="string">'r'</span>] == <span class="number">1</span>:</div><div class="line">        <span class="comment"># 不输入验证码登录失败</span></div><div class="line">        <span class="comment"># 使用需要输入验证码的方式登录</span></div><div class="line">        post_data[<span class="string">"captcha"</span>] = get_captcha()</div><div class="line">        login_page = session.post(post_url, post_data, headers=headers)</div><div class="line">        login_code = login_page.json()</div><div class="line">        print(login_code[<span class="string">'msg'</span>])</div><div class="line">    <span class="comment"># 保存 cookies 到文件，</span></div><div class="line">    <span class="comment"># 下次可以使用 cookie 直接登录，不需要输入账号和密码</span></div><div class="line">    session.cookies.save()</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">is_login</span><span class="params">()</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    通过查看用户个人信息来判断是否已经登录</div><div class="line">    :return: </div><div class="line">    """</div><div class="line">    url = <span class="string">"https://www.zhihu.com/settings/profile"</span></div><div class="line">    response = session.get(url, headers=headers, allow_redirects=<span class="keyword">False</span>)</div><div class="line">    <span class="keyword">if</span> response.status_code == <span class="number">200</span>:</div><div class="line">        <span class="keyword">return</span> <span class="keyword">True</span></div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="keyword">return</span> <span class="keyword">False</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    <span class="keyword">if</span> is_login():</div><div class="line">        print(<span class="string">"您已经登录！"</span>)</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        account = input(<span class="string">"请输入用户名：\n"</span>)</div><div class="line">        password = input(<span class="string">"请输入密码：\n"</span>)</div><div class="line">        zhihu_login(account, password)</div></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;a href=&quot;http://docs.python-requests.org/zh_CN/latest/index.html&quot;&gt;Requests&lt;/a&gt; 是以 &lt;a href=&quot;http://www.python.org/dev/peps/pep-0020&quot;&gt;PEP 20&lt;/a&gt; 的箴言为中心开发的&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Beautiful is better than ugly.(美丽优于丑陋)&lt;/li&gt;
+&lt;li&gt;Explicit is better than implicit.(直白优于含蓄)&lt;/li&gt;
+&lt;li&gt;Simple is better than complex.(简单优于复杂)&lt;/li&gt;
+&lt;li&gt;Complex is better than complicated.(复杂优于繁琐)&lt;/li&gt;
+&lt;li&gt;Readability counts.(可读性很重要)&lt;/li&gt;
+&lt;/ol&gt;
+    
+    </summary>
+    
+      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
+    
+    
+      <category term="Scrapy，Requests，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CRequests%EF%BC%8CPython/"/>
+    
+  </entry>
   
   <entry>
     <title>Python分布式爬虫打造搜索引擎项目学习笔记——理解Session和Cookie机制</title>
@@ -245,33 +362,6 @@ u&#39;one&lt;br&gt;two&lt;br&gt;three&#39;</code> </li>
   </entry>
   
   <entry>
-    <title>Python分布式爬虫打造搜索引擎项目学习笔记——保存item到json文件</title>
-    <link href="http://yoursite.com/2017/05/07/scrapy-item-json/"/>
-    <id>http://yoursite.com/2017/05/07/scrapy-item-json/</id>
-    <published>2017-05-07T06:18:54.000Z</published>
-    <updated>2017-05-07T05:05:09.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>在Scrapy中，所有item数据都会通过pipelines进行处理，想要保存为json格式文件，只需要在piplines中进行相应的处理即可。</p>
-<a id="more"></a>
-<h2 id="使用系统-exporter-导出为-JSON-文件"><a href="#使用系统-exporter-导出为-JSON-文件" class="headerlink" title="使用系统 exporter 导出为 JSON 文件"></a><strong>使用系统 exporter 导出为 JSON 文件</strong></h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> scrapy.exporters <span class="keyword">import</span> JsonItemExporter</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">JsonExporterPipeline</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="comment"># 调用Scrapy提供的json exporter导出json文件</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.file = open(<span class="string">'article.json'</span>, <span class="string">'wb'</span>)</div><div class="line">        self.exporter = JsonItemExporter(self.file, encoding=<span class="string">"utf-8"</span>, ensure_ascii=<span class="keyword">False</span>)</div><div class="line">        self.exporter.start_exporting()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">close_spider</span><span class="params">(self, spider)</span>:</span></div><div class="line">        self.exporter.finish_exporting()</div><div class="line">        self.file.close()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_item</span><span class="params">(self, item, spider)</span>:</span></div><div class="line">        self.exporter.export_item(item)</div><div class="line">        <span class="keyword">return</span> item</div></pre></td></tr></table></figure>
-<h2 id="自定义-Pipeline-导出为-JSON-文件"><a href="#自定义-Pipeline-导出为-JSON-文件" class="headerlink" title="自定义 Pipeline 导出为 JSON 文件"></a><strong>自定义 Pipeline 导出为 JSON 文件</strong></h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">JsonWithEncodingPipeline</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="comment"># 自定义json文件的导出</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.file = codecs.open(<span class="string">'article.json'</span>, <span class="string">'w'</span>, encoding=<span class="string">"utf-8"</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_item</span><span class="params">(self, item, spider)</span>:</span></div><div class="line">        lines = json.dumps(dict(item), ensure_ascii=<span class="keyword">False</span>) + <span class="string">"\n"</span></div><div class="line">        self.file.write(lines)</div><div class="line">        <span class="keyword">return</span> item</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">spider_closed</span><span class="params">(self, spider)</span>:</span></div><div class="line">        self.file.close()</div></pre></td></tr></table></figure>
-<h2 id="函数说明"><a href="#函数说明" class="headerlink" title="函数说明"></a><strong>函数说明</strong></h2><p><code>codecs</code> ：避免打开文件时出现编码错误。<br><code>json.dumps</code> ：dict转成str<br><code>json.loads</code> ：str转成dict<br><code>ensure_ascii=False</code> ：避免处理英文以外语言时出错<br><code>return item</code> ：交给下一个pipeline处理</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;在Scrapy中，所有item数据都会通过pipelines进行处理，想要保存为json格式文件，只需要在piplines中进行相应的处理即可。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
-    
-    
-      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Python分布式爬虫打造搜索引擎项目学习笔记——通过Pipeline保存数据到MySQL</title>
     <link href="http://yoursite.com/2017/05/07/scrapy-item-mysql/"/>
     <id>http://yoursite.com/2017/05/07/scrapy-item-mysql/</id>
@@ -316,47 +406,22 @@ u&#39;one&lt;br&gt;two&lt;br&gt;three&#39;</code> </li>
   </entry>
   
   <entry>
-    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Item Pipeline</title>
-    <link href="http://yoursite.com/2017/05/06/scrapy-item-pipeline/"/>
-    <id>http://yoursite.com/2017/05/06/scrapy-item-pipeline/</id>
-    <published>2017-05-06T06:18:54.000Z</published>
-    <updated>2017-05-06T13:35:25.000Z</updated>
+    <title>Python分布式爬虫打造搜索引擎项目学习笔记——保存item到json文件</title>
+    <link href="http://yoursite.com/2017/05/07/scrapy-item-json/"/>
+    <id>http://yoursite.com/2017/05/07/scrapy-item-json/</id>
+    <published>2017-05-07T06:18:54.000Z</published>
+    <updated>2017-05-07T05:05:09.000Z</updated>
     
-    <content type="html"><![CDATA[<p>当 Item 在 Spider 中被收集之后，它将会被传递到 Item Pipeline，一些组件会按照一定的顺序执行对 Item 的处理。</p>
-<p>每个 item pipeline 组件（有时称之为“Item Pipeline”）是实现了简单方法的 Python 类。他们接收到 Item 并通过它执行一些行为，同时也决定此 Item 是否继续通过 pipeline，或是被丢弃而不再进行处理。</p>
+    <content type="html"><![CDATA[<p>在Scrapy中，所有item数据都会通过pipelines进行处理，想要保存为json格式文件，只需要在piplines中进行相应的处理即可。</p>
 <a id="more"></a>
-<p>以下是 item pipeline 的一些典型应用：</p>
-<ul>
-<li>清理 HTML 数据</li>
-<li>验证爬取的数据（检查 item 包含某些字段）</li>
-<li>查重（并丢弃）</li>
-<li>将爬取结果保存到数据库中</li>
-</ul>
-<h2 id="编写自定义的-Pipeline"><a href="#编写自定义的-Pipeline" class="headerlink" title="编写自定义的 Pipeline"></a><strong>编写自定义的 Pipeline</strong></h2><p>定义一个Python类，然后实现方法 <code>process_item(self, item, spider)</code> 即可，返回一个字典或Item，或者抛出 <code>DropItem</code> 异常丢弃这个Item。</p>
-<p>除此之外，还可以实现以下几个方法：</p>
-<ul>
-<li><code>open_spider(self, spider)</code> ：当spider被开启时，这个方法被调用</li>
-<li><code>close_spider(self, spider)</code> ：当spider被关闭时，这个方法被调用</li>
-<li><code>from_crawler(cls, crawler)</code> ： 可访问核心组件比如配置和信号，并注册钩子函数到Scrapy中</li>
-</ul>
-<h2 id="Item-Pipeline示例"><a href="#Item-Pipeline示例" class="headerlink" title="Item Pipeline示例"></a><strong>Item Pipeline示例</strong></h2><h3 id="价格验证"><a href="#价格验证" class="headerlink" title="价格验证"></a><strong>价格验证</strong></h3><p>让我们来看一下以下这个假设的 pipeline，它为那些不含税（<code>price_excludes_vat</code> 属性）的item调整了price属性，同时丢弃了那些没有价格item：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> scrapy.exceptions <span class="keyword">import</span> DropItem</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">PricePipeline</span><span class="params">(object)</span>:</span></div><div class="line"></div><div class="line">	vat_factor = <span class="number">1.15</span></div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">def</span> <span class="title">process_item</span><span class="params">(self, item, spider)</span>:</span> </div><div class="line">        <span class="keyword">if</span> item[<span class="string">'price'</span>]: </div><div class="line">            <span class="keyword">if</span> item[<span class="string">'price_excludes_vat'</span>]:</div><div class="line">				item[<span class="string">'price'</span>] = item[<span class="string">'price'</span>] * self.vat_factor </div><div class="line">            <span class="keyword">return</span> item </div><div class="line">        <span class="keyword">else</span>: </div><div class="line">            <span class="keyword">raise</span> DropItem(<span class="string">"Missing price in %s"</span> % item)</div></pre></td></tr></table></figure>
-<h3 id="将item写入Json文件"><a href="#将item写入Json文件" class="headerlink" title="将item写入Json文件"></a><strong>将item写入Json文件</strong></h3><p>下面的这个Pipeline将所有的item写入到一个单独的json文件，，每行包含一个序列化 为 JSON 格式的 item:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> json</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">JsonWriterPipeline</span><span class="params">(object)</span>:</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.file = open(<span class="string">'items.jl'</span>, <span class="string">'wb'</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_item</span><span class="params">(self, item, spider)</span>:</span></div><div class="line">        line = json.dumps(dict(item)) + <span class="string">"\n"</span></div><div class="line">        self.file.write(line)</div><div class="line">        <span class="keyword">return</span> item</div></pre></td></tr></table></figure>
-<p>JsonWriterPipeline 的目的只是为了介绍怎样编写 item pipeline，如果你想要将所有爬取的 item 都保存到同 一个 JSON 文件， 你需要使用 Feed exports 。</p>
-<h3 id="将item存储到MongoDB中"><a href="#将item存储到MongoDB中" class="headerlink" title="将item存储到MongoDB中"></a>将item存储到MongoDB中</h3><p>这个例子使用<a href="http://api.mongodb.org/python/current/" target="_blank" rel="external">pymongo</a>来演示怎样讲item保存到MongoDB中。 MongoDB的地址和数据库名在配置 <code>settings.py</code> 中指定，这个例子主要是向你展示怎样使用<code>from_crawler()</code>方法，以及如何清理资源。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pymongo</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MongoPipeline</span><span class="params">(object)</span>:</span></div><div class="line"></div><div class="line">    collection_name = <span class="string">'scrapy_items'</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, mongo_uri, mongo_db)</span>:</span></div><div class="line">        self.mongo_uri = mongo_uri</div><div class="line">        self.mongo_db = mongo_db</div><div class="line"></div><div class="line"><span class="meta">    @classmethod</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">from_crawler</span><span class="params">(cls, crawler)</span>:</span></div><div class="line">        <span class="keyword">return</span> cls(</div><div class="line">            mongo_uri=crawler.settings.get(<span class="string">'MONGO_URI'</span>),</div><div class="line">            mongo_db=crawler.settings.get(<span class="string">'MONGO_DATABASE'</span>, <span class="string">'items'</span>)</div><div class="line">        )</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">open_spider</span><span class="params">(self, spider)</span>:</span></div><div class="line">        self.client = pymongo.MongoClient(self.mongo_uri)</div><div class="line">        self.db = self.client[self.mongo_db]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">close_spider</span><span class="params">(self, spider)</span>:</span></div><div class="line">        self.client.close()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_item</span><span class="params">(self, item, spider)</span>:</span></div><div class="line">        self.db[self.collection_name].insert(dict(item))</div><div class="line">        <span class="keyword">return</span> item</div></pre></td></tr></table></figure>
-<h3 id="去重"><a href="#去重" class="headerlink" title="去重"></a><strong>去重</strong></h3><p>一个用于去重的过滤器，丢弃那些已经被处理过的 item。让我们假设我们的 item 有一个唯一的 id，但是我们 sp ider 返回的多个 item 中包含有相同的 id:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> scrapy.exceptions <span class="keyword">import</span> DropItem</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">DuplicatesPipeline</span><span class="params">(object)</span>:</span></div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span> </div><div class="line">        self.ids_seen = set()</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">def</span> <span class="title">process_item</span><span class="params">(self, item, spider)</span>:</span> </div><div class="line">        <span class="keyword">if</span> item[<span class="string">'id'</span>] <span class="keyword">in</span> self.ids_seen:</div><div class="line">			<span class="keyword">raise</span> DropItem(<span class="string">"Duplicate item found: %s"</span> % item) </div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            self.ids_seen.add(item[<span class="string">'id'</span>]) </div><div class="line">            <span class="keyword">return</span> item</div></pre></td></tr></table></figure>
-<h2 id="启用一个-Item-Pipeline-组件"><a href="#启用一个-Item-Pipeline-组件" class="headerlink" title="启用一个 Item Pipeline 组件"></a>启用一个 Item Pipeline 组件</h2><p>为了启用一个 Item Pipeline 组件，你必须将它的类添加到 ITEM_PIPELINES 配置，就像下面这个例子:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">ITEM_PIPELINES = &#123; </div><div class="line">    <span class="string">'myproject.pipelines.PricePipeline'</span>: <span class="number">300</span>, </div><div class="line">    <span class="string">'myproject.pipelines.JsonWriterPipeline'</span>: <span class="number">800</span>, </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>分配给每个类的整型值，确定了他们运行的顺序，item 按数字从低到高的顺序，通过 pipeline，通常将这些数字 定义在 0-1000 范围内。</p>
+<h2 id="使用系统-exporter-导出为-JSON-文件"><a href="#使用系统-exporter-导出为-JSON-文件" class="headerlink" title="使用系统 exporter 导出为 JSON 文件"></a><strong>使用系统 exporter 导出为 JSON 文件</strong></h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> scrapy.exporters <span class="keyword">import</span> JsonItemExporter</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">JsonExporterPipeline</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="comment"># 调用Scrapy提供的json exporter导出json文件</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.file = open(<span class="string">'article.json'</span>, <span class="string">'wb'</span>)</div><div class="line">        self.exporter = JsonItemExporter(self.file, encoding=<span class="string">"utf-8"</span>, ensure_ascii=<span class="keyword">False</span>)</div><div class="line">        self.exporter.start_exporting()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">close_spider</span><span class="params">(self, spider)</span>:</span></div><div class="line">        self.exporter.finish_exporting()</div><div class="line">        self.file.close()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_item</span><span class="params">(self, item, spider)</span>:</span></div><div class="line">        self.exporter.export_item(item)</div><div class="line">        <span class="keyword">return</span> item</div></pre></td></tr></table></figure>
+<h2 id="自定义-Pipeline-导出为-JSON-文件"><a href="#自定义-Pipeline-导出为-JSON-文件" class="headerlink" title="自定义 Pipeline 导出为 JSON 文件"></a><strong>自定义 Pipeline 导出为 JSON 文件</strong></h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">JsonWithEncodingPipeline</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="comment"># 自定义json文件的导出</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.file = codecs.open(<span class="string">'article.json'</span>, <span class="string">'w'</span>, encoding=<span class="string">"utf-8"</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_item</span><span class="params">(self, item, spider)</span>:</span></div><div class="line">        lines = json.dumps(dict(item), ensure_ascii=<span class="keyword">False</span>) + <span class="string">"\n"</span></div><div class="line">        self.file.write(lines)</div><div class="line">        <span class="keyword">return</span> item</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">spider_closed</span><span class="params">(self, spider)</span>:</span></div><div class="line">        self.file.close()</div></pre></td></tr></table></figure>
+<h2 id="函数说明"><a href="#函数说明" class="headerlink" title="函数说明"></a><strong>函数说明</strong></h2><p><code>codecs</code> ：避免打开文件时出现编码错误。<br><code>json.dumps</code> ：dict转成str<br><code>json.loads</code> ：str转成dict<br><code>ensure_ascii=False</code> ：避免处理英文以外语言时出错<br><code>return item</code> ：交给下一个pipeline处理</p>
 ]]></content>
     
     <summary type="html">
     
-      &lt;p&gt;当 Item 在 Spider 中被收集之后，它将会被传递到 Item Pipeline，一些组件会按照一定的顺序执行对 Item 的处理。&lt;/p&gt;
-&lt;p&gt;每个 item pipeline 组件（有时称之为“Item Pipeline”）是实现了简单方法的 Python 类。他们接收到 Item 并通过它执行一些行为，同时也决定此 Item 是否继续通过 pipeline，或是被丢弃而不再进行处理。&lt;/p&gt;
+      &lt;p&gt;在Scrapy中，所有item数据都会通过pipelines进行处理，想要保存为json格式文件，只需要在piplines中进行相应的处理即可。&lt;/p&gt;
     
     </summary>
     
@@ -527,44 +592,47 @@ u&#39;one&lt;br&gt;two&lt;br&gt;three&#39;</code> </li>
   </entry>
   
   <entry>
-    <title>Python分布式爬虫打造搜索引擎项目学习笔记——items设计</title>
-    <link href="http://yoursite.com/2017/05/05/scrapy-items-design/"/>
-    <id>http://yoursite.com/2017/05/05/scrapy-items-design/</id>
-    <published>2017-05-05T06:18:54.000Z</published>
-    <updated>2017-05-06T10:36:18.000Z</updated>
+    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Item Pipeline</title>
+    <link href="http://yoursite.com/2017/05/06/scrapy-item-pipeline/"/>
+    <id>http://yoursite.com/2017/05/06/scrapy-item-pipeline/</id>
+    <published>2017-05-06T06:18:54.000Z</published>
+    <updated>2017-05-06T13:35:25.000Z</updated>
     
-    <content type="html"><![CDATA[<p>Scrapy的item是进行数据保存不可缺少的步骤，通过它进行数据的整理并通过Pipelines进行数据的数据库保存，图片下载等，它只有一种类型 <code>scrapy.Field()</code> 。</p>
+    <content type="html"><![CDATA[<p>当 Item 在 Spider 中被收集之后，它将会被传递到 Item Pipeline，一些组件会按照一定的顺序执行对 Item 的处理。</p>
+<p>每个 item pipeline 组件（有时称之为“Item Pipeline”）是实现了简单方法的 Python 类。他们接收到 Item 并通过它执行一些行为，同时也决定此 Item 是否继续通过 pipeline，或是被丢弃而不再进行处理。</p>
 <a id="more"></a>
-<h2 id="定义-items"><a href="#定义-items" class="headerlink" title="定义 items"></a><strong>定义 items</strong></h2><p>由于需要添加一个封面图，对上面的爬虫添加一个 <code>front_image_url</code> 字段对 <code>parse</code> 函数进行修改：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    1. 获取文章列表页中的文章url并交给解析函数进行具体字段的解析</div><div class="line">    2. 获取下一页的url并交给scrapy进行下载</div><div class="line">    :param response: </div><div class="line">    :return: </div><div class="line">    """</div><div class="line"></div><div class="line">    <span class="comment"># 解析列表页中的所有文章url并交给解析函数进行具体字段的解析</span></div><div class="line">    post_nodes = response.css(<span class="string">"#archive .floated-thumb .post-thumb a"</span>)</div><div class="line">    <span class="keyword">for</span> post_node <span class="keyword">in</span> post_nodes:</div><div class="line">        image_url = post_node.css(<span class="string">"img::attr(src)"</span>).extract_first(<span class="string">""</span>)</div><div class="line">        post_url = post_node.css(<span class="string">"::attr(href)"</span>).extract_first(<span class="string">""</span>)</div><div class="line">        <span class="keyword">yield</span> Request(url=parse.urljoin(response.url, post_url), meta=&#123;<span class="string">"front_image_url"</span>: image_url&#125;, callback=self.parse_detail)</div></pre></td></tr></table></figure>
-<p>其中的 <code>meta</code> 字段是传递值的方法。在调试时返回的 <code>response</code> 中会出现 <code>meta</code> 的内容，它是一个字典，故在传递时可以直接通过 <code>response.meta[&#39;front_image_url&#39;]</code> 进行引用（也可以使用get的方法，附默认值防止出现异常）：</p>
-<p><img src="http://ww1.sinaimg.cn/large/006tNc79gy1ffaslwq4mqj30l1058t9b.jpg" alt=""></p>
-<p>在 <code>items.py</code> 文件中，定义一个item并声明其字段：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">JobBoleArticleItem</span><span class="params">(scrapy.Item)</span>:</span></div><div class="line">    title = scrapy.Field()</div><div class="line">    create_date = scrapy.Field()</div><div class="line">    url = scrapy.Field()</div><div class="line">    url_object_id = scrapy.Field()</div><div class="line">    front_image_url = scrapy.Field()</div><div class="line">    front_image_path = scrapy.Field()</div><div class="line">    praise_nums = scrapy.Field()</div><div class="line">    comment_nums = scrapy.Field()</div><div class="line">    fav_nums = scrapy.Field()</div><div class="line">    tags = scrapy.Field()</div><div class="line">    content = scrapy.Field()</div></pre></td></tr></table></figure>
-<p>在 <code>jobbole.py</code> 中添加 <code>from ArticleSpider.items import JobBoleArticleItem</code> 对item进行引用，然后在 <code>parse_detail</code> 中进行初始化 <code>article_item = JobBoleArticleItem()</code> ，之后将获取到的字段内容存入初始化的item中，最终代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse_detail</span><span class="params">(self, response)</span>:</span></div><div class="line">    article_item = JobBoleArticleItem()</div><div class="line"></div><div class="line">    <span class="comment"># 通过css选择器提取字段</span></div><div class="line">    front_image_url = response.meta.get(<span class="string">"front_image_url"</span>, <span class="string">""</span>)  <span class="comment"># 文章封面图</span></div><div class="line">    title = response.css(<span class="string">".entry-header h1::text"</span>).extract()[<span class="number">0</span>]</div><div class="line">    create_date = response.css(<span class="string">"p.entry-meta-hide-on-mobile::text"</span>).extract()[<span class="number">0</span>].strip().replace(<span class="string">"·"</span>, <span class="string">""</span>).strip()</div><div class="line">    praise_nums = int(response.css(<span class="string">".vote-post-up h10::text"</span>).extract()[<span class="number">0</span>])</div><div class="line">    fav_nums = response.css(<span class="string">".bookmark-btn::text"</span>).extract()[<span class="number">0</span>]</div><div class="line">    match_re = re.match(<span class="string">".*?(\d+).*?"</span>, fav_nums)</div><div class="line">    <span class="keyword">if</span> match_re:</div><div class="line">        fav_nums = int(match_re.group(<span class="number">1</span>))</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        fav_nums = <span class="number">0</span></div><div class="line">    comment_nums = response.css(<span class="string">"a[href='#article-comment'] span::text"</span>).extract()[<span class="number">0</span>]</div><div class="line">    match_re = re.match(<span class="string">".*?(\d+).*?"</span>, comment_nums)</div><div class="line">    <span class="keyword">if</span> match_re:</div><div class="line">        comment_nums = int(match_re.group(<span class="number">1</span>))</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        comment_nums = <span class="number">0</span></div><div class="line">    content = response.css(<span class="string">"div.entry"</span>).extract()[<span class="number">0</span>]</div><div class="line">    tag_list = response.css(<span class="string">"p.entry-meta-hide-on-mobile a::text"</span>).extract()</div><div class="line">    tag_list = [element <span class="keyword">for</span> element <span class="keyword">in</span> tag_list <span class="keyword">if</span> <span class="keyword">not</span> element.strip().endswith(<span class="string">"评论"</span>)]</div><div class="line">    tags = <span class="string">","</span>.join(tag_list)</div><div class="line"></div><div class="line">    article_item[<span class="string">"title"</span>] = title</div><div class="line">    article_item[<span class="string">"url"</span>] = response.url</div><div class="line">    article_item[<span class="string">"create_date"</span>] = create_date</div><div class="line">    article_item[<span class="string">"front_image_url"</span>] = front_image_url</div><div class="line">    article_item[<span class="string">"praise_nums"</span>] = praise_nums</div><div class="line">    article_item[<span class="string">"comment_nums"</span>] = comment_nums</div><div class="line">    article_item[<span class="string">"fav_nums"</span>] = fav_nums</div><div class="line">    article_item[<span class="string">"content"</span>] = content</div><div class="line">    article_item[<span class="string">"tags"</span>] = tags</div><div class="line">    </div><div class="line">    <span class="keyword">yield</span> article_item</div></pre></td></tr></table></figure>
-<p>其中 <code>yield article_item</code> 会自动提交到 <code>settings</code> 中的 <code>ITEM_PIPELINES</code> 进行处理。<br>此时在 <code>pipelines.py</code> 中设置断点调试，可以看到 <code>article_item</code> 中的值已经传递到这里了。</p>
-<p><img src="http://ww3.sinaimg.cn/large/006tNc79gy1ffasxu8jauj31ge0my46y.jpg" alt=""></p>
-<h2 id="自定义-Pipelines"><a href="#自定义-Pipelines" class="headerlink" title="自定义 Pipelines"></a><strong>自定义 Pipelines</strong></h2><p>在 <code>settings.py</code> 中有一个ITEM_PIPELINES的选项，把它的注释去掉增加下载图片的代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Configure item pipelines</span></div><div class="line"><span class="comment"># See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html</span></div><div class="line">ITEM_PIPELINES = &#123;</div><div class="line">    <span class="string">'ArticleSpider.pipelines.ArticlespiderPipeline'</span>: <span class="number">300</span>,</div><div class="line">    <span class="string">'scrapy.pipelines.images.ImagesPipeline'</span>: <span class="number">1</span>,</div><div class="line">&#125;</div><div class="line">IMAGES_URLS_FIELD = <span class="string">"front_image_url"</span></div><div class="line">project_dir = os.path.abspath(os.path.dirname(__file__))</div><div class="line">IMAGES_STORE = os.path.join(project_dir, <span class="string">'images'</span>)</div></pre></td></tr></table></figure>
-<p>上面的代码启用了下载图片piplines，并定义了存储地址及想要存储的图片地址。<br>在settings.py同级目录下建立文件夹 <code>images</code> 用来保存图片。当运行爬虫时，图片就会自动下载图片并保存到本地。<br>如果想要得到存储的图片路径的话，需要自定义pipelines。</p>
-<p>首先，在 <code>pipeines.py</code> 中引入 <code>from scrapy.pipelines.images import ImagesPipeline</code> ， 然后自定义一个pipeline对ImagesPipeline进行重载：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ArticleImagePipeline</span><span class="params">(ImagesPipeline)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">item_completed</span><span class="params">(self, results, item, info)</span>:</span></div><div class="line">        <span class="keyword">pass</span></div></pre></td></tr></table></figure>
-<p>进行断点调试，查看results中的信息：</p>
-<p><img src="http://ww4.sinaimg.cn/large/006tNc79gy1ffblwnn93tj31aq0t2wmq.jpg" alt=""></p>
-<p>调试结果中，results是一个list，第一个值是一个bool值表示图片是否获取成功，第二个值是一个字典，保存了图片路径，图片地址等信息。</p>
-<p>最终自定义的pipeline代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ArticleImagePipeline</span><span class="params">(ImagesPipeline)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">item_completed</span><span class="params">(self, results, item, info)</span>:</span></div><div class="line">        <span class="keyword">for</span> ok, value <span class="keyword">in</span> results:</div><div class="line">            image_file_path = value[<span class="string">"path"</span>]</div><div class="line">        item[<span class="string">"front_image_path"</span>] = image_file_path</div><div class="line">        <span class="keyword">return</span> item</div></pre></td></tr></table></figure>
-<p>上面代码得到image_path保存到 <code>item[&quot;front_image_path&quot;]</code> 中并返回，这时会根据pipelines的顺序进行下一个pipelines进行处理。通过断点调试可以得到想要的结果。</p>
-<p><img src="http://ww3.sinaimg.cn/large/006tNc79gy1ffbpccuulfj31kw0w7dqk.jpg" alt=""></p>
-<h2 id="完善-items-获取"><a href="#完善-items-获取" class="headerlink" title="完善 items 获取"></a><strong>完善 items 获取</strong></h2><p>对之前定义的items中的 <code>url_object_id</code> 字段，需要对url进行md5处理，因此在 <code>items.py</code> 同级目录下新建一个名为 <code>utils</code> 的 <code>python package</code>，新建 <code>common.py</code> ，代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> hashlib</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_md5</span><span class="params">(url)</span>:</span></div><div class="line">    <span class="keyword">if</span> isinstance(url, str):</div><div class="line">        url = url.encode(<span class="string">"utf-8"</span>)</div><div class="line">    m = hashlib.md5()</div><div class="line">    m.update(url)</div><div class="line">    <span class="keyword">return</span> m.hexdigest()</div></pre></td></tr></table></figure>
-<p>然后在 <code>jobbole.py</code> 下引入 <code>from ArticleSpider.utils.common import get_md5</code> ，在item内容填充时加上 <code>article_item[&quot;url_object_id&quot;] = get_md5(response.url)</code> 即可。</p>
+<p>以下是 item pipeline 的一些典型应用：</p>
+<ul>
+<li>清理 HTML 数据</li>
+<li>验证爬取的数据（检查 item 包含某些字段）</li>
+<li>查重（并丢弃）</li>
+<li>将爬取结果保存到数据库中</li>
+</ul>
+<h2 id="编写自定义的-Pipeline"><a href="#编写自定义的-Pipeline" class="headerlink" title="编写自定义的 Pipeline"></a><strong>编写自定义的 Pipeline</strong></h2><p>定义一个Python类，然后实现方法 <code>process_item(self, item, spider)</code> 即可，返回一个字典或Item，或者抛出 <code>DropItem</code> 异常丢弃这个Item。</p>
+<p>除此之外，还可以实现以下几个方法：</p>
+<ul>
+<li><code>open_spider(self, spider)</code> ：当spider被开启时，这个方法被调用</li>
+<li><code>close_spider(self, spider)</code> ：当spider被关闭时，这个方法被调用</li>
+<li><code>from_crawler(cls, crawler)</code> ： 可访问核心组件比如配置和信号，并注册钩子函数到Scrapy中</li>
+</ul>
+<h2 id="Item-Pipeline示例"><a href="#Item-Pipeline示例" class="headerlink" title="Item Pipeline示例"></a><strong>Item Pipeline示例</strong></h2><h3 id="价格验证"><a href="#价格验证" class="headerlink" title="价格验证"></a><strong>价格验证</strong></h3><p>让我们来看一下以下这个假设的 pipeline，它为那些不含税（<code>price_excludes_vat</code> 属性）的item调整了price属性，同时丢弃了那些没有价格item：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> scrapy.exceptions <span class="keyword">import</span> DropItem</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">PricePipeline</span><span class="params">(object)</span>:</span></div><div class="line"></div><div class="line">	vat_factor = <span class="number">1.15</span></div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">def</span> <span class="title">process_item</span><span class="params">(self, item, spider)</span>:</span> </div><div class="line">        <span class="keyword">if</span> item[<span class="string">'price'</span>]: </div><div class="line">            <span class="keyword">if</span> item[<span class="string">'price_excludes_vat'</span>]:</div><div class="line">				item[<span class="string">'price'</span>] = item[<span class="string">'price'</span>] * self.vat_factor </div><div class="line">            <span class="keyword">return</span> item </div><div class="line">        <span class="keyword">else</span>: </div><div class="line">            <span class="keyword">raise</span> DropItem(<span class="string">"Missing price in %s"</span> % item)</div></pre></td></tr></table></figure>
+<h3 id="将item写入Json文件"><a href="#将item写入Json文件" class="headerlink" title="将item写入Json文件"></a><strong>将item写入Json文件</strong></h3><p>下面的这个Pipeline将所有的item写入到一个单独的json文件，，每行包含一个序列化 为 JSON 格式的 item:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> json</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">JsonWriterPipeline</span><span class="params">(object)</span>:</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.file = open(<span class="string">'items.jl'</span>, <span class="string">'wb'</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_item</span><span class="params">(self, item, spider)</span>:</span></div><div class="line">        line = json.dumps(dict(item)) + <span class="string">"\n"</span></div><div class="line">        self.file.write(line)</div><div class="line">        <span class="keyword">return</span> item</div></pre></td></tr></table></figure>
+<p>JsonWriterPipeline 的目的只是为了介绍怎样编写 item pipeline，如果你想要将所有爬取的 item 都保存到同 一个 JSON 文件， 你需要使用 Feed exports 。</p>
+<h3 id="将item存储到MongoDB中"><a href="#将item存储到MongoDB中" class="headerlink" title="将item存储到MongoDB中"></a>将item存储到MongoDB中</h3><p>这个例子使用<a href="http://api.mongodb.org/python/current/" target="_blank" rel="external">pymongo</a>来演示怎样讲item保存到MongoDB中。 MongoDB的地址和数据库名在配置 <code>settings.py</code> 中指定，这个例子主要是向你展示怎样使用<code>from_crawler()</code>方法，以及如何清理资源。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pymongo</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MongoPipeline</span><span class="params">(object)</span>:</span></div><div class="line"></div><div class="line">    collection_name = <span class="string">'scrapy_items'</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, mongo_uri, mongo_db)</span>:</span></div><div class="line">        self.mongo_uri = mongo_uri</div><div class="line">        self.mongo_db = mongo_db</div><div class="line"></div><div class="line"><span class="meta">    @classmethod</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">from_crawler</span><span class="params">(cls, crawler)</span>:</span></div><div class="line">        <span class="keyword">return</span> cls(</div><div class="line">            mongo_uri=crawler.settings.get(<span class="string">'MONGO_URI'</span>),</div><div class="line">            mongo_db=crawler.settings.get(<span class="string">'MONGO_DATABASE'</span>, <span class="string">'items'</span>)</div><div class="line">        )</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">open_spider</span><span class="params">(self, spider)</span>:</span></div><div class="line">        self.client = pymongo.MongoClient(self.mongo_uri)</div><div class="line">        self.db = self.client[self.mongo_db]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">close_spider</span><span class="params">(self, spider)</span>:</span></div><div class="line">        self.client.close()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_item</span><span class="params">(self, item, spider)</span>:</span></div><div class="line">        self.db[self.collection_name].insert(dict(item))</div><div class="line">        <span class="keyword">return</span> item</div></pre></td></tr></table></figure>
+<h3 id="去重"><a href="#去重" class="headerlink" title="去重"></a><strong>去重</strong></h3><p>一个用于去重的过滤器，丢弃那些已经被处理过的 item。让我们假设我们的 item 有一个唯一的 id，但是我们 sp ider 返回的多个 item 中包含有相同的 id:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> scrapy.exceptions <span class="keyword">import</span> DropItem</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">DuplicatesPipeline</span><span class="params">(object)</span>:</span></div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span> </div><div class="line">        self.ids_seen = set()</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">def</span> <span class="title">process_item</span><span class="params">(self, item, spider)</span>:</span> </div><div class="line">        <span class="keyword">if</span> item[<span class="string">'id'</span>] <span class="keyword">in</span> self.ids_seen:</div><div class="line">			<span class="keyword">raise</span> DropItem(<span class="string">"Duplicate item found: %s"</span> % item) </div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            self.ids_seen.add(item[<span class="string">'id'</span>]) </div><div class="line">            <span class="keyword">return</span> item</div></pre></td></tr></table></figure>
+<h2 id="启用一个-Item-Pipeline-组件"><a href="#启用一个-Item-Pipeline-组件" class="headerlink" title="启用一个 Item Pipeline 组件"></a>启用一个 Item Pipeline 组件</h2><p>为了启用一个 Item Pipeline 组件，你必须将它的类添加到 ITEM_PIPELINES 配置，就像下面这个例子:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">ITEM_PIPELINES = &#123; </div><div class="line">    <span class="string">'myproject.pipelines.PricePipeline'</span>: <span class="number">300</span>, </div><div class="line">    <span class="string">'myproject.pipelines.JsonWriterPipeline'</span>: <span class="number">800</span>, </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>分配给每个类的整型值，确定了他们运行的顺序，item 按数字从低到高的顺序，通过 pipeline，通常将这些数字 定义在 0-1000 范围内。</p>
 ]]></content>
     
     <summary type="html">
     
-      &lt;p&gt;Scrapy的item是进行数据保存不可缺少的步骤，通过它进行数据的整理并通过Pipelines进行数据的数据库保存，图片下载等，它只有一种类型 &lt;code&gt;scrapy.Field()&lt;/code&gt; 。&lt;/p&gt;
+      &lt;p&gt;当 Item 在 Spider 中被收集之后，它将会被传递到 Item Pipeline，一些组件会按照一定的顺序执行对 Item 的处理。&lt;/p&gt;
+&lt;p&gt;每个 item pipeline 组件（有时称之为“Item Pipeline”）是实现了简单方法的 Python 类。他们接收到 Item 并通过它执行一些行为，同时也决定此 Item 是否继续通过 pipeline，或是被丢弃而不再进行处理。&lt;/p&gt;
     
     </summary>
     
@@ -750,6 +818,55 @@ u&#39;one&lt;br&gt;two&lt;br&gt;three&#39;</code> </li>
 &lt;li&gt;&lt;a href=&quot;http://lxml.de/index.html&quot;&gt;lxml&lt;/a&gt; 是一个基于 ElementTree（不是 Python 标准库的一部分）的 python 化的 XML 解析库（也可以解析 HTML）。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Scrapy 提取数据有自己的一套机制。它们被称作选择器（seletors），因为他们通过特定的 XPath 或者 CSS 表达式来“选择” HTML 文件中的某个部分。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
+    
+    
+      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Python分布式爬虫打造搜索引擎项目学习笔记——items设计</title>
+    <link href="http://yoursite.com/2017/05/05/scrapy-items-design/"/>
+    <id>http://yoursite.com/2017/05/05/scrapy-items-design/</id>
+    <published>2017-05-05T06:18:54.000Z</published>
+    <updated>2017-05-06T10:36:18.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Scrapy的item是进行数据保存不可缺少的步骤，通过它进行数据的整理并通过Pipelines进行数据的数据库保存，图片下载等，它只有一种类型 <code>scrapy.Field()</code> 。</p>
+<a id="more"></a>
+<h2 id="定义-items"><a href="#定义-items" class="headerlink" title="定义 items"></a><strong>定义 items</strong></h2><p>由于需要添加一个封面图，对上面的爬虫添加一个 <code>front_image_url</code> 字段对 <code>parse</code> 函数进行修改：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    1. 获取文章列表页中的文章url并交给解析函数进行具体字段的解析</div><div class="line">    2. 获取下一页的url并交给scrapy进行下载</div><div class="line">    :param response: </div><div class="line">    :return: </div><div class="line">    """</div><div class="line"></div><div class="line">    <span class="comment"># 解析列表页中的所有文章url并交给解析函数进行具体字段的解析</span></div><div class="line">    post_nodes = response.css(<span class="string">"#archive .floated-thumb .post-thumb a"</span>)</div><div class="line">    <span class="keyword">for</span> post_node <span class="keyword">in</span> post_nodes:</div><div class="line">        image_url = post_node.css(<span class="string">"img::attr(src)"</span>).extract_first(<span class="string">""</span>)</div><div class="line">        post_url = post_node.css(<span class="string">"::attr(href)"</span>).extract_first(<span class="string">""</span>)</div><div class="line">        <span class="keyword">yield</span> Request(url=parse.urljoin(response.url, post_url), meta=&#123;<span class="string">"front_image_url"</span>: image_url&#125;, callback=self.parse_detail)</div></pre></td></tr></table></figure>
+<p>其中的 <code>meta</code> 字段是传递值的方法。在调试时返回的 <code>response</code> 中会出现 <code>meta</code> 的内容，它是一个字典，故在传递时可以直接通过 <code>response.meta[&#39;front_image_url&#39;]</code> 进行引用（也可以使用get的方法，附默认值防止出现异常）：</p>
+<p><img src="http://ww1.sinaimg.cn/large/006tNc79gy1ffaslwq4mqj30l1058t9b.jpg" alt=""></p>
+<p>在 <code>items.py</code> 文件中，定义一个item并声明其字段：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">JobBoleArticleItem</span><span class="params">(scrapy.Item)</span>:</span></div><div class="line">    title = scrapy.Field()</div><div class="line">    create_date = scrapy.Field()</div><div class="line">    url = scrapy.Field()</div><div class="line">    url_object_id = scrapy.Field()</div><div class="line">    front_image_url = scrapy.Field()</div><div class="line">    front_image_path = scrapy.Field()</div><div class="line">    praise_nums = scrapy.Field()</div><div class="line">    comment_nums = scrapy.Field()</div><div class="line">    fav_nums = scrapy.Field()</div><div class="line">    tags = scrapy.Field()</div><div class="line">    content = scrapy.Field()</div></pre></td></tr></table></figure>
+<p>在 <code>jobbole.py</code> 中添加 <code>from ArticleSpider.items import JobBoleArticleItem</code> 对item进行引用，然后在 <code>parse_detail</code> 中进行初始化 <code>article_item = JobBoleArticleItem()</code> ，之后将获取到的字段内容存入初始化的item中，最终代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse_detail</span><span class="params">(self, response)</span>:</span></div><div class="line">    article_item = JobBoleArticleItem()</div><div class="line"></div><div class="line">    <span class="comment"># 通过css选择器提取字段</span></div><div class="line">    front_image_url = response.meta.get(<span class="string">"front_image_url"</span>, <span class="string">""</span>)  <span class="comment"># 文章封面图</span></div><div class="line">    title = response.css(<span class="string">".entry-header h1::text"</span>).extract()[<span class="number">0</span>]</div><div class="line">    create_date = response.css(<span class="string">"p.entry-meta-hide-on-mobile::text"</span>).extract()[<span class="number">0</span>].strip().replace(<span class="string">"·"</span>, <span class="string">""</span>).strip()</div><div class="line">    praise_nums = int(response.css(<span class="string">".vote-post-up h10::text"</span>).extract()[<span class="number">0</span>])</div><div class="line">    fav_nums = response.css(<span class="string">".bookmark-btn::text"</span>).extract()[<span class="number">0</span>]</div><div class="line">    match_re = re.match(<span class="string">".*?(\d+).*?"</span>, fav_nums)</div><div class="line">    <span class="keyword">if</span> match_re:</div><div class="line">        fav_nums = int(match_re.group(<span class="number">1</span>))</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        fav_nums = <span class="number">0</span></div><div class="line">    comment_nums = response.css(<span class="string">"a[href='#article-comment'] span::text"</span>).extract()[<span class="number">0</span>]</div><div class="line">    match_re = re.match(<span class="string">".*?(\d+).*?"</span>, comment_nums)</div><div class="line">    <span class="keyword">if</span> match_re:</div><div class="line">        comment_nums = int(match_re.group(<span class="number">1</span>))</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        comment_nums = <span class="number">0</span></div><div class="line">    content = response.css(<span class="string">"div.entry"</span>).extract()[<span class="number">0</span>]</div><div class="line">    tag_list = response.css(<span class="string">"p.entry-meta-hide-on-mobile a::text"</span>).extract()</div><div class="line">    tag_list = [element <span class="keyword">for</span> element <span class="keyword">in</span> tag_list <span class="keyword">if</span> <span class="keyword">not</span> element.strip().endswith(<span class="string">"评论"</span>)]</div><div class="line">    tags = <span class="string">","</span>.join(tag_list)</div><div class="line"></div><div class="line">    article_item[<span class="string">"title"</span>] = title</div><div class="line">    article_item[<span class="string">"url"</span>] = response.url</div><div class="line">    article_item[<span class="string">"create_date"</span>] = create_date</div><div class="line">    article_item[<span class="string">"front_image_url"</span>] = front_image_url</div><div class="line">    article_item[<span class="string">"praise_nums"</span>] = praise_nums</div><div class="line">    article_item[<span class="string">"comment_nums"</span>] = comment_nums</div><div class="line">    article_item[<span class="string">"fav_nums"</span>] = fav_nums</div><div class="line">    article_item[<span class="string">"content"</span>] = content</div><div class="line">    article_item[<span class="string">"tags"</span>] = tags</div><div class="line">    </div><div class="line">    <span class="keyword">yield</span> article_item</div></pre></td></tr></table></figure>
+<p>其中 <code>yield article_item</code> 会自动提交到 <code>settings</code> 中的 <code>ITEM_PIPELINES</code> 进行处理。<br>此时在 <code>pipelines.py</code> 中设置断点调试，可以看到 <code>article_item</code> 中的值已经传递到这里了。</p>
+<p><img src="http://ww3.sinaimg.cn/large/006tNc79gy1ffasxu8jauj31ge0my46y.jpg" alt=""></p>
+<h2 id="自定义-Pipelines"><a href="#自定义-Pipelines" class="headerlink" title="自定义 Pipelines"></a><strong>自定义 Pipelines</strong></h2><p>在 <code>settings.py</code> 中有一个ITEM_PIPELINES的选项，把它的注释去掉增加下载图片的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Configure item pipelines</span></div><div class="line"><span class="comment"># See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html</span></div><div class="line">ITEM_PIPELINES = &#123;</div><div class="line">    <span class="string">'ArticleSpider.pipelines.ArticlespiderPipeline'</span>: <span class="number">300</span>,</div><div class="line">    <span class="string">'scrapy.pipelines.images.ImagesPipeline'</span>: <span class="number">1</span>,</div><div class="line">&#125;</div><div class="line">IMAGES_URLS_FIELD = <span class="string">"front_image_url"</span></div><div class="line">project_dir = os.path.abspath(os.path.dirname(__file__))</div><div class="line">IMAGES_STORE = os.path.join(project_dir, <span class="string">'images'</span>)</div></pre></td></tr></table></figure>
+<p>上面的代码启用了下载图片piplines，并定义了存储地址及想要存储的图片地址。<br>在settings.py同级目录下建立文件夹 <code>images</code> 用来保存图片。当运行爬虫时，图片就会自动下载图片并保存到本地。<br>如果想要得到存储的图片路径的话，需要自定义pipelines。</p>
+<p>首先，在 <code>pipeines.py</code> 中引入 <code>from scrapy.pipelines.images import ImagesPipeline</code> ， 然后自定义一个pipeline对ImagesPipeline进行重载：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ArticleImagePipeline</span><span class="params">(ImagesPipeline)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">item_completed</span><span class="params">(self, results, item, info)</span>:</span></div><div class="line">        <span class="keyword">pass</span></div></pre></td></tr></table></figure>
+<p>进行断点调试，查看results中的信息：</p>
+<p><img src="http://ww4.sinaimg.cn/large/006tNc79gy1ffblwnn93tj31aq0t2wmq.jpg" alt=""></p>
+<p>调试结果中，results是一个list，第一个值是一个bool值表示图片是否获取成功，第二个值是一个字典，保存了图片路径，图片地址等信息。</p>
+<p>最终自定义的pipeline代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ArticleImagePipeline</span><span class="params">(ImagesPipeline)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">item_completed</span><span class="params">(self, results, item, info)</span>:</span></div><div class="line">        <span class="keyword">for</span> ok, value <span class="keyword">in</span> results:</div><div class="line">            image_file_path = value[<span class="string">"path"</span>]</div><div class="line">        item[<span class="string">"front_image_path"</span>] = image_file_path</div><div class="line">        <span class="keyword">return</span> item</div></pre></td></tr></table></figure>
+<p>上面代码得到image_path保存到 <code>item[&quot;front_image_path&quot;]</code> 中并返回，这时会根据pipelines的顺序进行下一个pipelines进行处理。通过断点调试可以得到想要的结果。</p>
+<p><img src="http://ww3.sinaimg.cn/large/006tNc79gy1ffbpccuulfj31kw0w7dqk.jpg" alt=""></p>
+<h2 id="完善-items-获取"><a href="#完善-items-获取" class="headerlink" title="完善 items 获取"></a><strong>完善 items 获取</strong></h2><p>对之前定义的items中的 <code>url_object_id</code> 字段，需要对url进行md5处理，因此在 <code>items.py</code> 同级目录下新建一个名为 <code>utils</code> 的 <code>python package</code>，新建 <code>common.py</code> ，代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> hashlib</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_md5</span><span class="params">(url)</span>:</span></div><div class="line">    <span class="keyword">if</span> isinstance(url, str):</div><div class="line">        url = url.encode(<span class="string">"utf-8"</span>)</div><div class="line">    m = hashlib.md5()</div><div class="line">    m.update(url)</div><div class="line">    <span class="keyword">return</span> m.hexdigest()</div></pre></td></tr></table></figure>
+<p>然后在 <code>jobbole.py</code> 下引入 <code>from ArticleSpider.utils.common import get_md5</code> ，在item内容填充时加上 <code>article_item[&quot;url_object_id&quot;] = get_md5(response.url)</code> 即可。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Scrapy的item是进行数据保存不可缺少的步骤，通过它进行数据的整理并通过Pipelines进行数据的数据库保存，图片下载等，它只有一种类型 &lt;code&gt;scrapy.Field()&lt;/code&gt; 。&lt;/p&gt;
     
     </summary>
     
@@ -1533,458 +1650,6 @@ u&#39;one&lt;br&gt;two&lt;br&gt;three&#39;</code> </li>
     
     
       <category term="Scrapy，Unicode，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CUnicode%EF%BC%8CPython/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Python正则表达式</title>
-    <link href="http://yoursite.com/2017/04/11/regex/"/>
-    <id>http://yoursite.com/2017/04/11/regex/</id>
-    <published>2017-04-11T12:18:54.000Z</published>
-    <updated>2017-04-11T12:10:21.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="Python正则表达式"><a href="#Python正则表达式" class="headerlink" title="Python正则表达式"></a><strong>Python正则表达式</strong></h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a><strong>简介</strong></h3><p>正则表达式是一个特殊的字符序列，它能帮助你方便的检查一个字符串是否与某种模式匹配。</p>
-<p>Python 自1.5版本起增加了re 模块，它提供 Perl 风格的正则表达式模式。</p>
-<p>re 模块使 Python 语言拥有全部的正则表达式功能。<br><a id="more"></a></p>
-<p>compile 函数根据一个模式字符串和可选的标志参数生成一个正则表达式对象。该对象拥有一系列方法用于正则表达式匹配和替换。</p>
-<p>re 模块也提供了与这些方法功能完全一致的函数，这些函数使用一个模式字符串做为它们的第一个参数。</p>
-<h3 id="正则表达式模式（常用）"><a href="#正则表达式模式（常用）" class="headerlink" title="正则表达式模式（常用）"></a><strong>正则表达式模式（常用）</strong></h3><p>模式字符串使用特殊的语法来表示一个正则表达式：字母和数字表示他们自身。一个正则表达式模式中的字母和数字匹配同样的字符串。多数字母和数字前加一个反斜杠时会拥有不同的含义。标点符号只有被转义时才匹配自身，否则它们表示特殊的含义。反斜杠本身需要使用反斜杠转义。由于正则表达式通常都包含反斜杠，所以你最好使用原始字符串来表示它们。模式元素(如 r’/t’，等价于’//t’)匹配相应的特殊字符。</p>
-<p>下表列出了正则表达式模式语法中的特殊元素。如果你使用模式的同时提供了可选的标志参数，某些模式元素的含义会改变。</p>
-<table>
-<thead>
-<tr>
-<th>模式</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>^</td>
-<td>匹配字符串的开头</td>
-</tr>
-<tr>
-<td>$</td>
-<td>匹配字符串的末尾</td>
-</tr>
-<tr>
-<td>.</td>
-<td>匹配任意字符，除了换行符”\n”，当re.DOTALL标记被指定时，可以匹配包含换行符的任意字符</td>
-</tr>
-<tr>
-<td>[…]</td>
-<td>用来表示一组字符，单独列出：[amk]匹配’a’，’m’或’k’</td>
-</tr>
-<tr>
-<td>[^…]</td>
-<td>不在[]中的字符： [ ^abc ]匹配除了a,b,c之外的字符</td>
-</tr>
-<tr>
-<td>re*</td>
-<td>匹配0个或多个的表达式</td>
-</tr>
-<tr>
-<td>re+</td>
-<td>匹配1个或多个的表达式</td>
-</tr>
-<tr>
-<td>re?</td>
-<td>匹配0个或1个由前面的正则表达式定义的片段，非贪婪方式</td>
-</tr>
-<tr>
-<td>re{ n,}</td>
-<td>精确匹配n个前面表达式</td>
-</tr>
-<tr>
-<td>re{n,m}</td>
-<td>匹配 n 到 m 次由前面的正则表达式定义的片段，贪婪方式</td>
-</tr>
-<tr>
-<td>a &#124; b</td>
-<td>匹配a或b</td>
-</tr>
-<tr>
-<td>(re)</td>
-<td>匹配括号内的表达式，也表示一个组</td>
-</tr>
-<tr>
-<td>(?imx)</td>
-<td>正则表达式包含三种可选标志：i, m, 或 x 。只影响括号中的区域</td>
-</tr>
-<tr>
-<td>(?-imx)</td>
-<td>正则表达式关闭 i, m, 或 x 可选标志。只影响括号中的区域</td>
-</tr>
-<tr>
-<td>\w</td>
-<td>匹配字母数字及下划线</td>
-</tr>
-<tr>
-<td>\W</td>
-<td>匹配非字母数字及下划线</td>
-</tr>
-<tr>
-<td>\s</td>
-<td>匹配任意空白字符，等价于 [\t\n\r\f].</td>
-</tr>
-<tr>
-<td>\S</td>
-<td>匹配任意非空字符</td>
-</tr>
-<tr>
-<td>\d</td>
-<td>匹配任意数字，等价于 [0-9].</td>
-</tr>
-<tr>
-<td>\D</td>
-<td>匹配任意非数字</td>
-</tr>
-<tr>
-<td>\A</td>
-<td>匹配字符串开始</td>
-</tr>
-<tr>
-<td>\Z</td>
-<td>匹配字符串结束，如果是存在换行，只匹配到换行前的结束字符串</td>
-</tr>
-<tr>
-<td>\z</td>
-<td>匹配字符串结束</td>
-</tr>
-<tr>
-<td>\G</td>
-<td>匹配最后匹配完成的位置</td>
-</tr>
-<tr>
-<td>\b</td>
-<td>匹配一个单词边界，也就是指单词和空格间的位置。例如， ‘er\b’ 可以匹配”never” 中的 ‘er’，但不能匹配 “verb” 中的 ‘er’</td>
-</tr>
-<tr>
-<td>\B</td>
-<td>匹配非单词边界。’er\B’ 能匹配 “verb” 中的 ‘er’，但不能匹配 “never” 中的 ‘er’</td>
-</tr>
-<tr>
-<td>\n,\t,等</td>
-<td>匹配一个换行符。匹配一个制表符。等</td>
-</tr>
-<tr>
-<td>\1…\9</td>
-<td>匹配第n个分组的子表达式。</td>
-</tr>
-<tr>
-<td>\10</td>
-<td>匹配第n个分组的子表达式，如果它经匹配。否则指的是八进制字符码的表达式</td>
-</tr>
-</tbody>
-</table>
-<h3 id="正则表达式实例"><a href="#正则表达式实例" class="headerlink" title="正则表达式实例"></a><strong>正则表达式实例</strong></h3><p>字符匹配</p>
-<table>
-<thead>
-<tr>
-<th>实例</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>python</td>
-<td>匹配”python”</td>
-</tr>
-</tbody>
-</table>
-<p>字符类</p>
-<table>
-<thead>
-<tr>
-<th>实例</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>[Pp]ython</td>
-<td>匹配 “Python” 或 “python”</td>
-</tr>
-<tr>
-<td>rub[ye]</td>
-<td>匹配 “ruby” 或 “rube”</td>
-</tr>
-<tr>
-<td>[lawtech]</td>
-<td>匹配中括号内的任意一个字母</td>
-</tr>
-<tr>
-<td>[0-9]</td>
-<td>匹配任何数字。类似于 [0123456789]</td>
-</tr>
-<tr>
-<td>[a-z]</td>
-<td>匹配任何小写字母</td>
-</tr>
-<tr>
-<td>[A-Z]</td>
-<td>匹配任何大写字母</td>
-</tr>
-<tr>
-<td>[a-zA-Z0-9]</td>
-<td>匹配任何字母及数字</td>
-</tr>
-<tr>
-<td>[^lawtech]</td>
-<td>除了lawtech字母以外的所有字符</td>
-</tr>
-<tr>
-<td>[^0-9]</td>
-<td>匹配除了数字外的字符</td>
-</tr>
-</tbody>
-</table>
-<p>特殊字符类</p>
-<table>
-<thead>
-<tr>
-<th>实例</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>.</td>
-<td>匹配除 “\n” 之外的任何单个字符，要匹配包括 ‘\n’ 在内的任何字符，请使用像’[.\n]’ 的模式</td>
-</tr>
-<tr>
-<td>\d</td>
-<td>匹配一个数字字符，等价于 [0-9]</td>
-</tr>
-<tr>
-<td>\D</td>
-<td>匹配一个非数字字符，等价于 [ ^0-9 ]</td>
-</tr>
-<tr>
-<td>\s</td>
-<td>匹配任何空白字符，包括空格、制表符、换页符等等，等价于[\f\n\r\t\v]</td>
-</tr>
-<tr>
-<td>\S</td>
-<td>匹配任何非空白字符。等价于 [ ^\f\n\r\t\v ]</td>
-</tr>
-<tr>
-<td>\w</td>
-<td>匹配包括下划线的任何单词字符，等价于[A-Za-z0-9_]</td>
-</tr>
-<tr>
-<td>\W</td>
-<td>匹配任何非单词字符等价于 [ ^A-Za-z0-9_ ]</td>
-</tr>
-</tbody>
-</table>
-<h3 id="正则表达式修饰符-可选标志"><a href="#正则表达式修饰符-可选标志" class="headerlink" title="正则表达式修饰符 - 可选标志"></a>正则表达式修饰符 - 可选标志</h3><p>正则表达式可以包含一些可选标志修饰符来控制匹配的模式。修饰符被指定为一个可选的标志。多个标志可以通过按位 OR(|) 它们来指定。如 re.I | re.M 被设置成 I 和 M 标志：</p>
-<table>
-<thead>
-<tr>
-<th>修饰符</th>
-<th style="text-align:left">描述</th>
-<th>全拼</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>re.I</td>
-<td style="text-align:left">使匹配对大小写不敏感</td>
-<td>IGNORECASE</td>
-</tr>
-<tr>
-<td>re.L</td>
-<td style="text-align:left">做本地化识别（locale-aware）匹配</td>
-<td>LOCALE</td>
-</tr>
-<tr>
-<td>re.M</td>
-<td style="text-align:left">多行匹配，影响 ^ 和 $</td>
-<td>MULTILINE</td>
-</tr>
-<tr>
-<td>re.S</td>
-<td style="text-align:left">使 . 匹配包括换行在内的所有字符</td>
-<td>DOTALL</td>
-</tr>
-<tr>
-<td>re.U</td>
-<td style="text-align:left">根据Unicode字符集解析字符。这个标志影响 \w, \W, \b, \B.</td>
-<td>UNICODE</td>
-</tr>
-<tr>
-<td>re.X</td>
-<td style="text-align:left">该标志通过给予你更灵活的格式以便你将正则表达式写得更易于理解</td>
-<td>VERBOSE</td>
-</tr>
-</tbody>
-</table>
-<h3 id="re模块能够处理正则表达式的操作生成正则表达式对象"><a href="#re模块能够处理正则表达式的操作生成正则表达式对象" class="headerlink" title="re模块能够处理正则表达式的操作生成正则表达式对象"></a><strong>re模块能够处理正则表达式的操作生成正则表达式对象</strong></h3><ul>
-<li><p>生成正则表达式对象 compile(pattern, flags=0)构建一个正则表达式，返回该正则表达式对象</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> re</div><div class="line">pattern = re.compile(<span class="string">'re'</span>)</div></pre></td></tr></table></figure>
-</li>
-<li><p>进行匹配</p>
-<ul>
-<li>match() 确定正则表达式是否匹配字符串的开头</li>
-<li>search() 扫描字符串以查找匹配</li>
-<li>findall() 找到所有正则表达式匹配的子字符串，并把它们作为一个列表返回</li>
-<li>finditer() 找到所有正则表达式匹配的子字符串，并把它们以迭代器的形式返回</li>
-<li>group() 返回通过正则表达式匹配到的字符串</li>
-<li>start() 返回成功匹配开始位置</li>
-<li>end()   返回成功匹配结束位置</li>
-<li>span()  返回包含成功匹配开始和结束位置的元组</li>
-</ul>
-</li>
-</ul>
-<h4 id="re-match函数"><a href="#re-match函数" class="headerlink" title="re.match函数"></a><strong>re.match函数</strong></h4><p>re.match 尝试从字符串的起始位置匹配一个模式，如果不是起始位置匹配成功的话，match()就返回None。</p>
-<p>函数语法：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">re.match(pattern, string, flags=<span class="number">0</span>)</div></pre></td></tr></table></figure>
-<p>函数参数说明：</p>
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>pattern</td>
-<td>匹配的正则表达式</td>
-</tr>
-<tr>
-<td>string</td>
-<td>要匹配的字符串</td>
-</tr>
-<tr>
-<td>flags</td>
-<td>标志位，用于控制正则表达式的匹配方式，如：是否区分大小写，多行匹配等等</td>
-</tr>
-</tbody>
-</table>
-<p>匹配成功re.match方法返回一个匹配的对象（match object），否则返回None。</p>
-<p>我们可以使用group(num) 或 groups() 匹配对象函数来获取匹配表达式。</p>
-<table>
-<thead>
-<tr>
-<th>匹配对象方法</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>group(num=0)</td>
-<td>匹配的整个表达式的字符串，group() 可以一次输入多个组号，在这种情况下它将返回一个包含那些组所对应值的元组</td>
-</tr>
-<tr>
-<td>groups()</td>
-<td>返回一个包含所有小组字符串的元组，从1到所含的小组号</td>
-</tr>
-</tbody>
-</table>
-<p>实例1：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: UTF-8 -*- </span></div><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line">print(re.match(<span class="string">'www'</span>, <span class="string">'www.lawtech0902.com'</span>).span())  <span class="comment"># 在起始位置匹配</span></div><div class="line">print(re.match(<span class="string">'com'</span>, <span class="string">'www.lawtech0902.com'</span>)) <span class="comment"># 不在起始位置匹配</span></div></pre></td></tr></table></figure>
-<p>运行结果：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">(<span class="number">0</span>, <span class="number">3</span>)</div><div class="line"><span class="keyword">None</span></div></pre></td></tr></table></figure>
-<p>实例2：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: UTF-8 -*- </span></div><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line">line = <span class="string">"Cats are smarter than dogs"</span></div><div class="line"></div><div class="line">matchObj = re.match( <span class="string">r'(.*) are (.*?) .*'</span>, line, re.M|re.I)</div><div class="line"></div><div class="line"><span class="keyword">if</span> matchObj:</div><div class="line">   print(<span class="string">"matchObj.group() : "</span>, matchObj.group())</div><div class="line">   print(<span class="string">"matchObj.group(1) : "</span>, matchObj.group(<span class="number">1</span>))</div><div class="line">   print(<span class="string">"matchObj.group(2) : "</span>, matchObj.group(<span class="number">2</span>))</div><div class="line"><span class="keyword">else</span>:</div><div class="line">   print(<span class="string">"No match!!"</span>)</div></pre></td></tr></table></figure>
-<p>运行结果：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">matchObj.group() :  Cats are smarter than dogs</div><div class="line">matchObj.group(<span class="number">1</span>) :  Cats</div><div class="line">matchObj.group(<span class="number">2</span>) :  smarter</div></pre></td></tr></table></figure>
-<h4 id="re-search方法"><a href="#re-search方法" class="headerlink" title="re.search方法"></a><strong>re.search方法</strong></h4><p>re.search 扫描整个字符串并返回第一个成功的匹配。</p>
-<p>函数语法：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">re.search(pattern, string, flags=<span class="number">0</span>)</div></pre></td></tr></table></figure>
-<p>函数参数说明与re.match方法相同。</p>
-<p>匹配成功re.search方法返回一个匹配的对象，否则返回None。</p>
-<p>实例1：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: UTF-8 -*- </span></div><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line">print(re.search(<span class="string">'www'</span>, <span class="string">'www.lawtech0902.com'</span>).span())  <span class="comment"># 在起始位置匹配</span></div><div class="line">print(re.search(<span class="string">'com'</span>, <span class="string">'www.lawtech0902.com'</span>).span())  <span class="comment"># 不在起始位置匹配</span></div></pre></td></tr></table></figure>
-<p>运行结果：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">(<span class="number">0</span>, <span class="number">3</span>)</div><div class="line">(<span class="number">16</span>, <span class="number">19</span>)</div></pre></td></tr></table></figure>
-<p>实例2：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: UTF-8 -*- </span></div><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line">line = <span class="string">"Cats are smarter than dogs"</span></div><div class="line"></div><div class="line">searchObj = re.search( <span class="string">r'(.*) are (.*?) .*'</span>, line, re.M|re.I)</div><div class="line"></div><div class="line"><span class="keyword">if</span> searchObj:</div><div class="line">   print(<span class="string">"searchObj.group() : "</span>, searchObj.group())</div><div class="line">   print(<span class="string">"searchObj.group(1) : "</span>, searchObj.group(<span class="number">1</span>))</div><div class="line">   print(<span class="string">"searchObj.group(2) : "</span>, searchObj.group(<span class="number">2</span>))</div><div class="line"><span class="keyword">else</span>:</div><div class="line">   print(<span class="string">"Nothing found!!"</span>)</div></pre></td></tr></table></figure>
-<p>运行结果：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">searchObj.group() :  Cats are smarter than dogs</div><div class="line">searchObj.group(<span class="number">1</span>) :  Cats</div><div class="line">searchObj.group(<span class="number">2</span>) :  smarter</div></pre></td></tr></table></figure>
-<h4 id="re-match与re-search的区别"><a href="#re-match与re-search的区别" class="headerlink" title="re.match与re.search的区别"></a>re.match与re.search的区别</h4><p>re.match只匹配字符串的开始，如果字符串开始不符合正则表达式，则匹配失败，函数返回None；而re.search匹配整个字符串，直到找到一个匹配。</p>
-<p>实例：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: UTF-8 -*- </span></div><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line">line = <span class="string">"Cats are smarter than dogs"</span></div><div class="line"></div><div class="line">matchObj = re.match( <span class="string">r'dogs'</span>, line, re.M|re.I)</div><div class="line"><span class="keyword">if</span> matchObj:</div><div class="line">   print(<span class="string">"match --&gt; matchObj.group() : "</span>, matchObj.group())</div><div class="line"><span class="keyword">else</span>:</div><div class="line">   print(<span class="string">"No match!!"</span>)</div><div class="line"></div><div class="line">matchObj = re.search( <span class="string">r'dogs'</span>, line, re.M|re.I)</div><div class="line"><span class="keyword">if</span> matchObj:</div><div class="line">   print(<span class="string">"search --&gt; matchObj.group() : "</span>, matchObj.group())</div><div class="line"><span class="keyword">else</span>:</div><div class="line">   print(<span class="string">"No match!!"</span>)</div></pre></td></tr></table></figure>
-<p>运行结果：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">No match!!</div><div class="line">search --&gt; matchObj.group() :  dogs</div></pre></td></tr></table></figure>
-<h4 id="检索和替换"><a href="#检索和替换" class="headerlink" title="检索和替换"></a><strong>检索和替换</strong></h4><p>Python 的 re 模块提供了re.sub用于替换字符串中的匹配项。</p>
-<p>语法：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">re.sub(pattern, repl, string, count=<span class="number">0</span>, flags=<span class="number">0</span>)</div></pre></td></tr></table></figure>
-<p>参数：</p>
-<ul>
-<li>pattern : 正则中的模式字符串。</li>
-<li>repl : 替换的字符串，也可为一个函数。</li>
-<li>string : 要被查找替换的原始字符串。</li>
-<li>count : 模式匹配后替换的最大次数，默认 0 表示替换所有的匹配。</li>
-</ul>
-<p>实例：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line">phone = <span class="string">"2004-959-559 # 这是一个国外电话号码"</span></div><div class="line"></div><div class="line"><span class="comment"># 删除字符串中的 Python注释 </span></div><div class="line">num = re.sub(<span class="string">r'#.*$'</span>, <span class="string">""</span>, phone)</div><div class="line">print(<span class="string">"电话号码是: "</span>, num)</div><div class="line"></div><div class="line"><span class="comment"># 删除非数字(-)的字符串 </span></div><div class="line">num = re.sub(<span class="string">r'\D'</span>, <span class="string">""</span>, phone)</div><div class="line">print(<span class="string">"电话号码是 : "</span>, num)</div></pre></td></tr></table></figure>
-<p>运行结果：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">电话号码是:  <span class="number">2004</span><span class="number">-959</span><span class="number">-559</span></div><div class="line">电话号码是 :  <span class="number">2004959559</span></div></pre></td></tr></table></figure>
-<h5 id="repl参数是一个函数"><a href="#repl参数是一个函数" class="headerlink" title="repl参数是一个函数"></a><strong>repl参数是一个函数</strong></h5><p>以下实例中将字符串中的匹配的数字乘于 2：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line"><span class="comment"># 将匹配的数字乘于 2</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">double</span><span class="params">(matched)</span>:</span></div><div class="line">    value = int(matched.group(<span class="string">'value'</span>))</div><div class="line">    <span class="keyword">return</span> str(value * <span class="number">2</span>)</div><div class="line"></div><div class="line">s = <span class="string">'A23G4HFD567'</span></div><div class="line">print(re.sub(<span class="string">'(?P&lt;value&gt;\d+)'</span>, double, s))</div></pre></td></tr></table></figure>
-<p>运行结果为：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">A46G8HFD1134</div></pre></td></tr></table></figure>]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;Python正则表达式&quot;&gt;&lt;a href=&quot;#Python正则表达式&quot; class=&quot;headerlink&quot; title=&quot;Python正则表达式&quot;&gt;&lt;/a&gt;&lt;strong&gt;Python正则表达式&lt;/strong&gt;&lt;/h2&gt;&lt;h3 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;/a&gt;&lt;strong&gt;简介&lt;/strong&gt;&lt;/h3&gt;&lt;p&gt;正则表达式是一个特殊的字符序列，它能帮助你方便的检查一个字符串是否与某种模式匹配。&lt;/p&gt;
-&lt;p&gt;Python 自1.5版本起增加了re 模块，它提供 Perl 风格的正则表达式模式。&lt;/p&gt;
-&lt;p&gt;re 模块使 Python 语言拥有全部的正则表达式功能。&lt;br&gt;
-    
-    </summary>
-    
-      <category term="Regular Expression" scheme="http://yoursite.com/categories/Regular-Expression/"/>
-    
-    
-      <category term="Scrapy，Regular Expression，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CRegular-Expression%EF%BC%8CPython/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy安装及调试</title>
-    <link href="http://yoursite.com/2017/04/11/scrapy-install/"/>
-    <id>http://yoursite.com/2017/04/11/scrapy-install/</id>
-    <published>2017-04-11T12:18:54.000Z</published>
-    <updated>2017-04-11T07:48:50.000Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a><strong>环境搭建</strong></h2><a id="more"></a>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ mkvirtualenv article_spider</div><div class="line">$ pip install -i https://pypi.douban.com/simple/ scrapy</div></pre></td></tr></table></figure>
-<h2 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a><strong>创建项目</strong></h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$ workon article_spider</div><div class="line">$ scrapy startproject ArticleSpider</div><div class="line">New Scrapy project &apos;ArticleSpider&apos;, using template directory &apos;/Users/lawtech/myvirtualenvs/article_spider/lib/python3.5/site-packages/scrapy/templates/project&apos;, created in:</div><div class="line">    /Users/lawtech/PycharmProjects/ArticleSpider</div><div class="line"></div><div class="line">You can start your first spider with:</div><div class="line">    cd ArticleSpider</div><div class="line">    scrapy genspider example example.com</div><div class="line">    </div><div class="line">$ cd ArticleSpider</div><div class="line">$ scrapy genspider jobbole blog.jobbole.com</div><div class="line">Created spider &apos;jobbole&apos; using template &apos;basic&apos; in module:</div><div class="line">  ArticleSpider.spiders.jobbole</div></pre></td></tr></table></figure>
-<h2 id="项目目录介绍"><a href="#项目目录介绍" class="headerlink" title="项目目录介绍"></a><strong>项目目录介绍</strong></h2><p>首先先要回答一个问题。</p>
-<p>问：把网站装进爬虫里，总共分几步？<br>答案很简单，四步：</p>
-<ul>
-<li>新建项目 (Project)：新建一个新的爬虫项目</li>
-<li>明确目标（Items）：明确你想要抓取的目标</li>
-<li>制作爬虫（Spider）：制作爬虫开始爬取网页</li>
-<li>存储内容（Pipeline）：设计管道存储爬取内容</li>
-</ul>
-<p>创建好AticleSpider项目之后，可以看到将会创建一个AticleSpider文件夹，目录结构如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">ArticleSpider/  </div><div class="line">    scrapy.cfg  </div><div class="line">    ArticleSpider/  </div><div class="line">        __init__.py  </div><div class="line">        items.py  </div><div class="line">        pipelines.py  </div><div class="line">        settings.py  </div><div class="line">        spiders/  </div><div class="line">            __init__.py  </div><div class="line">            jobbole.py</div></pre></td></tr></table></figure>
-<p>下面来简单介绍一下各个文件的作用：</p>
-<ul>
-<li>scrapy.cfg：项目的配置文件</li>
-<li>ArticleSpider/：项目的 Python 模块，将会从这里引用代码</li>
-<li>ArticleSpider/items.py：项目的 items 文件</li>
-<li>ArticleSpider/pipelines.py：项目的 pipelines 文件</li>
-<li>ArticleSpider/settings.py：项目的设置文件</li>
-<li>ArticleSpider/spiders/：存储爬虫的目录</li>
-</ul>
-<h2 id="pycharm-调试-scrapy-执行流程"><a href="#pycharm-调试-scrapy-执行流程" class="headerlink" title="pycharm 调试 scrapy 执行流程"></a><strong>pycharm 调试 scrapy 执行流程</strong></h2><p>在项目根目录下新建 main.py 文件，添加如下代码</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> scrapy.cmdline <span class="keyword">import</span> execute</div><div class="line"></div><div class="line"><span class="keyword">import</span> sys</div><div class="line"><span class="keyword">import</span> os</div><div class="line"></div><div class="line"><span class="comment"># __file__ 表示当前py文件</span></div><div class="line">sys.path.append(os.path.dirname(os.path.abspath(__file__)))</div><div class="line"><span class="comment"># 将实际命令拆分</span></div><div class="line">execute([<span class="string">"scrapy"</span>, <span class="string">"crawl"</span>, <span class="string">"spiders文件夹下的py文件名称"</span>])</div></pre></td></tr></table></figure>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;环境搭建&quot;&gt;&lt;a href=&quot;#环境搭建&quot; class=&quot;headerlink&quot; title=&quot;环境搭建&quot;&gt;&lt;/a&gt;&lt;strong&gt;环境搭建&lt;/strong&gt;&lt;/h2&gt;
-    
-    </summary>
-    
-      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
-    
-    
-      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
     
   </entry>
   
