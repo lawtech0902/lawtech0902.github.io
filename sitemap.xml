@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2017/06/09/scrapy-crawlspider-lagou/</loc>
+    
+    <lastmod>2017-06-09T08:31:25.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2017/04/12/python-str-encode/</loc>
     
     <lastmod>2017-06-09T08:21:36.000Z</lastmod>
@@ -33,13 +40,6 @@
     <loc>http://yoursite.com/2017/04/16/xpath-example/</loc>
     
     <lastmod>2017-06-09T08:20:10.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2017/06/09/scrapy-crawlspider-lagou/</loc>
-    
-    <lastmod>2017-06-09T08:19:22.000Z</lastmod>
     
   </url>
   
