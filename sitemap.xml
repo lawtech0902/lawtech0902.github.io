@@ -2,6 +2,55 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2017/04/12/python-str-encode/</loc>
+    
+    <lastmod>2017-06-09T08:21:36.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2017/04/11/regex/</loc>
+    
+    <lastmod>2017-06-09T08:21:21.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2017/04/11/xpath-usage/</loc>
+    
+    <lastmod>2017-06-09T08:20:49.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2017/04/25/css-selector/</loc>
+    
+    <lastmod>2017-06-09T08:20:27.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2017/04/16/xpath-example/</loc>
+    
+    <lastmod>2017-06-09T08:20:10.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2017/06/09/scrapy-crawlspider-lagou/</loc>
+    
+    <lastmod>2017-06-09T08:19:22.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2017/06/07/scrapy-zhihu/</loc>
+    
+    <lastmod>2017-06-07T10:41:56.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2017/05/11/scrapy-login-zhihu/</loc>
     
     <lastmod>2017-05-12T08:12:46.000Z</lastmod>
@@ -79,13 +128,6 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2017/04/25/css-selector/</loc>
-    
-    <lastmod>2017-04-25T13:13:49.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://yoursite.com/2017/04/22/scrapy-spiders/</loc>
     
     <lastmod>2017-04-22T11:34:40.000Z</lastmod>
@@ -114,20 +156,6 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2017/04/16/xpath-example/</loc>
-    
-    <lastmod>2017-04-16T10:26:54.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2017/04/11/xpath-usage/</loc>
-    
-    <lastmod>2017-04-16T08:41:39.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://yoursite.com/2017/04/16/scrapy-simple-intro/</loc>
     
     <lastmod>2017-04-16T07:13:21.000Z</lastmod>
@@ -142,23 +170,9 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2017/04/12/python-str-encode/</loc>
-    
-    <lastmod>2017-04-12T07:05:23.000Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://yoursite.com/2017/04/10/Redis-5/</loc>
     
     <lastmod>2017-04-12T06:16:29.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2017/04/11/regex/</loc>
-    
-    <lastmod>2017-04-11T12:10:21.000Z</lastmod>
     
   </url>
   
