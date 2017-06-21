@@ -72,7 +72,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="LawTech" />
+  <meta name="keywords" content="Scrapy，Requests，Python," />
 
 
 
@@ -90,15 +90,18 @@
 
 
 
-<meta name="description" content="破邮python爱好者。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="LawTech's Blog">
-<meta property="og:url" content="http://yoursite.com/tags/Scrapy，CSS，Python/index.html">
+<meta name="description" content="概览首先看一下Scrapy的架构图：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy核心架构分析">
+<meta property="og:url" content="http://yoursite.com/2017/06/11/scrapy-framework/index.html">
 <meta property="og:site_name" content="LawTech's Blog">
-<meta property="og:description" content="破邮python爱好者。">
+<meta property="og:description" content="概览首先看一下Scrapy的架构图：">
+<meta property="og:image" content="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg">
+<meta property="og:updated_time" content="2017-06-21T04:04:54.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="LawTech's Blog">
-<meta name="twitter:description" content="破邮python爱好者。">
+<meta name="twitter:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy核心架构分析">
+<meta name="twitter:description" content="概览首先看一下Scrapy的架构图：">
+<meta name="twitter:image" content="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg">
 
 
 
@@ -126,13 +129,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/Scrapy，CSS，Python/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/06/11/scrapy-framework/"/>
 
 
 
 
 
-  <title> 标签: Scrapy，CSS，Python | LawTech's Blog </title>
+  <title> Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy核心架构分析 | LawTech's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -162,7 +165,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-right  ">
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -287,53 +290,282 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h2 >
-        Scrapy，CSS，Python
-        <small>标签</small>
-      </h2>
-    </div>
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/11/scrapy-framework/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="LawTech.">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="LawTech's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="LawTech's Blog" src="/images/avatar.jpg">
+    </span>
+  </span>
 
     
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy核心架构分析
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-11T14:18:54+08:00">
+                2017-06-11
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2017-06-21T12:04:54+08:00">
+                2017-06-21
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Scrapy/" itemprop="url" rel="index">
+                    <span itemprop="name">Scrapy</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/06/11/scrapy-framework/" class="leancloud_visitors" data-flag-title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy核心架构分析">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+ 
+        
+
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+          
+          
+            <div class="post-gallery-row">
+              <a class="post-gallery-img fancybox"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj46jdcon0014zuqzwzwz5vuk"
+                 itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
+                <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
+              </a>
+            
+          
+
+          
+          </div>
+        </div>
       
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+      
+        <h2 id="概览"><a href="#概览" class="headerlink" title="概览"></a><strong>概览</strong></h2><p>首先看一下Scrapy的架构图：</p>
+<a id="more"></a>
+<p><img src="https://ws4.sinaimg.cn/large/006tNc79ly1fgsotbkiowj31240oagp5.jpg" alt=""></p>
+<h2 id="核心组件"><a href="#核心组件" class="headerlink" title="核心组件"></a><strong>核心组件</strong></h2><p>Scrapy有以下几大组件：</p>
+<ul>
+<li><code>Scrapy Engine</code>：核心引擎，负责控制和调度各个组件，保证数据流转；</li>
+<li><code>Scheduler</code>：负责管理任务、过滤任务、输出任务的调度器，存储、去重任务都在此控制；</li>
+<li><code>Downloader</code>：下载器，负责在网络上下载网页数据，输入待下载URL，输出下载结果；</li>
+<li><code>Spiders</code>：用户自己编写的爬虫脚本，可自定义抓取意图；</li>
+<li><code>Item Pipeline</code>：负责输出结构化数据，可自定义输出位置；</li>
+</ul>
+<p>除此之外，还有两大中间件组件：</p>
+<ul>
+<li><code>Downloader middlewares</code>：介于引擎和下载器之间，可以在网页在下载前、后进行逻辑处理；</li>
+<li><code>Spider middlewares</code>：介于引擎和爬虫之间，可以在调用爬虫输入下载结果和输出请求/数据时进行逻辑处理</li>
+</ul>
+<h2 id="数据流转"><a href="#数据流转" class="headerlink" title="数据流转"></a><strong>数据流转</strong></h2><p>按照架构图的序号，数据流转大概是这样的：</p>
+<ol>
+<li><strong>引擎</strong>从<strong>自定义爬虫</strong>中获取初始化请求（也叫种子URL）；</li>
+<li>引擎把该请求放入<strong>调度器</strong>中，同时<strong>引擎向调度器</strong>获取一个<strong>待下载的请求</strong>（这两部是异步执行的）；</li>
+<li>调度器返回给引擎一个<strong>待下载</strong>的请求；</li>
+<li>引擎发送请求给<strong>下载器</strong>，中间会经过一系列<strong>下载器中间件</strong>；</li>
+<li>这个请求通过下载器下载完成后，生成一个<strong>响应对象</strong>，返回给引擎，这中间会再次经过一系列<strong>下载器中间件</strong>；</li>
+<li>引擎接收到下载返回的响应对象后，然后发送给爬虫，执行<strong>自定义爬虫逻辑</strong>，中间会经过一系列<strong>爬虫中间件</strong>；</li>
+<li>爬虫执行对应的回调方法，处理这个响应，完成用户逻辑后，会生成<strong>结果对象</strong>或<strong>新的请求对象</strong>给引擎，再次经过一系列<strong>爬虫中间件</strong>；</li>
+<li>引擎把爬虫返回的结果对象交由<strong>结果处理器</strong>处理，把<strong>新的请求</strong>对象通过引擎再交给<strong>调度器</strong>；</li>
+<li>从1开始重复执行，直到<strong>调度器</strong>中没有新的请求处理；</li>
+</ol>
+<h2 id="核心组件交互图"><a href="#核心组件交互图" class="headerlink" title="核心组件交互图"></a><strong>核心组件交互图</strong></h2><p><img src="https://ws3.sinaimg.cn/large/006tNc79ly1fgsowftl9fj31f60zjtco.jpg" alt=""></p>
+<p>这里需要说明一下图中的<code>Scrapyer</code>，其实这也是在源码的一个核心类，但官方架构图中没有展示出来，这个类其实是处于<code>Engine</code>、<code>Spiders</code>、<code>Pipeline</code>之间，是连通这3个组件的桥梁。</p>
+<h2 id="核心类图"><a href="#核心类图" class="headerlink" title="核心类图"></a><strong>核心类图</strong></h2><p>涉及到的一些核心类如下：</p>
+<p><img src="https://ws2.sinaimg.cn/large/006tNc79ly1fgsoxkf4ntj30tc14hq6c.jpg" alt=""></p>
+<p>其中没有样式的<strong>黑色文字</strong>是类的核心<strong>属性</strong>，<strong>黄色样式</strong>的文字都是核心<strong>方法</strong>。</p>
+<p>可以看到，Scrapy的核心类，其实主要包含5大组件、4大中间件管理器、爬虫类和爬虫管理器、请求、响应对象和数据解析类这几大块。</p>
 
-      <h2 class="post-title">
+      
+    </div>
+
+    <div>
+      
         
-            <a class="post-title-link" href="/2017/04/25/css-selector/" itemprop="url">
-              
-                <span itemprop="name">Python分布式爬虫打造搜索引擎项目学习笔记——CSS选择器</span>
-              
-            </a>
+
+      
+    </div>
+  
+        <div class="post-tags">
+          
+            <a href="/tags/Scrapy，Requests，Python/" rel="tag"># Scrapy，Requests，Python</a>
+          
+        </div>
+      
+
+
+    <div>
+      
         
-      </h2>
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>🐶 怕是要给老板下跪了哦~ 🐶</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赞赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat-reward-img.jpg" alt="LawTech. WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay-reward-img.jpg" alt="LawTech. Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-04-25T20:18:54+08:00"
-              content="2017-04-25" >
-          04-25
-        </time>
-      </div>
 
-    </header>
+      
+    </div>
+
+
+    <footer class="post-footer">
+         
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/09/scrapy-crawlspider-lagou/" rel="next" title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy爬取拉勾网">
+                <i class="fa fa-chevron-left"></i> Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy爬取拉勾网
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </article>
 
 
-    
-  </div>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
           
           </div>
           
 
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="monthly" data-num-items="4"></div>
+
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -353,8 +585,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg"
@@ -451,6 +692,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概览"><span class="nav-number">1.</span> <span class="nav-text">概览</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#核心组件"><span class="nav-number">2.</span> <span class="nav-text">核心组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据流转"><span class="nav-number">3.</span> <span class="nav-text">数据流转</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#核心组件交互图"><span class="nav-number">4.</span> <span class="nav-text">核心组件交互图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#核心类图"><span class="nav-number">5.</span> <span class="nav-text">核心类图</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
     </div>
@@ -569,6 +826,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
 
   
 
@@ -600,6 +861,10 @@
 
   
 
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
   
 
 
