@@ -72,7 +72,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Scrapy，Requests，Python," />
+  <meta name="keywords" content="Scrapy，Python," />
 
 
 
@@ -90,17 +90,20 @@
 
 
 
-<meta name="description" content="概览首先看一下Scrapy的架构图：">
+<meta name="description" content="之前有一节用于介绍Request和Response，还是官方文档介绍的比较详尽，所以就不做笔记了。
+这一节用于介绍随机更换User-Agent和实现IP代理池的方法，首先来看一下现在网站中所做的反爬虫工作。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy核心架构分析">
-<meta property="og:url" content="http://yoursite.com/2017/06/11/scrapy-framework/index.html">
+<meta property="og:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy随机更换User-Agent和实现IP代理池">
+<meta property="og:url" content="http://yoursite.com/2017/06/11/scrapy-useragent-proxyip/index.html">
 <meta property="og:site_name" content="LawTech's Blog">
-<meta property="og:description" content="概览首先看一下Scrapy的架构图：">
+<meta property="og:description" content="之前有一节用于介绍Request和Response，还是官方文档介绍的比较详尽，所以就不做笔记了。
+这一节用于介绍随机更换User-Agent和实现IP代理池的方法，首先来看一下现在网站中所做的反爬虫工作。">
 <meta property="og:image" content="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg">
-<meta property="og:updated_time" content="2017-06-21T04:04:54.000Z">
+<meta property="og:updated_time" content="2017-06-21T10:13:36.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy核心架构分析">
-<meta name="twitter:description" content="概览首先看一下Scrapy的架构图：">
+<meta name="twitter:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy随机更换User-Agent和实现IP代理池">
+<meta name="twitter:description" content="之前有一节用于介绍Request和Response，还是官方文档介绍的比较详尽，所以就不做笔记了。
+这一节用于介绍随机更换User-Agent和实现IP代理池的方法，首先来看一下现在网站中所做的反爬虫工作。">
 <meta name="twitter:image" content="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg">
 
 
@@ -129,13 +132,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/06/11/scrapy-framework/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/06/11/scrapy-useragent-proxyip/"/>
 
 
 
 
 
-  <title> Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy核心架构分析 | LawTech's Blog </title>
+  <title> Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy随机更换User-Agent和实现IP代理池 | LawTech's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -300,7 +303,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/11/scrapy-framework/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/11/scrapy-useragent-proxyip/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="LawTech.">
@@ -324,7 +327,7 @@
             
             
               
-                Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy核心架构分析
+                Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy随机更换User-Agent和实现IP代理池
               
             
           </h2>
@@ -355,7 +358,7 @@
               
                 <span class="post-meta-item-text">更新于</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2017-06-21T12:04:54+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2017-06-21T18:13:36+08:00">
                 2017-06-21
               </time>
             
@@ -393,7 +396,7 @@
 
           
           
-             <span id="/2017/06/11/scrapy-framework/" class="leancloud_visitors" data-flag-title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy核心架构分析">
+             <span id="/2017/06/11/scrapy-useragent-proxyip/" class="leancloud_visitors" data-flag-title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy随机更换User-Agent和实现IP代理池">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -426,7 +429,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj46uduay0011oeqzcgc3nxhe"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj46uducf002toeqzcbpb5g7a"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
               </a>
@@ -439,40 +442,36 @@
       
 
       
-        <h2 id="概览"><a href="#概览" class="headerlink" title="概览"></a><strong>概览</strong></h2><p>首先看一下Scrapy的架构图：</p>
+        <p>之前有一节用于介绍<code>Request</code>和<code>Response</code>，还是<a href="https://doc.scrapy.org/en/latest/index.html" target="_blank" rel="external">官方文档</a>介绍的比较详尽，所以就不做笔记了。</p>
+<p>这一节用于介绍随机更换User-Agent和实现IP代理池的方法，首先来看一下现在网站中所做的反爬虫工作。</p>
 <a id="more"></a>
-<p><img src="https://ws4.sinaimg.cn/large/006tNc79ly1fgsotbkiowj31240oagp5.jpg" alt=""></p>
-<h2 id="核心组件"><a href="#核心组件" class="headerlink" title="核心组件"></a><strong>核心组件</strong></h2><p>Scrapy有以下几大组件：</p>
-<ul>
-<li><code>Scrapy Engine</code>：核心引擎，负责控制和调度各个组件，保证数据流转；</li>
-<li><code>Scheduler</code>：负责管理任务、过滤任务、输出任务的调度器，存储、去重任务都在此控制；</li>
-<li><code>Downloader</code>：下载器，负责在网络上下载网页数据，输入待下载URL，输出下载结果；</li>
-<li><code>Spiders</code>：用户自己编写的爬虫脚本，可自定义抓取意图；</li>
-<li><code>Item Pipeline</code>：负责输出结构化数据，可自定义输出位置；</li>
+<h2 id="常见的反爬虫和应对方法"><a href="#常见的反爬虫和应对方法" class="headerlink" title="常见的反爬虫和应对方法"></a><strong>常见的反爬虫和应对方法</strong></h2><p>一般网站从三个方面反爬虫：用户请求的Headers，用户行为，网站目录和数据加载方式。前两种比较容易遇到，大多数网站都从这些角度来反爬虫。第三种一些应用ajax的网站会采用，这样增大了爬取的难度。</p>
+<h3 id="通过Headers反爬虫"><a href="#通过Headers反爬虫" class="headerlink" title="通过Headers反爬虫"></a><strong>通过</strong>Headers反爬虫</h3><p>从用户请求的Headers反爬虫是最常见的反爬虫策略。很多网站都会对Headers的User-Agent进行检测，还有一部分网站会对Referer进行检测（一些资源网站的防盗链就是检测Referer）。如果遇到了这类反爬虫机制，可以直接在爬虫中添加Headers，将浏览器的User-Agent复制到爬虫的Headers中；或者将Referer值修改为目标网站域名。对于检测Headers的反爬虫，在爬虫中修改或者添加Headers就能很好的绕过。</p>
+<p>针对这样的反爬虫方法，我们在Scrapy中实现随机更换User-Agent就很有必要了。</p>
+<h3 id="基于用户行为反爬虫"><a href="#基于用户行为反爬虫" class="headerlink" title="基于用户行为反爬虫"></a>基于用户行为反爬虫</h3><p>还有一部分网站是通过检测用户行为，例如同一IP短时间内多次访问同一页面，或者同一账户短时间内多次进行相同操作。</p>
+<p>大多数网站都是前一种情况，对于这种情况，使用IP代理就可以解决。可以专门写一个爬虫，爬取网上公开的代理ip，检测后全部保存起来。这样的代理ip爬虫经常会用到，最好自己准备一个。有了大量代理ip后可以每请求几次更换一个ip，这在requests或者urllib2中很容易做到，这样就能很容易的绕过第一种反爬虫。</p>
+<p>对于第二种情况，可以在每次请求后随机间隔几秒再进行下一次请求。有些有逻辑漏洞的网站，可以通过请求几次，退出登录，重新登录，继续请求来绕过同一账号短时间内不能多次进行相同请求的限制。</p>
+<p>对于这样的反爬虫方法，我们可以在Scrapy中实现IP代理池，问题便迎刃而解。</p>
+<h3 id="动态页面的反爬虫"><a href="#动态页面的反爬虫" class="headerlink" title="动态页面的反爬虫"></a>动态页面的反爬虫</h3><p>上述的几种情况大多都是出现在静态页面，还有一部分网站，我们需要爬取的数据是通过ajax请求得到，或者通过JavaScript生成的。首先用Firebug或者HttpFox对网络请求进行分析。如果能够找到ajax请求，也能分析出具体的参数和响应的具体含义，我们就能采用上面的方法，直接利用requests或者urllib2模拟ajax请求，对响应的json进行分析得到需要的数据。</p>
+<p>能够直接模拟ajax请求获取数据固然是极好的，但是有些网站把ajax请求的所有参数全部加密了。我们根本没办法构造自己所需要的数据的请求。我这几天爬的那个网站就是这样，除了加密ajax参数，它还把一些基本的功能都封装了，全部都是在调用自己的接口，而接口参数都是加密的。遇到这样的网站，我们就不能用上面的方法了，我用的是selenium+phantomJS框架，调用浏览器内核，并利用phantomJS执行js来模拟人为操作以及触发页面中的js脚本。从填写表单到点击按钮再到滚动页面，全部都可以模拟，不考虑具体的请求和响应过程，只是完完整整的把人浏览页面获取数据的过程模拟一遍。 </p>
+<p>用这套框架几乎能绕过大多数的反爬虫，因为它不是在伪装成浏览器来获取数据（上述的通过添加 Headers一定程度上就是为了伪装成浏览器），它本身就是浏览器，phantomJS就是一个没有界面的浏览器，只是操控这个浏览器的不是人。利用 selenium+phantomJS能干很多事情，例如识别点触式（12306）或者滑动式的验证码，对页面表单进行暴力破解等等。它在自动化渗透中还 会大展身手，以后还会提到这个。</p>
+<h2 id="随机更换User-Agent"><a href="#随机更换User-Agent" class="headerlink" title="随机更换User-Agent"></a><strong>随机更换User-Agent</strong></h2><p>首先将下面的代码添加到<code>settings.py</code>文件，替换默认的user-agent处理模块：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">DOWNLOADER_MIDDLEWARES = &#123;</div><div class="line">    <span class="string">'ArticleSpider.middlewares.RandomUserAgentMiddleware'</span>: <span class="number">543</span>,</div><div class="line">    <span class="string">'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware'</span>: <span class="keyword">None</span>,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在<code>middlewares.py</code>文件中自定义User-Agent处理模块：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> fake_useragent <span class="keyword">import</span> UserAgent</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">RandomUserAgentMiddleware</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    随机更换User-Agent</div><div class="line">    """</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, crawler)</span>:</span></div><div class="line">        super(RandomUserAgentMiddleware, self).__init__()</div><div class="line">        self.ua = UserAgent()</div><div class="line">        self.ua_type = crawler.settings.get(<span class="string">'RANDOM_UA_TYPE'</span>, <span class="string">'random'</span>)</div><div class="line"></div><div class="line"><span class="meta">    @classmethod</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">from_crawler</span><span class="params">(cls, crawler)</span>:</span></div><div class="line">        <span class="keyword">return</span> cls(crawler)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_request</span><span class="params">(self, request, spider)</span>:</span></div><div class="line">        <span class="function"><span class="keyword">def</span> <span class="title">get_ua</span><span class="params">()</span>:</span></div><div class="line">            <span class="keyword">return</span> getattr(self.ua, self.ua_type)</div><div class="line"></div><div class="line">        request.headers.setdefault(<span class="string">'User-Agent'</span>, get_ua())</div></pre></td></tr></table></figure>
+<p>其中，<a href="https://github.com/hellysmile/fake-useragent" target="_blank" rel="external">fake_useragent</a>这个第三方库维护了大量的User-Agent，我们就没必要自己去维护了，直接使用就好。</p>
+<p>下图为其的安装和使用方法：</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tNc79ly1fgspyd3gulj31e8150n6o.jpg" alt=""></p>
+<h2 id="实现IP代理池"><a href="#实现IP代理池" class="headerlink" title="实现IP代理池"></a><strong>实现IP代理池</strong></h2><p>我们用<a href="http://www.xicidaili.com/nn" target="_blank" rel="external">西刺免费代理IP网站</a>来实现这个IP代理池。我们选择爬取这个网站，然后将获取的数据写入数据库以供我们自己使用。</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tNc79ly1fgsqbcp5abj31kw180b29.jpg" alt=""></p>
+<p>调试之后，用CSS选择器来获取我们所需的内容，并将其保存到数据库中。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> requests</div><div class="line"><span class="keyword">from</span> scrapy.selector <span class="keyword">import</span> Selector</div><div class="line"><span class="keyword">import</span> MySQLdb</div><div class="line"></div><div class="line">conn = MySQLdb.connect(host=<span class="string">"127.0.0.1"</span>, user=<span class="string">"root"</span>, passwd=<span class="string">"123"</span>, db=<span class="string">"article_spider"</span>, charset=<span class="string">"utf8"</span>)</div><div class="line">cursor = conn.cursor()</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">crawl_ips</span><span class="params">()</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    爬取西刺网的免费代理IP</div><div class="line">    """</div><div class="line">    headers = &#123;</div><div class="line">        <span class="string">'User-Agent'</span>: <span class="string">"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/603.2.4 (KHTML, like Gecko) Version/10.1.1 Safari/603.2.4"</span></div><div class="line">    &#125;</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">2093</span>):</div><div class="line">        re = requests.get(<span class="string">"http://www.xicidaili.com/nn/&#123;0&#125;"</span>.format(i), headers=headers)</div><div class="line"></div><div class="line">        selector = Selector(text=re.text)</div><div class="line">        all_trs = selector.css(<span class="string">"#ip_list tr"</span>)</div><div class="line"></div><div class="line">        ip_list = []</div><div class="line"></div><div class="line">        <span class="keyword">for</span> tr <span class="keyword">in</span> all_trs[<span class="number">1</span>:]:</div><div class="line">            speed_str = tr.css(<span class="string">".bar::attr(title)"</span>).extract()[<span class="number">0</span>]</div><div class="line">            <span class="keyword">if</span> speed_str:</div><div class="line">                speed = float(speed_str.split(<span class="string">"秒"</span>)[<span class="number">0</span>])</div><div class="line">            ip = tr.css(<span class="string">"td:nth-child(2)::text"</span>).extract_first()</div><div class="line">            port = tr.css(<span class="string">"td:nth-child(3)::text"</span>).extract_first()</div><div class="line">            proxy_type = tr.css(<span class="string">"td:nth-child(6)::text"</span>).extract_first()</div><div class="line">            ip_list.append((ip, port, proxy_type, speed))</div><div class="line"></div><div class="line">        <span class="keyword">for</span> ip_info <span class="keyword">in</span> ip_list:</div><div class="line">            cursor.execute(</div><div class="line">                <span class="string">"insert proxy_ip(ip, port, speed, proxy_type) VALUES('&#123;0&#125;', '&#123;1&#125;', '&#123;2&#125;', '&#123;3&#125;')"</span>.format(</div><div class="line">                    ip_info[<span class="number">0</span>], ip_info[<span class="number">1</span>], ip_info[<span class="number">3</span>], ip_info[<span class="number">2</span>]</div><div class="line">                )</div><div class="line">            )</div><div class="line">            conn.commit()</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">GetIP</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">delete_ip</span><span class="params">(self, ip)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        从数据库中删除无效的IP </div><div class="line">        """</div><div class="line">        delete_sql = <span class="string">"""</span></div><div class="line">            DELETE FROM proxy_ip WHERE ip='&#123;0&#125;'</div><div class="line">        """.format(ip)</div><div class="line">        cursor.execute(delete_sql)</div><div class="line">        conn.commit()</div><div class="line">        <span class="keyword">return</span> <span class="keyword">True</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">judge_ip</span><span class="params">(self, ip, port)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        判断IP是否可用</div><div class="line">        """</div><div class="line">        http_url = <span class="string">"http://www.baidu.com"</span></div><div class="line">        proxy_url = <span class="string">"http://&#123;0&#125;:&#123;1&#125;"</span>.format(ip, port)</div><div class="line">        <span class="keyword">try</span>:</div><div class="line">            proxy_dict = &#123;</div><div class="line">                <span class="string">"http"</span>: proxy_url,</div><div class="line">            &#125;</div><div class="line">            response = requests.get(http_url, proxies=proxy_dict)</div><div class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</div><div class="line">            print(<span class="string">"invalid ip and port"</span>)</div><div class="line">            self.delete_ip(ip)</div><div class="line">            <span class="keyword">return</span> <span class="keyword">False</span></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            code = response.status_code</div><div class="line">            <span class="keyword">if</span> code &gt;= <span class="number">200</span> <span class="keyword">and</span> code &lt; <span class="number">300</span>:</div><div class="line">                print(<span class="string">"effective ip"</span>)</div><div class="line">                <span class="keyword">return</span> <span class="keyword">True</span></div><div class="line">            <span class="keyword">else</span>:</div><div class="line">                print(<span class="string">"invalid ip and port"</span>)</div><div class="line">                self.delete_ip(ip)</div><div class="line">                <span class="keyword">return</span> <span class="keyword">False</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_random_ip</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        从数据库中随机获取一个可用的IP</div><div class="line">        """</div><div class="line">        random_sql = <span class="string">"""</span></div><div class="line">            SELECT ip, port FROM proxy_ip</div><div class="line">            ORDER BY RAND()</div><div class="line">            LIMIT 1</div><div class="line">        """</div><div class="line">        result = cursor.execute(random_sql)</div><div class="line"></div><div class="line">        <span class="keyword">for</span> ip_info <span class="keyword">in</span> cursor.fetchall():</div><div class="line">            ip = ip_info[<span class="number">0</span>]</div><div class="line">            port = ip_info[<span class="number">1</span>]</div><div class="line"></div><div class="line">            judge_re = self.judge_ip(ip, port)</div><div class="line">            <span class="keyword">if</span> judge_re:</div><div class="line">                <span class="keyword">return</span> <span class="string">"http://&#123;0&#125;:&#123;1&#125;"</span>.format(ip, port)</div><div class="line">            <span class="keyword">else</span>:</div><div class="line">                <span class="keyword">return</span> self.get_random_ip()</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    get_ip = GetIP()</div><div class="line">    get_ip.get_random_ip()</div></pre></td></tr></table></figure>
+<p>最后，在<code>middlewares.py</code>文件中写入我们用于设置IP代理的逻辑即可：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">RandomProxyMiddleware</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    动态设置IP代理</div><div class="line">    """</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_request</span><span class="params">(self, request, spider)</span>:</span></div><div class="line">        get_ip = GetIP()</div><div class="line">        request.meta[<span class="string">"proxy"</span>] = get_ip.get_random_ip()</div></pre></td></tr></table></figure>
+<h2 id="可参考的第三方库"><a href="#可参考的第三方库" class="headerlink" title="可参考的第三方库"></a><strong>可参考的第三方库</strong></h2><ul>
+<li><a href="https://github.com/scrapy-plugins/scrapy-crawlera" target="_blank" rel="external"><strong>scrapy-crawlera</strong></a></li>
+<li><a href="https://github.com/aivarsk/scrapy-proxies" target="_blank" rel="external"><strong>scrapy-proxies</strong></a></li>
 </ul>
-<p>除此之外，还有两大中间件组件：</p>
-<ul>
-<li><code>Downloader middlewares</code>：介于引擎和下载器之间，可以在网页在下载前、后进行逻辑处理；</li>
-<li><code>Spider middlewares</code>：介于引擎和爬虫之间，可以在调用爬虫输入下载结果和输出请求/数据时进行逻辑处理</li>
-</ul>
-<h2 id="数据流转"><a href="#数据流转" class="headerlink" title="数据流转"></a><strong>数据流转</strong></h2><p>按照架构图的序号，数据流转大概是这样的：</p>
-<ol>
-<li><strong>引擎</strong>从<strong>自定义爬虫</strong>中获取初始化请求（也叫种子URL）；</li>
-<li>引擎把该请求放入<strong>调度器</strong>中，同时<strong>引擎向调度器</strong>获取一个<strong>待下载的请求</strong>（这两部是异步执行的）；</li>
-<li>调度器返回给引擎一个<strong>待下载</strong>的请求；</li>
-<li>引擎发送请求给<strong>下载器</strong>，中间会经过一系列<strong>下载器中间件</strong>；</li>
-<li>这个请求通过下载器下载完成后，生成一个<strong>响应对象</strong>，返回给引擎，这中间会再次经过一系列<strong>下载器中间件</strong>；</li>
-<li>引擎接收到下载返回的响应对象后，然后发送给爬虫，执行<strong>自定义爬虫逻辑</strong>，中间会经过一系列<strong>爬虫中间件</strong>；</li>
-<li>爬虫执行对应的回调方法，处理这个响应，完成用户逻辑后，会生成<strong>结果对象</strong>或<strong>新的请求对象</strong>给引擎，再次经过一系列<strong>爬虫中间件</strong>；</li>
-<li>引擎把爬虫返回的结果对象交由<strong>结果处理器</strong>处理，把<strong>新的请求</strong>对象通过引擎再交给<strong>调度器</strong>；</li>
-<li>从1开始重复执行，直到<strong>调度器</strong>中没有新的请求处理；</li>
-</ol>
-<h2 id="核心组件交互图"><a href="#核心组件交互图" class="headerlink" title="核心组件交互图"></a><strong>核心组件交互图</strong></h2><p><img src="https://ws3.sinaimg.cn/large/006tNc79ly1fgsowftl9fj31f60zjtco.jpg" alt=""></p>
-<p>这里需要说明一下图中的<code>Scrapyer</code>，其实这也是在源码的一个核心类，但官方架构图中没有展示出来，这个类其实是处于<code>Engine</code>、<code>Spiders</code>、<code>Pipeline</code>之间，是连通这3个组件的桥梁。</p>
-<h2 id="核心类图"><a href="#核心类图" class="headerlink" title="核心类图"></a><strong>核心类图</strong></h2><p>涉及到的一些核心类如下：</p>
-<p><img src="https://ws2.sinaimg.cn/large/006tNc79ly1fgsoxkf4ntj30tc14hq6c.jpg" alt=""></p>
-<p>其中没有样式的<strong>黑色文字</strong>是类的核心<strong>属性</strong>，<strong>黄色样式</strong>的文字都是核心<strong>方法</strong>。</p>
-<p>可以看到，Scrapy的核心类，其实主要包含5大组件、4大中间件管理器、爬虫类和爬虫管理器、请求、响应对象和数据解析类这几大块。</p>
 
       
     </div>
@@ -486,7 +485,7 @@
   
         <div class="post-tags">
           
-            <a href="/tags/Scrapy，Requests，Python/" rel="tag"># Scrapy，Requests，Python</a>
+            <a href="/tags/Scrapy，Python/" rel="tag"># Scrapy，Python</a>
           
         </div>
       
@@ -527,8 +526,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/06/09/scrapy-crawlspider-lagou/" rel="next" title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy爬取拉勾网">
-                <i class="fa fa-chevron-left"></i> Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy爬取拉勾网
+              <a href="/2017/06/11/scrapy-framework/" rel="next" title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy核心架构分析">
+                <i class="fa fa-chevron-left"></i> Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy核心架构分析
               </a>
             
           </div>
@@ -536,10 +535,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/06/11/scrapy-useragent-proxyip/" rel="prev" title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy随机更换User-Agent和实现IP代理池">
-                Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy随机更换User-Agent和实现IP代理池 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -706,7 +701,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概览"><span class="nav-number">1.</span> <span class="nav-text">概览</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#核心组件"><span class="nav-number">2.</span> <span class="nav-text">核心组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据流转"><span class="nav-number">3.</span> <span class="nav-text">数据流转</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#核心组件交互图"><span class="nav-number">4.</span> <span class="nav-text">核心组件交互图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#核心类图"><span class="nav-number">5.</span> <span class="nav-text">核心类图</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#常见的反爬虫和应对方法"><span class="nav-number">1.</span> <span class="nav-text">常见的反爬虫和应对方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#通过Headers反爬虫"><span class="nav-number">1.1.</span> <span class="nav-text">通过Headers反爬虫</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基于用户行为反爬虫"><span class="nav-number">1.2.</span> <span class="nav-text">基于用户行为反爬虫</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动态页面的反爬虫"><span class="nav-number">1.3.</span> <span class="nav-text">动态页面的反爬虫</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#随机更换User-Agent"><span class="nav-number">2.</span> <span class="nav-text">随机更换User-Agent</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现IP代理池"><span class="nav-number">3.</span> <span class="nav-text">实现IP代理池</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#可参考的第三方库"><span class="nav-number">4.</span> <span class="nav-text">可参考的第三方库</span></a></li></ol></div>
             
 
           </div>
