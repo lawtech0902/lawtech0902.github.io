@@ -90,20 +90,17 @@
 
 
 
-<meta name="description" content="实现爬虫时最经常提到的需求就是能合适的保存爬取到的数据，或者说，生成一个带有爬取数据的”输出文件”（通常叫做”输出 feed”），来供其他系统使用。
-Scrapy 自带了 Feed 输出，并且支持多种序列化格式（serialization format）及存储方式（storage backends）。">
+<meta name="description" content="像cookie禁用、自动限速这样的设置都在settings.py文件中，下面我们就来简单介绍一下。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Feed Exports">
-<meta property="og:url" content="http://yoursite.com/2017/05/06/scrapy-feed-exports/index.html">
+<meta property="og:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——cookie禁用、自动限速、自定义Spider的settings">
+<meta property="og:url" content="http://yoursite.com/2017/06/12/scrapy-cookies-settings/index.html">
 <meta property="og:site_name" content="LawTech's Blog">
-<meta property="og:description" content="实现爬虫时最经常提到的需求就是能合适的保存爬取到的数据，或者说，生成一个带有爬取数据的”输出文件”（通常叫做”输出 feed”），来供其他系统使用。
-Scrapy 自带了 Feed 输出，并且支持多种序列化格式（serialization format）及存储方式（storage backends）。">
+<meta property="og:description" content="像cookie禁用、自动限速这样的设置都在settings.py文件中，下面我们就来简单介绍一下。">
 <meta property="og:image" content="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg">
-<meta property="og:updated_time" content="2017-05-06T14:46:00.000Z">
+<meta property="og:updated_time" content="2017-06-22T08:29:40.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Feed Exports">
-<meta name="twitter:description" content="实现爬虫时最经常提到的需求就是能合适的保存爬取到的数据，或者说，生成一个带有爬取数据的”输出文件”（通常叫做”输出 feed”），来供其他系统使用。
-Scrapy 自带了 Feed 输出，并且支持多种序列化格式（serialization format）及存储方式（storage backends）。">
+<meta name="twitter:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——cookie禁用、自动限速、自定义Spider的settings">
+<meta name="twitter:description" content="像cookie禁用、自动限速这样的设置都在settings.py文件中，下面我们就来简单介绍一下。">
 <meta name="twitter:image" content="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg">
 
 
@@ -132,13 +129,13 @@ Scrapy 自带了 Feed 输出，并且支持多种序列化格式（serialization
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/05/06/scrapy-feed-exports/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/06/12/scrapy-cookies-settings/"/>
 
 
 
 
 
-  <title> Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Feed Exports | LawTech's Blog </title>
+  <title> Python分布式爬虫打造搜索引擎项目学习笔记——cookie禁用、自动限速、自定义Spider的settings | LawTech's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -303,7 +300,7 @@ Scrapy 自带了 Feed 输出，并且支持多种序列化格式（serialization
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/06/scrapy-feed-exports/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/12/scrapy-cookies-settings/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="LawTech.">
@@ -327,7 +324,7 @@ Scrapy 自带了 Feed 输出，并且支持多种序列化格式（serialization
             
             
               
-                Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Feed Exports
+                Python分布式爬虫打造搜索引擎项目学习笔记——cookie禁用、自动限速、自定义Spider的settings
               
             
           </h2>
@@ -342,8 +339,8 @@ Scrapy 自带了 Feed 输出，并且支持多种序列化格式（serialization
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-06T14:18:54+08:00">
-                2017-05-06
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-12T14:18:54+08:00">
+                2017-06-12
               </time>
             
 
@@ -358,8 +355,8 @@ Scrapy 自带了 Feed 输出，并且支持多种序列化格式（serialization
               
                 <span class="post-meta-item-text">更新于</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2017-05-06T22:46:00+08:00">
-                2017-05-06
+              <time title="更新于" itemprop="dateModified" datetime="2017-06-22T16:29:40+08:00">
+                2017-06-22
               </time>
             
           </span>
@@ -396,7 +393,7 @@ Scrapy 自带了 Feed 输出，并且支持多种序列化格式（serialization
 
           
           
-             <span id="/2017/05/06/scrapy-feed-exports/" class="leancloud_visitors" data-flag-title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Feed Exports">
+             <span id="/2017/06/12/scrapy-cookies-settings/" class="leancloud_visitors" data-flag-title="Python分布式爬虫打造搜索引擎项目学习笔记——cookie禁用、自动限速、自定义Spider的settings">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -429,7 +426,7 @@ Scrapy 自带了 Feed 输出，并且支持多种序列化格式（serialization
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj4863v1n001adxqzdtogz29e"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj4863v16000wdxqzszrdeocn"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
               </a>
@@ -442,143 +439,39 @@ Scrapy 自带了 Feed 输出，并且支持多种序列化格式（serialization
       
 
       
-        <p>实现爬虫时最经常提到的需求就是能合适的保存爬取到的数据，或者说，生成一个带有爬取数据的”输出文件”（通常叫做”输出 feed”），来供其他系统使用。</p>
-<p>Scrapy 自带了 Feed 输出，并且支持多种序列化格式（serialization format）及存储方式（storage backends）。</p>
+        <p>像cookie禁用、自动限速这样的设置都在<code>settings.py</code>文件中，下面我们就来简单介绍一下。</p>
 <a id="more"></a>
-<h2 id="序列化方式（serialization-format）"><a href="#序列化方式（serialization-format）" class="headerlink" title="序列化方式（serialization format）"></a><strong>序列化方式（serialization format）</strong></h2><p>feed 输出使用到了 Item exporters 。其自带支持的类型有:</p>
+<h2 id="cookie禁用"><a href="#cookie禁用" class="headerlink" title="cookie禁用"></a><strong>cookie禁用</strong></h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Disable cookies (enabled by default)</span></div><div class="line">COOKIES_ENABLED = <span class="keyword">True</span></div></pre></td></tr></table></figure>
+<p>默认设置为False。</p>
+<h2 id="自动限速"><a href="#自动限速" class="headerlink" title="自动限速"></a><strong>自动限速</strong></h2><p>自动限速是通过自动限速(AutoThrottle)扩展来实现的，该扩展能根据Scrapy服务器及您爬取的网站的负载自动限制爬取速度。</p>
+<h3 id="限速算法"><a href="#限速算法" class="headerlink" title="限速算法"></a><strong>限速算法</strong></h3><p>算法根据以下规则调整下载延迟及并发数:</p>
+<ol>
+<li>spider永远以1并发请求数及 <code>AUTOTHROTTLE_START_DELAY</code> 中指定的下载延迟启动。</li>
+<li>当接收到回复时，下载延迟会调整到该回复的延迟与之前下载延迟之间的平均值。</li>
+</ol>
+<p><code>AutoThrottle</code> 扩展尊重标准Scrapy设置中的并发数及延迟。这意味着其永远不会设置一个比<code>DOWNLOAD_DELAY</code> 更低的下载延迟或者比 <code>CONCURRENT_REQUESTS_PER_DOMAIN</code> 更高的并发数 (或 <code>CONCURRENT_REQUESTS_PER_IP</code> ，取决于您使用哪一个)。</p>
+<h2 id="设置"><a href="#设置" class="headerlink" title="设置"></a>设置</h2><p>下面是控制 <code>AutoThrottle</code> 扩展的设置:</p>
 <ul>
-<li>JSON</li>
-<li>JSON lines</li>
-<li>CSV</li>
-<li>XML</li>
+<li><code>AUTOTHROTTLE_ENABLED</code></li>
+<li><code>AUTOTHROTTLE_START_DELAY</code></li>
+<li><code>AUTOTHROTTLE_MAX_DELAY</code></li>
+<li><code>AUTOTHROTTLE_DEBUG</code></li>
+<li><code>CONCURRENT_REQUESTS_PER_DOMAIN</code></li>
+<li><code>CONCURRENT_REQUESTS_PER_IP</code></li>
+<li><code>DOWNLOAD_DELAY</code></li>
 </ul>
-<p>也可以通过 FEED_EXPORTERS 设置扩展支持的属性。</p>
-<p>在 <code>exporters.py</code> 中可以看到所有的 Item exporters：</p>
-<p><img src="http://ww3.sinaimg.cn/large/006tNc79gy1ffbz5887gzj30x603qdge.jpg" alt=""></p>
-<p>下表对主要的 Item exporters进行简要的介绍：</p>
-<table>
-<thead>
-<tr>
-<th>类型</th>
-<th>FEED_FORMAT</th>
-<th>使用的 exporter</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>JSON</td>
-<td>json</td>
-<td>JsonItemExporter</td>
-</tr>
-<tr>
-<td>JSON lines</td>
-<td>jsonlines</td>
-<td>JsonLinesItemExporter</td>
-</tr>
-<tr>
-<td>CSV</td>
-<td>csv</td>
-<td>CsvItemExporter</td>
-</tr>
-<tr>
-<td>XML</td>
-<td>xml</td>
-<td>XmlItemExporter</td>
-</tr>
-<tr>
-<td>Pickle</td>
-<td>pickle</td>
-<td>PickleItemExporter</td>
-</tr>
-<tr>
-<td>Marshal</td>
-<td>marshal</td>
-<td>MarshalItemExporter</td>
-</tr>
-</tbody>
-</table>
-<h2 id="存储（Storages）"><a href="#存储（Storages）" class="headerlink" title="存储（Storages）"></a><strong>存储（Storages）</strong></h2><p>使用 feed 输出时您可以通过使用 <a href="http://en.wikipedia.org/wiki/Uniform_Resource_Identifier" target="_blank" rel="external">URI</a>（通过 FEED_URI 设置）来定义存储端。feed 输出支持 URI 方式支持的多种存储后端类型。</p>
-<p>自带支持的存储后端有：</p>
-<ul>
-<li>本地文件系统</li>
-<li>FTP</li>
-<li>S3（需要 boto）</li>
-<li>标准输出</li>
-</ul>
-<p>有些存储后端会因所需的外部库未安装而不可用。例如，S3 只有在 boto 库安装的情况下才可使用。</p>
-<h2 id="存储-URI-参数"><a href="#存储-URI-参数" class="headerlink" title="存储 URI 参数"></a><strong>存储 URI 参数</strong></h2><p>存储 URI 也包含参数。当 feed 被创建时这些参数可以被覆盖：</p>
-<ul>
-<li><code>%(time)s</code> - 当 feed 被创建时被 timestamp 覆盖</li>
-<li><code>%(name)s</code> - 被 spider 的名字覆盖</li>
-</ul>
-<p>其他命名的参数会被 spider 同名的属性所覆盖。例如， 当 feed 被创建时，<code>%(site_id)s</code> 将会被 <code>spider.site_id</code> 属性所覆盖。</p>
-<p>下面用一些例子来说明:</p>
-<ul>
-<li>存储在 FTP，每个 spider 一个目录: <ul>
-<li><code>ftp://user:password@ftp.example.com/scraping/feeds/%(name)s/%(time)s.json</code></li>
-</ul>
-</li>
-<li>存储在 S3，每一个 spider 一个目录:<ul>
-<li><code>s3://mybucket/scraping/feeds/%(name)s/%(time)s.json</code></li>
-</ul>
-</li>
-</ul>
-<h2 id="存储后端（Storage-backends）"><a href="#存储后端（Storage-backends）" class="headerlink" title="存储后端（Storage backends）"></a><strong>存储后端（Storage backends）</strong></h2><h3 id="本地文件系统"><a href="#本地文件系统" class="headerlink" title="本地文件系统"></a><strong>本地文件系统</strong></h3><p>将 feed 存储在本地系统。</p>
-<ul>
-<li>URI scheme: <code>file</code></li>
-<li>URI 样例: <code>file:///tmp/export.csv</code></li>
-<li>需要的外部依赖库: <code>none</code></li>
-</ul>
-<p>注意: (只有)存储在本地文件系统时，您可以指定一个绝对路径 /tmp/export.csv 并忽略协议(scheme)。不过这 仅仅只能在 Unix 系统中工作。</p>
-<h3 id="FTP"><a href="#FTP" class="headerlink" title="FTP"></a><strong>FTP</strong></h3><p>将 feed 存储在 FTP 服务器。</p>
-<ul>
-<li>URI scheme: <code>ftp</code></li>
-<li>URI 样例: <code>ftp://user:pass@ftp.example.com/path/to/export.csv</code></li>
-<li>需要的外部依赖库: <code>none</code></li>
-</ul>
-<h3 id="S3"><a href="#S3" class="headerlink" title="S3"></a><strong>S3</strong></h3><p>将 feed 存储在 Amazon S3 。 </p>
-<ul>
-<li>URI scheme: s3 </li>
-<li>URI 样例: <ul>
-<li>s3://mybucket/path/to/export.csv </li>
-<li>s3://aws_key:aws_secret@mybucket/path/to/export.csv </li>
-</ul>
-</li>
-<li>需要的外部依赖库: <code>boto</code></li>
-</ul>
-<p>您可以通过在 URI 中传递 user/pass 来完成 AWS 认证，或者也可以通过下列的设置来完成: </p>
-<p>AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY</p>
-<h3 id="标准输出"><a href="#标准输出" class="headerlink" title="标准输出"></a><strong>标准输出</strong></h3><p>feed 输出到 Scrapy 进程的标准输出。</p>
-<ul>
-<li>URI scheme: <code>stdout</code></li>
-<li>URI 样例: <code>stdout</code></li>
-<li>需要的外部依赖库: <code>none</code></li>
-</ul>
-<h2 id="设定（Settings）"><a href="#设定（Settings）" class="headerlink" title="设定（Settings）"></a><strong>设定（Settings）</strong></h2><p>这些是配置 feed 输出的设定:</p>
-<ul>
-<li>FEED_URI (必须)</li>
-<li>FEED_FORMAT</li>
-<li>FEED_STORAGES</li>
-<li>FEED_EXPORTERS</li>
-<li>FEED_STORE_EMPTY</li>
-</ul>
-<h3 id="FEED-URI"><a href="#FEED-URI" class="headerlink" title="FEED_URI"></a><strong>FEED_URI</strong></h3><p>Default: <code>None</code> </p>
-<p>输出 feed 的 URI。支持的 URI 协议请参见存储后端。</p>
-<p> 为了启用 feed 输出，该设定是必须的。</p>
-<h3 id="FEED-FORMAT"><a href="#FEED-FORMAT" class="headerlink" title="FEED_FORMAT"></a><strong>FEED_FORMAT</strong></h3><p>输出 feed 的序列化格式。可用的值请参见序列化方式（Serialization formats）。</p>
-<h3 id="FEED-STORE-EMPTY"><a href="#FEED-STORE-EMPTY" class="headerlink" title="FEED_STORE_EMPTY"></a><strong>FEED_STORE_EMPTY</strong></h3><p>Default: <code>False</code> </p>
-<p>是否输出空 feed（没有 item 的 feed）。</p>
-<h3 id="FEED-STORAGES"><a href="#FEED-STORAGES" class="headerlink" title="FEED_STORAGES"></a><strong>FEED_STORAGES</strong></h3><p>Default: <code>{}</code> </p>
-<p>包含项目支持的额外 feed 存储端的字典。 字典的键（key）是 URI 协议（scheme），值是存储类（storage class）的路径。</p>
-<h3 id="FEED-STORAGES-BASE"><a href="#FEED-STORAGES-BASE" class="headerlink" title="FEED_STORAGES_BASE"></a><strong>FEED_STORAGES_BASE</strong></h3><p>Default:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line"><span class="string">''</span>: <span class="string">'scrapy.contrib.feedexport.FileFeedStorage'</span>, </div><div class="line"><span class="string">'file'</span>: <span class="string">'scrapy.contrib.feedexport.FileFeedStorage'</span>, </div><div class="line"><span class="string">'stdout'</span>: <span class="string">'scrapy.contrib.feedexport.StdoutFeedStorage'</span>, </div><div class="line"><span class="string">'s3'</span>: <span class="string">'scrapy.contrib.feedexport.S3FeedStorage'</span>, </div><div class="line"><span class="string">'ftp'</span>: <span class="string">'scrapy.contrib.feedexport.FTPFeedStorage'</span>,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>包含 Scrapy 内置支持的 feed 存储端的字典。</p>
-<h3 id="FEED-EXPORTERS"><a href="#FEED-EXPORTERS" class="headerlink" title="FEED_EXPORTERS"></a><strong>FEED_EXPORTERS</strong></h3><p>Default: <code>{}</code> </p>
-<p>包含项目支持的额外输出器（exporter）的字典。 该字典的键（key）是 URI 协议（scheme），值是 Item 输出器（exp orter）类的路径。</p>
-<h3 id="FEED-EXPORTERS-BASE"><a href="#FEED-EXPORTERS-BASE" class="headerlink" title="FEED_EXPORTERS_BASE"></a><strong>FEED_EXPORTERS_BASE</strong></h3><p>Default:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">FEED_EXPORTERS_BASE = &#123; </div><div class="line">    <span class="string">'json'</span>: <span class="string">'scrapy.contrib.exporter.JsonItemExporter'</span>, </div><div class="line">    <span class="string">'jsonlines'</span>: <span class="string">'scrapy.contrib.exporter.JsonLinesItemExporter'</span>, </div><div class="line">    <span class="string">'csv'</span>: <span class="string">'scrapy.contrib.exporter.CsvItemExporter'</span>, </div><div class="line">    <span class="string">'xml'</span>: <span class="string">'scrapy.contrib.exporter.XmlItemExporter'</span>, </div><div class="line">    <span class="string">'marshal'</span>: <span class="string">'scrapy.contrib.exporter.MarshalItemExporter'</span>,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>包含 Scrapy 内置支持的 feed 输出器（exporter）的字典。</p>
-
+<h3 id="AUTOTHROTTLE-ENABLED"><a href="#AUTOTHROTTLE-ENABLED" class="headerlink" title="AUTOTHROTTLE_ENABLED"></a>AUTOTHROTTLE_ENABLED</h3><p>默认: <code>False</code></p>
+<p>启用AutoThrottle扩展。</p>
+<h3 id="AUTOTHROTTLE-START-DELAY"><a href="#AUTOTHROTTLE-START-DELAY" class="headerlink" title="AUTOTHROTTLE_START_DELAY"></a>AUTOTHROTTLE_START_DELAY</h3><p>默认: <code>5.0</code></p>
+<p>初始下载延迟(单位:秒)。</p>
+<h3 id="AUTOTHROTTLE-MAX-DELAY"><a href="#AUTOTHROTTLE-MAX-DELAY" class="headerlink" title="AUTOTHROTTLE_MAX_DELAY"></a>AUTOTHROTTLE_MAX_DELAY</h3><p>默认: <code>60.0</code></p>
+<p>在高延迟情况下最大的下载延迟(单位秒)。</p>
+<h3 id="AUTOTHROTTLE-DEBUG"><a href="#AUTOTHROTTLE-DEBUG" class="headerlink" title="AUTOTHROTTLE_DEBUG"></a>AUTOTHROTTLE_DEBUG</h3><p>默认: <code>False</code></p>
+<p>起用AutoThrottle调试(debug)模式，展示每个接收到的response。 您可以通过此来查看限速参数是如何实时被调整的。</p>
+<h2 id="自定义Spider的settings"><a href="#自定义Spider的settings" class="headerlink" title="自定义Spider的settings"></a><strong>自定义Spider的settings</strong></h2><p>每个Spider可以定义自己的设置，这些设置将优先覆盖项目目录中的设置，可以通过设置 <code>custom_settings</code> 属性来实现。</p>
+<p>例如，我们的项目中，<code>zhihu.py</code> 中需要设置开启cookie，那么只需要在该文件中如下设置即可：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">custom_settings = &#123;</div><div class="line">    <span class="string">"COOKIES_ENABLED"</span>: <span class="keyword">True</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="settings-py详解"><a href="#settings-py详解" class="headerlink" title="settings.py详解"></a><strong>settings.py详解</strong></h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> os</div><div class="line"></div><div class="line"><span class="comment"># Scrapy settings for ArticleSpider project</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># For simplicity, this file contains only settings considered important or</span></div><div class="line"><span class="comment"># commonly used. You can find more settings consulting the documentation:</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment">#     http://doc.scrapy.org/en/latest/topics/settings.html</span></div><div class="line"><span class="comment">#     http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html</span></div><div class="line"><span class="comment">#     http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html</span></div><div class="line"></div><div class="line">BOT_NAME = <span class="string">'ArticleSpider'</span>  <span class="comment">#Scrapy项目的名字这将用来构造默认User-Agent，同时也用来log，当您使用startproject命令创建项目时其也被自动赋值。</span></div><div class="line"></div><div class="line">SPIDER_MODULES = [<span class="string">'ArticleSpider.spiders'</span>]  <span class="comment">#Scrapy搜索spider的模块列表 默认: [xxx.spiders]</span></div><div class="line">NEWSPIDER_MODULE = <span class="string">'ArticleSpider.spiders'</span>  <span class="comment">#使用genspider命令创建新spider的模块 默认: 'xxx.spiders'</span></div><div class="line"></div><div class="line"><span class="comment"># Crawl responsibly by identifying yourself (and your website) on the user-agent</span></div><div class="line"><span class="comment"># USER_AGENT = 'ArticleSpider (+http://www.yourdomain.com)'  #爬取的默认User-Agent，除非被覆盖</span></div><div class="line"></div><div class="line"><span class="comment"># Obey robots.txt rules</span></div><div class="line">ROBOTSTXT_OBEY = <span class="keyword">False</span>  <span class="comment">#如果启用,Scrapy将会采用robots.txt策略 </span></div><div class="line"></div><div class="line"><span class="comment"># Configure maximum concurrent requests performed by Scrapy (default: 16)</span></div><div class="line"><span class="comment">#Scrapy downloader并发请求(concurrent requests)的最大值，默认: 16</span></div><div class="line"><span class="comment"># CONCURRENT_REQUESTS = 32</span></div><div class="line"></div><div class="line"><span class="comment"># Configure a delay for requests for the same website (default: 0)</span></div><div class="line"><span class="comment"># See http://scrapy.readthedocs.org/en/latest/topics/settings.html#download-delay</span></div><div class="line"><span class="comment"># See also autothrottle settings and docs</span></div><div class="line"><span class="comment">#为同一网站的请求配置延迟（默认值：0）下载器在下载同一个网站下一个页面前需要等待的时间,该选项可以用来限制爬取速度,减轻服务器压力。同时也支持小数:0.25 以秒为单位  </span></div><div class="line">DOWNLOAD_DELAY = <span class="number">10</span></div><div class="line"><span class="comment"># The download delay setting will honor only one of:</span></div><div class="line"><span class="comment">#下载延迟设置只有一个有效</span></div><div class="line"><span class="comment"># CONCURRENT_REQUESTS_PER_DOMAIN = 16  对单个网站进行并发请求的最大值。</span></div><div class="line"><span class="comment"># CONCURRENT_REQUESTS_PER_IP = 16  对单个IP进行并发请求的最大值。如果非0,则忽略 CONCURRENT_REQUESTS_PER_DOMAIN 设定,使用该设定。 也就是说,并发限制将针对IP,而不是网站。该设定也影响 DOWNLOAD_DELAY: 如果 CONCURRENT_REQUESTS_PER_IP 非0,下载延迟应用在IP而不是网站上。  </span></div><div class="line"></div><div class="line"><span class="comment"># Disable cookies (enabled by default)</span></div><div class="line"><span class="comment">#禁用Cookie（默认情况下启用）</span></div><div class="line">COOKIES_ENABLED = <span class="keyword">False</span></div><div class="line"></div><div class="line"><span class="comment"># Disable Telnet Console (enabled by default)</span></div><div class="line"><span class="comment">#禁用Telnet控制台（默认启用）</span></div><div class="line"><span class="comment"># TELNETCONSOLE_ENABLED = False</span></div><div class="line"></div><div class="line"><span class="comment"># Override the default request headers:</span></div><div class="line"><span class="comment">#覆盖默认请求头：</span></div><div class="line"><span class="comment"># DEFAULT_REQUEST_HEADERS = &#123;</span></div><div class="line"><span class="comment">#   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',</span></div><div class="line"><span class="comment">#   'Accept-Language': 'en',</span></div><div class="line"><span class="comment"># &#125;</span></div><div class="line"></div><div class="line"><span class="comment"># Enable or disable spider middlewares</span></div><div class="line"><span class="comment"># See http://scrapy.readthedocs.org/en/latest/topics/spider-middleware.html</span></div><div class="line"><span class="comment">#启用或禁用爬虫中间件</span></div><div class="line"><span class="comment"># SPIDER_MIDDLEWARES = &#123;</span></div><div class="line"><span class="comment">#    'ArticleSpider.middlewares.ArticlespiderSpiderMiddleware': 543,</span></div><div class="line"><span class="comment"># &#125;</span></div><div class="line"></div><div class="line"><span class="comment"># Enable or disable downloader middlewares</span></div><div class="line"><span class="comment"># See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html</span></div><div class="line"><span class="comment">#启用或禁用下载器中间件</span></div><div class="line">DOWNLOADER_MIDDLEWARES = &#123;</div><div class="line">    <span class="string">'ArticleSpider.middlewares.RandomUserAgentMiddleware'</span>: <span class="number">543</span>,</div><div class="line">    <span class="string">'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware'</span>: <span class="keyword">None</span>,</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment"># Enable or disable extensions</span></div><div class="line"><span class="comment"># See http://scrapy.readthedocs.org/en/latest/topics/extensions.html</span></div><div class="line"><span class="comment">#启用或禁用扩展程序</span></div><div class="line"><span class="comment"># EXTENSIONS = &#123;</span></div><div class="line"><span class="comment">#    'scrapy.extensions.telnet.TelnetConsole': None,</span></div><div class="line"><span class="comment"># &#125;</span></div><div class="line"></div><div class="line"><span class="comment"># Configure item pipelines</span></div><div class="line"><span class="comment"># See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html</span></div><div class="line">ITEM_PIPELINES = &#123;</div><div class="line">    <span class="comment"># 'ArticleSpider.pipelines.JsonExporterPipeline': 2,</span></div><div class="line">    <span class="comment"># # 'scrapy.pipelines.images.ImagesPipeline': 1,</span></div><div class="line">    <span class="comment"># 'ArticleSpider.pipelines.ArticleImagePipeline': 1,</span></div><div class="line">    <span class="string">'ArticleSpider.pipelines.MysqlTwistedPipeline'</span>: <span class="number">1</span>,</div><div class="line">&#125;</div><div class="line">IMAGES_URLS_FIELD = <span class="string">"front_image_url"</span></div><div class="line">project_dir = os.path.abspath(os.path.dirname(__file__))</div><div class="line">IMAGES_STORE = os.path.join(project_dir, <span class="string">'images'</span>)</div><div class="line"></div><div class="line"><span class="comment"># 设置搜索路径</span></div><div class="line"><span class="keyword">import</span> os</div><div class="line"><span class="keyword">import</span> sys</div><div class="line"></div><div class="line">BASE_DIR = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))</div><div class="line">sys.path.insert(<span class="number">0</span>, os.path.join(BASE_DIR, <span class="string">'ArticleSpider'</span>))</div><div class="line"></div><div class="line">USER_AGENT = <span class="string">"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/603.2.4 (KHTML, like Gecko) Version/10.1.1 Safari/603.2.4"</span></div><div class="line"></div><div class="line">RANDOM_UA_TYPE = <span class="string">'random'</span></div><div class="line"></div><div class="line"><span class="comment"># IMAGES_MIN_HEIGHT = 100</span></div><div class="line"><span class="comment"># IMAGES_MIN_WIDTH = 100</span></div><div class="line"></div><div class="line"><span class="comment"># Enable and configure the AutoThrottle extension (disabled by default)</span></div><div class="line"><span class="comment"># See http://doc.scrapy.org/en/latest/topics/autothrottle.html</span></div><div class="line"><span class="comment">#启用和配置AutoThrottle扩展（默认情况下禁用）</span></div><div class="line">AUTOTHROTTLE_ENABLED = <span class="keyword">True</span></div><div class="line"><span class="comment"># The initial download delay</span></div><div class="line"><span class="comment"># AUTOTHROTTLE_START_DELAY = 5</span></div><div class="line"><span class="comment"># The maximum download delay to be set in case of high latencies</span></div><div class="line"><span class="comment"># AUTOTHROTTLE_MAX_DELAY = 60</span></div><div class="line"><span class="comment"># The average number of requests Scrapy should be sending in parallel to</span></div><div class="line"><span class="comment"># each remote server</span></div><div class="line"><span class="comment"># AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0</span></div><div class="line"><span class="comment"># Enable showing throttling stats for every response received:</span></div><div class="line"><span class="comment"># AUTOTHROTTLE_DEBUG = False</span></div><div class="line"></div><div class="line"><span class="comment"># Enable and configure HTTP caching (disabled by default)</span></div><div class="line"><span class="comment"># See http://scrapy.readthedocs.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings</span></div><div class="line"><span class="comment">#启用和配置HTTP缓存（默认情况下禁用）</span></div><div class="line"><span class="comment"># HTTPCACHE_ENABLED = True</span></div><div class="line"><span class="comment"># HTTPCACHE_EXPIRATION_SECS = 0</span></div><div class="line"><span class="comment"># HTTPCACHE_DIR = 'httpcache'</span></div><div class="line"><span class="comment"># HTTPCACHE_IGNORE_HTTP_CODES = []</span></div><div class="line"><span class="comment"># HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'</span></div><div class="line"></div><div class="line">MYSQL_HOST = <span class="string">"127.0.0.1"</span></div><div class="line">MYSQL_DBNAME = <span class="string">"article_spider"</span></div><div class="line">MYSQL_USER = <span class="string">"root"</span></div><div class="line">MYSQL_PASSWORD = <span class="string">"123"</span></div><div class="line"></div><div class="line">SQL_DATETIME_FORMAT = <span class="string">"%Y-%m-%d %H:%M:%S"</span></div><div class="line">SQL_DATE_FORMAT = <span class="string">"%Y-%m-%d"</span></div></pre></td></tr></table></figure>
       
     </div>
 
@@ -632,8 +525,8 @@ Scrapy 自带了 Feed 输出，并且支持多种序列化格式（serialization
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/05/05/scrapy-items-design/" rel="next" title="Python分布式爬虫打造搜索引擎项目学习笔记——items设计">
-                <i class="fa fa-chevron-left"></i> Python分布式爬虫打造搜索引擎项目学习笔记——items设计
+              <a href="/2017/06/11/scrapy-useragent-proxyip/" rel="next" title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy随机更换User-Agent和实现IP代理池">
+                <i class="fa fa-chevron-left"></i> Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy随机更换User-Agent和实现IP代理池
               </a>
             
           </div>
@@ -642,8 +535,8 @@ Scrapy 自带了 Feed 输出，并且支持多种序列化格式（serialization
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/05/06/scrapy-item-pipeline/" rel="prev" title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Item Pipeline">
-                Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Item Pipeline <i class="fa fa-chevron-right"></i>
+              <a href="/2017/06/12/scrapy-yundama/" rel="prev" title="Python分布式爬虫打造搜索引擎项目学习笔记——云打码实现验证码识别">
+                Python分布式爬虫打造搜索引擎项目学习笔记——云打码实现验证码识别 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -811,7 +704,7 @@ Scrapy 自带了 Feed 输出，并且支持多种序列化格式（serialization
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#序列化方式（serialization-format）"><span class="nav-number">1.</span> <span class="nav-text">序列化方式（serialization format）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#存储（Storages）"><span class="nav-number">2.</span> <span class="nav-text">存储（Storages）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#存储-URI-参数"><span class="nav-number">3.</span> <span class="nav-text">存储 URI 参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#存储后端（Storage-backends）"><span class="nav-number">4.</span> <span class="nav-text">存储后端（Storage backends）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#本地文件系统"><span class="nav-number">4.1.</span> <span class="nav-text">本地文件系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FTP"><span class="nav-number">4.2.</span> <span class="nav-text">FTP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#S3"><span class="nav-number">4.3.</span> <span class="nav-text">S3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#标准输出"><span class="nav-number">4.4.</span> <span class="nav-text">标准输出</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设定（Settings）"><span class="nav-number">5.</span> <span class="nav-text">设定（Settings）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#FEED-URI"><span class="nav-number">5.1.</span> <span class="nav-text">FEED_URI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FEED-FORMAT"><span class="nav-number">5.2.</span> <span class="nav-text">FEED_FORMAT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FEED-STORE-EMPTY"><span class="nav-number">5.3.</span> <span class="nav-text">FEED_STORE_EMPTY</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FEED-STORAGES"><span class="nav-number">5.4.</span> <span class="nav-text">FEED_STORAGES</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FEED-STORAGES-BASE"><span class="nav-number">5.5.</span> <span class="nav-text">FEED_STORAGES_BASE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FEED-EXPORTERS"><span class="nav-number">5.6.</span> <span class="nav-text">FEED_EXPORTERS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FEED-EXPORTERS-BASE"><span class="nav-number">5.7.</span> <span class="nav-text">FEED_EXPORTERS_BASE</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#cookie禁用"><span class="nav-number">1.</span> <span class="nav-text">cookie禁用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自动限速"><span class="nav-number">2.</span> <span class="nav-text">自动限速</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#限速算法"><span class="nav-number">2.1.</span> <span class="nav-text">限速算法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置"><span class="nav-number">3.</span> <span class="nav-text">设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AUTOTHROTTLE-ENABLED"><span class="nav-number">3.1.</span> <span class="nav-text">AUTOTHROTTLE_ENABLED</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AUTOTHROTTLE-START-DELAY"><span class="nav-number">3.2.</span> <span class="nav-text">AUTOTHROTTLE_START_DELAY</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AUTOTHROTTLE-MAX-DELAY"><span class="nav-number">3.3.</span> <span class="nav-text">AUTOTHROTTLE_MAX_DELAY</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AUTOTHROTTLE-DEBUG"><span class="nav-number">3.4.</span> <span class="nav-text">AUTOTHROTTLE_DEBUG</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义Spider的settings"><span class="nav-number">4.</span> <span class="nav-text">自定义Spider的settings</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#settings-py详解"><span class="nav-number">5.</span> <span class="nav-text">settings.py详解</span></a></li></ol></div>
             
 
           </div>
