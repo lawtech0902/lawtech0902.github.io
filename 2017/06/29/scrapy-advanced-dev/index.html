@@ -1,0 +1,1141 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Neucha:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Scrapy，Python," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="LawTech's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="本篇主要介绍selenium的使用、其余的一些动态网页获取技术以及scrapy的一些进阶知识。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy 进阶开发">
+<meta property="og:url" content="http://yoursite.com/2017/06/29/scrapy-advanced-dev/index.html">
+<meta property="og:site_name" content="LawTech's Blog">
+<meta property="og:description" content="本篇主要介绍selenium的使用、其余的一些动态网页获取技术以及scrapy的一些进阶知识。">
+<meta property="og:image" content="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg">
+<meta property="og:updated_time" content="2017-06-29T08:20:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy 进阶开发">
+<meta name="twitter:description" content="本篇主要介绍selenium的使用、其余的一些动态网页获取技术以及scrapy的一些进阶知识。">
+<meta name="twitter:image" content="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/29/scrapy-advanced-dev/"/>
+
+
+
+
+
+  <title> Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy 进阶开发 | LawTech's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=61398861";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta custom-logo">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">LawTech's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <h1 class="site-subtitle" itemprop="description">不破不立</h1>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/29/scrapy-advanced-dev/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="LawTech.">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="LawTech's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="LawTech's Blog" src="/images/avatar.jpg">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy 进阶开发
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-29T14:18:54+08:00">
+                2017-06-29
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2017-06-29T16:20:28+08:00">
+                2017-06-29
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Scrapy/" itemprop="url" rel="index">
+                    <span itemprop="name">Scrapy</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/06/29/scrapy-advanced-dev/" class="leancloud_visitors" data-flag-title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy 进阶开发">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+ 
+        
+
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+          
+          
+            <div class="post-gallery-row">
+              <a class="post-gallery-img fancybox"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj4i5ufm9000wd1qz2z9oonvg"
+                 itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
+                <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
+              </a>
+            
+          
+
+          
+          </div>
+        </div>
+      
+
+      
+        <p>本篇主要介绍selenium的使用、其余的一些动态网页获取技术以及scrapy的一些进阶知识。</p>
+<a id="more"></a>
+<h2 id="Selenium的使用"><a href="#Selenium的使用" class="headerlink" title="Selenium的使用"></a><strong>Selenium的使用</strong></h2><h3 id="Selenium介绍"><a href="#Selenium介绍" class="headerlink" title="Selenium介绍"></a><strong>Selenium介绍</strong></h3><p><a href="http://selenium-python-zh.readthedocs.io/en/latest/index.html" target="_blank" rel="external">Selenium</a>是一个用于Web应用程序测试的工具。Selenium测试直接运行在浏览器中，就像真正的用户在操作一样。支持的浏览器包括IE（7, 8, 9, 10, 11），Mozilla Firefox，Safari，Google Chrome，Opera等。这个工具的主要功能包括：测试与浏览器的兼容性——测试你的应用程序看是否能够很好得工作在不同浏览器和操作系统之上。测试系统功能——创建回归测试检验软件功能和用户需求。支持自动录制动作和自动生成 .Net、Java、Perl等不同语言的测试脚本。</p>
+<h3 id="Selenium安装"><a href="#Selenium安装" class="headerlink" title="Selenium安装"></a><strong>Selenium安装</strong></h3><p><img src="https://ws1.sinaimg.cn/large/006tKfTcly1fgu3vu4nj3j31kw054abx.jpg" alt=""></p>
+<p>Selenium安装完成之后，还需要下载浏览器对应的webdriver才能开始使用，我们这里选择Chrome的<a href="https://sites.google.com/a/chromium.org/chromedriver/downloads" target="_blank" rel="external">ChromeDriver</a>。</p>
+<h3 id="Selenium动态网页请求"><a href="#Selenium动态网页请求" class="headerlink" title="Selenium动态网页请求"></a><strong>Selenium动态网页请求</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</div><div class="line"><span class="keyword">from</span> scrapy.selector <span class="keyword">import</span> Selector</div><div class="line"></div><div class="line">browser = webdriver.Chrome(executable_path=<span class="string">"/Users/lawtech/TempSpace/chromedriver"</span>)</div><div class="line"></div><div class="line">browser.get(<span class="string">"https://detail.tmall.com/item.htm?spm=a230r.1.14.13.bgHDMS&amp;id=539418030842&amp;cm_id=140105335569ed55e27b&amp;abbucket=5"</span>)</div><div class="line"></div><div class="line">t_selector = Selector(text=browser.page_source)</div><div class="line"></div><div class="line">print(t_selector.css(<span class="string">".tm-promo-price .tm-price::text"</span>).extract())</div><div class="line"></div><div class="line">browser.quit()</div></pre></td></tr></table></figure>
+<p>我们用Selenium请求一个天猫商品的动态网页，并用Scrapy Selector来获取对应的商品价格信息。</p>
+<p><img src="https://ws2.sinaimg.cn/large/006tKfTcly1fgu40xqud2j31d403et98.jpg" alt=""></p>
+<h3 id="Selenium模拟登录知乎"><a href="#Selenium模拟登录知乎" class="headerlink" title="Selenium模拟登录知乎"></a><strong>Selenium模拟登录知乎</strong></h3><p><img src="https://ws3.sinaimg.cn/large/006tKfTcly1fgu4vmkm5hj314o0dyn2r.jpg" alt=""></p>
+<p>调试观察之后，采用Selenium自带的选择器方法来模拟输入账号密码并且点击登录。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</div><div class="line"></div><div class="line">browser = webdriver.Chrome(executable_path=<span class="string">"/Users/lawtech/TempSpace/chromedriver"</span>)</div><div class="line">browser.get(<span class="string">"https://www.zhihu.com/#signin"</span>)</div><div class="line"></div><div class="line">browser.find_element_by_css_selector(<span class="string">".view-signin input[name='account']"</span>).send_keys(<span class="string">"584563542@qq.com"</span>)</div><div class="line">browser.find_element_by_css_selector(<span class="string">".view-signin input[name='password']"</span>).send_keys(<span class="string">"tracy584563542"</span>)</div><div class="line">browser.find_element_by_css_selector(<span class="string">".view_signin button.sign-button"</span>).click()</div></pre></td></tr></table></figure>
+<h3 id="Selenium模拟登录微博"><a href="#Selenium模拟登录微博" class="headerlink" title="Selenium模拟登录微博"></a><strong>Selenium模拟登录微博</strong></h3><p><img src="https://ws4.sinaimg.cn/large/006tKfTcgy1fgu8zpu487j30xu05wjtd.jpg" alt=""></p>
+<p><img src="https://ws2.sinaimg.cn/large/006tKfTcgy1fgu8zttkrzj30xy060ac1.jpg" alt=""></p>
+<p><img src="https://ws4.sinaimg.cn/large/006tKfTcgy1fgu8zzmjavj30y405uq4o.jpg" alt=""></p>
+<p>首先调试观察微博登录页面</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</div><div class="line"></div><div class="line">browser = webdriver.Chrome(executable_path=<span class="string">"/Users/lawtech/TempSpace/chromedriver"</span>)</div><div class="line">browser.get(<span class="string">"https://www.weibo.com"</span>)</div><div class="line">browser.find_element_by_css_selector(<span class="string">"#loginname"</span>).send_keys(<span class="string">"584563542@qq.com"</span>)</div><div class="line">browser.find_element_by_css_selector(<span class="string">".info_list.password input[node-type='password']"</span>).send_keys(<span class="string">"tracy584563542"</span>)</div><div class="line">browser.find_element_by_css_selector(<span class="string">".info_list.login_btn a[node-type='submitBtn']"</span>).click()</div></pre></td></tr></table></figure>
+<p>发现如下错误</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tKfTcly1fgu91pgp2uj31kw0ezgrc.jpg" alt=""></p>
+<p>原因：我们在页面还没有请求完成时就进行了下一步操作，导致元素获取不到。</p>
+<p>在请求发出之后，休眠一段时间等待页面加载完成即可。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> time</div><div class="line"></div><div class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</div><div class="line"></div><div class="line">browser = webdriver.Chrome(executable_path=<span class="string">"/Users/lawtech/TempSpace/chromedriver"</span>)</div><div class="line">browser.get(<span class="string">"https://www.weibo.com"</span>)</div><div class="line">time.sleep(<span class="number">15</span>)</div><div class="line">browser.find_element_by_css_selector(<span class="string">"#loginname"</span>).send_keys(<span class="string">"584563542@qq.com"</span>)</div><div class="line">browser.find_element_by_css_selector(<span class="string">".info_list.password input[node-type='password']"</span>).send_keys(<span class="string">"tracy584563542"</span>)</div><div class="line">browser.find_element_by_css_selector(<span class="string">".info_list.login_btn a[node-type='submitBtn']"</span>).click()</div></pre></td></tr></table></figure>
+<h3 id="Selenium模拟鼠标下拉"><a href="#Selenium模拟鼠标下拉" class="headerlink" title="Selenium模拟鼠标下拉"></a><strong>Selenium模拟鼠标下拉</strong></h3><p>这样的操作是通过JS脚本来进行的：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> time</div><div class="line"></div><div class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</div><div class="line"></div><div class="line">browser = webdriver.Chrome(executable_path=<span class="string">"/Users/lawtech/TempSpace/chromedriver"</span>)</div><div class="line">browser.get(<span class="string">"https://www.oschina.net/blog"</span>)</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">3</span>):</div><div class="line">    browser.execute_script(<span class="string">"window.scrollTo(0, document.body.scrollHeight); var lenOfPage=document.body.scrollHeight; return lenOfPage;"</span>)</div><div class="line">    time.sleep(<span class="number">3</span>)</div></pre></td></tr></table></figure>
+<h3 id="设置ChromeDriver不加载图片"><a href="#设置ChromeDriver不加载图片" class="headerlink" title="设置ChromeDriver不加载图片"></a><strong>设置ChromeDriver不加载图片</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 设置ChromeDriver不加载图片</span></div><div class="line">chrome_opt = webdriver.ChromeOptions()</div><div class="line">prefs = &#123;<span class="string">"profile.managed_default_content_settings.images"</span>: <span class="number">2</span>&#125;</div><div class="line">chrome_opt.add_experimental_option(<span class="string">"prefs"</span>, prefs)</div><div class="line">browser = webdriver.Chrome(executable_path=<span class="string">"/Users/lawtech/TempSpace/chromedriver"</span>, chrome_options=chrome_opt)</div><div class="line">browser.get(<span class="string">"https://www.taobao.com"</span>)</div></pre></td></tr></table></figure>
+<h3 id="PhantomJS获取动态网页"><a href="#PhantomJS获取动态网页" class="headerlink" title="PhantomJS获取动态网页"></a><strong>PhantomJS获取动态网页</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># phantomjs, 无界面的浏览器， 多进程情况下phantomjs性能会下降很严重</span></div><div class="line">browser = webdriver.PhantomJS(executable_path=<span class="string">"/Users/lawtech/TempSpace/phantomjs-2.1.1-macosx/bin/phantomjs"</span>)</div><div class="line">browser.get(<span class="string">"https://detail.tmall.com/item.htm?spm=a230r.1.14.13.bgHDMS&amp;id=539418030842&amp;cm_id=140105335569ed55e27b&amp;abbucket=5"</span>)</div><div class="line">t_selector = Selector(text=browser.page_source)</div><div class="line">print(t_selector.css(<span class="string">".tm-promo-price .tm-price::text"</span>).extract())</div><div class="line">browser.quit()</div></pre></td></tr></table></figure>
+<h3 id="Selenium集成到Scrapy中"><a href="#Selenium集成到Scrapy中" class="headerlink" title="Selenium集成到Scrapy中"></a><strong>Selenium集成到Scrapy中</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</div><div class="line"><span class="keyword">from</span> scrapy.http <span class="keyword">import</span> HtmlResponse</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">JSPageMiddleware</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    通过Chrome动态请求网页</div><div class="line">    """</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.browser = webdriver.Chrome(executable_path=<span class="string">"/Users/lawtech/TempSpace/chromedriver"</span>)</div><div class="line">        super(JSPageMiddleware, self).__init__()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_request</span><span class="params">(self, request, spider)</span>:</span></div><div class="line">        <span class="keyword">if</span> spider.name == <span class="string">"jobbole"</span>:</div><div class="line">            self.browser.get(request.url)</div><div class="line">            <span class="keyword">import</span> time</div><div class="line">            time.sleep(<span class="number">3</span>)</div><div class="line">            print(<span class="string">"访问&#123;0&#125;"</span>.format(request.url))</div><div class="line"></div><div class="line">            <span class="keyword">return</span> HtmlResponse(url=self.browser.current_url, body=self.browser.page_source, encoding=<span class="string">'utf-8'</span>)</div></pre></td></tr></table></figure>
+<p>在<code>middlewares.py</code>中添加如上代码之后，别忘了在<code>settings.py</code>中将其配置好：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">DOWNLOADER_MIDDLEWARES = &#123;</div><div class="line">    <span class="string">'ArticleSpider.middlewares.RandomUserAgentMiddleware'</span>: <span class="number">543</span>,</div><div class="line">    <span class="string">'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware'</span>: <span class="keyword">None</span>,</div><div class="line">    <span class="string">'ArticleSpider.middlewares.JSPageMiddleware'</span>: <span class="number">1</span>,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其实我们可以把Chrome放到Spider中，此时就引入了信号量的问题：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> scrapy.xlib.pydispatch <span class="keyword">import</span> dispatcher</div><div class="line"><span class="keyword">from</span> scrapy <span class="keyword">import</span> signals</div><div class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">JobboleSpider</span><span class="params">(scrapy.Spider)</span>:</span></div><div class="line">    name = <span class="string">"jobbole"</span></div><div class="line">    allowed_domains = [<span class="string">"blog.jobbole.com"</span>]</div><div class="line">    start_urls = [<span class="string">'http://blog.jobbole.com/all-posts/'</span>]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.browser = webdriver.Chrome(executable_path=<span class="string">"/Users/lawtech/TempSpace/chromedriver"</span>)</div><div class="line">        super(JobboleSpider, self).__init__()</div><div class="line">        dispatcher.connect(self.spider_closed, signals.spider_closed)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">spider_closed</span><span class="params">(self, spider)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        当爬虫退出的时候关闭Chrome</div><div class="line">        :param spider:</div><div class="line">        :return:</div><div class="line">        """</div><div class="line">        print(<span class="string">"spider closed"</span>)</div><div class="line">        self.browser.quit()</div></pre></td></tr></table></figure>
+<h2 id="其余动态网页获取技术"><a href="#其余动态网页获取技术" class="headerlink" title="其余动态网页获取技术"></a><strong>其余动态网页获取技术</strong></h2><h3 id="Chrome无界面运行"><a href="#Chrome无界面运行" class="headerlink" title="Chrome无界面运行"></a><strong>Chrome无界面运行</strong></h3><p>首先安装<code>pyvirtualdisplay</code>：<code>pip install pyvirtualdisplay -i https://pypi.douban.com/simple/</code></p>
+<p>主要代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> pyvirtualdisplay <span class="keyword">import</span> Display</div><div class="line">display = Display(visible=<span class="number">0</span>, size=(<span class="number">800</span>, <span class="number">600</span>))</div><div class="line">display.start()</div><div class="line"></div><div class="line">browser = webdriver.Chrome(executable_path=<span class="string">"/Users/lawtech/TempSpace/chromedriver"</span>)</div><div class="line">browser.get(<span class="string">"https://detail.tmall.com/item.htm?spm=a230r.1.14.13.bgHDMS&amp;id=539418030842&amp;cm_id=140105335569ed55e27b&amp;abbucket=5"</span>)</div><div class="line">browser.quit()</div></pre></td></tr></table></figure>
+<h3 id="scrapy-splash"><a href="#scrapy-splash" class="headerlink" title="scrapy-splash"></a><strong>scrapy-splash</strong></h3><p><a href="https://github.com/scrapy-plugins/scrapy-splash" target="_blank" rel="external">https://github.com/scrapy-plugins/scrapy-splash</a></p>
+<p>稳定性没有Chrome高</p>
+<h3 id="selenium-grid"><a href="#selenium-grid" class="headerlink" title="selenium-grid"></a><strong>selenium-grid</strong></h3><p><a href="https://github.com/SeleniumHQ/selenium/wiki/Grid2" target="_blank" rel="external">https://github.com/SeleniumHQ/selenium/wiki/Grid2</a></p>
+<h3 id="splinter"><a href="#splinter" class="headerlink" title="splinter"></a><strong>splinter</strong></h3><p><a href="https://github.com/cobrateam/splinter" target="_blank" rel="external">https://github.com/cobrateam/splinter</a></p>
+<h2 id="Scrapy的暂停与重启"><a href="#Scrapy的暂停与重启" class="headerlink" title="Scrapy的暂停与重启"></a><strong>Scrapy的暂停与重启</strong></h2><p><code>scrapy crawl lagou -s JOBDIR=jobinfo/001</code></p>
+<p>上面这条命令即可完成lagouspider的暂停与重启，中途可以你可以使用ctrl+c终止采集程序的运行，恢复时，还是运行上面这条命令即可，连按两次ctrl+c就可以完全终止。</p>
+<p>其中jobinfo/001 是一个保存采集列表状态的目录，千万不要同时开多个爬虫程序使用同一个目录，会导致混乱。</p>
+<p>还有更简单的方法，就是在settings.py文件里加入下面的代码：</p>
+<p><code>JOBDIR=&#39;jobinfo/001&#39;</code></p>
+<p>使用命令<code>scrapy crawl lagou</code>，就会自动生成一个jobinfo/001的目录，然后将工作列表放到这个文件夹里。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+  
+        <div class="post-tags">
+          
+            <a href="/tags/Scrapy，Python/" rel="tag"># Scrapy，Python</a>
+          
+        </div>
+      
+
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>🐶 怕是要给老板下跪了哦~ 🐶</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赞赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat-reward-img.jpg" alt="LawTech. WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay-reward-img.jpg" alt="LawTech. Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+         
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/12/scrapy-yundama/" rel="next" title="Python分布式爬虫打造搜索引擎项目学习笔记——云打码实现验证码识别">
+                <i class="fa fa-chevron-left"></i> Python分布式爬虫打造搜索引擎项目学习笔记——云打码实现验证码识别
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="monthly" data-num-items="4"></div>
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg"
+               alt="LawTech." />
+          <p class="site-author-name" itemprop="name">LawTech.</p>
+          <p class="site-description motion-element" itemprop="description">破邮python爱好者。</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/lawtech0902" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/LawRev1s1on" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://github.com/lawtech0902" title="没地方链~" target="_blank">没地方链~</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Selenium的使用"><span class="nav-number">1.</span> <span class="nav-text">Selenium的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Selenium介绍"><span class="nav-number">1.1.</span> <span class="nav-text">Selenium介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Selenium安装"><span class="nav-number">1.2.</span> <span class="nav-text">Selenium安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Selenium动态网页请求"><span class="nav-number">1.3.</span> <span class="nav-text">Selenium动态网页请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Selenium模拟登录知乎"><span class="nav-number">1.4.</span> <span class="nav-text">Selenium模拟登录知乎</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Selenium模拟登录微博"><span class="nav-number">1.5.</span> <span class="nav-text">Selenium模拟登录微博</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Selenium模拟鼠标下拉"><span class="nav-number">1.6.</span> <span class="nav-text">Selenium模拟鼠标下拉</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置ChromeDriver不加载图片"><span class="nav-number">1.7.</span> <span class="nav-text">设置ChromeDriver不加载图片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PhantomJS获取动态网页"><span class="nav-number">1.8.</span> <span class="nav-text">PhantomJS获取动态网页</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Selenium集成到Scrapy中"><span class="nav-number">1.9.</span> <span class="nav-text">Selenium集成到Scrapy中</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其余动态网页获取技术"><span class="nav-number">2.</span> <span class="nav-text">其余动态网页获取技术</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Chrome无界面运行"><span class="nav-number">2.1.</span> <span class="nav-text">Chrome无界面运行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#scrapy-splash"><span class="nav-number">2.2.</span> <span class="nav-text">scrapy-splash</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#selenium-grid"><span class="nav-number">2.3.</span> <span class="nav-text">selenium-grid</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#splinter"><span class="nav-number">2.4.</span> <span class="nav-text">splinter</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Scrapy的暂停与重启"><span class="nav-number">3.</span> <span class="nav-text">Scrapy的暂停与重启</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LawTech.</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io" rel="external nofollow">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" rel="external nofollow">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/jquery.lazyload/1.9.3/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("R025aEVl3sFz6nIRV8p0nqRB-gzGzoHsz", "g1roHmmHckuQSu2n9JW16T5b");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>
