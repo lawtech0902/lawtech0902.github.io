@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-07-01T08:43:21.000Z</updated>
+  <updated>2017-07-01T08:48:32.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,29 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy-redis分布式爬虫</title>
+    <link href="http://yoursite.com/2017/07/01/scrapy-redis/"/>
+    <id>http://yoursite.com/2017/07/01/scrapy-redis/</id>
+    <published>2017-07-01T12:18:54.000Z</published>
+    <updated>2017-07-01T08:48:32.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="分布式爬虫要点"><a href="#分布式爬虫要点" class="headerlink" title="分布式爬虫要点"></a><strong>分布式爬虫要点</strong></h2><p><img src="https://ws3.sinaimg.cn/large/006tNc79gy1fh4hbyf2moj30h50byq4t.jpg" alt=""></p>
+<a id="more"></a>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;分布式爬虫要点&quot;&gt;&lt;a href=&quot;#分布式爬虫要点&quot; class=&quot;headerlink&quot; title=&quot;分布式爬虫要点&quot;&gt;&lt;/a&gt;&lt;strong&gt;分布式爬虫要点&lt;/strong&gt;&lt;/h2&gt;&lt;p&gt;&lt;img src=&quot;https://ws3.sinaimg.cn/large/006tNc79gy1fh4hbyf2moj30h50byq4t.jpg&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
+    
+    
+      <category term="Scrapy，Python，Redis" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython%EF%BC%8CRedis/"/>
+    
+  </entry>
   
   <entry>
     <title>Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy 进阶开发</title>
@@ -100,6 +123,43 @@
   </entry>
   
   <entry>
+    <title>Python分布式爬虫打造搜索引擎项目学习笔记——云打码实现验证码识别</title>
+    <link href="http://yoursite.com/2017/06/12/scrapy-yundama/"/>
+    <id>http://yoursite.com/2017/06/12/scrapy-yundama/</id>
+    <published>2017-06-12T06:18:54.000Z</published>
+    <updated>2017-06-22T07:19:19.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>验证码识别大致有如下几种方式：</p>
+<ul>
+<li>编码实现（Tesseract-OCR）</li>
+<li>在线打码</li>
+<li>人工打码</li>
+</ul>
+<a id="more"></a>
+<p>这里我们简单介绍一下在线打码，选择的打码平台为：<a href="http://www.yundama.com" target="_blank" rel="external">云打码</a></p>
+<p>具体方式查看调用示例即可。</p>
+<p>下面给出代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> json</div><div class="line"><span class="keyword">import</span> requests</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">YDMHttp</span><span class="params">(object)</span>:</span></div><div class="line">    apiurl = <span class="string">'http://api.yundama.com/api.php'</span></div><div class="line">    username = <span class="string">''</span></div><div class="line">    password = <span class="string">''</span></div><div class="line">    appid = <span class="string">''</span></div><div class="line">    appkey = <span class="string">''</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, username, password, appid, appkey)</span>:</span></div><div class="line">        self.username = username</div><div class="line">        self.password = password</div><div class="line">        self.appid = str(appid)</div><div class="line">        self.appkey = appkey</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">balance</span><span class="params">(self)</span>:</span></div><div class="line">        data = &#123;<span class="string">'method'</span>: <span class="string">'balance'</span>, <span class="string">'username'</span>: self.username, <span class="string">'password'</span>: self.password, <span class="string">'appid'</span>: self.appid,</div><div class="line">                <span class="string">'appkey'</span>: self.appkey&#125;</div><div class="line">        response_data = requests.post(self.apiurl, data=data)</div><div class="line">        ret_data = json.loads(response_data.text)</div><div class="line">        <span class="keyword">if</span> ret_data[<span class="string">"ret"</span>] == <span class="number">0</span>:</div><div class="line">            print(<span class="string">"获取剩余积分"</span>, ret_data[<span class="string">"balance"</span>])</div><div class="line">            <span class="keyword">return</span> ret_data[<span class="string">"balance"</span>]</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">return</span> <span class="keyword">None</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">login</span><span class="params">(self)</span>:</span></div><div class="line">        data = &#123;<span class="string">'method'</span>: <span class="string">'login'</span>, <span class="string">'username'</span>: self.username, <span class="string">'password'</span>: self.password, <span class="string">'appid'</span>: self.appid,</div><div class="line">                <span class="string">'appkey'</span>: self.appkey&#125;</div><div class="line">        response_data = requests.post(self.apiurl, data=data)</div><div class="line">        ret_data = json.loads(response_data.text)</div><div class="line">        <span class="keyword">if</span> ret_data[<span class="string">"ret"</span>] == <span class="number">0</span>:</div><div class="line">            print(<span class="string">"登录成功"</span>, ret_data[<span class="string">"uid"</span>])</div><div class="line">            <span class="keyword">return</span> ret_data[<span class="string">"uid"</span>]</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">return</span> <span class="keyword">None</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">decode</span><span class="params">(self, filename, codetype, timeout)</span>:</span></div><div class="line">        data = &#123;<span class="string">'method'</span>: <span class="string">'upload'</span>, <span class="string">'username'</span>: self.username, <span class="string">'password'</span>: self.password, <span class="string">'appid'</span>: self.appid,</div><div class="line">                <span class="string">'appkey'</span>: self.appkey, <span class="string">'codetype'</span>: str(codetype), <span class="string">'timeout'</span>: str(timeout)&#125;</div><div class="line">        files = &#123;<span class="string">'file'</span>: open(filename, <span class="string">'rb'</span>)&#125;</div><div class="line">        response_data = requests.post(self.apiurl, files=files, data=data)</div><div class="line">        ret_data = json.loads(response_data.text)</div><div class="line">        <span class="keyword">if</span> ret_data[<span class="string">"ret"</span>] == <span class="number">0</span>:</div><div class="line">            print(<span class="string">"识别成功"</span>, ret_data[<span class="string">"text"</span>])</div><div class="line">            <span class="keyword">return</span> ret_data[<span class="string">"text"</span>]</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">return</span> <span class="keyword">None</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">ydm</span><span class="params">(file_path)</span>:</span></div><div class="line">    username = <span class="string">'da_ge_da1'</span></div><div class="line">    <span class="comment"># 密码</span></div><div class="line">    password = <span class="string">'da_ge_da'</span></div><div class="line">    <span class="comment"># 软件ＩＤ，开发者分成必要参数。登录开发者后台【我的软件】获得！</span></div><div class="line">    appid = <span class="number">3129</span></div><div class="line">    <span class="comment"># 软件密钥，开发者分成必要参数。登录开发者后台【我的软件】获得！</span></div><div class="line">    appkey = <span class="string">'40d5ad41c047179fc797631e3b9c3025'</span></div><div class="line">    <span class="comment"># 图片文件</span></div><div class="line">    filename = <span class="string">'image/captcha.jpg'</span></div><div class="line">    <span class="comment"># 验证码类型，# 例：1004表示4位字母数字，不同类型收费不同。请准确填写，否则影响识别率。在此查询所有类型 http://www.yundama.com/price.html</span></div><div class="line">    codetype = <span class="number">5000</span></div><div class="line">    <span class="comment"># 超时时间，秒</span></div><div class="line">    timeout = <span class="number">60</span></div><div class="line">    <span class="comment"># 检查</span></div><div class="line"></div><div class="line">    yundama = YDMHttp(username, password, appid, appkey)</div><div class="line">    <span class="keyword">if</span> (username == <span class="string">'username'</span>):</div><div class="line">        print(<span class="string">'请设置好相关参数再测试'</span>)</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="comment"># 开始识别，图片路径，验证码类型ID，超时时间（秒），识别结果</span></div><div class="line">        <span class="keyword">return</span> yundama.decode(file_path, codetype, timeout);</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</div><div class="line">    <span class="comment"># 用户名</span></div><div class="line">    username = <span class="string">'da_ge_da1'</span></div><div class="line">    <span class="comment"># 密码</span></div><div class="line">    password = <span class="string">'da_ge_da'</span></div><div class="line">    <span class="comment"># 软件ＩＤ，开发者分成必要参数。登录开发者后台【我的软件】获得！</span></div><div class="line">    appid = <span class="number">3129</span></div><div class="line">    <span class="comment"># 软件密钥，开发者分成必要参数。登录开发者后台【我的软件】获得！</span></div><div class="line">    appkey = <span class="string">'40d5ad41c047179fc797631e3b9c3025'</span></div><div class="line">    <span class="comment"># 图片文件</span></div><div class="line">    filename = <span class="string">'image/captcha.jpg'</span></div><div class="line">    <span class="comment"># 验证码类型，# 例：1004表示4位字母数字，不同类型收费不同。请准确填写，否则影响识别率。在此查询所有类型 http://www.yundama.com/price.html</span></div><div class="line">    codetype = <span class="number">5000</span></div><div class="line">    <span class="comment"># 超时时间，秒</span></div><div class="line">    timeout = <span class="number">60</span></div><div class="line">    <span class="comment"># 检查</span></div><div class="line">    <span class="keyword">if</span> (username == <span class="string">'username'</span>):</div><div class="line">        print(<span class="string">'请设置好相关参数再测试'</span>)</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="comment"># 初始化</span></div><div class="line">        yundama = YDMHttp(username, password, appid, appkey)</div><div class="line"></div><div class="line">        <span class="comment"># 登陆云打码</span></div><div class="line">        uid = yundama.login()</div><div class="line">        print(<span class="string">'uid: %s'</span> % uid)</div><div class="line"></div><div class="line">        <span class="comment"># 登陆云打码</span></div><div class="line">        uid = yundama.login()</div><div class="line">        print(<span class="string">'uid: %s'</span> % uid)</div><div class="line"></div><div class="line">        <span class="comment"># 查询余额</span></div><div class="line">        balance = yundama.balance()</div><div class="line">        print(<span class="string">'balance: %s'</span> % balance)</div><div class="line"></div><div class="line">        <span class="comment"># 开始识别，图片路径，验证码类型ID，超时时间（秒），识别结果</span></div><div class="line">        text = yundama.decode(filename, codetype, timeout)</div></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;验证码识别大致有如下几种方式：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;编码实现（Tesseract-OCR）&lt;/li&gt;
+&lt;li&gt;在线打码&lt;/li&gt;
+&lt;li&gt;人工打码&lt;/li&gt;
+&lt;/ul&gt;
+    
+    </summary>
+    
+      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
+    
+    
+      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Python分布式爬虫打造搜索引擎项目学习笔记——cookie禁用、自动限速、自定义Spider的settings</title>
     <link href="http://yoursite.com/2017/06/12/scrapy-cookies-settings/"/>
     <id>http://yoursite.com/2017/06/12/scrapy-cookies-settings/</id>
@@ -143,43 +203,6 @@
     <summary type="html">
     
       &lt;p&gt;像cookie禁用、自动限速这样的设置都在&lt;code&gt;settings.py&lt;/code&gt;文件中，下面我们就来简单介绍一下。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
-    
-    
-      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Python分布式爬虫打造搜索引擎项目学习笔记——云打码实现验证码识别</title>
-    <link href="http://yoursite.com/2017/06/12/scrapy-yundama/"/>
-    <id>http://yoursite.com/2017/06/12/scrapy-yundama/</id>
-    <published>2017-06-12T06:18:54.000Z</published>
-    <updated>2017-06-22T07:19:19.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>验证码识别大致有如下几种方式：</p>
-<ul>
-<li>编码实现（Tesseract-OCR）</li>
-<li>在线打码</li>
-<li>人工打码</li>
-</ul>
-<a id="more"></a>
-<p>这里我们简单介绍一下在线打码，选择的打码平台为：<a href="http://www.yundama.com" target="_blank" rel="external">云打码</a></p>
-<p>具体方式查看调用示例即可。</p>
-<p>下面给出代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> json</div><div class="line"><span class="keyword">import</span> requests</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">YDMHttp</span><span class="params">(object)</span>:</span></div><div class="line">    apiurl = <span class="string">'http://api.yundama.com/api.php'</span></div><div class="line">    username = <span class="string">''</span></div><div class="line">    password = <span class="string">''</span></div><div class="line">    appid = <span class="string">''</span></div><div class="line">    appkey = <span class="string">''</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, username, password, appid, appkey)</span>:</span></div><div class="line">        self.username = username</div><div class="line">        self.password = password</div><div class="line">        self.appid = str(appid)</div><div class="line">        self.appkey = appkey</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">balance</span><span class="params">(self)</span>:</span></div><div class="line">        data = &#123;<span class="string">'method'</span>: <span class="string">'balance'</span>, <span class="string">'username'</span>: self.username, <span class="string">'password'</span>: self.password, <span class="string">'appid'</span>: self.appid,</div><div class="line">                <span class="string">'appkey'</span>: self.appkey&#125;</div><div class="line">        response_data = requests.post(self.apiurl, data=data)</div><div class="line">        ret_data = json.loads(response_data.text)</div><div class="line">        <span class="keyword">if</span> ret_data[<span class="string">"ret"</span>] == <span class="number">0</span>:</div><div class="line">            print(<span class="string">"获取剩余积分"</span>, ret_data[<span class="string">"balance"</span>])</div><div class="line">            <span class="keyword">return</span> ret_data[<span class="string">"balance"</span>]</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">return</span> <span class="keyword">None</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">login</span><span class="params">(self)</span>:</span></div><div class="line">        data = &#123;<span class="string">'method'</span>: <span class="string">'login'</span>, <span class="string">'username'</span>: self.username, <span class="string">'password'</span>: self.password, <span class="string">'appid'</span>: self.appid,</div><div class="line">                <span class="string">'appkey'</span>: self.appkey&#125;</div><div class="line">        response_data = requests.post(self.apiurl, data=data)</div><div class="line">        ret_data = json.loads(response_data.text)</div><div class="line">        <span class="keyword">if</span> ret_data[<span class="string">"ret"</span>] == <span class="number">0</span>:</div><div class="line">            print(<span class="string">"登录成功"</span>, ret_data[<span class="string">"uid"</span>])</div><div class="line">            <span class="keyword">return</span> ret_data[<span class="string">"uid"</span>]</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">return</span> <span class="keyword">None</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">decode</span><span class="params">(self, filename, codetype, timeout)</span>:</span></div><div class="line">        data = &#123;<span class="string">'method'</span>: <span class="string">'upload'</span>, <span class="string">'username'</span>: self.username, <span class="string">'password'</span>: self.password, <span class="string">'appid'</span>: self.appid,</div><div class="line">                <span class="string">'appkey'</span>: self.appkey, <span class="string">'codetype'</span>: str(codetype), <span class="string">'timeout'</span>: str(timeout)&#125;</div><div class="line">        files = &#123;<span class="string">'file'</span>: open(filename, <span class="string">'rb'</span>)&#125;</div><div class="line">        response_data = requests.post(self.apiurl, files=files, data=data)</div><div class="line">        ret_data = json.loads(response_data.text)</div><div class="line">        <span class="keyword">if</span> ret_data[<span class="string">"ret"</span>] == <span class="number">0</span>:</div><div class="line">            print(<span class="string">"识别成功"</span>, ret_data[<span class="string">"text"</span>])</div><div class="line">            <span class="keyword">return</span> ret_data[<span class="string">"text"</span>]</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">return</span> <span class="keyword">None</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">ydm</span><span class="params">(file_path)</span>:</span></div><div class="line">    username = <span class="string">'da_ge_da1'</span></div><div class="line">    <span class="comment"># 密码</span></div><div class="line">    password = <span class="string">'da_ge_da'</span></div><div class="line">    <span class="comment"># 软件ＩＤ，开发者分成必要参数。登录开发者后台【我的软件】获得！</span></div><div class="line">    appid = <span class="number">3129</span></div><div class="line">    <span class="comment"># 软件密钥，开发者分成必要参数。登录开发者后台【我的软件】获得！</span></div><div class="line">    appkey = <span class="string">'40d5ad41c047179fc797631e3b9c3025'</span></div><div class="line">    <span class="comment"># 图片文件</span></div><div class="line">    filename = <span class="string">'image/captcha.jpg'</span></div><div class="line">    <span class="comment"># 验证码类型，# 例：1004表示4位字母数字，不同类型收费不同。请准确填写，否则影响识别率。在此查询所有类型 http://www.yundama.com/price.html</span></div><div class="line">    codetype = <span class="number">5000</span></div><div class="line">    <span class="comment"># 超时时间，秒</span></div><div class="line">    timeout = <span class="number">60</span></div><div class="line">    <span class="comment"># 检查</span></div><div class="line"></div><div class="line">    yundama = YDMHttp(username, password, appid, appkey)</div><div class="line">    <span class="keyword">if</span> (username == <span class="string">'username'</span>):</div><div class="line">        print(<span class="string">'请设置好相关参数再测试'</span>)</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="comment"># 开始识别，图片路径，验证码类型ID，超时时间（秒），识别结果</span></div><div class="line">        <span class="keyword">return</span> yundama.decode(file_path, codetype, timeout);</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</div><div class="line">    <span class="comment"># 用户名</span></div><div class="line">    username = <span class="string">'da_ge_da1'</span></div><div class="line">    <span class="comment"># 密码</span></div><div class="line">    password = <span class="string">'da_ge_da'</span></div><div class="line">    <span class="comment"># 软件ＩＤ，开发者分成必要参数。登录开发者后台【我的软件】获得！</span></div><div class="line">    appid = <span class="number">3129</span></div><div class="line">    <span class="comment"># 软件密钥，开发者分成必要参数。登录开发者后台【我的软件】获得！</span></div><div class="line">    appkey = <span class="string">'40d5ad41c047179fc797631e3b9c3025'</span></div><div class="line">    <span class="comment"># 图片文件</span></div><div class="line">    filename = <span class="string">'image/captcha.jpg'</span></div><div class="line">    <span class="comment"># 验证码类型，# 例：1004表示4位字母数字，不同类型收费不同。请准确填写，否则影响识别率。在此查询所有类型 http://www.yundama.com/price.html</span></div><div class="line">    codetype = <span class="number">5000</span></div><div class="line">    <span class="comment"># 超时时间，秒</span></div><div class="line">    timeout = <span class="number">60</span></div><div class="line">    <span class="comment"># 检查</span></div><div class="line">    <span class="keyword">if</span> (username == <span class="string">'username'</span>):</div><div class="line">        print(<span class="string">'请设置好相关参数再测试'</span>)</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="comment"># 初始化</span></div><div class="line">        yundama = YDMHttp(username, password, appid, appkey)</div><div class="line"></div><div class="line">        <span class="comment"># 登陆云打码</span></div><div class="line">        uid = yundama.login()</div><div class="line">        print(<span class="string">'uid: %s'</span> % uid)</div><div class="line"></div><div class="line">        <span class="comment"># 登陆云打码</span></div><div class="line">        uid = yundama.login()</div><div class="line">        print(<span class="string">'uid: %s'</span> % uid)</div><div class="line"></div><div class="line">        <span class="comment"># 查询余额</span></div><div class="line">        balance = yundama.balance()</div><div class="line">        print(<span class="string">'balance: %s'</span> % balance)</div><div class="line"></div><div class="line">        <span class="comment"># 开始识别，图片路径，验证码类型ID，超时时间（秒），识别结果</span></div><div class="line">        text = yundama.decode(filename, codetype, timeout)</div></pre></td></tr></table></figure>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;验证码识别大致有如下几种方式：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;编码实现（Tesseract-OCR）&lt;/li&gt;
-&lt;li&gt;在线打码&lt;/li&gt;
-&lt;li&gt;人工打码&lt;/li&gt;
-&lt;/ul&gt;
     
     </summary>
     
@@ -751,33 +774,6 @@ u&#39;one&lt;br&gt;two&lt;br&gt;three&#39;</code> </li>
   </entry>
   
   <entry>
-    <title>Python分布式爬虫打造搜索引擎项目学习笔记——保存item到json文件</title>
-    <link href="http://yoursite.com/2017/05/07/scrapy-item-json/"/>
-    <id>http://yoursite.com/2017/05/07/scrapy-item-json/</id>
-    <published>2017-05-07T06:18:54.000Z</published>
-    <updated>2017-05-07T05:05:09.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>在Scrapy中，所有item数据都会通过pipelines进行处理，想要保存为json格式文件，只需要在piplines中进行相应的处理即可。</p>
-<a id="more"></a>
-<h2 id="使用系统-exporter-导出为-JSON-文件"><a href="#使用系统-exporter-导出为-JSON-文件" class="headerlink" title="使用系统 exporter 导出为 JSON 文件"></a><strong>使用系统 exporter 导出为 JSON 文件</strong></h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> scrapy.exporters <span class="keyword">import</span> JsonItemExporter</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">JsonExporterPipeline</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="comment"># 调用Scrapy提供的json exporter导出json文件</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.file = open(<span class="string">'article.json'</span>, <span class="string">'wb'</span>)</div><div class="line">        self.exporter = JsonItemExporter(self.file, encoding=<span class="string">"utf-8"</span>, ensure_ascii=<span class="keyword">False</span>)</div><div class="line">        self.exporter.start_exporting()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">close_spider</span><span class="params">(self, spider)</span>:</span></div><div class="line">        self.exporter.finish_exporting()</div><div class="line">        self.file.close()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_item</span><span class="params">(self, item, spider)</span>:</span></div><div class="line">        self.exporter.export_item(item)</div><div class="line">        <span class="keyword">return</span> item</div></pre></td></tr></table></figure>
-<h2 id="自定义-Pipeline-导出为-JSON-文件"><a href="#自定义-Pipeline-导出为-JSON-文件" class="headerlink" title="自定义 Pipeline 导出为 JSON 文件"></a><strong>自定义 Pipeline 导出为 JSON 文件</strong></h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">JsonWithEncodingPipeline</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="comment"># 自定义json文件的导出</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.file = codecs.open(<span class="string">'article.json'</span>, <span class="string">'w'</span>, encoding=<span class="string">"utf-8"</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_item</span><span class="params">(self, item, spider)</span>:</span></div><div class="line">        lines = json.dumps(dict(item), ensure_ascii=<span class="keyword">False</span>) + <span class="string">"\n"</span></div><div class="line">        self.file.write(lines)</div><div class="line">        <span class="keyword">return</span> item</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">spider_closed</span><span class="params">(self, spider)</span>:</span></div><div class="line">        self.file.close()</div></pre></td></tr></table></figure>
-<h2 id="函数说明"><a href="#函数说明" class="headerlink" title="函数说明"></a><strong>函数说明</strong></h2><p><code>codecs</code> ：避免打开文件时出现编码错误。<br><code>json.dumps</code> ：dict转成str<br><code>json.loads</code> ：str转成dict<br><code>ensure_ascii=False</code> ：避免处理英文以外语言时出错<br><code>return item</code> ：交给下一个pipeline处理</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;在Scrapy中，所有item数据都会通过pipelines进行处理，想要保存为json格式文件，只需要在piplines中进行相应的处理即可。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
-    
-    
-      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Python分布式爬虫打造搜索引擎项目学习笔记——通过Pipeline保存数据到MySQL</title>
     <link href="http://yoursite.com/2017/05/07/scrapy-item-mysql/"/>
     <id>http://yoursite.com/2017/05/07/scrapy-item-mysql/</id>
@@ -811,6 +807,33 @@ u&#39;one&lt;br&gt;two&lt;br&gt;three&#39;</code> </li>
     <summary type="html">
     
       &lt;p&gt;将数据保存到MySQL数据库，需要用到 &lt;code&gt;mysqlclient&lt;/code&gt; 模块，需要在我们的虚拟环境中用 &lt;code&gt;pip&lt;/code&gt; 进行安装。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
+    
+    
+      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Python分布式爬虫打造搜索引擎项目学习笔记——保存item到json文件</title>
+    <link href="http://yoursite.com/2017/05/07/scrapy-item-json/"/>
+    <id>http://yoursite.com/2017/05/07/scrapy-item-json/</id>
+    <published>2017-05-07T06:18:54.000Z</published>
+    <updated>2017-05-07T05:05:09.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>在Scrapy中，所有item数据都会通过pipelines进行处理，想要保存为json格式文件，只需要在piplines中进行相应的处理即可。</p>
+<a id="more"></a>
+<h2 id="使用系统-exporter-导出为-JSON-文件"><a href="#使用系统-exporter-导出为-JSON-文件" class="headerlink" title="使用系统 exporter 导出为 JSON 文件"></a><strong>使用系统 exporter 导出为 JSON 文件</strong></h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> scrapy.exporters <span class="keyword">import</span> JsonItemExporter</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">JsonExporterPipeline</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="comment"># 调用Scrapy提供的json exporter导出json文件</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.file = open(<span class="string">'article.json'</span>, <span class="string">'wb'</span>)</div><div class="line">        self.exporter = JsonItemExporter(self.file, encoding=<span class="string">"utf-8"</span>, ensure_ascii=<span class="keyword">False</span>)</div><div class="line">        self.exporter.start_exporting()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">close_spider</span><span class="params">(self, spider)</span>:</span></div><div class="line">        self.exporter.finish_exporting()</div><div class="line">        self.file.close()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_item</span><span class="params">(self, item, spider)</span>:</span></div><div class="line">        self.exporter.export_item(item)</div><div class="line">        <span class="keyword">return</span> item</div></pre></td></tr></table></figure>
+<h2 id="自定义-Pipeline-导出为-JSON-文件"><a href="#自定义-Pipeline-导出为-JSON-文件" class="headerlink" title="自定义 Pipeline 导出为 JSON 文件"></a><strong>自定义 Pipeline 导出为 JSON 文件</strong></h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">JsonWithEncodingPipeline</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="comment"># 自定义json文件的导出</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.file = codecs.open(<span class="string">'article.json'</span>, <span class="string">'w'</span>, encoding=<span class="string">"utf-8"</span>)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_item</span><span class="params">(self, item, spider)</span>:</span></div><div class="line">        lines = json.dumps(dict(item), ensure_ascii=<span class="keyword">False</span>) + <span class="string">"\n"</span></div><div class="line">        self.file.write(lines)</div><div class="line">        <span class="keyword">return</span> item</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">spider_closed</span><span class="params">(self, spider)</span>:</span></div><div class="line">        self.file.close()</div></pre></td></tr></table></figure>
+<h2 id="函数说明"><a href="#函数说明" class="headerlink" title="函数说明"></a><strong>函数说明</strong></h2><p><code>codecs</code> ：避免打开文件时出现编码错误。<br><code>json.dumps</code> ：dict转成str<br><code>json.loads</code> ：str转成dict<br><code>ensure_ascii=False</code> ：避免处理英文以外语言时出错<br><code>return item</code> ：交给下一个pipeline处理</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在Scrapy中，所有item数据都会通过pipelines进行处理，想要保存为json格式文件，只需要在piplines中进行相应的处理即可。&lt;/p&gt;
     
     </summary>
     
@@ -1416,44 +1439,6 @@ u&#39;one&lt;br&gt;two&lt;br&gt;three&#39;</code> </li>
     
     
       <category term="Scrapy，CSS，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CCSS%EF%BC%8CPython/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Spiders</title>
-    <link href="http://yoursite.com/2017/04/22/scrapy-spiders/"/>
-    <id>http://yoursite.com/2017/04/22/scrapy-spiders/</id>
-    <published>2017-04-22T06:18:54.000Z</published>
-    <updated>2017-04-22T11:34:40.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>Spider 类定义了如何爬取某个（或某些）网站。包括了爬取的动作(例如：是否跟进链接)以及如何从网页的内容中提取结构化数据（爬取 item）。换句话说，Spider 就是您定义爬取的动作及分析某个网页(或者是有些网页)的地方。</p>
-<a id="more"></a>
-<p>对 spider 来说，爬取的流程如下：</p>
-<ol>
-<li>先初始化请求URL列表，并指定下载后处理response的回调函数。初次请求URL通过 <code>start_urls</code> 指定，调用 <code>start_requests()</code> 产生 <code>Request</code> 对象，然后注册 <code>parse</code> 方法作为回调</li>
-<li>在parse回调中解析response并返回字典, <code>Item</code> 对象, <code>Request</code> 对象或它们的迭代对象。 <code>Request</code> 对象还会包含回调函数，之后Scrapy下载完后会被这里注册的回调函数处理。</li>
-<li>在回调函数里面，你通过使用选择器（同样可以使用BeautifulSoup,lxml或其他工具）解析页面内容，并生成解析后的结果Item。</li>
-<li>最后返回的这些Item通常会被持久化到数据库中(使用<a href="http://doc.scrapy.org/en/latest/topics/item-pipeline.html#topics-item-pipeline" target="_blank" rel="external">Item Pipeline</a>)或者使用<a href="http://doc.scrapy.org/en/latest/topics/feed-exports.html#topics-feed-exports" target="_blank" rel="external">Feed exports</a>将其保存到文件中。</li>
-</ol>
-<p>虽然该循环对任何类型的 spider 都（多少）适用，但 Scrapy 仍然为了不同的需求提供了多种默认 spider。 之后将讨论这些 spider。</p>
-<h2 id="Spider-参数"><a href="#Spider-参数" class="headerlink" title="Spider 参数"></a><strong>Spider 参数</strong></h2><p>Spider 可以通过接受参数来修改其功能。 spider 参数一般用来定义初始 URL 或者指定限制爬取网站的部分。 您也可以使用其来配置 spider 的任何功能。 </p>
-<p>在运行 <code>crawl</code> 时添加 <code>-a</code> 可以传递 Spider 参数：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">scrapy crawl myspider -a category=electronics</div></pre></td></tr></table></figure>
-<p>Spider 在构造器（constructor）中获取参数：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> scrapy</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MySpider</span><span class="params">(scrapy.Spider)</span>:</span></div><div class="line">    name = <span class="string">'myspider'</span></div><div class="line">    </div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, category=None, *args, **kwargs)</span>:</span></div><div class="line">        super(MySpider, self).__init__(*args, **kwargs) </div><div class="line">        self.start_urls = [<span class="string">'http://www.example.com/categories/%s'</span> % category] </div><div class="line">        <span class="comment"># ...</span></div></pre></td></tr></table></figure>
-<p>Spider 参数也可以通过 <code>Scrapyd</code> 的 <code>schedule.json API</code> 来传递。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;Spider 类定义了如何爬取某个（或某些）网站。包括了爬取的动作(例如：是否跟进链接)以及如何从网页的内容中提取结构化数据（爬取 item）。换句话说，Spider 就是您定义爬取的动作及分析某个网页(或者是有些网页)的地方。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
-    
-    
-      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
     
   </entry>
   
