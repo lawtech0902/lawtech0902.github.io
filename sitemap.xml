@@ -2,16 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://yoursite.com/2017/07/01/scrapy-redis/</loc>
+    <loc>http://yoursite.com/2017/06/29/scrapy-advanced-dev/</loc>
     
-    <lastmod>2017-07-03T07:07:17.000Z</lastmod>
+    <lastmod>2017-07-04T06:14:51.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://yoursite.com/2017/06/29/scrapy-advanced-dev/</loc>
+    <loc>http://yoursite.com/2017/04/11/elasticsearch-usage/</loc>
     
-    <lastmod>2017-07-01T08:43:21.000Z</lastmod>
+    <lastmod>2017-07-04T03:10:49.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2017/07/01/scrapy-redis/</loc>
+    
+    <lastmod>2017-07-03T07:07:17.000Z</lastmod>
     
   </url>
   

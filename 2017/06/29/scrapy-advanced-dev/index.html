@@ -97,7 +97,7 @@
 <meta property="og:site_name" content="LawTech's Blog">
 <meta property="og:description" content="本篇主要介绍selenium的使用、其余的一些动态网页获取技术以及scrapy的一些进阶知识。">
 <meta property="og:image" content="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg">
-<meta property="og:updated_time" content="2017-07-01T08:43:21.000Z">
+<meta property="og:updated_time" content="2017-07-04T06:14:51.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy 进阶开发">
 <meta name="twitter:description" content="本篇主要介绍selenium的使用、其余的一些动态网页获取技术以及scrapy的一些进阶知识。">
@@ -355,8 +355,8 @@
               
                 <span class="post-meta-item-text">更新于</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2017-07-01T16:43:21+08:00">
-                2017-07-01
+              <time title="更新于" itemprop="dateModified" datetime="2017-07-04T14:14:51+08:00">
+                2017-07-04
               </time>
             
           </span>
@@ -436,7 +436,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj4nszqao000ybjqz6nf4f80u"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cj4p6k1ac000yfeqzsm9uq1lb"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
               </a>
@@ -459,12 +459,12 @@
 <p><img src="https://ws2.sinaimg.cn/large/006tKfTcly1fgu40xqud2j31d403et98.jpg" alt=""></p>
 <h3 id="Selenium模拟登录知乎"><a href="#Selenium模拟登录知乎" class="headerlink" title="Selenium模拟登录知乎"></a><strong>Selenium模拟登录知乎</strong></h3><p><img src="https://ws3.sinaimg.cn/large/006tKfTcly1fgu4vmkm5hj314o0dyn2r.jpg" alt=""></p>
 <p>调试观察之后，采用Selenium自带的选择器方法来模拟输入账号密码并且点击登录。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</div><div class="line"></div><div class="line">browser = webdriver.Chrome(executable_path=<span class="string">"/Users/lawtech/TempSpace/chromedriver"</span>)</div><div class="line">browser.get(<span class="string">"https://www.zhihu.com/#signin"</span>)</div><div class="line"></div><div class="line">browser.find_element_by_css_selector(<span class="string">".view-signin input[name='account']"</span>).send_keys(<span class="string">"584563542@qq.com"</span>)</div><div class="line">browser.find_element_by_css_selector(<span class="string">".view-signin input[name='password']"</span>).send_keys(<span class="string">"tracy584563542"</span>)</div><div class="line">browser.find_element_by_css_selector(<span class="string">".view_signin button.sign-button"</span>).click()</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</div><div class="line"></div><div class="line">browser = webdriver.Chrome(executable_path=<span class="string">"/Users/lawtech/TempSpace/chromedriver"</span>)</div><div class="line">browser.get(<span class="string">"https://www.zhihu.com/#signin"</span>)</div><div class="line"></div><div class="line">browser.find_element_by_css_selector(<span class="string">".view-signin input[name='account']"</span>).send_keys(<span class="string">"your_username"</span>)</div><div class="line">browser.find_element_by_css_selector(<span class="string">".view-signin input[name='password']"</span>).send_keys(<span class="string">"your_password"</span>)</div><div class="line">browser.find_element_by_css_selector(<span class="string">".view_signin button.sign-button"</span>).click()</div></pre></td></tr></table></figure>
 <h3 id="Selenium模拟登录微博"><a href="#Selenium模拟登录微博" class="headerlink" title="Selenium模拟登录微博"></a><strong>Selenium模拟登录微博</strong></h3><p><img src="https://ws4.sinaimg.cn/large/006tKfTcgy1fgu8zpu487j30xu05wjtd.jpg" alt=""></p>
 <p><img src="https://ws2.sinaimg.cn/large/006tKfTcgy1fgu8zttkrzj30xy060ac1.jpg" alt=""></p>
 <p><img src="https://ws4.sinaimg.cn/large/006tKfTcgy1fgu8zzmjavj30y405uq4o.jpg" alt=""></p>
 <p>首先调试观察微博登录页面</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</div><div class="line"></div><div class="line">browser = webdriver.Chrome(executable_path=<span class="string">"/Users/lawtech/TempSpace/chromedriver"</span>)</div><div class="line">browser.get(<span class="string">"https://www.weibo.com"</span>)</div><div class="line">browser.find_element_by_css_selector(<span class="string">"#loginname"</span>).send_keys(<span class="string">"584563542@qq.com"</span>)</div><div class="line">browser.find_element_by_css_selector(<span class="string">".info_list.password input[node-type='password']"</span>).send_keys(<span class="string">"tracy584563542"</span>)</div><div class="line">browser.find_element_by_css_selector(<span class="string">".info_list.login_btn a[node-type='submitBtn']"</span>).click()</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</div><div class="line"></div><div class="line">browser = webdriver.Chrome(executable_path=<span class="string">"/Users/lawtech/TempSpace/chromedriver"</span>)</div><div class="line">browser.get(<span class="string">"https://www.weibo.com"</span>)</div><div class="line">browser.find_element_by_css_selector(<span class="string">"#loginname"</span>).send_keys(<span class="string">"your_username"</span>)</div><div class="line">browser.find_element_by_css_selector(<span class="string">".info_list.password input[node-type='password']"</span>).send_keys(<span class="string">"your_password"</span>)</div><div class="line">browser.find_element_by_css_selector(<span class="string">".info_list.login_btn a[node-type='submitBtn']"</span>).click()</div></pre></td></tr></table></figure>
 <p>发现如下错误</p>
 <p><img src="https://ws3.sinaimg.cn/large/006tKfTcly1fgu91pgp2uj31kw0ezgrc.jpg" alt=""></p>
 <p>原因：我们在页面还没有请求完成时就进行了下一步操作，导致元素获取不到。</p>
@@ -565,8 +565,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/06/12/scrapy-cookies-settings/" rel="next" title="Python分布式爬虫打造搜索引擎项目学习笔记——cookie禁用、自动限速、自定义Spider的settings">
-                <i class="fa fa-chevron-left"></i> Python分布式爬虫打造搜索引擎项目学习笔记——cookie禁用、自动限速、自定义Spider的settings
+              <a href="/2017/06/12/scrapy-yundama/" rel="next" title="Python分布式爬虫打造搜索引擎项目学习笔记——云打码实现验证码识别">
+                <i class="fa fa-chevron-left"></i> Python分布式爬虫打造搜索引擎项目学习笔记——云打码实现验证码识别
               </a>
             
           </div>
@@ -652,7 +652,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">38</span>
+                <span class="site-state-item-count">39</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -670,7 +670,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
