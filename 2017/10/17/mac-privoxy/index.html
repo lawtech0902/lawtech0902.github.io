@@ -90,20 +90,17 @@
 
 
 
-<meta name="description" content="安装Privoxy地址：https://www.privoxy.org/sf-download-mirror/
-配置Privoxy12345cd /Applications/Privoxy# 监听8118端口echo &apos;listen-address 0.0.0.0:8118&apos; &amp;gt;&amp;gt; /usr/local/etc/privoxy/config# 设置转发socks5服务器echo &apos;f">
+<meta name="description" content="安装Privoxy地址：https://www.privoxy.org/sf-download-mirror/">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Mac配置Privoxy设置go get代理">
 <meta property="og:url" content="http://yoursite.com/2017/10/17/mac-privoxy/index.html">
 <meta property="og:site_name" content="LawTech's Blog">
-<meta property="og:description" content="安装Privoxy地址：https://www.privoxy.org/sf-download-mirror/
-配置Privoxy12345cd /Applications/Privoxy# 监听8118端口echo &apos;listen-address 0.0.0.0:8118&apos; &amp;gt;&amp;gt; /usr/local/etc/privoxy/config# 设置转发socks5服务器echo &apos;f">
+<meta property="og:description" content="安装Privoxy地址：https://www.privoxy.org/sf-download-mirror/">
 <meta property="og:image" content="http://networkstatic.net/wp-content/uploads/2015/01/twitter-gopher-banner-small.jpg">
-<meta property="og:updated_time" content="2017-10-17T05:49:25.110Z">
+<meta property="og:updated_time" content="2017-10-17T05:56:35.775Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Mac配置Privoxy设置go get代理">
-<meta name="twitter:description" content="安装Privoxy地址：https://www.privoxy.org/sf-download-mirror/
-配置Privoxy12345cd /Applications/Privoxy# 监听8118端口echo &apos;listen-address 0.0.0.0:8118&apos; &amp;gt;&amp;gt; /usr/local/etc/privoxy/config# 设置转发socks5服务器echo &apos;f">
+<meta name="twitter:description" content="安装Privoxy地址：https://www.privoxy.org/sf-download-mirror/">
 <meta name="twitter:image" content="http://networkstatic.net/wp-content/uploads/2015/01/twitter-gopher-banner-small.jpg">
 
 
@@ -358,7 +355,7 @@
               
                 <span class="post-meta-item-text">更新于</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2017-10-17T13:49:25+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2017-10-17T13:56:35+08:00">
                 2017-10-17
               </time>
             
@@ -439,7 +436,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="http://networkstatic.net/wp-content/uploads/2015/01/twitter-gopher-banner-small.jpg" rel="gallery_cj8v6x9z4000z9wqzsn5qcv7l"
+                 href="http://networkstatic.net/wp-content/uploads/2015/01/twitter-gopher-banner-small.jpg" rel="gallery_cj8v74wdu000zchqzzvsroo90"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="http://networkstatic.net/wp-content/uploads/2015/01/twitter-gopher-banner-small.jpg" itemprop="contentUrl"/>
               </a>
@@ -452,8 +449,8 @@
       
 
       
-        <a id="more"></a>
-<h2 id="安装Privoxy"><a href="#安装Privoxy" class="headerlink" title="安装Privoxy"></a><strong>安装Privoxy</strong></h2><p>地址：<a href="https://www.privoxy.org/sf-download-mirror/" target="_blank" rel="external">https://www.privoxy.org/sf-download-mirror/</a></p>
+        <h2 id="安装Privoxy"><a href="#安装Privoxy" class="headerlink" title="安装Privoxy"></a><strong>安装Privoxy</strong></h2><p>地址：<a href="https://www.privoxy.org/sf-download-mirror/" target="_blank" rel="external">https://www.privoxy.org/sf-download-mirror/</a></p>
+<a id="more"></a>
 <h2 id="配置Privoxy"><a href="#配置Privoxy" class="headerlink" title="配置Privoxy"></a><strong>配置Privoxy</strong></h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">cd</span> /Applications/Privoxy</div><div class="line"><span class="comment"># 监听8118端口</span></div><div class="line"><span class="built_in">echo</span> <span class="string">'listen-address 0.0.0.0:8118'</span> &gt;&gt; /usr/<span class="built_in">local</span>/etc/privoxy/config</div><div class="line"><span class="comment"># 设置转发socks5服务器</span></div><div class="line"><span class="built_in">echo</span> <span class="string">'forward-socks5 / localhost:1080 .'</span> &gt;&gt; /usr/<span class="built_in">local</span>/etc/privoxy/config</div></pre></td></tr></table></figure>
 <p>发现提示错误：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">-bash: /usr/<span class="built_in">local</span>/etc/privoxy/config: Permission denied</div></pre></td></tr></table></figure>
@@ -516,8 +513,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/07/27/scrapyd/" rel="next" title="Python分布式爬虫打造搜索引擎项目学习笔记——scrapyd部署scrapy爬虫">
-                <i class="fa fa-chevron-left"></i> Python分布式爬虫打造搜索引擎项目学习笔记——scrapyd部署scrapy爬虫
+              <a href="/2017/07/27/scrapy-summary/" rel="next" title="Python分布式爬虫打造搜索引擎项目学习笔记——总结">
+                <i class="fa fa-chevron-left"></i> Python分布式爬虫打造搜索引擎项目学习笔记——总结
               </a>
             
           </div>
