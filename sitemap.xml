@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2017/11/03/vue-django-1-1/</loc>
+    
+    <lastmod>2017-11-08T09:49:49.849Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2017/10/17/mac-privoxy/</loc>
     
     <lastmod>2017-10-17T05:56:35.775Z</lastmod>
