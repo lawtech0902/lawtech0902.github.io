@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-11-08T09:49:49.849Z</updated>
+  <updated>2017-11-14T06:17:10.307Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,52 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Vue+Django REST Framework生鲜电商项目学习笔记——项目初始化</title>
+    <link href="http://yoursite.com/2017/11/04/vue-django-2-1/"/>
+    <id>http://yoursite.com/2017/11/04/vue-django-2-1/</id>
+    <published>2017-11-04T05:18:54.000Z</published>
+    <updated>2017-11-14T06:17:10.307Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="虚拟环境配置"><a href="#虚拟环境配置" class="headerlink" title="虚拟环境配置"></a><strong>虚拟环境配置</strong></h3><ol>
+<li>配置virtualenv和virtualenvwrapper(略)</li>
+<li>新建虚拟环境VueShop:</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">pip install djangorestframework</div><div class="line">pip install markdown django-filter</div><div class="line">pip install django</div><div class="line">pip install mysqlclient</div></pre></td></tr></table></figure>
+<p>最好在pip后面加上<code>-i https://pypi.doban.com/simple</code>豆瓣源加快安装速度，否则太慢了，或者直接在配置文件中进行换源，不用每次都加。</p>
+<a id="more"></a>
+<h3 id="新建项目"><a href="#新建项目" class="headerlink" title="新建项目"></a><strong>新建项目</strong></h3><ol>
+<li>创建</li>
+</ol>
+<p><img src="https://ws4.sinaimg.cn/large/006tKfTcgy1flbkc8lekej31760qs0wu.jpg" alt=""></p>
+<ol>
+<li>修改目录和配置</li>
+</ol>
+<p>新建apps和extra_apps两个Python Package，media和db_tools两个Directory，将users拖入apps中，并将apps和extra_apps右键mark为sources root，初步的项目结构如下：</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tKfTcgy1flblin1jgoj30fc0gs0u9.jpg" alt=""></p>
+<p>修改settings.py中的配置，添加或修改为如下代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> sys</div><div class="line"></div><div class="line"><span class="comment"># Build paths inside the project like this: os.path.join(BASE_DIR, ...)</span></div><div class="line">BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))</div><div class="line">sys.path.insert(<span class="number">0</span>, BASE_DIR)</div><div class="line">sys.path.insert(<span class="number">0</span>, os.path.join(BASE_DIR, <span class="string">'apps'</span>))</div><div class="line">sys.path.insert(<span class="number">0</span>, os.path.join(BASE_DIR, <span class="string">'extra_apps'</span>))</div><div class="line"></div><div class="line">DATABASES = &#123;</div><div class="line">    <span class="string">'default'</span>: &#123;</div><div class="line">        <span class="string">'ENGINE'</span>: <span class="string">'django.db.backends.mysql'</span>,</div><div class="line">        <span class="string">'NAME'</span>: <span class="string">"mxshop"</span>,</div><div class="line">        <span class="string">'USER'</span>: <span class="string">"root"</span>,</div><div class="line">        <span class="string">'PASSWORD'</span>: <span class="string">"12"</span>,</div><div class="line">        <span class="string">'HOST'</span>: <span class="string">"127.0.0.1"</span>,</div><div class="line">        <span class="string">'OPTIONS'</span>: &#123;<span class="string">'init_command'</span>: <span class="string">'SET storage_default_engine=INNODB;'</span>&#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在更换数据库配置之后，需要在Navicat中创建相应的数据库。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;虚拟环境配置&quot;&gt;&lt;a href=&quot;#虚拟环境配置&quot; class=&quot;headerlink&quot; title=&quot;虚拟环境配置&quot;&gt;&lt;/a&gt;&lt;strong&gt;虚拟环境配置&lt;/strong&gt;&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;配置virtualenv和virtualenvwrapper(略)&lt;/li&gt;
+&lt;li&gt;新建虚拟环境VueShop:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;pip install djangorestframework&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;pip install markdown django-filter&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;pip install django&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;pip install mysqlclient&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;最好在pip后面加上&lt;code&gt;-i https://pypi.doban.com/simple&lt;/code&gt;豆瓣源加快安装速度，否则太慢了，或者直接在配置文件中进行换源，不用每次都加。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Django，Vue" scheme="http://yoursite.com/categories/Django%EF%BC%8CVue/"/>
+    
+    
+      <category term="Django，Vue，Rest" scheme="http://yoursite.com/tags/Django%EF%BC%8CVue%EF%BC%8CRest/"/>
+    
+  </entry>
   
   <entry>
     <title>Vue+Django REST Framework生鲜电商项目学习笔记——概览</title>
@@ -1029,6 +1075,41 @@
   </entry>
   
   <entry>
+    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy模拟登录知乎</title>
+    <link href="http://yoursite.com/2017/05/11/scrapy-login-zhihu/"/>
+    <id>http://yoursite.com/2017/05/11/scrapy-login-zhihu/</id>
+    <published>2017-05-11T06:18:54.000Z</published>
+    <updated>2017-05-12T08:12:46.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Scrapy登录知乎要解决两个问题</p>
+<ol>
+<li>session的传递，保证处理登录是同一个状态。</li>
+<li>首个登录页面的改变，由直接爬取的页面变为登录页面，再去爬取页面。</li>
+</ol>
+<a id="more"></a>
+<p>话不多说，直接上代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"><span class="keyword">import</span> scrapy</div><div class="line"><span class="keyword">import</span> re</div><div class="line"><span class="keyword">import</span> json</div><div class="line"><span class="keyword">import</span> time</div><div class="line"></div><div class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ZhihuSpider</span><span class="params">(scrapy.Spider)</span>:</span></div><div class="line">    name = <span class="string">"zhihu"</span></div><div class="line">    allowed_domains = [<span class="string">"www.zhihu.com"</span>]</div><div class="line">    start_urls = [<span class="string">'http://www.zhihu.com/'</span>]</div><div class="line">    headers = &#123;</div><div class="line">        <span class="string">"Host"</span>: <span class="string">"www.zhihu.com"</span>,</div><div class="line">        <span class="string">"Referer"</span>: <span class="string">"https://www.zhihu.com/"</span>,</div><div class="line">        <span class="string">'User-Agent'</span>: <span class="string">'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.96 Safari/537.36'</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="keyword">pass</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">start_requests</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> [scrapy.Request(<span class="string">"https://www.zhihu.com/#signin"</span>, headers=self.headers, callback=self.login)]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">login</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        登录</div><div class="line">        :param response: </div><div class="line">        :return: </div><div class="line">        """</div><div class="line">        response_text = response.text</div><div class="line">        match_obj = re.match(<span class="string">'.*name="_xsrf" value="(.*?)"'</span>, response_text, re.DOTALL)</div><div class="line">        xsrf = <span class="string">''</span></div><div class="line">        <span class="keyword">if</span> match_obj:</div><div class="line">            xsrf = match_obj.group(<span class="number">1</span>)</div><div class="line"></div><div class="line">        <span class="keyword">if</span> xsrf:</div><div class="line">            post_data = &#123;</div><div class="line">                <span class="string">"_xsrf"</span>: xsrf,</div><div class="line">                <span class="string">"phone_num"</span>: <span class="string">"18951855817"</span>,</div><div class="line">                <span class="string">"password"</span>: <span class="string">"tracy584563542"</span></div><div class="line">            &#125;</div><div class="line">            t = str(int(time.time() * <span class="number">1000</span>))</div><div class="line">            captcha_url = <span class="string">'https://www.zhihu.com/captcha.gif?r='</span> + t + <span class="string">"&amp;type=login"</span></div><div class="line">            <span class="keyword">yield</span> scrapy.Request(captcha_url, headers=self.headers, meta=&#123;<span class="string">"post_data"</span>: post_data&#125;,</div><div class="line">                                 callback=self.login_after_captcha)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">login_after_captcha</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="keyword">with</span> open(<span class="string">"captcha.jpg"</span>, <span class="string">"wb"</span>) <span class="keyword">as</span> f:</div><div class="line">            f.write(response.body)</div><div class="line">        im = Image.open(<span class="string">'captcha.jpg'</span>)</div><div class="line">        im.show()</div><div class="line">        im.close()</div><div class="line">        captcha = input(<span class="string">"请输入验证码：\n"</span>)</div><div class="line">        post_data = response.meta.get(<span class="string">"post_data"</span>, &#123;&#125;)</div><div class="line">        post_data[<span class="string">"captcha"</span>] = captcha</div><div class="line">        post_url = <span class="string">"https://www.zhihu.com/login/phone_num"</span></div><div class="line">        <span class="keyword">return</span> [scrapy.FormRequest(</div><div class="line">            url=post_url,</div><div class="line">            formdata=post_data,</div><div class="line">            headers=self.headers,</div><div class="line">            callback=self.check_login</div><div class="line">        )]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">check_login</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        验证服务器的返回数据判断登录是否成功</div><div class="line">        :param response: </div><div class="line">        :return: </div><div class="line">        """</div><div class="line">        text_json = json.loads(response.text)</div><div class="line">        <span class="keyword">if</span> <span class="string">'msg'</span> <span class="keyword">in</span> text_json <span class="keyword">and</span> text_json[<span class="string">'msg'</span>] == <span class="string">'登陆成功'</span>:</div><div class="line">            <span class="comment"># 从继承的Spider类中拿的内容，恢复到正确执行</span></div><div class="line">            <span class="keyword">for</span> url <span class="keyword">in</span> self.start_urls:</div><div class="line">                <span class="keyword">yield</span> scrapy.Request(url, dont_filter=<span class="keyword">True</span>, headers=self.headers)</div></pre></td></tr></table></figure>
+<p>首先对 <code>scrapy.Spider</code> 类中的 <code>start_requests(self)</code> 进行重载，改变首先要处理的页面为登录页面。<br>得到登录页面后，获得xsrf，并下载验证码，通过 <code>scrapy.FormRequest</code>构造登录数据，通过check_login回调函数判断登录是否成功。在代码的最后一行转回正常的登录流程。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Scrapy登录知乎要解决两个问题&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;session的传递，保证处理登录是同一个状态。&lt;/li&gt;
+&lt;li&gt;首个登录页面的改变，由直接爬取的页面变为登录页面，再去爬取页面。&lt;/li&gt;
+&lt;/ol&gt;
+    
+    </summary>
+    
+      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
+    
+    
+      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Python分布式爬虫打造搜索引擎项目学习笔记——Requests模拟登录知乎</title>
     <link href="http://yoursite.com/2017/05/11/scrapy-requests-zhihu-login/"/>
     <id>http://yoursite.com/2017/05/11/scrapy-requests-zhihu-login/</id>
@@ -1107,41 +1188,6 @@
     
     
       <category term="Scrapy，Requests，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CRequests%EF%BC%8CPython/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy模拟登录知乎</title>
-    <link href="http://yoursite.com/2017/05/11/scrapy-login-zhihu/"/>
-    <id>http://yoursite.com/2017/05/11/scrapy-login-zhihu/</id>
-    <published>2017-05-11T06:18:54.000Z</published>
-    <updated>2017-05-12T08:12:46.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>Scrapy登录知乎要解决两个问题</p>
-<ol>
-<li>session的传递，保证处理登录是同一个状态。</li>
-<li>首个登录页面的改变，由直接爬取的页面变为登录页面，再去爬取页面。</li>
-</ol>
-<a id="more"></a>
-<p>话不多说，直接上代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"><span class="keyword">import</span> scrapy</div><div class="line"><span class="keyword">import</span> re</div><div class="line"><span class="keyword">import</span> json</div><div class="line"><span class="keyword">import</span> time</div><div class="line"></div><div class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ZhihuSpider</span><span class="params">(scrapy.Spider)</span>:</span></div><div class="line">    name = <span class="string">"zhihu"</span></div><div class="line">    allowed_domains = [<span class="string">"www.zhihu.com"</span>]</div><div class="line">    start_urls = [<span class="string">'http://www.zhihu.com/'</span>]</div><div class="line">    headers = &#123;</div><div class="line">        <span class="string">"Host"</span>: <span class="string">"www.zhihu.com"</span>,</div><div class="line">        <span class="string">"Referer"</span>: <span class="string">"https://www.zhihu.com/"</span>,</div><div class="line">        <span class="string">'User-Agent'</span>: <span class="string">'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.96 Safari/537.36'</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="keyword">pass</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">start_requests</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> [scrapy.Request(<span class="string">"https://www.zhihu.com/#signin"</span>, headers=self.headers, callback=self.login)]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">login</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        登录</div><div class="line">        :param response: </div><div class="line">        :return: </div><div class="line">        """</div><div class="line">        response_text = response.text</div><div class="line">        match_obj = re.match(<span class="string">'.*name="_xsrf" value="(.*?)"'</span>, response_text, re.DOTALL)</div><div class="line">        xsrf = <span class="string">''</span></div><div class="line">        <span class="keyword">if</span> match_obj:</div><div class="line">            xsrf = match_obj.group(<span class="number">1</span>)</div><div class="line"></div><div class="line">        <span class="keyword">if</span> xsrf:</div><div class="line">            post_data = &#123;</div><div class="line">                <span class="string">"_xsrf"</span>: xsrf,</div><div class="line">                <span class="string">"phone_num"</span>: <span class="string">"18951855817"</span>,</div><div class="line">                <span class="string">"password"</span>: <span class="string">"tracy584563542"</span></div><div class="line">            &#125;</div><div class="line">            t = str(int(time.time() * <span class="number">1000</span>))</div><div class="line">            captcha_url = <span class="string">'https://www.zhihu.com/captcha.gif?r='</span> + t + <span class="string">"&amp;type=login"</span></div><div class="line">            <span class="keyword">yield</span> scrapy.Request(captcha_url, headers=self.headers, meta=&#123;<span class="string">"post_data"</span>: post_data&#125;,</div><div class="line">                                 callback=self.login_after_captcha)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">login_after_captcha</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="keyword">with</span> open(<span class="string">"captcha.jpg"</span>, <span class="string">"wb"</span>) <span class="keyword">as</span> f:</div><div class="line">            f.write(response.body)</div><div class="line">        im = Image.open(<span class="string">'captcha.jpg'</span>)</div><div class="line">        im.show()</div><div class="line">        im.close()</div><div class="line">        captcha = input(<span class="string">"请输入验证码：\n"</span>)</div><div class="line">        post_data = response.meta.get(<span class="string">"post_data"</span>, &#123;&#125;)</div><div class="line">        post_data[<span class="string">"captcha"</span>] = captcha</div><div class="line">        post_url = <span class="string">"https://www.zhihu.com/login/phone_num"</span></div><div class="line">        <span class="keyword">return</span> [scrapy.FormRequest(</div><div class="line">            url=post_url,</div><div class="line">            formdata=post_data,</div><div class="line">            headers=self.headers,</div><div class="line">            callback=self.check_login</div><div class="line">        )]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">check_login</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        验证服务器的返回数据判断登录是否成功</div><div class="line">        :param response: </div><div class="line">        :return: </div><div class="line">        """</div><div class="line">        text_json = json.loads(response.text)</div><div class="line">        <span class="keyword">if</span> <span class="string">'msg'</span> <span class="keyword">in</span> text_json <span class="keyword">and</span> text_json[<span class="string">'msg'</span>] == <span class="string">'登陆成功'</span>:</div><div class="line">            <span class="comment"># 从继承的Spider类中拿的内容，恢复到正确执行</span></div><div class="line">            <span class="keyword">for</span> url <span class="keyword">in</span> self.start_urls:</div><div class="line">                <span class="keyword">yield</span> scrapy.Request(url, dont_filter=<span class="keyword">True</span>, headers=self.headers)</div></pre></td></tr></table></figure>
-<p>首先对 <code>scrapy.Spider</code> 类中的 <code>start_requests(self)</code> 进行重载，改变首先要处理的页面为登录页面。<br>得到登录页面后，获得xsrf，并下载验证码，通过 <code>scrapy.FormRequest</code>构造登录数据，通过check_login回调函数判断登录是否成功。在代码的最后一行转回正常的登录流程。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;Scrapy登录知乎要解决两个问题&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;session的传递，保证处理登录是同一个状态。&lt;/li&gt;
-&lt;li&gt;首个登录页面的改变，由直接爬取的页面变为登录页面，再去爬取页面。&lt;/li&gt;
-&lt;/ol&gt;
-    
-    </summary>
-    
-      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
-    
-    
-      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
     
   </entry>
   
@@ -1391,50 +1437,6 @@ u&#39;one&lt;br&gt;two&lt;br&gt;three&#39;</code> </li>
     <summary type="html">
     
       &lt;p&gt;在Scrapy中，所有item数据都会通过pipelines进行处理，想要保存为json格式文件，只需要在piplines中进行相应的处理即可。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
-    
-    
-      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Python分布式爬虫打造搜索引擎项目学习笔记——通过Pipeline保存数据到MySQL</title>
-    <link href="http://yoursite.com/2017/05/07/scrapy-item-mysql/"/>
-    <id>http://yoursite.com/2017/05/07/scrapy-item-mysql/</id>
-    <published>2017-05-07T06:18:54.000Z</published>
-    <updated>2017-05-07T11:36:20.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>将数据保存到MySQL数据库，需要用到 <code>mysqlclient</code> 模块，需要在我们的虚拟环境中用 <code>pip</code> 进行安装。</p>
-<a id="more"></a>
-<h2 id="设计数据表"><a href="#设计数据表" class="headerlink" title="设计数据表"></a><strong>设计数据表</strong></h2><p>需要根据之前Item来设计我们的数据表 <code>jobbole_article</code> ，数据库取名为 <code>article_spider</code>。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">JobBoleArticleItem</span><span class="params">(scrapy.Item)</span>:</span></div><div class="line">    title = scrapy.Field()</div><div class="line">    create_date = scrapy.Field()</div><div class="line">    url = scrapy.Field()</div><div class="line">    url_object_id = scrapy.Field()</div><div class="line">    front_image_url = scrapy.Field()</div><div class="line">    front_image_path = scrapy.Field()</div><div class="line">    praise_nums = scrapy.Field()</div><div class="line">    comment_nums = scrapy.Field()</div><div class="line">    fav_nums = scrapy.Field()</div><div class="line">    tags = scrapy.Field()</div><div class="line">    content = scrapy.Field()</div></pre></td></tr></table></figure>
-<p>初步设计的数据表如下，在后面使用时还会进行必要的改动：</p>
-<p><img src="http://ww1.sinaimg.cn/large/006tNc79gy1ffcueufjwhj317e0kwwib.jpg" alt=""></p>
-<h2 id="采用同步机制写入MySQL"><a href="#采用同步机制写入MySQL" class="headerlink" title="采用同步机制写入MySQL"></a><strong>采用同步机制写入MySQL</strong></h2><p>首先在 <code>pipelines.py</code> 中引入数据库连接模块 <code>import MySQLdb</code> ，然后完善 <code>MysqlPipeline</code> 类的代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MysqlPipeline</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="comment"># 采用同步的机制写入mysql</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.conn = MySQLdb.connect(<span class="string">'127.0.0.1'</span>, <span class="string">'root'</span>, <span class="string">'12'</span>, <span class="string">'article_spider'</span>,</div><div class="line">                                    charset=<span class="string">'utf8'</span>, use_unicode=<span class="keyword">True</span>)</div><div class="line">        self.cursor = self.conn.cursor()</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_item</span><span class="params">(self, item, spider)</span>:</span></div><div class="line">        insert_sql = <span class="string">"""</span></div><div class="line">                    insert into jobbole_article(title, url, create_date, fav_nums)</div><div class="line">                    VALUES (%s, %s, %s, %s)</div><div class="line">        """</div><div class="line">        self.cursor.execute(insert_sql, (item[<span class="string">"title"</span>], item[<span class="string">"url"</span>], item[<span class="string">"create_date"</span>], item[<span class="string">"fav_nums"</span>]))</div><div class="line">        self.conn.commit()</div></pre></td></tr></table></figure>
-<p><code>__init__</code> 方法是对数据进行初始化，定义连接信息如host，数据库用户名、密码、数据库名称、数据库编码<br>在 <code>process_item</code> 方法中进行插入数据操作，格式都是固定的。</p>
-<p>最后在 <code>settings.py</code> 中把 <code>MysqlPipeline()</code> 加入到 <code>ITEM_PIPELINES</code> 的配置中。</p>
-<h2 id="采用异步机制写入MySQL"><a href="#采用异步机制写入MySQL" class="headerlink" title="采用异步机制写入MySQL"></a><strong>采用异步机制写入MySQL</strong></h2><p>在上面的同步机制写入数据库中，我们把连接信息 <code>MySQLdb.connect(&#39;127.0.0.1&#39;, &#39;root&#39;, &#39;12&#39;, &#39;article_spider&#39;, charset=&#39;utf8&#39;, use_unicode=True)</code> 直接定义在函数中，如果不经常改动的话，可以把相关信息放到 <code>settings.py</code> 中进行调用。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">MYSQL_HOST = <span class="string">'127.0.0.1'</span></div><div class="line">MYSQL_DBNAME = <span class="string">'article_spider'</span></div><div class="line">MYSQL_USER = <span class="string">'root'</span></div><div class="line">MYSQL_PASSWORD = <span class="string">'12'</span></div></pre></td></tr></table></figure>
-<p>在 <code>pipelines.py</code> 中新建 <code>MysqlTwistedPipeline</code> ，写入如下代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MysqlTwistedPipeline</span><span class="params">(object)</span>:</span></div><div class="line"><span class="meta">    @classmethod</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">from_settings</span><span class="params">(cls, settings)</span>:</span></div><div class="line">        host = settings[<span class="string">'MYSQL_HOST'</span>]</div><div class="line">        <span class="keyword">pass</span></div></pre></td></tr></table></figure>
-<p>在 <code>from_settings</code> 这个类方法中，我们获取到了settings配置中的 <code>MYSQL_HOST</code> ，这个方法在Scrapy初始化的时候就会被调用，会将Scrapy的settings对象传递进来，我们在这里进行断点调试，查看是否获取到了这个对象：</p>
-<p><img src="http://ww3.sinaimg.cn/large/006tNc79gy1ffcv0p0d3xj31kw0ejqcr.jpg" alt=""></p>
-<p><img src="http://ww2.sinaimg.cn/large/006tNc79gy1ffcv1i1po9j319w04kgmy.jpg" alt=""></p>
-<p>发现在settings的attributes这个字典中，确实有我们定义的各种属性。</p>
-<p>我们的异步操作需要引入twisted，代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> twisted.enterprise <span class="keyword">import</span> adbapi</div><div class="line"><span class="keyword">import</span> MySQLdb</div><div class="line"><span class="keyword">import</span> MySQLdb.cursors</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MysqlTwistedPipeline</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, dbpool)</span>:</span></div><div class="line">        self.dbpool = dbpool</div><div class="line"></div><div class="line"><span class="meta">    @classmethod</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">from_settings</span><span class="params">(cls, settings)</span>:</span></div><div class="line">        dbparams = dict(</div><div class="line">            host=settings[<span class="string">'MYSQL_HOST'</span>],</div><div class="line">            db=settings[<span class="string">'MYSQL_DBNAME'</span>],</div><div class="line">            user=settings[<span class="string">'MYSQL_USER'</span>],</div><div class="line">            passwd=settings[<span class="string">'MYSQL_PASSWORD'</span>],</div><div class="line">            charset=<span class="string">'utf8'</span>,</div><div class="line">            cursorclass=MySQLdb.cursors.DictCursor,</div><div class="line">            use_unicode=<span class="keyword">True</span>,</div><div class="line">        )</div><div class="line">        dbpool = adbapi.ConnectionPool(<span class="string">"MySQLdb"</span>, **dbparams)</div><div class="line"></div><div class="line">        <span class="keyword">return</span> cls(dbpool)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_item</span><span class="params">(self, item, spider)</span>:</span></div><div class="line">        <span class="comment"># 使用twisted将mysql插入变成异步执行</span></div><div class="line">        query = self.dbpool.runInteraction(self.do_insert, item)</div><div class="line">        query.addErrback(self.handle_error)  <span class="comment"># 处理异常</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">handle_error</span><span class="params">(self, failure)</span>:</span></div><div class="line">        <span class="comment"># 处理异步插入异常</span></div><div class="line">        print(failure)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">do_insert</span><span class="params">(self, cursor, item)</span>:</span></div><div class="line">        <span class="comment"># 执行具体的插入</span></div><div class="line">        insert_sql = <span class="string">"""</span></div><div class="line">                            insert into jobbole_article(title, url, create_date, fav_nums)</div><div class="line">                            VALUES (%s, %s, %s, %s)</div><div class="line">                """</div><div class="line">        cursor.execute(insert_sql, (item[<span class="string">"title"</span>], item[<span class="string">"url"</span>], item[<span class="string">"create_date"</span>], item[<span class="string">"fav_nums"</span>]))</div></pre></td></tr></table></figure>
-<p>我们在使用时，绝大部分代码无须变动，只要修改 <code>do_insert</code> 方法中的插入内容，以及自己的信息即可。</p>
-<p>在数据量不大时，用同步插入即可。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;将数据保存到MySQL数据库，需要用到 &lt;code&gt;mysqlclient&lt;/code&gt; 模块，需要在我们的虚拟环境中用 &lt;code&gt;pip&lt;/code&gt; 进行安装。&lt;/p&gt;
     
     </summary>
     
