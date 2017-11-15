@@ -1,0 +1,1197 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Neucha:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Django，Vue，Rest," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="LawTech's Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="分为以下几个环节：
+
+user用户的model设计
+goods商品的model设计
+trade交易的model设计
+user_operation用户操作的model设计
+migrations原理及表生成
+xadmin后台管理系统的配置
+导入商品和商品类别数据">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue+Django REST Framework生鲜电商项目学习笔记——model设计和资源导入">
+<meta property="og:url" content="http://yoursite.com/2017/11/05/vue-django-3-1/index.html">
+<meta property="og:site_name" content="LawTech's Blog">
+<meta property="og:description" content="分为以下几个环节：
+
+user用户的model设计
+goods商品的model设计
+trade交易的model设计
+user_operation用户操作的model设计
+migrations原理及表生成
+xadmin后台管理系统的配置
+导入商品和商品类别数据">
+<meta property="og:image" content="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg">
+<meta property="og:updated_time" content="2017-11-14T13:54:29.112Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vue+Django REST Framework生鲜电商项目学习笔记——model设计和资源导入">
+<meta name="twitter:description" content="分为以下几个环节：
+
+user用户的model设计
+goods商品的model设计
+trade交易的model设计
+user_operation用户操作的model设计
+migrations原理及表生成
+xadmin后台管理系统的配置
+导入商品和商品类别数据">
+<meta name="twitter:image" content="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/11/05/vue-django-3-1/"/>
+
+
+
+
+
+  <title> Vue+Django REST Framework生鲜电商项目学习笔记——model设计和资源导入 | LawTech's Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=61398861";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta custom-logo">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">LawTech's Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <h1 class="site-subtitle" itemprop="description">不破不立</h1>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/05/vue-django-3-1/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="LawTech.">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="LawTech's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="LawTech's Blog" src="/images/avatar.jpg">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                Vue+Django REST Framework生鲜电商项目学习笔记——model设计和资源导入
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-05T13:18:54+08:00">
+                2017-11-05
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2017-11-14T21:54:29+08:00">
+                2017-11-14
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Django，Vue/" itemprop="url" rel="index">
+                    <span itemprop="name">Django，Vue</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a class="cloud-tie-join-count" href="/2017/11/05/vue-django-3-1/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count join-count" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/11/05/vue-django-3-1/" class="leancloud_visitors" data-flag-title="Vue+Django REST Framework生鲜电商项目学习笔记——model设计和资源导入">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+ 
+        
+
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+          
+          
+            <div class="post-gallery-row">
+              <a class="post-gallery-img fancybox"
+                 href="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg" rel="gallery_cja0cywbi003zl4qzv2n9uwru"
+                 itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
+                <img src="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg" itemprop="contentUrl"/>
+              </a>
+            
+          
+
+          
+          </div>
+        </div>
+      
+
+      
+        <p>分为以下几个环节：</p>
+<ol>
+<li>user用户的model设计</li>
+<li>goods商品的model设计</li>
+<li>trade交易的model设计</li>
+<li>user_operation用户操作的model设计</li>
+<li>migrations原理及表生成</li>
+<li>xadmin后台管理系统的配置</li>
+<li>导入商品和商品类别数据</li>
+</ol>
+<a id="more"></a>
+<h3 id="user用户的model设计"><a href="#user用户的model设计" class="headerlink" title="user用户的model设计"></a><strong>user用户的model设计</strong></h3><p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</div><div class="line"></div><div class="line"><span class="keyword">from</span> django.db <span class="keyword">import</span> models</div><div class="line"><span class="keyword">from</span> django.contrib.auth.models <span class="keyword">import</span> AbstractUser</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># Create your models here.</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserProfile</span><span class="params">(AbstractUser)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    用户</div><div class="line">    """</div><div class="line">    name = models.CharField(max_length=<span class="number">30</span>, null=<span class="keyword">True</span>, blank=<span class="keyword">True</span>, verbose_name=<span class="string">"姓名"</span>)</div><div class="line">    birthday = models.DateField(null=<span class="keyword">True</span>, blank=<span class="keyword">True</span>, verbose_name=<span class="string">"出生年月"</span>)</div><div class="line">    mobile = models.CharField(max_length=<span class="number">11</span>, verbose_name=<span class="string">"电话"</span>)</div><div class="line">    gender = models.CharField(max_length=<span class="number">6</span>, choices=((<span class="string">"male"</span>, <span class="string">"男"</span>), (<span class="string">"female"</span>, <span class="string">"女"</span>)), default=<span class="string">"female"</span>,</div><div class="line">                              verbose_name=<span class="string">"性别"</span>)</div><div class="line">    email = models.CharField(max_length=<span class="number">100</span>, null=<span class="keyword">True</span>, blank=<span class="keyword">True</span>, verbose_name=<span class="string">"邮箱"</span>)</div><div class="line"></div><div class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></div><div class="line">        verbose_name = <span class="string">"用户"</span></div><div class="line">        verbose_name_plural = verbose_name</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.name</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">VerifyCode</span><span class="params">(models.Model)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    短信验证码</div><div class="line">    """</div><div class="line">    code = models.CharField(max_length=<span class="number">10</span>, verbose_name=<span class="string">"验证码"</span>)</div><div class="line">    mobile = models.CharField(max_length=<span class="number">11</span>, verbose_name=<span class="string">"电话"</span>)</div><div class="line">    add_time = models.DateTimeField(default=datetime.now, verbose_name=<span class="string">"添加时间"</span>)</div><div class="line"></div><div class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></div><div class="line">        verbose_name = <span class="string">"短信验证码"</span></div><div class="line">        verbose_name_plural = verbose_name</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.code</div></pre></td></tr></table></figure>
+<p>然后在settings文件中添加下面这行代码以替换django本身的用户。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">AUTH_USER_MODEL = <span class="string">'users.UserProfile'</span></div></pre></td></tr></table></figure>
+<h3 id="goods商品的model设计"><a href="#goods商品的model设计" class="headerlink" title="goods商品的model设计"></a><strong>goods商品的model设计</strong></h3><p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</div><div class="line"></div><div class="line"><span class="keyword">from</span> django.db <span class="keyword">import</span> models</div><div class="line"><span class="keyword">from</span> DjangoUeditor.models <span class="keyword">import</span> UEditorField</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># Create your models here.</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">GoodsCategory</span><span class="params">(models.Model)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    商品类别</div><div class="line">    """</div><div class="line"></div><div class="line">    CATEGORY_TYPE = (</div><div class="line">        (<span class="number">1</span>, <span class="string">"一级类目"</span>),</div><div class="line">        (<span class="number">2</span>, <span class="string">"二级类目"</span>),</div><div class="line">        (<span class="number">3</span>, <span class="string">"三级类目"</span>),</div><div class="line">    )</div><div class="line">    name = models.CharField(default=<span class="string">""</span>, max_length=<span class="number">30</span>, verbose_name=<span class="string">"类别名"</span>, help_text=<span class="string">"类别名"</span>)</div><div class="line">    code = models.CharField(default=<span class="string">""</span>, max_length=<span class="number">30</span>, verbose_name=<span class="string">"类别code"</span>, help_text=<span class="string">"类别code"</span>)</div><div class="line">    desc = models.TextField(default=<span class="string">""</span>, verbose_name=<span class="string">"类别描述"</span>, help_text=<span class="string">"类别描述"</span>)</div><div class="line">    category_type = models.IntegerField(choices=CATEGORY_TYPE, verbose_name=<span class="string">"类目级别"</span>, help_text=<span class="string">"类目级别"</span>)</div><div class="line">    parent_category = models.ForeignKey(<span class="string">"self"</span>, null=<span class="keyword">True</span>, blank=<span class="keyword">True</span>, verbose_name=<span class="string">"父类目级别"</span>, help_text=<span class="string">"父目录"</span>,</div><div class="line">                                        related_name=<span class="string">"sub_cat"</span>)</div><div class="line">    is_tab = models.BooleanField(default=<span class="keyword">False</span>, verbose_name=<span class="string">"是否导航"</span>, help_text=<span class="string">"是否导航"</span>)</div><div class="line">    add_time = models.DateTimeField(default=datetime.now, verbose_name=<span class="string">"添加时间"</span>)</div><div class="line"></div><div class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></div><div class="line">        verbose_name = <span class="string">"商品类别"</span></div><div class="line">        verbose_name_plural = verbose_name</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.name</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">GoodsCategoryBrand</span><span class="params">(models.Model)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    品牌</div><div class="line">    """</div><div class="line">    category = models.ForeignKey(GoodsCategory, related_name=<span class="string">'brands'</span>, null=<span class="keyword">True</span>, blank=<span class="keyword">True</span>, verbose_name=<span class="string">"商品类目"</span>)</div><div class="line">    name = models.CharField(default=<span class="string">""</span>, max_length=<span class="number">30</span>, verbose_name=<span class="string">"品牌名"</span>, help_text=<span class="string">"品牌名"</span>)</div><div class="line">    desc = models.TextField(default=<span class="string">""</span>, max_length=<span class="number">200</span>, verbose_name=<span class="string">"品牌描述"</span>, help_text=<span class="string">"品牌描述"</span>)</div><div class="line">    image = models.ImageField(max_length=<span class="number">200</span>, upload_to=<span class="string">"brand/"</span>)</div><div class="line">    add_time = models.DateTimeField(default=datetime.now, verbose_name=<span class="string">"添加时间"</span>)</div><div class="line"></div><div class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></div><div class="line">        verbose_name = <span class="string">"品牌"</span></div><div class="line">        verbose_name_plural = verbose_name</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.name</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Goods</span><span class="params">(models.Model)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    商品</div><div class="line">    """</div><div class="line">    category = models.ForeignKey(GoodsCategory, verbose_name=<span class="string">"商品类目"</span>)</div><div class="line">    goods_sn = models.CharField(max_length=<span class="number">50</span>, default=<span class="string">""</span>, verbose_name=<span class="string">"商品唯一货号"</span>)</div><div class="line">    name = models.CharField(max_length=<span class="number">100</span>, verbose_name=<span class="string">"商品名"</span>)</div><div class="line">    click_num = models.IntegerField(default=<span class="number">0</span>, verbose_name=<span class="string">"点击数"</span>)</div><div class="line">    sold_num = models.IntegerField(default=<span class="number">0</span>, verbose_name=<span class="string">"商品销售量"</span>)</div><div class="line">    fav_num = models.IntegerField(default=<span class="number">0</span>, verbose_name=<span class="string">"收藏数"</span>)</div><div class="line">    goods_num = models.IntegerField(default=<span class="number">0</span>, verbose_name=<span class="string">"库存数"</span>)</div><div class="line">    market_price = models.FloatField(default=<span class="number">0</span>, verbose_name=<span class="string">"市场价格"</span>)</div><div class="line">    shop_price = models.FloatField(default=<span class="number">0</span>, verbose_name=<span class="string">"本店价格"</span>)</div><div class="line">    goods_brief = models.TextField(max_length=<span class="number">500</span>, verbose_name=<span class="string">"商品简短描述"</span>)</div><div class="line">    goods_desc = UEditorField(verbose_name=<span class="string">"内容"</span>, imagePath=<span class="string">"goods/images/"</span>, width=<span class="number">1000</span>, height=<span class="number">300</span>,</div><div class="line">                              filePath=<span class="string">"goods/files/"</span>, default=<span class="string">''</span>)</div><div class="line">    ship_free = models.BooleanField(default=<span class="keyword">True</span>, verbose_name=<span class="string">"是否承担运费"</span>)</div><div class="line">    goods_front_image = models.ImageField(upload_to=<span class="string">"goods/images/"</span>, null=<span class="keyword">True</span>, blank=<span class="keyword">True</span>, verbose_name=<span class="string">"封面图"</span>)</div><div class="line">    is_new = models.BooleanField(default=<span class="keyword">False</span>, verbose_name=<span class="string">"是否新品"</span>)</div><div class="line">    is_hot = models.BooleanField(default=<span class="keyword">False</span>, verbose_name=<span class="string">"是否热销"</span>)</div><div class="line">    add_time = models.DateTimeField(default=datetime.now, verbose_name=<span class="string">"添加时间"</span>)</div><div class="line"></div><div class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></div><div class="line">        verbose_name = <span class="string">'商品'</span></div><div class="line">        verbose_name_plural = verbose_name</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.name</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">GoodsImage</span><span class="params">(models.Model)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    商品轮播图</div><div class="line">    """</div><div class="line">    goods = models.ForeignKey(Goods, verbose_name=<span class="string">"商品"</span>, related_name=<span class="string">"images"</span>)</div><div class="line">    image = models.ImageField(upload_to=<span class="string">""</span>, verbose_name=<span class="string">"图片"</span>, null=<span class="keyword">True</span>, blank=<span class="keyword">True</span>)</div><div class="line">    add_time = models.DateTimeField(default=datetime.now, verbose_name=<span class="string">"添加时间"</span>)</div><div class="line"></div><div class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></div><div class="line">        verbose_name = <span class="string">"商品轮播图"</span></div><div class="line">        verbose_name_plural = verbose_name</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.goods.name</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Banner</span><span class="params">(models.Model)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    轮播的商品</div><div class="line">    """</div><div class="line">    goods = models.ForeignKey(Goods, verbose_name=<span class="string">"商品"</span>)</div><div class="line">    image = models.ImageField(upload_to=<span class="string">'banner'</span>, verbose_name=<span class="string">"轮播图片"</span>)</div><div class="line">    index = models.IntegerField(default=<span class="number">0</span>, verbose_name=<span class="string">"轮播顺序"</span>)</div><div class="line">    add_time = models.DateTimeField(default=datetime.now, verbose_name=<span class="string">"添加时间"</span>)</div><div class="line"></div><div class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></div><div class="line">        verbose_name = <span class="string">"轮播商品"</span></div><div class="line">        verbose_name_plural = verbose_name</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.goods.name</div></pre></td></tr></table></figure>
+<p>其中需要使用<a href="https://pan.baidu.com/s/1jI7qYH4" target="_blank" rel="external">DjangoUeditor</a>，直接解压放到extra_apps目录下即可，记得在settings.py文件中注册我们的app：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">INSTALLED_APPS = [</div><div class="line">    <span class="string">'django.contrib.auth'</span>,</div><div class="line">    <span class="string">'django.contrib.contenttypes'</span>,</div><div class="line">    <span class="string">'django.contrib.sessions'</span>,</div><div class="line">    <span class="string">'django.contrib.messages'</span>,</div><div class="line">    <span class="string">'django.contrib.staticfiles'</span>,</div><div class="line">    <span class="string">'apps.users.apps.UsersConfig'</span>,</div><div class="line">    <span class="string">'DjangoUeditor'</span>,</div><div class="line">    <span class="string">'users'</span>,</div><div class="line">    <span class="string">'goods'</span>,</div><div class="line">    <span class="string">'trade'</span>,</div><div class="line">    <span class="string">'user_operation'</span></div><div class="line">]</div></pre></td></tr></table></figure>
+<h3 id="trade交易的model设计"><a href="#trade交易的model设计" class="headerlink" title="trade交易的model设计"></a><strong>trade交易的model设计</strong></h3><p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</div><div class="line"></div><div class="line"><span class="keyword">from</span> django.db <span class="keyword">import</span> models</div><div class="line"><span class="keyword">from</span> django.contrib.auth <span class="keyword">import</span> get_user_model()</div><div class="line"></div><div class="line"><span class="keyword">from</span> goods.models <span class="keyword">import</span> Goods</div><div class="line"></div><div class="line">User = get_user_model()</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># Create your models here.</span></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ShoppingCart</span><span class="params">(models.Model)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    购物车</div><div class="line">    """</div><div class="line">    user = models.ForeignKey(User, verbose_name=<span class="string">"用户"</span>)</div><div class="line">    goods = models.ForeignKey(Goods, verbose_name=<span class="string">"商品"</span>)</div><div class="line">    goods_num = models.IntegerField(default=<span class="number">0</span>, verbose_name=<span class="string">"购买数量"</span>)</div><div class="line">    add_time = models.DateTimeField(default=datetime.now, verbose_name=<span class="string">"添加时间"</span>)</div><div class="line"></div><div class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></div><div class="line">        verbose_name = <span class="string">"购物车"</span></div><div class="line">        verbose_name_plural = verbose_name</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> <span class="string">"%s(%d)"</span>.format(self.goods.name, self.goods_num)</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">OrderInfo</span><span class="params">(models.Model)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    订单</div><div class="line">    """</div><div class="line">    ORDER_STATUS = (</div><div class="line">        (<span class="string">"success"</span>, <span class="string">"成功"</span>),</div><div class="line">        (<span class="string">"cancel"</span>, <span class="string">"取消"</span>),</div><div class="line">        (<span class="string">"cancel"</span>, <span class="string">"待支付"</span>),</div><div class="line">    )</div><div class="line"></div><div class="line">    user = models.ForeignKey(User, verbose_name=<span class="string">"用户"</span>)</div><div class="line">    order_sn = models.CharField(max_length=<span class="number">30</span>, null=<span class="keyword">True</span>, blank=<span class="keyword">True</span>, unique=<span class="keyword">True</span>, verbose_name=<span class="string">"订单号"</span>)</div><div class="line">    trade_no = models.CharField(max_length=<span class="number">100</span>, unique=<span class="keyword">True</span>, null=<span class="keyword">True</span>, blank=<span class="keyword">True</span>, verbose_name=<span class="string">u"交易号"</span>)</div><div class="line">    pay_status = models.CharField(choices=ORDER_STATUS, default=<span class="string">"paying"</span>, max_length=<span class="number">30</span>, verbose_name=<span class="string">"订单状态"</span>)</div><div class="line">    post_script = models.CharField(max_length=<span class="number">200</span>, verbose_name=<span class="string">"订单留言"</span>)</div><div class="line">    order_mount = models.FloatField(default=<span class="number">0.0</span>, verbose_name=<span class="string">"订单金额"</span>)</div><div class="line">    pay_time = models.DateTimeField(null=<span class="keyword">True</span>, blank=<span class="keyword">True</span>, verbose_name=<span class="string">"支付时间"</span>)</div><div class="line">    address = models.CharField(max_length=<span class="number">100</span>, default=<span class="string">""</span>, verbose_name=<span class="string">"收货地址"</span>)</div><div class="line">    signer_name = models.CharField(max_length=<span class="number">20</span>, default=<span class="string">""</span>, verbose_name=<span class="string">"签收人"</span>)</div><div class="line">    singer_mobile = models.CharField(max_length=<span class="number">11</span>, verbose_name=<span class="string">"联系电话"</span>)</div><div class="line">    add_time = models.DateTimeField(default=datetime.now, verbose_name=<span class="string">"添加时间"</span>)</div><div class="line"></div><div class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></div><div class="line">        verbose_name = <span class="string">"订单"</span></div><div class="line">        verbose_name_plural = verbose_name</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> str(self.order_sn)</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">OrderGoods</span><span class="params">(models.Model)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    订单商品详情</div><div class="line">    """</div><div class="line">    order = models.ForeignKey(OrderInfo, verbose_name=<span class="string">"订单信息"</span>, related_name=<span class="string">"goods"</span>)</div><div class="line">    goods = models.ForeignKey(Goods, verbose_name=<span class="string">"商品"</span>)</div><div class="line">    goods_num = models.IntegerField(default=<span class="number">0</span>, verbose_name=<span class="string">"商品数量"</span>)</div><div class="line">    add_time = models.DateTimeField(default=datetime.now, verbose_name=<span class="string">"添加时间"</span>)</div><div class="line"></div><div class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></div><div class="line">        verbose_name = <span class="string">"订单商品"</span></div><div class="line">        verbose_name_plural = verbose_name</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> str(self.order.order_sn)</div></pre></td></tr></table></figure>
+<p>注：Django 1.5之后y用户可以自定义User Model，可以通过以下两种方式来获取User Model。</p>
+<ol>
+<li>使用django.contrib.auth.get_user_model()</li>
+</ol>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"># 使用默认User model时</div><div class="line">&gt;&gt;&gt; from django.contrib.auth import get_user_model</div><div class="line">&gt;&gt;&gt; get_user_model()</div><div class="line">&lt;class 'django.contrib.auth.models.User'&gt;</div><div class="line"></div><div class="line"># 使用自定义User model时</div><div class="line">&gt;&gt;&gt; from django.contrib.auth import get_user_model</div><div class="line">&gt;&gt;&gt; get_user_model()</div><div class="line">&lt;class 'xxx.models.UserProfile'&gt;</div></pre></td></tr></table></figure>
+<ol>
+<li>使用settings.AUTH_USER_MODEL</li>
+</ol>
+<p>应该使用django.contrib.auth.get_user_model()来引用用户模型，而不要直接引用User。 这个方法将返回当前正在使用的用户模型 —— 指定的自定义用户模型或者User。当定义一个外键或者到用户模型的多对多关系时，你应该使用 settings.AUTH_USER_MODEL设置来指定自定义的模型。一般来说，在导入时候执行的代码中，应该使用settings.AUTH_USER_MODEL，get_user_model() 只在Django 已经导入所有的模型后才工作。</p>
+<h3 id="user-operation用户操作的model设计"><a href="#user-operation用户操作的model设计" class="headerlink" title="user_operation用户操作的model设计"></a><strong>user_operation用户操作的model设计</strong></h3><p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> datetime <span class="keyword">import</span> datetime</div><div class="line"></div><div class="line"><span class="keyword">from</span> django.db <span class="keyword">import</span> models</div><div class="line"><span class="keyword">from</span> django.contrib.auth <span class="keyword">import</span> get_user_model</div><div class="line"></div><div class="line"><span class="keyword">from</span> goods.models <span class="keyword">import</span> Goods</div><div class="line"></div><div class="line"><span class="comment"># Create your models here.</span></div><div class="line">User = get_user_model()</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserFav</span><span class="params">(models.Model)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    用户收藏</div><div class="line">    """</div><div class="line">    user = models.ForeignKey(User, verbose_name=<span class="string">"用户"</span>)</div><div class="line">    goods = models.ForeignKey(Goods, verbose_name=<span class="string">"商品"</span>, help_text=<span class="string">"商品id"</span>)</div><div class="line">    add_time = models.DateTimeField(default=datetime.now, verbose_name=<span class="string">"添加时间"</span>)</div><div class="line"></div><div class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></div><div class="line">        verbose_name = <span class="string">"用户收藏"</span></div><div class="line">        verbose_name_plural = verbose_name</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.user.name</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserLeavingMessage</span><span class="params">(models.Model)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    用户留言</div><div class="line">    """</div><div class="line">    MESSAGE_CHOICES = (</div><div class="line">        (<span class="number">1</span>, <span class="string">"留言"</span>),</div><div class="line">        (<span class="number">2</span>, <span class="string">"投诉"</span>),</div><div class="line">        (<span class="number">3</span>, <span class="string">"询问"</span>),</div><div class="line">        (<span class="number">4</span>, <span class="string">"售后"</span>),</div><div class="line">        (<span class="number">5</span>, <span class="string">"求购"</span>)</div><div class="line">    )</div><div class="line"></div><div class="line">    user = models.ForeignKey(User, verbose_name=<span class="string">"用户"</span>)</div><div class="line">    message_type = models.IntegerField(default=<span class="number">1</span>, choices=MESSAGE_CHOICES, verbose_name=<span class="string">"留言类型"</span>,</div><div class="line">                                       help_text=<span class="string">u"留言类型: 1(留言),2(投诉),3(询问),4(售后),5(求购)"</span>)</div><div class="line">    subject = models.CharField(max_length=<span class="number">100</span>, default=<span class="string">""</span>, verbose_name=<span class="string">"主题"</span>)</div><div class="line">    message = models.TextField(default=<span class="string">""</span>, verbose_name=<span class="string">"留言内容"</span>, help_text=<span class="string">"留言内容"</span>)</div><div class="line">    file = models.FileField(upload_to=<span class="string">"message/images/"</span>, verbose_name=<span class="string">"上传的文件"</span>, help_text=<span class="string">"上传的文件"</span>)</div><div class="line">    add_time = models.DateTimeField(default=datetime.now, verbose_name=<span class="string">"添加时间"</span>)</div><div class="line"></div><div class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></div><div class="line">        verbose_name = <span class="string">"用户留言"</span></div><div class="line">        verbose_name_plural = verbose_name</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.subject</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserAddress</span><span class="params">(models.Model)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    用户收货地址</div><div class="line">    """</div><div class="line">    user = models.ForeignKey(User, verbose_name=<span class="string">"用户"</span>)</div><div class="line">    province = models.CharField(max_length=<span class="number">100</span>, default=<span class="string">""</span>, verbose_name=<span class="string">"省份"</span>)</div><div class="line">    city = models.CharField(max_length=<span class="number">100</span>, default=<span class="string">""</span>, verbose_name=<span class="string">"城市"</span>)</div><div class="line">    district = models.CharField(max_length=<span class="number">100</span>, default=<span class="string">""</span>, verbose_name=<span class="string">"区域"</span>)</div><div class="line">    address = models.CharField(max_length=<span class="number">100</span>, default=<span class="string">""</span>, verbose_name=<span class="string">"详细地址"</span>)</div><div class="line">    signer_name = models.CharField(max_length=<span class="number">100</span>, default=<span class="string">""</span>, verbose_name=<span class="string">"签收人"</span>)</div><div class="line">    signer_mobile = models.CharField(max_length=<span class="number">11</span>, default=<span class="string">""</span>, verbose_name=<span class="string">"电话"</span>)</div><div class="line">    add_time = models.DateTimeField(default=datetime.now, verbose_name=<span class="string">"添加时间"</span>)</div><div class="line"></div><div class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Meta</span>:</span></div><div class="line">        verbose_name = <span class="string">"收货地址"</span></div><div class="line">        verbose_name_plural = verbose_name</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> self.address</div></pre></td></tr></table></figure>
+<h3 id="migrations原理及表生成"><a href="#migrations原理及表生成" class="headerlink" title="migrations原理及表生成"></a><strong>migrations原理及表生成</strong></h3><p>直接Run manage.py Task然后makemigrations</p>
+<p><a href="http://python.usyiyi.cn/translate/django_182/topics/migrations.html" target="_blank" rel="external">原理</a>略过，官方文档讲的很详细。</p>
+<h3 id="xadmin后台管理系统的配置"><a href="#xadmin后台管理系统的配置" class="headerlink" title="xadmin后台管理系统的配置"></a><strong>xadmin后台管理系统的配置</strong></h3><p>将<a href="https://pan.baidu.com/s/1i5owpE1" target="_blank" rel="external">xadmin</a>中的xadmin文件夹复制到extra_apps目录下，将其中每个app目录下的adminx.py文件复制到项目对应app目录下。</p>
+<p>安装xadmin依赖包：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pip install django-crispy-forms django-reversion django-formtools future httplib2 six xlwt xlswriter -i https://pypi.douban.com/simple/</div></pre></td></tr></table></figure>
+<p>在settings.py文件中添加配置：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">INSTALLED_APPS = [</div><div class="line">    <span class="string">'django.contrib.auth'</span>,</div><div class="line">    <span class="string">'django.contrib.contenttypes'</span>,</div><div class="line">    <span class="string">'django.contrib.sessions'</span>,</div><div class="line">    <span class="string">'django.contrib.messages'</span>,</div><div class="line">    <span class="string">'django.contrib.staticfiles'</span>,</div><div class="line">  	<span class="string">'django_filters'</span>,</div><div class="line">    <span class="string">'DjangoUeditor'</span>,</div><div class="line">    <span class="string">'apps.users.apps.UsersConfig'</span>,</div><div class="line">    <span class="string">'goods.apps.GoodsConfig'</span>,</div><div class="line">    <span class="string">'trade.apps.TradeConfig'</span>,</div><div class="line">    <span class="string">'user_operation.apps.UserOperationConfig'</span>,</div><div class="line">    <span class="string">'crispy_forms'</span>,</div><div class="line">    <span class="string">'xadmin'</span>,</div><div class="line">]</div><div class="line"></div><div class="line"><span class="comment"># 设置时区</span></div><div class="line">LANGUAGE_CODE = <span class="string">'zh-hans'</span>  <span class="comment"># 中文支持，django1.8以后支持；1.8以前是zh-cn</span></div><div class="line">TIME_ZONE = <span class="string">'Asia/Shanghai'</span></div><div class="line">USE_I18N = <span class="keyword">True</span></div><div class="line">USE_L10N = <span class="keyword">True</span></div><div class="line">USE_TZ = <span class="keyword">False</span>  <span class="comment"># 默认是Ture，时间是utc时间，由于我们要用本地时间，所用手动修改为false！！！！</span></div></pre></td></tr></table></figure>
+<p>再执行makemigrations和migrate</p>
+<p>修改Mxshop/urls.py文件:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> django.conf.urls <span class="keyword">import</span> url</div><div class="line"><span class="keyword">import</span> xadmin</div><div class="line"></div><div class="line">urlpatterns = [</div><div class="line">    url(<span class="string">r'^xadmin/'</span>, xadmin.site.urls),</div><div class="line">]</div></pre></td></tr></table></figure>
+<p>创建超级用户</p>
+<p><img src="https://ws4.sinaimg.cn/large/006tNc79gy1flhe8itum3j31kw0cjdj5.jpg" alt=""></p>
+<p>Debug运行，打开<a href="http://127.0.0.1:8000/xadmin/" target="_blank" rel="external">http://127.0.0.1:8000/xadmin/</a></p>
+<p><img src="https://ws4.sinaimg.cn/large/006tNc79gy1flhenvlrxwj31kw13jjwu.jpg" alt=""></p>
+<p>发现app名称仍是英文，下面进入对应app下的apps.py文件进行修改，例如goods:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> django.apps <span class="keyword">import</span> AppConfig</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">GoodsConfig</span><span class="params">(AppConfig)</span>:</span></div><div class="line">    name = <span class="string">'goods'</span></div><div class="line">    verbose_name = <span class="string">"商品"</span></div></pre></td></tr></table></figure>
+<p>OK，大功告成！</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNc79gy1flhex3e9iuj31kw175wn8.jpg" alt=""></p>
+<h3 id="导入商品和商品类别数据"><a href="#导入商品和商品类别数据" class="headerlink" title="导入商品和商品类别数据"></a><strong>导入商品和商品类别数据</strong></h3><p>将<a href="https://pan.baidu.com/s/1hsoyp6k" target="_blank" rel="external">data</a>中的goods和brands文件夹复制到项目的media文件夹中，并在db_tools文件夹下新建data文件夹，拖入category_data.py和product_data.py文件。</p>
+<p>在db_tools文件夹下新建import_category_data.py：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 独立使用django的model</span></div><div class="line"><span class="keyword">import</span> sys</div><div class="line"><span class="keyword">import</span> os</div><div class="line"></div><div class="line"><span class="comment"># 获取当前文件的目录</span></div><div class="line">pwd = os.path.dirname(os.path.realpath(__file__))</div><div class="line"><span class="comment"># 获取项目名的目录(因为我的当前文件是在项目名下的文件夹下的文件.所以是../)</span></div><div class="line">sys.path.append(pwd + <span class="string">"../"</span>)</div><div class="line">os.environ.setdefault(<span class="string">"DJANGO_SETTINGS_MODULE"</span>, <span class="string">"MxShop.settings"</span>)</div><div class="line"></div><div class="line"><span class="keyword">import</span> django</div><div class="line"></div><div class="line">django.setup()</div><div class="line"></div><div class="line"><span class="keyword">from</span> goods.models <span class="keyword">import</span> GoodsCategory</div><div class="line"></div><div class="line"><span class="keyword">from</span> db_tools.data.category_data <span class="keyword">import</span> row_data</div><div class="line"></div><div class="line"><span class="keyword">for</span> lev1_cat <span class="keyword">in</span> row_data:</div><div class="line">    lev1_instance = GoodsCategory()</div><div class="line">    lev1_instance.code = lev1_cat[<span class="string">"code"</span>]</div><div class="line">    lev1_instance.name = lev1_cat[<span class="string">"name"</span>]</div><div class="line">    lev1_instance.category_type = <span class="number">1</span></div><div class="line">    lev1_instance.save()</div><div class="line"></div><div class="line">    <span class="keyword">for</span> lev2_cat <span class="keyword">in</span> lev1_cat[<span class="string">"sub_categorys"</span>]:</div><div class="line">        lev2_instance = GoodsCategory()</div><div class="line">        lev2_instance.code = lev2_cat[<span class="string">"code"</span>]</div><div class="line">        lev2_instance.name = lev2_cat[<span class="string">"name"</span>]</div><div class="line">        lev2_instance.category_type = <span class="number">2</span></div><div class="line">        lev2_instance.parent_category = lev1_instance</div><div class="line">        lev2_instance.save()</div><div class="line"></div><div class="line">        <span class="keyword">for</span> lev3_cat <span class="keyword">in</span> lev2_cat[<span class="string">"sub_categorys"</span>]:</div><div class="line">            lev3_instance = GoodsCategory()</div><div class="line">            lev3_instance.code = lev3_cat[<span class="string">"code"</span>]</div><div class="line">            lev3_instance.name = lev3_cat[<span class="string">"name"</span>]</div><div class="line">            lev3_instance.category_type = <span class="number">3</span></div><div class="line">            lev3_instance.parent_category = lev2_instance</div><div class="line">            lev3_instance.save()</div></pre></td></tr></table></figure>
+<p>运行之后即可导入商品类别数据，可以再navicat或者后台管理系统中查看：</p>
+<p><img src="https://ws4.sinaimg.cn/large/006tNc79gy1flhoawg0xlj31kw175atl.jpg" alt=""></p>
+<p>接下来导入商品数据，观察商品数据结构之后，在db_tools文件夹下新建import_goods_data.py：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> sys</div><div class="line"><span class="keyword">import</span> os</div><div class="line"></div><div class="line"><span class="comment"># 获取当前文件的目录</span></div><div class="line">pwd = os.path.dirname(os.path.realpath(__file__))</div><div class="line"><span class="comment"># 获取项目名的目录(因为我的当前文件是在项目名下的文件夹下的文件.所以是../)</span></div><div class="line">sys.path.append(pwd + <span class="string">"../"</span>)</div><div class="line">os.environ.setdefault(<span class="string">"DJANGO_SETTINGS_MODULE"</span>, <span class="string">"MxShop.settings"</span>)</div><div class="line"></div><div class="line"><span class="keyword">import</span> django</div><div class="line"></div><div class="line">django.setup()</div><div class="line"></div><div class="line"><span class="keyword">from</span> goods.models <span class="keyword">import</span> Goods, GoodsCategory, GoodsImage</div><div class="line"></div><div class="line"><span class="keyword">from</span> db_tools.data.product_data <span class="keyword">import</span> row_data</div><div class="line"></div><div class="line"><span class="keyword">for</span> goods_detail <span class="keyword">in</span> row_data:</div><div class="line">    goods = Goods()</div><div class="line">    goods.name = goods_detail[<span class="string">"name"</span>]</div><div class="line">    goods.market_price = float(int(goods_detail[<span class="string">"market_price"</span>].replace(<span class="string">"￥"</span>, <span class="string">""</span>).replace(<span class="string">"元"</span>, <span class="string">""</span>)))</div><div class="line">    goods.shop_price = float(int(goods_detail[<span class="string">"sale_price"</span>].replace(<span class="string">"￥"</span>, <span class="string">""</span>).replace(<span class="string">"元"</span>, <span class="string">""</span>)))</div><div class="line">    goods.goods_brief = goods_detail[<span class="string">"desc"</span>] <span class="keyword">if</span> goods_detail[<span class="string">"desc"</span>] <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span> <span class="keyword">else</span> <span class="string">""</span></div><div class="line">    goods.goods_desc = goods_detail[<span class="string">"goods_desc"</span>] <span class="keyword">if</span> goods_detail[<span class="string">"goods_desc"</span>] <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span> <span class="keyword">else</span> <span class="string">""</span></div><div class="line">    goods.goods_front_image = goods_detail[<span class="string">"images"</span>][<span class="number">0</span>] <span class="keyword">if</span> goods_detail[<span class="string">"images"</span>] <span class="keyword">else</span> <span class="string">""</span></div><div class="line"></div><div class="line">    category_name = goods_detail[<span class="string">"categorys"</span>][<span class="number">-1</span>]</div><div class="line">    category = GoodsCategory.objects.filter(name=category_name)</div><div class="line"></div><div class="line">    <span class="keyword">if</span> category:</div><div class="line">        goods.category = category[<span class="number">0</span>]</div><div class="line">    goods.save()</div><div class="line"></div><div class="line">    <span class="keyword">for</span> goods_image <span class="keyword">in</span> goods_detail[<span class="string">"images"</span>]:</div><div class="line">        goods_image_instance = GoodsImage()</div><div class="line">        goods_image_instance.image = goods_image</div><div class="line">        goods_image_instance.goods = goods</div><div class="line">        goods_image_instance.save()</div></pre></td></tr></table></figure>
+<p>运行即可。</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNc79gy1flhq8ni6jkj31kw175tt8.jpg" alt=""></p>
+<p>但是发现其中的图片无法显示，需要我们进行配置：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># settings.py文件中添加</span></div><div class="line">MEDIA_URL = <span class="string">"/media/"</span></div><div class="line">MEDIA_ROOT = os.path.join(BASE_DIR, <span class="string">"media"</span>)</div><div class="line"></div><div class="line"><span class="comment"># MxShop/urls.py文件中修改</span></div><div class="line"><span class="keyword">from</span> django.conf.urls <span class="keyword">import</span> url</div><div class="line"><span class="keyword">import</span> xadmin</div><div class="line"><span class="keyword">from</span> MxShop.settings <span class="keyword">import</span> MEDIA_ROOT</div><div class="line"><span class="keyword">from</span> django.views.static <span class="keyword">import</span> serve</div><div class="line"></div><div class="line">urlpatterns = [</div><div class="line">    url(<span class="string">r'^xadmin/'</span>, xadmin.site.urls),</div><div class="line">    url(<span class="string">r'^media/(?P&lt;path&gt;.*)$'</span>, serve, &#123;<span class="string">"document_root"</span>: MEDIA_ROOT&#125;),</div><div class="line">]</div></pre></td></tr></table></figure>
+<p>附<a href="http://blog.csdn.net/wwaiym/article/details/5820689" target="_blank" rel="external">Django settings.py的media路径设置</a> </p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+  
+        <div class="post-tags">
+          
+            <a href="/tags/Django，Vue，Rest/" rel="tag"># Django，Vue，Rest</a>
+          
+        </div>
+      
+
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>🐶 怕是要给老板下跪了哦~ 🐶</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赞赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat-reward-img.jpg" alt="LawTech. WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay-reward-img.jpg" alt="LawTech. Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+         
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/04/vue-django-2-1/" rel="next" title="Vue+Django REST Framework生鲜电商项目学习笔记——项目初始化">
+                <i class="fa fa-chevron-left"></i> Vue+Django REST Framework生鲜电商项目学习笔记——项目初始化
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="monthly" data-num-items="4"></div>
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg"
+               alt="LawTech." />
+          <p class="site-author-name" itemprop="name">LawTech.</p>
+          <p class="site-description motion-element" itemprop="description">破邮python爱好者。</p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/lawtech0902" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/LawRev1s1on" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              友情链接
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://github.com/lawtech0902" title="没地方链~" target="_blank">没地方链~</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#user用户的model设计"><span class="nav-number">1.</span> <span class="nav-text">user用户的model设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#goods商品的model设计"><span class="nav-number">2.</span> <span class="nav-text">goods商品的model设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#trade交易的model设计"><span class="nav-number">3.</span> <span class="nav-text">trade交易的model设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#user-operation用户操作的model设计"><span class="nav-number">4.</span> <span class="nav-text">user_operation用户操作的model设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#migrations原理及表生成"><span class="nav-number">5.</span> <span class="nav-text">migrations原理及表生成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#xadmin后台管理系统的配置"><span class="nav-number">6.</span> <span class="nav-text">xadmin后台管理系统的配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#导入商品和商品类别数据"><span class="nav-number">7.</span> <span class="nav-text">导入商品和商品类别数据</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LawTech.</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io" rel="external nofollow">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" rel="external nofollow">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+
+
+        
+
+<div class="busuanzi-count">
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv"><i class="fa fa-user"></i><span class="busuanzi-value" id="busuanzi_value_site_uv"></span></span>
+  
+
+  
+    <span class="site-pv"><i class="fa fa-eye"></i><span class="busuanzi-value" id="busuanzi_value_site_pv"></span></span>
+  
+  
+</div>
+
+
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/jquery.lazyload/1.9.3/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+    
+    <script>
+      var cloudTieConfig = {
+        url: document.location.href, 
+        sourceId: "",
+        productKey: "ec88f2d452d14780a44cc383900f167a",
+        target: "cloud-tie-wrapper"
+      };
+    </script>
+    <script src="https://img1.ws.126.net/f2e/tie/yun/sdk/loader.js"></script>
+  
+
+
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("R025aEVl3sFz6nIRV8p0nqRB-gzGzoHsz", "g1roHmmHckuQSu2n9JW16T5b");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>
