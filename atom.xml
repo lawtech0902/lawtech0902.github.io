@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-11-14T13:54:29.112Z</updated>
+  <updated>2017-11-16T02:59:17.077Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,77 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Vue+Django REST Framework生鲜电商项目学习笔记——Vue的结构和restful api介绍</title>
+    <link href="http://yoursite.com/2017/11/15/vue-django-4-1/"/>
+    <id>http://yoursite.com/2017/11/15/vue-django-4-1/</id>
+    <published>2017-11-15T05:18:54.000Z</published>
+    <updated>2017-11-16T02:59:17.077Z</updated>
+    
+    <content type="html"><![CDATA[<p>分为以下几个环节：</p>
+<ol>
+<li>restful api介绍</li>
+<li>vue的基本概念介绍</li>
+<li>vue的源码结构介绍</li>
+</ol>
+<a id="more"></a>
+<h2 id="restful-api介绍"><a href="#restful-api介绍" class="headerlink" title="restful api介绍"></a><strong>restful api介绍</strong></h2><h3 id="前后端分离优缺点"><a href="#前后端分离优缺点" class="headerlink" title="前后端分离优缺点"></a><strong>前后端分离优缺点</strong></h3><h4 id="为什么要前后端分离"><a href="#为什么要前后端分离" class="headerlink" title="为什么要前后端分离"></a><strong>为什么要前后端分离</strong></h4><ol>
+<li>pc, app, pad多端适应</li>
+<li>SPA开发模式开始流行</li>
+<li>前后端开发职责不清</li>
+<li>开发效率问题，前后端互相等待</li>
+<li>前端一直配合着后端，能力受限</li>
+<li>后台开发语言和模板高度耦合，导致开发语言依赖严重</li>
+</ol>
+<h4 id="前后端分离缺点"><a href="#前后端分离缺点" class="headerlink" title="前后端分离缺点"></a><strong>前后端分离缺点</strong></h4><ol>
+<li>前后端学习门槛增加</li>
+<li>数据依赖导致文档重要性增加</li>
+<li>前端工作量加大</li>
+<li>SEO的难度加大</li>
+<li>后端开发模式迁移增加成本</li>
+</ol>
+<h3 id="restful-api"><a href="#restful-api" class="headerlink" title="restful api"></a><strong>restful api</strong></h3><p>restful api目前是前后端分离最佳实践：</p>
+<ol>
+<li>轻量，直接通过http，不需要额外的协议，post/get/put/delete操作</li>
+<li>面向资源，一目了然，具有自解释性</li>
+<li>数据描述简单，一般通过json或者xml做数据通信</li>
+</ol>
+<p>restful api 重要概念</p>
+<ol>
+<li><a href="http://www.ruanyifeng.com/blog/2011/09/restful.html" target="_blank" rel="external">概念</a></li>
+<li><a href="http://www.ruanyifeng.com/blog/2014/05/restful_api.html" target="_blank" rel="external">restful实践</a></li>
+</ol>
+<h2 id="Vue的基本概念介绍"><a href="#Vue的基本概念介绍" class="headerlink" title="Vue的基本概念介绍"></a><strong>Vue的基本概念介绍</strong></h2><h3 id="几个概念"><a href="#几个概念" class="headerlink" title="几个概念"></a><strong>几个概念</strong></h3><ol>
+<li>前端工程化</li>
+<li>数据双向绑定</li>
+<li>组件化开发</li>
+</ol>
+<h3 id="vue开发的几个概念"><a href="#vue开发的几个概念" class="headerlink" title="vue开发的几个概念"></a><strong>vue开发的几个概念</strong></h3><ol>
+<li>webpack</li>
+<li>vue, vuex, vue-router, axios</li>
+<li>ES6, babel</li>
+</ol>
+<h2 id="Vue项目源码结构介绍"><a href="#Vue项目源码结构介绍" class="headerlink" title="Vue项目源码结构介绍"></a><strong>Vue项目源码结构介绍</strong></h2><p>老老实实把Vue学一学吧！</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;分为以下几个环节：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;restful api介绍&lt;/li&gt;
+&lt;li&gt;vue的基本概念介绍&lt;/li&gt;
+&lt;li&gt;vue的源码结构介绍&lt;/li&gt;
+&lt;/ol&gt;
+    
+    </summary>
+    
+      <category term="Django，Vue" scheme="http://yoursite.com/categories/Django%EF%BC%8CVue/"/>
+    
+    
+      <category term="Django，Vue，Rest" scheme="http://yoursite.com/tags/Django%EF%BC%8CVue%EF%BC%8CRest/"/>
+    
+  </entry>
   
   <entry>
     <title>Vue+Django REST Framework生鲜电商项目学习笔记——model设计和资源导入</title>
@@ -1168,41 +1239,6 @@
   </entry>
   
   <entry>
-    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy模拟登录知乎</title>
-    <link href="http://yoursite.com/2017/05/11/scrapy-login-zhihu/"/>
-    <id>http://yoursite.com/2017/05/11/scrapy-login-zhihu/</id>
-    <published>2017-05-11T06:18:54.000Z</published>
-    <updated>2017-05-12T08:12:46.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>Scrapy登录知乎要解决两个问题</p>
-<ol>
-<li>session的传递，保证处理登录是同一个状态。</li>
-<li>首个登录页面的改变，由直接爬取的页面变为登录页面，再去爬取页面。</li>
-</ol>
-<a id="more"></a>
-<p>话不多说，直接上代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"><span class="keyword">import</span> scrapy</div><div class="line"><span class="keyword">import</span> re</div><div class="line"><span class="keyword">import</span> json</div><div class="line"><span class="keyword">import</span> time</div><div class="line"></div><div class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ZhihuSpider</span><span class="params">(scrapy.Spider)</span>:</span></div><div class="line">    name = <span class="string">"zhihu"</span></div><div class="line">    allowed_domains = [<span class="string">"www.zhihu.com"</span>]</div><div class="line">    start_urls = [<span class="string">'http://www.zhihu.com/'</span>]</div><div class="line">    headers = &#123;</div><div class="line">        <span class="string">"Host"</span>: <span class="string">"www.zhihu.com"</span>,</div><div class="line">        <span class="string">"Referer"</span>: <span class="string">"https://www.zhihu.com/"</span>,</div><div class="line">        <span class="string">'User-Agent'</span>: <span class="string">'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.96 Safari/537.36'</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="keyword">pass</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">start_requests</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> [scrapy.Request(<span class="string">"https://www.zhihu.com/#signin"</span>, headers=self.headers, callback=self.login)]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">login</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        登录</div><div class="line">        :param response: </div><div class="line">        :return: </div><div class="line">        """</div><div class="line">        response_text = response.text</div><div class="line">        match_obj = re.match(<span class="string">'.*name="_xsrf" value="(.*?)"'</span>, response_text, re.DOTALL)</div><div class="line">        xsrf = <span class="string">''</span></div><div class="line">        <span class="keyword">if</span> match_obj:</div><div class="line">            xsrf = match_obj.group(<span class="number">1</span>)</div><div class="line"></div><div class="line">        <span class="keyword">if</span> xsrf:</div><div class="line">            post_data = &#123;</div><div class="line">                <span class="string">"_xsrf"</span>: xsrf,</div><div class="line">                <span class="string">"phone_num"</span>: <span class="string">"18951855817"</span>,</div><div class="line">                <span class="string">"password"</span>: <span class="string">"tracy584563542"</span></div><div class="line">            &#125;</div><div class="line">            t = str(int(time.time() * <span class="number">1000</span>))</div><div class="line">            captcha_url = <span class="string">'https://www.zhihu.com/captcha.gif?r='</span> + t + <span class="string">"&amp;type=login"</span></div><div class="line">            <span class="keyword">yield</span> scrapy.Request(captcha_url, headers=self.headers, meta=&#123;<span class="string">"post_data"</span>: post_data&#125;,</div><div class="line">                                 callback=self.login_after_captcha)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">login_after_captcha</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="keyword">with</span> open(<span class="string">"captcha.jpg"</span>, <span class="string">"wb"</span>) <span class="keyword">as</span> f:</div><div class="line">            f.write(response.body)</div><div class="line">        im = Image.open(<span class="string">'captcha.jpg'</span>)</div><div class="line">        im.show()</div><div class="line">        im.close()</div><div class="line">        captcha = input(<span class="string">"请输入验证码：\n"</span>)</div><div class="line">        post_data = response.meta.get(<span class="string">"post_data"</span>, &#123;&#125;)</div><div class="line">        post_data[<span class="string">"captcha"</span>] = captcha</div><div class="line">        post_url = <span class="string">"https://www.zhihu.com/login/phone_num"</span></div><div class="line">        <span class="keyword">return</span> [scrapy.FormRequest(</div><div class="line">            url=post_url,</div><div class="line">            formdata=post_data,</div><div class="line">            headers=self.headers,</div><div class="line">            callback=self.check_login</div><div class="line">        )]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">check_login</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        验证服务器的返回数据判断登录是否成功</div><div class="line">        :param response: </div><div class="line">        :return: </div><div class="line">        """</div><div class="line">        text_json = json.loads(response.text)</div><div class="line">        <span class="keyword">if</span> <span class="string">'msg'</span> <span class="keyword">in</span> text_json <span class="keyword">and</span> text_json[<span class="string">'msg'</span>] == <span class="string">'登陆成功'</span>:</div><div class="line">            <span class="comment"># 从继承的Spider类中拿的内容，恢复到正确执行</span></div><div class="line">            <span class="keyword">for</span> url <span class="keyword">in</span> self.start_urls:</div><div class="line">                <span class="keyword">yield</span> scrapy.Request(url, dont_filter=<span class="keyword">True</span>, headers=self.headers)</div></pre></td></tr></table></figure>
-<p>首先对 <code>scrapy.Spider</code> 类中的 <code>start_requests(self)</code> 进行重载，改变首先要处理的页面为登录页面。<br>得到登录页面后，获得xsrf，并下载验证码，通过 <code>scrapy.FormRequest</code>构造登录数据，通过check_login回调函数判断登录是否成功。在代码的最后一行转回正常的登录流程。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;Scrapy登录知乎要解决两个问题&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;session的传递，保证处理登录是同一个状态。&lt;/li&gt;
-&lt;li&gt;首个登录页面的改变，由直接爬取的页面变为登录页面，再去爬取页面。&lt;/li&gt;
-&lt;/ol&gt;
-    
-    </summary>
-    
-      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
-    
-    
-      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Python分布式爬虫打造搜索引擎项目学习笔记——Requests模拟登录知乎</title>
     <link href="http://yoursite.com/2017/05/11/scrapy-requests-zhihu-login/"/>
     <id>http://yoursite.com/2017/05/11/scrapy-requests-zhihu-login/</id>
@@ -1281,6 +1317,41 @@
     
     
       <category term="Scrapy，Requests，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CRequests%EF%BC%8CPython/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy模拟登录知乎</title>
+    <link href="http://yoursite.com/2017/05/11/scrapy-login-zhihu/"/>
+    <id>http://yoursite.com/2017/05/11/scrapy-login-zhihu/</id>
+    <published>2017-05-11T06:18:54.000Z</published>
+    <updated>2017-05-12T08:12:46.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Scrapy登录知乎要解决两个问题</p>
+<ol>
+<li>session的传递，保证处理登录是同一个状态。</li>
+<li>首个登录页面的改变，由直接爬取的页面变为登录页面，再去爬取页面。</li>
+</ol>
+<a id="more"></a>
+<p>话不多说，直接上代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"><span class="keyword">import</span> scrapy</div><div class="line"><span class="keyword">import</span> re</div><div class="line"><span class="keyword">import</span> json</div><div class="line"><span class="keyword">import</span> time</div><div class="line"></div><div class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ZhihuSpider</span><span class="params">(scrapy.Spider)</span>:</span></div><div class="line">    name = <span class="string">"zhihu"</span></div><div class="line">    allowed_domains = [<span class="string">"www.zhihu.com"</span>]</div><div class="line">    start_urls = [<span class="string">'http://www.zhihu.com/'</span>]</div><div class="line">    headers = &#123;</div><div class="line">        <span class="string">"Host"</span>: <span class="string">"www.zhihu.com"</span>,</div><div class="line">        <span class="string">"Referer"</span>: <span class="string">"https://www.zhihu.com/"</span>,</div><div class="line">        <span class="string">'User-Agent'</span>: <span class="string">'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.96 Safari/537.36'</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="keyword">pass</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">start_requests</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> [scrapy.Request(<span class="string">"https://www.zhihu.com/#signin"</span>, headers=self.headers, callback=self.login)]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">login</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        登录</div><div class="line">        :param response: </div><div class="line">        :return: </div><div class="line">        """</div><div class="line">        response_text = response.text</div><div class="line">        match_obj = re.match(<span class="string">'.*name="_xsrf" value="(.*?)"'</span>, response_text, re.DOTALL)</div><div class="line">        xsrf = <span class="string">''</span></div><div class="line">        <span class="keyword">if</span> match_obj:</div><div class="line">            xsrf = match_obj.group(<span class="number">1</span>)</div><div class="line"></div><div class="line">        <span class="keyword">if</span> xsrf:</div><div class="line">            post_data = &#123;</div><div class="line">                <span class="string">"_xsrf"</span>: xsrf,</div><div class="line">                <span class="string">"phone_num"</span>: <span class="string">"18951855817"</span>,</div><div class="line">                <span class="string">"password"</span>: <span class="string">"tracy584563542"</span></div><div class="line">            &#125;</div><div class="line">            t = str(int(time.time() * <span class="number">1000</span>))</div><div class="line">            captcha_url = <span class="string">'https://www.zhihu.com/captcha.gif?r='</span> + t + <span class="string">"&amp;type=login"</span></div><div class="line">            <span class="keyword">yield</span> scrapy.Request(captcha_url, headers=self.headers, meta=&#123;<span class="string">"post_data"</span>: post_data&#125;,</div><div class="line">                                 callback=self.login_after_captcha)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">login_after_captcha</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="keyword">with</span> open(<span class="string">"captcha.jpg"</span>, <span class="string">"wb"</span>) <span class="keyword">as</span> f:</div><div class="line">            f.write(response.body)</div><div class="line">        im = Image.open(<span class="string">'captcha.jpg'</span>)</div><div class="line">        im.show()</div><div class="line">        im.close()</div><div class="line">        captcha = input(<span class="string">"请输入验证码：\n"</span>)</div><div class="line">        post_data = response.meta.get(<span class="string">"post_data"</span>, &#123;&#125;)</div><div class="line">        post_data[<span class="string">"captcha"</span>] = captcha</div><div class="line">        post_url = <span class="string">"https://www.zhihu.com/login/phone_num"</span></div><div class="line">        <span class="keyword">return</span> [scrapy.FormRequest(</div><div class="line">            url=post_url,</div><div class="line">            formdata=post_data,</div><div class="line">            headers=self.headers,</div><div class="line">            callback=self.check_login</div><div class="line">        )]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">check_login</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        验证服务器的返回数据判断登录是否成功</div><div class="line">        :param response: </div><div class="line">        :return: </div><div class="line">        """</div><div class="line">        text_json = json.loads(response.text)</div><div class="line">        <span class="keyword">if</span> <span class="string">'msg'</span> <span class="keyword">in</span> text_json <span class="keyword">and</span> text_json[<span class="string">'msg'</span>] == <span class="string">'登陆成功'</span>:</div><div class="line">            <span class="comment"># 从继承的Spider类中拿的内容，恢复到正确执行</span></div><div class="line">            <span class="keyword">for</span> url <span class="keyword">in</span> self.start_urls:</div><div class="line">                <span class="keyword">yield</span> scrapy.Request(url, dont_filter=<span class="keyword">True</span>, headers=self.headers)</div></pre></td></tr></table></figure>
+<p>首先对 <code>scrapy.Spider</code> 类中的 <code>start_requests(self)</code> 进行重载，改变首先要处理的页面为登录页面。<br>得到登录页面后，获得xsrf，并下载验证码，通过 <code>scrapy.FormRequest</code>构造登录数据，通过check_login回调函数判断登录是否成功。在代码的最后一行转回正常的登录流程。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Scrapy登录知乎要解决两个问题&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;session的传递，保证处理登录是同一个状态。&lt;/li&gt;
+&lt;li&gt;首个登录页面的改变，由直接爬取的页面变为登录页面，再去爬取页面。&lt;/li&gt;
+&lt;/ol&gt;
+    
+    </summary>
+    
+      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
+    
+    
+      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
     
   </entry>
   
@@ -1382,134 +1453,6 @@
     
     
       <category term="Scrapy，Django，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CDjango%EF%BC%8CPython/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Item Loaders机制介绍与实例</title>
-    <link href="http://yoursite.com/2017/05/08/scrapy-item-loader/"/>
-    <id>http://yoursite.com/2017/05/08/scrapy-item-loader/</id>
-    <published>2017-05-08T06:18:54.000Z</published>
-    <updated>2017-05-08T07:02:35.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>Item Loaders 提供了一种便捷的方式填充抓取到的 Items 。虽然 Items 可以使用自带的类字典形式 API 填充，但是 Items Loaders 提供了更便捷的 API，可以分析原始数据并对 Item 进行赋值。 </p>
-<p>从另一方面来说，Items 提供保存抓取数据的容器，而 Item Loaders 提供的是填充容器的机制。</p>
-<p>Item Loaders 提供的是一种灵活，高效的机制，可以更方便的被 spider 或 source format （HTML，XML，etc）扩展，并 override 更易于维护的、不同的内容分析规则。</p>
-<a id="more"></a>
-<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><h3 id="使用-Item-Loaders-来填充-Items"><a href="#使用-Item-Loaders-来填充-Items" class="headerlink" title="使用 Item Loaders 来填充 Items"></a><strong>使用 Item Loaders 来填充 Items</strong></h3><p>要使用 Item Loader, 你必须先将它实例化。你可以使用类似字典的对象(例如: Item or dict)来进行实例化，或者不使用对象也可以，当不用对象进行实例化的时候，Item 会自动使用 <code>ItemLoader.default\_item_class</code> 属性中指定的 Item 类在 <code>Item Loader constructor</code> 中实例化。 </p>
-<p>然后，你开始收集数值到 Item Loader 时，通常使用 Selectors。你可以在同一个 item field 里面添加多个数 值；Item Loader 将知道如何用合适的处理函数来“添加”这些数值。 下面是在 Spider 中典型的 Item Loader 的用法，使用 <code>Items chapter</code> 中声明的 <code>Product item</code> ：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> scrapy.contrib.loader <span class="keyword">import</span> ItemLoader </div><div class="line"><span class="keyword">from</span> myproject.items <span class="keyword">import</span> Product</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span> </div><div class="line">    l = ItemLoader(item=Product(), response=response) </div><div class="line">    l.add_xpath(<span class="string">'name'</span>, <span class="string">'//div[@class="product_name"]'</span>) </div><div class="line">    l.add_xpath(<span class="string">'name'</span>, <span class="string">'//div[@class="product_title"]'</span>) </div><div class="line">    l.add_xpath(<span class="string">'price'</span>, <span class="string">'//p[@id="price"]'</span>) </div><div class="line">    l.add_css(<span class="string">'stock'</span>, <span class="string">'p#stock]'</span>) </div><div class="line">    l.add_value(<span class="string">'last_updated'</span>, <span class="string">'today'</span>) <span class="comment"># you can also use literal values </span></div><div class="line">    <span class="keyword">return</span> l.load_item()</div></pre></td></tr></table></figure>
-<p>快速查看这些代码之后，我们可以看到发现 name 字段被从页面中两个不同的 XPath 位置提取：</p>
-<ol>
-<li><code>//div[@class=&quot;product_name&quot;]</code></li>
-<li><code>//div[@class=&quot;product_title&quot;]</code></li>
-</ol>
-<p>换言之,数据通过用 <code>add_xpath()</code> 的方法，把从两个不同的 XPath 位置提取的数据收集起来。这是将在以后分配给 <code>name</code> 字段中的数据?</p>
-<p>之后，类似的请求被用于 price 和 stock 字段 （后者使用 <code>CSS selector</code> 和 <code>add_css()</code> 方法）， 最后使用不同的方法 <code>add_value()</code> 对 <code>last_update</code> 填充文本值( today )。 最终，当所有数据被收集起来之后，调用 <code>ItemLoader.load_item()</code> 方法，实际上填充并且返回了之前通过调用 <code>add_xpath()</code>，<code>add_css()</code> ，<code>add_value()</code> 所提取和收集到的数据的 Item。</p>
-<h3 id="输入和输出处理器"><a href="#输入和输出处理器" class="headerlink" title="输入和输出处理器"></a><strong>输入和输出处理器</strong></h3><p>Item Loader 在每个（Item）字段中都包含了一个输入处理器和一个输出处理器。输入处理器收到数据时立刻提取数据 （通过  <code>add_xpath()</code>， <code>add_css()</code>  或者  <code>add_value()</code>方法）之后输入处理器的结果被收集起来并且保存在ItemLoader内。收集到所有的数据后，调用 <code>ItemLoader.load_item()</code> 方法来填充，并得到填充后的 Item 对象。这是当输出处理器被和之前收集到的数据（和用输入处理器处理的）被调用。输出处理器的结果是被分配到Item的最终值。</p>
-<p>让我们看一个例子来说明如何输入和输出处理器被一个特定的字段调用（同样适用于其他field）：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">l = ItemLoader(Product(), some_selector)</div><div class="line">l.add_xpath(<span class="string">'name'</span>, xpath1) <span class="comment"># (1)</span></div><div class="line">l.add_xpath(<span class="string">'name'</span>, xpath2) <span class="comment"># (2)</span></div><div class="line">l.add_css(<span class="string">'name'</span>, css) <span class="comment"># (3)</span></div><div class="line">l.add_value(<span class="string">'name'</span>, <span class="string">'test'</span>) <span class="comment"># (4)</span></div><div class="line"><span class="keyword">return</span> l.load_item() <span class="comment"># (5)</span></div></pre></td></tr></table></figure>
-<p>发生了这些事情:</p>
-<ol>
-<li>从 <code>xpath1</code> 提取出的数据,传递给 <em>输入处理器</em> 的 <code>name</code> 字段.输入处理器的结果被收集和保存在Item Loader中(但尚未分配给该Item)｡</li>
-<li>从 <code>xpath2</code> 提取出来的数据,传递给(1)中使用的相同的 <em>输入处理器</em> .输入处理器的结果被附加到在(1)中收集的数据(如果有的话) ｡</li>
-<li>和之前相似，只不过这里的数据是通过 <code>css</code> CSS selector抽取，之后传输到在(1)和(2)使用 的<em>input processor</em> 中。最终输入处理器的结果被附加到在(1)和(2)中收集的数据之后 (如果存在数据的话)。</li>
-<li>这里的处理方式也和之前相似，但是此处的值是通过add_value直接赋予的， 而不是利用XPath表达式或CSS selector获取。得到的值仍然是被传送到输入处理器。 在这里例程中，因为得到的值并非可迭代，所以在传输到输入处理器之前需要将其 转化为可迭代的单个元素，这才是它所接受的形式。</li>
-<li>在之前步骤中所收集到的数据被传送到 <em>output processor</em> 的 <code>name</code> field中。 输出处理器的结果就是赋到item中 <code>name</code> field的值。</li>
-</ol>
-<p><strong>理解：</strong></p>
-<p>就是在使用Item Loader 时候，会有一个输入处理器，一个输出处理器，首先是收集好同一个字段的结果，传入到<strong>输入处理器</strong>当中，然后收集完后，会传递给<strong>输出处理器</strong>进行处理。输出处理器的处理结果，就是填充到item的结果。</p>
-<p>需要注意的是：输入处理器的返回值会是内部收集的，然后被传递给输出处理器，来填充fields。</p>
-<h4 id="Scrapy-内部的处理器"><a href="#Scrapy-内部的处理器" class="headerlink" title="Scrapy 内部的处理器"></a><strong>Scrapy 内部的处理器</strong></h4><p>Scrapy内部，已经有一些设置好的<a href="http://scrapy-chs.readthedocs.io/zh_CN/latest/topics/loaders.html#topics-loaders-available-processors" target="_blank" rel="external">内置处理器</a></p>
-<ul>
-<li>Identity<br>这是最简单的一个处理器，实际上就是什么都不做，传入多少个字段，就存储多少个字段，以list形式。<code>&gt;&gt;&gt; from scrapy.contrib.loader.processor import Identity
-\&gt;&gt;&gt; proc = Identity()
-\&gt;&gt;&gt; proc([&#39;one&#39;, &#39;two&#39;, &#39;three&#39;])
-[&#39;one&#39;, &#39;two&#39;, &#39;three&#39;]</code> </li>
-<li>TakeFirst<br>从接受到的list中返回第一个非null/非空的值，<code>&gt;&gt;&gt; from scrapy.contrib.loader.processor import TakeFirst
-\&gt;&gt;&gt; proc = TakeFirst()
-\&gt;&gt;&gt; proc([&#39;&#39;, &#39;one&#39;, &#39;two&#39;, &#39;three&#39;])
-&#39;one&#39;</code> </li>
-<li>Join<br>返回用分隔符（separator）作为间隔的连接形成的字符串。若不传入separator，则默认使用’ ‘（空格）。<code>&gt;&gt;&gt; from scrapy.contrib.loader.processor import Join
-\&gt;&gt;&gt; proc = Join()
-\&gt;&gt;&gt; proc([&#39;one&#39;, &#39;two&#39;, &#39;three&#39;])
-u&#39;one two three&#39;
-\&gt;&gt;&gt; proc = Join(&#39;&lt;br&gt;&#39;)
-\&gt;&gt;&gt; proc([&#39;one&#39;, &#39;two&#39;, &#39;three&#39;])
-u&#39;one&lt;br&gt;two&lt;br&gt;three&#39;</code> </li>
-<li>另外还有Compose以及MapCompose，这里不一一详述。</li>
-</ul>
-<hr>
-<h3 id="声明-Item-Loaders"><a href="#声明-Item-Loaders" class="headerlink" title="声明 Item Loaders"></a><strong>声明 Item Loaders</strong></h3><p>声明ItemLoaders 和声明Item类似，使用Class语法，例子：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">from scrapy.contrib.loader import ItemLoader</div><div class="line">from scrapy.contrib.loader.processor import TakeFirst, MapCompose, Join</div><div class="line"></div><div class="line">class ProductLoader(ItemLoader):</div><div class="line"></div><div class="line">    default_output_processor = TakeFirst()</div><div class="line"></div><div class="line">    name_in = MapCompose(unicode.title)</div><div class="line">    name_out = Join()</div><div class="line"></div><div class="line">    price_in = MapCompose(unicode.strip)</div><div class="line"></div><div class="line">    # ...</div></pre></td></tr></table></figure>
-<p>上述代码中:</p>
-<ul>
-<li>输出处理器，被声明为 <code>_in</code> 前缀，而输出处理器被声明为 <code>_out</code> 前缀。</li>
-<li>设置默认处理器 <a href="http://scrapy-chs.readthedocs.io/zh_CN/latest/topics/loaders.html#scrapy.contrib.loader.ItemLoader.default_input_processor" target="_blank" rel="external"><code>ItemLoader.default_input_processor</code></a>  and  <a href="http://scrapy-chs.readthedocs.io/zh_CN/latest/topics/loaders.html#scrapy.contrib.loader.ItemLoader.default_output_processor" target="_blank" rel="external"><code>ItemLoader.default_output_processor</code></a></li>
-</ul>
-<h3 id="声明输入、输出处理器"><a href="#声明输入、输出处理器" class="headerlink" title="声明输入、输出处理器"></a><strong>声明输入、输出处理器</strong></h3><p>输入、输出可以被如上方那样被声明，这也是最正常的方式。另外，我们也可以在另外的一个地方去声明输入和输出处理器：在item Field，元数据中。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">import scrapy</div><div class="line">from scrapy.contrib.loader.processor import Join, MapCompose, TakeFirst</div><div class="line">from w3lib.html import remove_tags</div><div class="line"></div><div class="line">def filter_price(value):</div><div class="line">    if value.isdigit():</div><div class="line">        return value</div><div class="line"></div><div class="line">class Product(scrapy.Item):</div><div class="line">    name = scrapy.Field(</div><div class="line">        input_processor=MapCompose(remove_tags),</div><div class="line">        output_processor=Join(),</div><div class="line">    )</div><div class="line">    price = scrapy.Field(</div><div class="line">        input_processor=MapCompose(remove_tags, filter_price),</div><div class="line">        output_processor=TakeFirst(),</div><div class="line">    )</div></pre></td></tr></table></figure>
-<p>输出和输出处理器的优先级如下：</p>
-<ol>
-<li>Item Loader field 指定的<code>field_in</code> 和 <code>field_out</code>（最优先）</li>
-<li>Field 元数据中(input_processor 和 output_processor key)</li>
-<li>item loader 默认。 <a href="http://scrapy-chs.readthedocs.io/zh_CN/latest/topics/loaders.html#scrapy.contrib.loader.ItemLoader.default_input_processor" target="_blank" rel="external"><code>ItemLoader.default_input_processor()</code></a> and<a href="http://scrapy-chs.readthedocs.io/zh_CN/latest/topics/loaders.html#scrapy.contrib.loader.ItemLoader.default_output_processor" target="_blank" rel="external"><code>ItemLoader.default_output_processor()</code></a> (least precedence)</li>
-</ol>
-<hr>
-<p>最后，给出Item Loader的官方说明API：</p>
-<p><a href="http://scrapy-chs.readthedocs.io/zh_CN/latest/topics/loaders.html#itemloader-objects" target="_blank" rel="external">ItemLoader objects</a></p>
-<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a><strong>实例</strong></h2><h3 id="通过-Item-loader-加载-Item"><a href="#通过-Item-loader-加载-Item" class="headerlink" title="通过 Item loader 加载 Item"></a><strong>通过 Item loader 加载 Item</strong></h3><p>首先在 <code>jobbole.py</code> 中引入 <code>from scrapy.loader import ItemLoader</code></p>
-<p>代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">item_loader = ItemLoader(item=JobBoleArticleItem(), response=response)</div><div class="line">item_loader.add_css(<span class="string">"title"</span>, <span class="string">".entry-header h1::text"</span>)</div><div class="line">item_loader.add_value(<span class="string">"url"</span>, response.url)</div><div class="line">item_loader.add_value(<span class="string">"url_object_id"</span>, get_md5(response.url))</div><div class="line">item_loader.add_css(<span class="string">"create_date"</span>, <span class="string">"p.entry-meta-hide-on-mobile::text"</span>)</div><div class="line">front_image_url = response.meta.get(<span class="string">"front_image_url"</span>, <span class="string">""</span>)  <span class="comment"># 文章封面图</span></div><div class="line">item_loader.add_value(<span class="string">"front_image_url"</span>, [front_image_url])</div><div class="line">item_loader.add_css(<span class="string">"praise_nums"</span>, <span class="string">".vote-post-up h10::text"</span>)</div><div class="line">item_loader.add_css(<span class="string">"comment_nums"</span>, <span class="string">"a[href='#article-comment'] span::text"</span>)</div><div class="line">item_loader.add_css(<span class="string">"fav_nums"</span>, <span class="string">".bookmark-btn::text"</span>)</div><div class="line">item_loader.add_css(<span class="string">"tags"</span>, <span class="string">"p.entry-meta-hide-on-mobile a::text"</span>)</div><div class="line">item_loader.add_css(<span class="string">"content"</span>, <span class="string">"div.entry"</span>)</div><div class="line"></div><div class="line">article_item = item_loader.load_item()</div></pre></td></tr></table></figure>
-<p>其中第一行中 <code>JobBoleArticleItem()</code> 为在 <code>items.py</code> 中声明的实例，<code>response</code> 为返回的响应。这属于固定写法。<br><code>add_css()</code>中第一个值为 <code>items.py</code> 中定义的值，第二个值为css选择器规则，类似的方法还有 <code>add_xpath()</code>，根据场景进行选择。</p>
-<p>同理，<code>add_value()</code>为添加确定值的方法。这里通过值传递附给 <code>front_image_url</code> 再通过add_value的方法，加入到最终的item中。</p>
-<p>最后通过调用 <code>load_item()</code> 方法对结果进行解析，所有的结果都是一个list并保存到 <code>article_item</code> 中。</p>
-<p>断点调试结果如图：</p>
-<p><img src="http://ww2.sinaimg.cn/large/006tNc79gy1ffdwrwwdu2j31kw1ax1a5.jpg" alt=""></p>
-<p>发现获取到的所有值都是一个list，这样很不方便，但使得代码可读性更高，可维护性更强。</p>
-<h3 id="通过-items-py-处理数据"><a href="#通过-items-py-处理数据" class="headerlink" title="通过 items.py 处理数据"></a><strong>通过 items.py 处理数据</strong></h3><p>在 <code>items.py</code> 中引入 <code>from scrapy.loader.processors import MapCompose</code> ，然后可以在定义 <code>scrapy.Field()</code> 时可以加入处理函数（可以使匿名函数），例如：</p>
-<p><img src="http://ww3.sinaimg.cn/large/006tNc79gy1ffdx4319hjj30x009kq4b.jpg" alt=""></p>
-<p>在 <code>MapCompose()</code> 中可以加入多个函数，在 <code>jobbole.py</code> 中断点调试结果如图：</p>
-<p><img src="http://ww3.sinaimg.cn/large/006tNc79gy1ffdx56xexcj31kw0c37aq.jpg" alt=""></p>
-<p>在title的结果后面出现了我们想要的后缀。</p>
-<p>另外，可以看到，结果都是 <code>list</code>，我们每次都需要提取第一个值。Scrapy给我们提供了 <code>TakeFirst</code> 方法。</p>
-<p>同样引入 <code>from scrapy.loader.processors import MapCompose,TakeFirst</code> ，修改代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">title = scrapy.Field(</div><div class="line">        input_processor = MapCompose(<span class="keyword">lambda</span> x:x+<span class="string">"-jobbole"</span>, add_jobbole),</div><div class="line">        output_processor = TakeFirst()</div><div class="line">	)</div></pre></td></tr></table></figure>
-<p>即可以得到第一个值。由于每一个结果都是取第一个值，每个值全部调用这个方法重复代码过多，可以通过自定义Item loader重载的方法解决。引入 <code>from scrapy.loader import ItemLoader</code> ，这个类提供了以下方法：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ItemLoader</span><span class="params">(object)</span>:</span></div><div class="line"></div><div class="line">    default_item_class = Item</div><div class="line">    default_input_processor = Identity()</div><div class="line">    default_output_processor = Identity()</div><div class="line">    default_selector_class = Selector</div></pre></td></tr></table></figure>
-<p>我们自定义的Item loader需要继承这个类：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ArticleItemLoader</span><span class="params">(ItemLoader)</span>:</span></div><div class="line">    default_output_processor = TakeFirst()</div></pre></td></tr></table></figure>
-<p>然后在 <code>jobbole.py</code> 文件中，把<br> <code>item_loader = ItemLoader(item=JobBoleArticleItem(), response=response)</code> 中的 <code>ItemLoader</code> 变为 <code>ArticleItemLoader</code>，即：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">item_loader = ArticleItemLoader(item=JobBoleArticleItem(), response=response)</div></pre></td></tr></table></figure>
-<p>这样得到的结果就是一个str而不是list了。</p>
-<p><img src="http://ww4.sinaimg.cn/large/006tNc79gy1ffdyhajhdvj31kw0bz445.jpg" alt=""></p>
-<p>不过在上图是可以看到，它的tags也取了第一个值，但实际上它的值是三个，不满足我们的需要。<br>引入Join方法 <code>from scrapy.loader.processors import MapCompose, TakeFirst, Join</code>，同时不使用自定义的item loader即可。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">tags = scrapy.Field(</div><div class="line">        output_processor=Join(<span class="string">','</span>),</div><div class="line">	)</div></pre></td></tr></table></figure>
-<p><img src="http://ww3.sinaimg.cn/large/006tNc79gy1ffdyj0tk9lj30oe00sdg0.jpg" alt=""></p>
-<p>和前面一样，有时候tags会有 <code>评论</code> 的不符合要求的tags，还需要自定义函数把相应的字段去掉。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">remove_comment</span><span class="params">(value)</span>:</span></div><div class="line">    <span class="keyword">if</span> <span class="string">'评论'</span> <span class="keyword">in</span> value:</div><div class="line">        <span class="keyword">return</span> <span class="string">''</span></div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="keyword">return</span> value</div></pre></td></tr></table></figure>
-<p>在处理图片时，使用pipelines需要传递的是一个列表，这里经过处理后，变成了str。可以通过一个默认函数不让默认的TakeFirst处理即可。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">return_value</span><span class="params">(value)</span>:</span></div><div class="line">    <span class="keyword">return</span> value</div></pre></td></tr></table></figure>
-<p>调用方法是：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">front_image_url = scrapy.Field(</div><div class="line">        output_processor=MapCompose(return_value),</div><div class="line">    )</div></pre></td></tr></table></figure>
-<p>最后，我们在之前还用正则表达式来清洗点赞数，收藏数，评论数这些数据，在item loader中我们也可以用函数处理：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_nums</span><span class="params">(value)</span>:</span></div><div class="line">    match_re = re.match(<span class="string">".*?(\d+).*?"</span>, value)</div><div class="line">    <span class="keyword">if</span> match_re:</div><div class="line">        nums = int(match_re.group(<span class="number">1</span>))</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        nums = <span class="number">0</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> nums</div><div class="line"></div><div class="line">praise_nums = scrapy.Field(</div><div class="line">        input_processor=MapCompose(get_nums),</div><div class="line">    )</div><div class="line">    comment_nums = scrapy.Field(</div><div class="line">        input_processor=MapCompose(get_nums),</div><div class="line">    )</div><div class="line">    fav_nums = scrapy.Field(</div><div class="line">        input_processor=MapCompose(get_nums),</div><div class="line">    )</div></pre></td></tr></table></figure>
-<p>调试结果中str就变成int类型了：</p>
-<p><img src="http://ww4.sinaimg.cn/large/006tNc79gy1ffdynb5xtsj31kw0c9afc.jpg" alt=""></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;Item Loaders 提供了一种便捷的方式填充抓取到的 Items 。虽然 Items 可以使用自带的类字典形式 API 填充，但是 Items Loaders 提供了更便捷的 API，可以分析原始数据并对 Item 进行赋值。 &lt;/p&gt;
-&lt;p&gt;从另一方面来说，Items 提供保存抓取数据的容器，而 Item Loaders 提供的是填充容器的机制。&lt;/p&gt;
-&lt;p&gt;Item Loaders 提供的是一种灵活，高效的机制，可以更方便的被 spider 或 source format （HTML，XML，etc）扩展，并 override 更易于维护的、不同的内容分析规则。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
-    
-    
-      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
     
   </entry>
   

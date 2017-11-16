@@ -72,7 +72,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Redis, Python," />
+  <meta name="keywords" content="Django，Vue，Rest," />
 
 
 
@@ -90,18 +90,30 @@
 
 
 
-<meta name="description" content="如果我们决定要将Redis用作应用程序唯一的数据存储手段的话，那么就必须确保Redis不会丢失任何数据。跟提供了ACID（原子性atomicity，一致性consistency，隔离性isolation，耐久性durability，如果一个数据库想要实现可靠的数据事务，那么它就必须保证 ACID 性质）保证的传统关系数据库不同，在使用Redis为后端构建应用程序的时候，我们需要多做一些工作才能保证">
+<meta name="description" content="分为以下几个环节：
+
+restful api介绍
+vue的基本概念介绍
+vue的源码结构介绍">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Redis学习笔记(六)：数据安全与性能保障——处理系统故障">
-<meta property="og:url" content="http://yoursite.com/2017/04/20/Redis-6/index.html">
+<meta property="og:title" content="Vue+Django REST Framework生鲜电商项目学习笔记——Vue的结构和restful api介绍">
+<meta property="og:url" content="http://yoursite.com/2017/11/15/vue-django-4-1/index.html">
 <meta property="og:site_name" content="LawTech's Blog">
-<meta property="og:description" content="如果我们决定要将Redis用作应用程序唯一的数据存储手段的话，那么就必须确保Redis不会丢失任何数据。跟提供了ACID（原子性atomicity，一致性consistency，隔离性isolation，耐久性durability，如果一个数据库想要实现可靠的数据事务，那么它就必须保证 ACID 性质）保证的传统关系数据库不同，在使用Redis为后端构建应用程序的时候，我们需要多做一些工作才能保证">
-<meta property="og:image" content="https://redis.io/images/redis-300dpi.png">
-<meta property="og:updated_time" content="2017-04-20T13:46:42.000Z">
+<meta property="og:description" content="分为以下几个环节：
+
+restful api介绍
+vue的基本概念介绍
+vue的源码结构介绍">
+<meta property="og:image" content="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg">
+<meta property="og:updated_time" content="2017-11-16T02:59:17.077Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Redis学习笔记(六)：数据安全与性能保障——处理系统故障">
-<meta name="twitter:description" content="如果我们决定要将Redis用作应用程序唯一的数据存储手段的话，那么就必须确保Redis不会丢失任何数据。跟提供了ACID（原子性atomicity，一致性consistency，隔离性isolation，耐久性durability，如果一个数据库想要实现可靠的数据事务，那么它就必须保证 ACID 性质）保证的传统关系数据库不同，在使用Redis为后端构建应用程序的时候，我们需要多做一些工作才能保证">
-<meta name="twitter:image" content="https://redis.io/images/redis-300dpi.png">
+<meta name="twitter:title" content="Vue+Django REST Framework生鲜电商项目学习笔记——Vue的结构和restful api介绍">
+<meta name="twitter:description" content="分为以下几个环节：
+
+restful api介绍
+vue的基本概念介绍
+vue的源码结构介绍">
+<meta name="twitter:image" content="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg">
 
 
 
@@ -129,13 +141,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/04/20/Redis-6/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/11/15/vue-django-4-1/"/>
 
 
 
 
 
-  <title> Redis学习笔记(六)：数据安全与性能保障——处理系统故障 | LawTech's Blog </title>
+  <title> Vue+Django REST Framework生鲜电商项目学习笔记——Vue的结构和restful api介绍 | LawTech's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -300,7 +312,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/20/Redis-6/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/15/vue-django-4-1/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="LawTech.">
@@ -324,7 +336,7 @@
             
             
               
-                Redis学习笔记(六)：数据安全与性能保障——处理系统故障
+                Vue+Django REST Framework生鲜电商项目学习笔记——Vue的结构和restful api介绍
               
             
           </h2>
@@ -339,8 +351,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-20T20:18:54+08:00">
-                2017-04-20
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-15T13:18:54+08:00">
+                2017-11-15
               </time>
             
 
@@ -355,8 +367,8 @@
               
                 <span class="post-meta-item-text">更新于</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2017-04-20T21:46:42+08:00">
-                2017-04-20
+              <time title="更新于" itemprop="dateModified" datetime="2017-11-16T10:59:17+08:00">
+                2017-11-16
               </time>
             
           </span>
@@ -374,8 +386,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Redis/" itemprop="url" rel="index">
-                    <span itemprop="name">Redis</span>
+                  <a href="/categories/Django，Vue/" itemprop="url" rel="index">
+                    <span itemprop="name">Django，Vue</span>
                   </a>
                 </span>
 
@@ -392,7 +404,7 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a class="cloud-tie-join-count" href="/2017/04/20/Redis-6/#comments" itemprop="discussionUrl">
+                <a class="cloud-tie-join-count" href="/2017/11/15/vue-django-4-1/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count join-count" itemprop="commentCount"></span>
                 </a>
               </span>
@@ -403,7 +415,7 @@
 
           
           
-             <span id="/2017/04/20/Redis-6/" class="leancloud_visitors" data-flag-title="Redis学习笔记(六)：数据安全与性能保障——处理系统故障">
+             <span id="/2017/11/15/vue-django-4-1/" class="leancloud_visitors" data-flag-title="Vue+Django REST Framework生鲜电商项目学习笔记——Vue的结构和restful api介绍">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -436,9 +448,9 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://redis.io/images/redis-300dpi.png" rel="gallery_cja1w1dx8000kvoqz50avq6af"
+                 href="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg" rel="gallery_cja1w1dzg003uvoqzpfg3e9mx"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
-                <img src="https://redis.io/images/redis-300dpi.png" itemprop="contentUrl"/>
+                <img src="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg" itemprop="contentUrl"/>
               </a>
             
           
@@ -449,39 +461,50 @@
       
 
       
-        <p>如果我们决定要将Redis用作应用程序唯一的数据存储手段的话，那么就必须确保Redis不会丢失任何数据。跟提供了ACID（原子性atomicity，一致性consistency，隔离性isolation，耐久性durability，如果一个数据库想要实现可靠的数据事务，那么它就必须保证 ACID 性质）保证的传统关系数据库不同，在使用Redis为后端构建应用程序的时候，我们需要多做一些工作才能保证数据的一致性。</p>
-<a id="more"></a>
-<h2 id="验证快照文件和-AOF-文件"><a href="#验证快照文件和-AOF-文件" class="headerlink" title="验证快照文件和 AOF 文件"></a><strong>验证快照文件和 AOF 文件</strong></h2><p>无论时快照持久化还是AOF持久化，都提供了在遇到系统故障时进行数据回复的工具。Redis提供了两个命令行程序 <code>redis-check-aof</code> 和 <code>redis-check-rdb(redis-check-dump was renamed to redis-check-rdb in redis version 3.2)</code> ，它们可以在系统故障发生之后，检查AOF文件和快照文件的状态，并在有需要的情况下对文件进行修复。</p>
-<p>在不给定任何参数的情况下运行这两个程序，就可以看见它们的基本使用方法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ redis-check-rdb</div><div class="line">Usage: redis-check-rdb &lt;rdb-file-name&gt;</div><div class="line">$ redis-check-dump</div><div class="line">Usage: redis-check-dump &lt;dump.rdb&gt;</div></pre></td></tr></table></figure>
-<p>如果运行 <code>redis-check-aof</code> 程序时给了 <code>--fix</code> 参数，那么会对AOF文件进行修复。修复方法非常简单：扫描给定的 AOF 文件，寻找不正确或不完整的命令，当发现第一个出错命令的时候，程序会删除出错的命令以及位于出错命令之后的所有命令。在大多数情况下，被删除的都是 AOF 文件末尾的不完整的写命令。<br>遗憾的是，目前没有办法修复出错的快照文件。尽管发现快照文件首个出现错误的地方是有可能的，但因为快照文件本身经过了压缩，而出现在快照文件中间的错误有可能会导致快照文件的剩余部分无法读取。因此，最好为重要的快照文件保留多个备份，并在进行数据恢复时，通过计算快照文件的 SHA1 散列值和 SHA256 散列值来对内容进行验证。</p>
-<h2 id="更换故障主服务器"><a href="#更换故障主服务器" class="headerlink" title="更换故障主服务器"></a><strong>更换故障主服务器</strong></h2><p>我们来看一下在拥有一个主服务器和一个从服务器的情况下，更换主服务器的具体步骤。假设A、B两台机器都运行着 Redis ，机器A为 master ，机器B为 slave 。机器A因为暂时无法修复的故障而断开了连接，因此决定将同样安装了 Redis 的机器 C 用作新的主服务器。</p>
-<p>更换服务器的计划非常简单：首先向机器B发送一个 SAVE 命令，让它创建一个新的快照文件，接着将这个快照文件发送给机器C，并在机器 C 上面启动 Redis 。最后，让B成为机器C的从服务器。由于环境有限，就在同一台机器上用不同的端口进行测试，下面进行演示：</p>
+        <p>分为以下几个环节：</p>
 <ol>
-<li><p>先进入 Redis 安装位置，再安装两个 Redis 服务并分别修改配置文件 redis.conf 中的 port 为6380和6381</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ cd /usr/local</div><div class="line">$ sudo cp -r redis redis6380</div><div class="line">Password:</div><div class="line">$ sudo chmod -R 777 redis6380</div><div class="line">$ vim redis6380/redis.conf</div><div class="line">$ sudo cp -r redis redis6381</div><div class="line">$ sudo chmod -R 777 redis6381</div><div class="line">$ vim redis6381/redis.conf</div></pre></td></tr></table></figure>
-</li>
-<li><p>启动机器A端口为6379，机器B端口为6380，并让B成为A的从服务器</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"># 启动A</div><div class="line">$ cd redis</div><div class="line">$ ./src/redis-server redis.conf</div><div class="line"></div><div class="line"># 启动B</div><div class="line">$ cd redis6380</div><div class="line">$ ./src/redis-server redis.conf</div><div class="line"></div><div class="line"># 让B成为A的从服务器</div><div class="line">$ $ redis-cli -h localhost -p 6380</div><div class="line">localhost:6380&gt; SLAVEOF localhost 6379</div><div class="line">OK</div></pre></td></tr></table></figure>
-</li>
-<li><p>停止机器A的 Redis 服务，此时只剩 Redis 从服务器B在运行</p>
-</li>
-<li><p>向机器B发送 SAVE 命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">localhost:6380&gt; SAVE</div><div class="line">OK</div></pre></td></tr></table></figure>
-</li>
-<li><p>将机器B的快照文件复制到机器C的对应目录，并启动 Redis 服务</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ cp -f /usr/local/redis6380/dump.rdb /usr/local/redis6381</div><div class="line">$ cd /usr/local/redis6381</div><div class="line">$ ./src/redis-server redis.conf</div></pre></td></tr></table></figure>
-</li>
-<li><p>让机器B成为机器C的从服务器</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">localhost:6380&gt; SLAVEOF localhost 6381</div><div class="line">OK</div></pre></td></tr></table></figure>
-</li>
-<li><p>测试机器B是否能从机器C同步数据</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ redis-cli -h localhost -p 6381</div><div class="line">localhost:6381&gt; set key new-master</div><div class="line">OK</div><div class="line">$ redis-cli -h localhost -p 6380</div><div class="line">localhost:6380&gt; get key</div><div class="line">&apos;new-master&apos;</div></pre></td></tr></table></figure>
-</li>
+<li>restful api介绍</li>
+<li>vue的基本概念介绍</li>
+<li>vue的源码结构介绍</li>
 </ol>
-<p>另一种创建新的主服务器的方法，就是将从服务器升级（turn）为主服务器，并为升级后的主服务器创建从服务器。</p>
-<p>以上两种方法都可以让 Redis 回到之前的一个主服务器和一个从服务器的状态，而用户接下来需要做的就是更新客户端的配置，让它们去读写正确的服务器。除此之外，如果用户需要重启 Redis 的话，那么可能还需要对服务器的持久化配置进行更新。</p>
-<p>Redis Sentinel可以监视指定的Redis主服务器及其下属的从服务器，并在主服务器下线时自动进行故障转移(failover)。</p>
+<a id="more"></a>
+<h2 id="restful-api介绍"><a href="#restful-api介绍" class="headerlink" title="restful api介绍"></a><strong>restful api介绍</strong></h2><h3 id="前后端分离优缺点"><a href="#前后端分离优缺点" class="headerlink" title="前后端分离优缺点"></a><strong>前后端分离优缺点</strong></h3><h4 id="为什么要前后端分离"><a href="#为什么要前后端分离" class="headerlink" title="为什么要前后端分离"></a><strong>为什么要前后端分离</strong></h4><ol>
+<li>pc, app, pad多端适应</li>
+<li>SPA开发模式开始流行</li>
+<li>前后端开发职责不清</li>
+<li>开发效率问题，前后端互相等待</li>
+<li>前端一直配合着后端，能力受限</li>
+<li>后台开发语言和模板高度耦合，导致开发语言依赖严重</li>
+</ol>
+<h4 id="前后端分离缺点"><a href="#前后端分离缺点" class="headerlink" title="前后端分离缺点"></a><strong>前后端分离缺点</strong></h4><ol>
+<li>前后端学习门槛增加</li>
+<li>数据依赖导致文档重要性增加</li>
+<li>前端工作量加大</li>
+<li>SEO的难度加大</li>
+<li>后端开发模式迁移增加成本</li>
+</ol>
+<h3 id="restful-api"><a href="#restful-api" class="headerlink" title="restful api"></a><strong>restful api</strong></h3><p>restful api目前是前后端分离最佳实践：</p>
+<ol>
+<li>轻量，直接通过http，不需要额外的协议，post/get/put/delete操作</li>
+<li>面向资源，一目了然，具有自解释性</li>
+<li>数据描述简单，一般通过json或者xml做数据通信</li>
+</ol>
+<p>restful api 重要概念</p>
+<ol>
+<li><a href="http://www.ruanyifeng.com/blog/2011/09/restful.html" target="_blank" rel="external">概念</a></li>
+<li><a href="http://www.ruanyifeng.com/blog/2014/05/restful_api.html" target="_blank" rel="external">restful实践</a></li>
+</ol>
+<h2 id="Vue的基本概念介绍"><a href="#Vue的基本概念介绍" class="headerlink" title="Vue的基本概念介绍"></a><strong>Vue的基本概念介绍</strong></h2><h3 id="几个概念"><a href="#几个概念" class="headerlink" title="几个概念"></a><strong>几个概念</strong></h3><ol>
+<li>前端工程化</li>
+<li>数据双向绑定</li>
+<li>组件化开发</li>
+</ol>
+<h3 id="vue开发的几个概念"><a href="#vue开发的几个概念" class="headerlink" title="vue开发的几个概念"></a><strong>vue开发的几个概念</strong></h3><ol>
+<li>webpack</li>
+<li>vue, vuex, vue-router, axios</li>
+<li>ES6, babel</li>
+</ol>
+<h2 id="Vue项目源码结构介绍"><a href="#Vue项目源码结构介绍" class="headerlink" title="Vue项目源码结构介绍"></a><strong>Vue项目源码结构介绍</strong></h2><p>老老实实把Vue学一学吧！</p>
 
       
     </div>
@@ -495,7 +518,7 @@
   
         <div class="post-tags">
           
-            <a href="/tags/Redis-Python/" rel="tag"># Redis, Python</a>
+            <a href="/tags/Django，Vue，Rest/" rel="tag"># Django，Vue，Rest</a>
           
         </div>
       
@@ -536,8 +559,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/04/20/scrapy-command-line-tools/" rel="next" title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy命令行工具">
-                <i class="fa fa-chevron-left"></i> Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy命令行工具
+              <a href="/2017/11/05/vue-django-3-1/" rel="next" title="Vue+Django REST Framework生鲜电商项目学习笔记——model设计和资源导入">
+                <i class="fa fa-chevron-left"></i> Vue+Django REST Framework生鲜电商项目学习笔记——model设计和资源导入
               </a>
             
           </div>
@@ -545,10 +568,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/04/21/scrapy-items/" rel="prev" title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Items">
-                Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Items <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -717,7 +736,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#验证快照文件和-AOF-文件"><span class="nav-number">1.</span> <span class="nav-text">验证快照文件和 AOF 文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更换故障主服务器"><span class="nav-number">2.</span> <span class="nav-text">更换故障主服务器</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#restful-api介绍"><span class="nav-number">1.</span> <span class="nav-text">restful api介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#前后端分离优缺点"><span class="nav-number">1.1.</span> <span class="nav-text">前后端分离优缺点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#为什么要前后端分离"><span class="nav-number">1.1.1.</span> <span class="nav-text">为什么要前后端分离</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#前后端分离缺点"><span class="nav-number">1.1.2.</span> <span class="nav-text">前后端分离缺点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#restful-api"><span class="nav-number">1.2.</span> <span class="nav-text">restful api</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Vue的基本概念介绍"><span class="nav-number">2.</span> <span class="nav-text">Vue的基本概念介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#几个概念"><span class="nav-number">2.1.</span> <span class="nav-text">几个概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vue开发的几个概念"><span class="nav-number">2.2.</span> <span class="nav-text">vue开发的几个概念</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Vue项目源码结构介绍"><span class="nav-number">3.</span> <span class="nav-text">Vue项目源码结构介绍</span></a></li></ol></div>
             
 
           </div>
