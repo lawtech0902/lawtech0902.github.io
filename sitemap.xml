@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2017/11/16/vue-django-5-1/</loc>
+    
+    <lastmod>2017-11-27T06:12:41.508Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2017/11/15/vue-django-4-1/</loc>
     
     <lastmod>2017-11-16T02:59:17.077Z</lastmod>
