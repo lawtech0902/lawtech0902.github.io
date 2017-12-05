@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-12-01T06:09:34.941Z</updated>
+  <updated>2017-12-05T07:11:53.666Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,30 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>随笔12.05</title>
+    <link href="http://yoursite.com/2017/12/05/essay-12-05/"/>
+    <id>http://yoursite.com/2017/12/05/essay-12-05/</id>
+    <published>2017-12-05T05:18:54.000Z</published>
+    <updated>2017-12-05T07:11:53.666Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近不想写这些无聊的blog了~心情也不好，准备搞一搞Java，emmmmm，又回到最初的起点。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;最近不想写这些无聊的blog了~心情也不好，准备搞一搞Java，emmmmm，又回到最初的起点。&lt;/p&gt;
+
+    
+    </summary>
+    
+      <category term="essay" scheme="http://yoursite.com/categories/essay/"/>
+    
+    
+      <category term="12.05" scheme="http://yoursite.com/tags/12-05/"/>
+    
+  </entry>
   
   <entry>
     <title>Vue+Django REST Framework生鲜电商项目学习笔记——商品类别数据和Vue展示</title>
@@ -555,46 +579,6 @@
   </entry>
   
   <entry>
-    <title>Python分布式爬虫打造搜索引擎项目学习笔记——scrapyd部署scrapy爬虫</title>
-    <link href="http://yoursite.com/2017/07/27/scrapyd/"/>
-    <id>http://yoursite.com/2017/07/27/scrapyd/</id>
-    <published>2017-07-27T12:18:54.000Z</published>
-    <updated>2017-07-27T15:22:43.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>在完成scrapy项目之后，就要进入项目实际部署环节。</p>
-<a id="more"></a>
-<p>传送门：<a href="https://github.com/scrapy/scrapyd" target="_blank" rel="external">scrapyd</a></p>
-<p>首先在我们之前爬虫项目的虚拟环境<code>article_spider</code>中安装scrapyd：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">(article_spider) lawtech@lawdeMacBook-Pro-2:~$ pip install scrapyd lawtech@lawdeMacBook-Pro-2:~$ pip install scrapyd-client</div></pre></td></tr></table></figure>
-<p><code>scrapyd-client</code>就没必要在虚拟环境中安装了。</p>
-<p>在scrapy项目中，有一个文件<code>scrapy.cfg</code>：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Automatically created by: scrapy startproject</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># For more information about the [deploy] section see:</span></div><div class="line"><span class="comment"># https://scrapyd.readthedocs.org/en/latest/deploy.html</span></div><div class="line"></div><div class="line">[settings]</div><div class="line">default = ArticleSpider.settings</div><div class="line"></div><div class="line">[deploy:lawtech]</div><div class="line">url = http://localhost:<span class="number">6800</span>/</div><div class="line">project = ArticleSpider</div></pre></td></tr></table></figure>
-<p>其中的deploy就是为scrapyd服务的。</p>
-<p>要部署项目，首先要启动scrapyd：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">lawtech@lawdeMacBook-Pro-2:~$ workon article_spider</div><div class="line">(article_spider) lawtech@lawdeMacBook-Pro-2:~$ scrapyd</div><div class="line">2017-07-27T23:14:51+0800 [-] Loading /Users/lawtech/myvirtualenvs/article_spider/lib/python3.5/site-packages/scrapyd/txapp.py...</div><div class="line">2017-07-27T23:14:52+0800 [-] Scrapyd web console available at http://127.0.0.1:6800/</div><div class="line">2017-07-27T23:14:52+0800 [-] Loaded.</div><div class="line">2017-07-27T23:14:52+0800 [twisted.scripts._twistd_unix.UnixAppLogger#info] twistd 17.1.0 (/Users/lawtech/myvirtualenvs/article_spider/bin/python3.5 3.5.2) starting up.</div><div class="line">2017-07-27T23:14:52+0800 [twisted.scripts._twistd_unix.UnixAppLogger#info] reactor class: twisted.internet.selectreactor.SelectReactor.</div><div class="line">2017-07-27T23:14:52+0800 [-] Site starting on 6800</div><div class="line">2017-07-27T23:14:52+0800 [twisted.web.server.Site#info] Starting factory &lt;twisted.web.server.Site object at 0x107a97198&gt;</div><div class="line">2017-07-27T23:14:52+0800 [Launcher] Scrapyd 1.2.0 started: max_proc=16, runner=&apos;scrapyd.runner&apos;</div></pre></td></tr></table></figure>
-<p>部署项目：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">(article_spider) lawtech@lawdeMacBook-Pro-2:~/PycharmProjects/ArticleSpider$ scrapyd-deploy lawtech -p ArticleSpider</div><div class="line">Packing version 1501168592</div><div class="line">Deploying to project &quot;ArticleSpider&quot; in http://localhost:6800/addversion.json</div><div class="line">Server response (200):</div><div class="line">&#123;&quot;status&quot;: &quot;ok&quot;, &quot;version&quot;: &quot;1501168592&quot;, &quot;spiders&quot;: 3, &quot;project&quot;: &quot;ArticleSpider&quot;, &quot;node_name&quot;: &quot;lawdeMacBook-Pro-2.local&quot;&#125;</div></pre></td></tr></table></figure>
-<p>现在只是将项目部署到目标地址，但是没有调度爬虫，调度爬虫需要用到curl命令，在<a href="http://localhost:6800" target="_blank" rel="external">http://localhost:6800</a>有提示如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl http://localhost:6800/schedule.json -d project=default -d spider=somespider</div></pre></td></tr></table></figure>
-<p>只需要改动一下即可</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">lawtech@lawdeMacBook-Pro-2:~/PycharmProjects/ArticleSpider$ curl http://localhost:6800/schedule.json -d project=ArticleSpider -d spider=jobbole</div><div class="line">&#123;&quot;status&quot;: &quot;ok&quot;, &quot;jobid&quot;: &quot;2466c76872df11e7846da45e60ba3bb7&quot;, &quot;node_name&quot;: &quot;lawdeMacBook-Pro-2.local&quot;&#125;</div></pre></td></tr></table></figure>
-<p>然后即可在<a href="http://127.0.0.1:6800/jobs" target="_blank" rel="external">http://127.0.0.1:6800/jobs</a>查看调度结果了。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;在完成scrapy项目之后，就要进入项目实际部署环节。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
-    
-    
-      <category term="Scrapy，Python，scrapyd" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython%EF%BC%8Cscrapyd/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Python分布式爬虫打造搜索引擎项目学习笔记——总结</title>
     <link href="http://yoursite.com/2017/07/27/scrapy-summary/"/>
     <id>http://yoursite.com/2017/07/27/scrapy-summary/</id>
@@ -636,6 +620,46 @@
     
     
       <category term="Scrapy，Python，ElasticSearch" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython%EF%BC%8CElasticSearch/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Python分布式爬虫打造搜索引擎项目学习笔记——scrapyd部署scrapy爬虫</title>
+    <link href="http://yoursite.com/2017/07/27/scrapyd/"/>
+    <id>http://yoursite.com/2017/07/27/scrapyd/</id>
+    <published>2017-07-27T12:18:54.000Z</published>
+    <updated>2017-07-27T15:22:43.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>在完成scrapy项目之后，就要进入项目实际部署环节。</p>
+<a id="more"></a>
+<p>传送门：<a href="https://github.com/scrapy/scrapyd" target="_blank" rel="external">scrapyd</a></p>
+<p>首先在我们之前爬虫项目的虚拟环境<code>article_spider</code>中安装scrapyd：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">(article_spider) lawtech@lawdeMacBook-Pro-2:~$ pip install scrapyd lawtech@lawdeMacBook-Pro-2:~$ pip install scrapyd-client</div></pre></td></tr></table></figure>
+<p><code>scrapyd-client</code>就没必要在虚拟环境中安装了。</p>
+<p>在scrapy项目中，有一个文件<code>scrapy.cfg</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Automatically created by: scrapy startproject</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># For more information about the [deploy] section see:</span></div><div class="line"><span class="comment"># https://scrapyd.readthedocs.org/en/latest/deploy.html</span></div><div class="line"></div><div class="line">[settings]</div><div class="line">default = ArticleSpider.settings</div><div class="line"></div><div class="line">[deploy:lawtech]</div><div class="line">url = http://localhost:<span class="number">6800</span>/</div><div class="line">project = ArticleSpider</div></pre></td></tr></table></figure>
+<p>其中的deploy就是为scrapyd服务的。</p>
+<p>要部署项目，首先要启动scrapyd：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">lawtech@lawdeMacBook-Pro-2:~$ workon article_spider</div><div class="line">(article_spider) lawtech@lawdeMacBook-Pro-2:~$ scrapyd</div><div class="line">2017-07-27T23:14:51+0800 [-] Loading /Users/lawtech/myvirtualenvs/article_spider/lib/python3.5/site-packages/scrapyd/txapp.py...</div><div class="line">2017-07-27T23:14:52+0800 [-] Scrapyd web console available at http://127.0.0.1:6800/</div><div class="line">2017-07-27T23:14:52+0800 [-] Loaded.</div><div class="line">2017-07-27T23:14:52+0800 [twisted.scripts._twistd_unix.UnixAppLogger#info] twistd 17.1.0 (/Users/lawtech/myvirtualenvs/article_spider/bin/python3.5 3.5.2) starting up.</div><div class="line">2017-07-27T23:14:52+0800 [twisted.scripts._twistd_unix.UnixAppLogger#info] reactor class: twisted.internet.selectreactor.SelectReactor.</div><div class="line">2017-07-27T23:14:52+0800 [-] Site starting on 6800</div><div class="line">2017-07-27T23:14:52+0800 [twisted.web.server.Site#info] Starting factory &lt;twisted.web.server.Site object at 0x107a97198&gt;</div><div class="line">2017-07-27T23:14:52+0800 [Launcher] Scrapyd 1.2.0 started: max_proc=16, runner=&apos;scrapyd.runner&apos;</div></pre></td></tr></table></figure>
+<p>部署项目：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">(article_spider) lawtech@lawdeMacBook-Pro-2:~/PycharmProjects/ArticleSpider$ scrapyd-deploy lawtech -p ArticleSpider</div><div class="line">Packing version 1501168592</div><div class="line">Deploying to project &quot;ArticleSpider&quot; in http://localhost:6800/addversion.json</div><div class="line">Server response (200):</div><div class="line">&#123;&quot;status&quot;: &quot;ok&quot;, &quot;version&quot;: &quot;1501168592&quot;, &quot;spiders&quot;: 3, &quot;project&quot;: &quot;ArticleSpider&quot;, &quot;node_name&quot;: &quot;lawdeMacBook-Pro-2.local&quot;&#125;</div></pre></td></tr></table></figure>
+<p>现在只是将项目部署到目标地址，但是没有调度爬虫，调度爬虫需要用到curl命令，在<a href="http://localhost:6800" target="_blank" rel="external">http://localhost:6800</a>有提示如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl http://localhost:6800/schedule.json -d project=default -d spider=somespider</div></pre></td></tr></table></figure>
+<p>只需要改动一下即可</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">lawtech@lawdeMacBook-Pro-2:~/PycharmProjects/ArticleSpider$ curl http://localhost:6800/schedule.json -d project=ArticleSpider -d spider=jobbole</div><div class="line">&#123;&quot;status&quot;: &quot;ok&quot;, &quot;jobid&quot;: &quot;2466c76872df11e7846da45e60ba3bb7&quot;, &quot;node_name&quot;: &quot;lawdeMacBook-Pro-2.local&quot;&#125;</div></pre></td></tr></table></figure>
+<p>然后即可在<a href="http://127.0.0.1:6800/jobs" target="_blank" rel="external">http://127.0.0.1:6800/jobs</a>查看调度结果了。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在完成scrapy项目之后，就要进入项目实际部署环节。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
+    
+    
+      <category term="Scrapy，Python，scrapyd" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython%EF%BC%8Cscrapyd/"/>
     
   </entry>
   
@@ -1138,6 +1162,43 @@
   </entry>
   
   <entry>
+    <title>Python分布式爬虫打造搜索引擎项目学习笔记——云打码实现验证码识别</title>
+    <link href="http://yoursite.com/2017/06/12/scrapy-yundama/"/>
+    <id>http://yoursite.com/2017/06/12/scrapy-yundama/</id>
+    <published>2017-06-12T06:18:54.000Z</published>
+    <updated>2017-06-22T07:19:19.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>验证码识别大致有如下几种方式：</p>
+<ul>
+<li>编码实现（Tesseract-OCR）</li>
+<li>在线打码</li>
+<li>人工打码</li>
+</ul>
+<a id="more"></a>
+<p>这里我们简单介绍一下在线打码，选择的打码平台为：<a href="http://www.yundama.com" target="_blank" rel="external">云打码</a></p>
+<p>具体方式查看调用示例即可。</p>
+<p>下面给出代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> json</div><div class="line"><span class="keyword">import</span> requests</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">YDMHttp</span><span class="params">(object)</span>:</span></div><div class="line">    apiurl = <span class="string">'http://api.yundama.com/api.php'</span></div><div class="line">    username = <span class="string">''</span></div><div class="line">    password = <span class="string">''</span></div><div class="line">    appid = <span class="string">''</span></div><div class="line">    appkey = <span class="string">''</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, username, password, appid, appkey)</span>:</span></div><div class="line">        self.username = username</div><div class="line">        self.password = password</div><div class="line">        self.appid = str(appid)</div><div class="line">        self.appkey = appkey</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">balance</span><span class="params">(self)</span>:</span></div><div class="line">        data = &#123;<span class="string">'method'</span>: <span class="string">'balance'</span>, <span class="string">'username'</span>: self.username, <span class="string">'password'</span>: self.password, <span class="string">'appid'</span>: self.appid,</div><div class="line">                <span class="string">'appkey'</span>: self.appkey&#125;</div><div class="line">        response_data = requests.post(self.apiurl, data=data)</div><div class="line">        ret_data = json.loads(response_data.text)</div><div class="line">        <span class="keyword">if</span> ret_data[<span class="string">"ret"</span>] == <span class="number">0</span>:</div><div class="line">            print(<span class="string">"获取剩余积分"</span>, ret_data[<span class="string">"balance"</span>])</div><div class="line">            <span class="keyword">return</span> ret_data[<span class="string">"balance"</span>]</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">return</span> <span class="keyword">None</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">login</span><span class="params">(self)</span>:</span></div><div class="line">        data = &#123;<span class="string">'method'</span>: <span class="string">'login'</span>, <span class="string">'username'</span>: self.username, <span class="string">'password'</span>: self.password, <span class="string">'appid'</span>: self.appid,</div><div class="line">                <span class="string">'appkey'</span>: self.appkey&#125;</div><div class="line">        response_data = requests.post(self.apiurl, data=data)</div><div class="line">        ret_data = json.loads(response_data.text)</div><div class="line">        <span class="keyword">if</span> ret_data[<span class="string">"ret"</span>] == <span class="number">0</span>:</div><div class="line">            print(<span class="string">"登录成功"</span>, ret_data[<span class="string">"uid"</span>])</div><div class="line">            <span class="keyword">return</span> ret_data[<span class="string">"uid"</span>]</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">return</span> <span class="keyword">None</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">decode</span><span class="params">(self, filename, codetype, timeout)</span>:</span></div><div class="line">        data = &#123;<span class="string">'method'</span>: <span class="string">'upload'</span>, <span class="string">'username'</span>: self.username, <span class="string">'password'</span>: self.password, <span class="string">'appid'</span>: self.appid,</div><div class="line">                <span class="string">'appkey'</span>: self.appkey, <span class="string">'codetype'</span>: str(codetype), <span class="string">'timeout'</span>: str(timeout)&#125;</div><div class="line">        files = &#123;<span class="string">'file'</span>: open(filename, <span class="string">'rb'</span>)&#125;</div><div class="line">        response_data = requests.post(self.apiurl, files=files, data=data)</div><div class="line">        ret_data = json.loads(response_data.text)</div><div class="line">        <span class="keyword">if</span> ret_data[<span class="string">"ret"</span>] == <span class="number">0</span>:</div><div class="line">            print(<span class="string">"识别成功"</span>, ret_data[<span class="string">"text"</span>])</div><div class="line">            <span class="keyword">return</span> ret_data[<span class="string">"text"</span>]</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">return</span> <span class="keyword">None</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">ydm</span><span class="params">(file_path)</span>:</span></div><div class="line">    username = <span class="string">'da_ge_da1'</span></div><div class="line">    <span class="comment"># 密码</span></div><div class="line">    password = <span class="string">'da_ge_da'</span></div><div class="line">    <span class="comment"># 软件ＩＤ，开发者分成必要参数。登录开发者后台【我的软件】获得！</span></div><div class="line">    appid = <span class="number">3129</span></div><div class="line">    <span class="comment"># 软件密钥，开发者分成必要参数。登录开发者后台【我的软件】获得！</span></div><div class="line">    appkey = <span class="string">'40d5ad41c047179fc797631e3b9c3025'</span></div><div class="line">    <span class="comment"># 图片文件</span></div><div class="line">    filename = <span class="string">'image/captcha.jpg'</span></div><div class="line">    <span class="comment"># 验证码类型，# 例：1004表示4位字母数字，不同类型收费不同。请准确填写，否则影响识别率。在此查询所有类型 http://www.yundama.com/price.html</span></div><div class="line">    codetype = <span class="number">5000</span></div><div class="line">    <span class="comment"># 超时时间，秒</span></div><div class="line">    timeout = <span class="number">60</span></div><div class="line">    <span class="comment"># 检查</span></div><div class="line"></div><div class="line">    yundama = YDMHttp(username, password, appid, appkey)</div><div class="line">    <span class="keyword">if</span> (username == <span class="string">'username'</span>):</div><div class="line">        print(<span class="string">'请设置好相关参数再测试'</span>)</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="comment"># 开始识别，图片路径，验证码类型ID，超时时间（秒），识别结果</span></div><div class="line">        <span class="keyword">return</span> yundama.decode(file_path, codetype, timeout);</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</div><div class="line">    <span class="comment"># 用户名</span></div><div class="line">    username = <span class="string">'da_ge_da1'</span></div><div class="line">    <span class="comment"># 密码</span></div><div class="line">    password = <span class="string">'da_ge_da'</span></div><div class="line">    <span class="comment"># 软件ＩＤ，开发者分成必要参数。登录开发者后台【我的软件】获得！</span></div><div class="line">    appid = <span class="number">3129</span></div><div class="line">    <span class="comment"># 软件密钥，开发者分成必要参数。登录开发者后台【我的软件】获得！</span></div><div class="line">    appkey = <span class="string">'40d5ad41c047179fc797631e3b9c3025'</span></div><div class="line">    <span class="comment"># 图片文件</span></div><div class="line">    filename = <span class="string">'image/captcha.jpg'</span></div><div class="line">    <span class="comment"># 验证码类型，# 例：1004表示4位字母数字，不同类型收费不同。请准确填写，否则影响识别率。在此查询所有类型 http://www.yundama.com/price.html</span></div><div class="line">    codetype = <span class="number">5000</span></div><div class="line">    <span class="comment"># 超时时间，秒</span></div><div class="line">    timeout = <span class="number">60</span></div><div class="line">    <span class="comment"># 检查</span></div><div class="line">    <span class="keyword">if</span> (username == <span class="string">'username'</span>):</div><div class="line">        print(<span class="string">'请设置好相关参数再测试'</span>)</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="comment"># 初始化</span></div><div class="line">        yundama = YDMHttp(username, password, appid, appkey)</div><div class="line"></div><div class="line">        <span class="comment"># 登陆云打码</span></div><div class="line">        uid = yundama.login()</div><div class="line">        print(<span class="string">'uid: %s'</span> % uid)</div><div class="line"></div><div class="line">        <span class="comment"># 登陆云打码</span></div><div class="line">        uid = yundama.login()</div><div class="line">        print(<span class="string">'uid: %s'</span> % uid)</div><div class="line"></div><div class="line">        <span class="comment"># 查询余额</span></div><div class="line">        balance = yundama.balance()</div><div class="line">        print(<span class="string">'balance: %s'</span> % balance)</div><div class="line"></div><div class="line">        <span class="comment"># 开始识别，图片路径，验证码类型ID，超时时间（秒），识别结果</span></div><div class="line">        text = yundama.decode(filename, codetype, timeout)</div></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;验证码识别大致有如下几种方式：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;编码实现（Tesseract-OCR）&lt;/li&gt;
+&lt;li&gt;在线打码&lt;/li&gt;
+&lt;li&gt;人工打码&lt;/li&gt;
+&lt;/ul&gt;
+    
+    </summary>
+    
+      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
+    
+    
+      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Python分布式爬虫打造搜索引擎项目学习笔记——cookie禁用、自动限速、自定义Spider的settings</title>
     <link href="http://yoursite.com/2017/06/12/scrapy-cookies-settings/"/>
     <id>http://yoursite.com/2017/06/12/scrapy-cookies-settings/</id>
@@ -1181,43 +1242,6 @@
     <summary type="html">
     
       &lt;p&gt;像cookie禁用、自动限速这样的设置都在&lt;code&gt;settings.py&lt;/code&gt;文件中，下面我们就来简单介绍一下。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
-    
-    
-      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Python分布式爬虫打造搜索引擎项目学习笔记——云打码实现验证码识别</title>
-    <link href="http://yoursite.com/2017/06/12/scrapy-yundama/"/>
-    <id>http://yoursite.com/2017/06/12/scrapy-yundama/</id>
-    <published>2017-06-12T06:18:54.000Z</published>
-    <updated>2017-06-22T07:19:19.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>验证码识别大致有如下几种方式：</p>
-<ul>
-<li>编码实现（Tesseract-OCR）</li>
-<li>在线打码</li>
-<li>人工打码</li>
-</ul>
-<a id="more"></a>
-<p>这里我们简单介绍一下在线打码，选择的打码平台为：<a href="http://www.yundama.com" target="_blank" rel="external">云打码</a></p>
-<p>具体方式查看调用示例即可。</p>
-<p>下面给出代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> json</div><div class="line"><span class="keyword">import</span> requests</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">YDMHttp</span><span class="params">(object)</span>:</span></div><div class="line">    apiurl = <span class="string">'http://api.yundama.com/api.php'</span></div><div class="line">    username = <span class="string">''</span></div><div class="line">    password = <span class="string">''</span></div><div class="line">    appid = <span class="string">''</span></div><div class="line">    appkey = <span class="string">''</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, username, password, appid, appkey)</span>:</span></div><div class="line">        self.username = username</div><div class="line">        self.password = password</div><div class="line">        self.appid = str(appid)</div><div class="line">        self.appkey = appkey</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">balance</span><span class="params">(self)</span>:</span></div><div class="line">        data = &#123;<span class="string">'method'</span>: <span class="string">'balance'</span>, <span class="string">'username'</span>: self.username, <span class="string">'password'</span>: self.password, <span class="string">'appid'</span>: self.appid,</div><div class="line">                <span class="string">'appkey'</span>: self.appkey&#125;</div><div class="line">        response_data = requests.post(self.apiurl, data=data)</div><div class="line">        ret_data = json.loads(response_data.text)</div><div class="line">        <span class="keyword">if</span> ret_data[<span class="string">"ret"</span>] == <span class="number">0</span>:</div><div class="line">            print(<span class="string">"获取剩余积分"</span>, ret_data[<span class="string">"balance"</span>])</div><div class="line">            <span class="keyword">return</span> ret_data[<span class="string">"balance"</span>]</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">return</span> <span class="keyword">None</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">login</span><span class="params">(self)</span>:</span></div><div class="line">        data = &#123;<span class="string">'method'</span>: <span class="string">'login'</span>, <span class="string">'username'</span>: self.username, <span class="string">'password'</span>: self.password, <span class="string">'appid'</span>: self.appid,</div><div class="line">                <span class="string">'appkey'</span>: self.appkey&#125;</div><div class="line">        response_data = requests.post(self.apiurl, data=data)</div><div class="line">        ret_data = json.loads(response_data.text)</div><div class="line">        <span class="keyword">if</span> ret_data[<span class="string">"ret"</span>] == <span class="number">0</span>:</div><div class="line">            print(<span class="string">"登录成功"</span>, ret_data[<span class="string">"uid"</span>])</div><div class="line">            <span class="keyword">return</span> ret_data[<span class="string">"uid"</span>]</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">return</span> <span class="keyword">None</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">decode</span><span class="params">(self, filename, codetype, timeout)</span>:</span></div><div class="line">        data = &#123;<span class="string">'method'</span>: <span class="string">'upload'</span>, <span class="string">'username'</span>: self.username, <span class="string">'password'</span>: self.password, <span class="string">'appid'</span>: self.appid,</div><div class="line">                <span class="string">'appkey'</span>: self.appkey, <span class="string">'codetype'</span>: str(codetype), <span class="string">'timeout'</span>: str(timeout)&#125;</div><div class="line">        files = &#123;<span class="string">'file'</span>: open(filename, <span class="string">'rb'</span>)&#125;</div><div class="line">        response_data = requests.post(self.apiurl, files=files, data=data)</div><div class="line">        ret_data = json.loads(response_data.text)</div><div class="line">        <span class="keyword">if</span> ret_data[<span class="string">"ret"</span>] == <span class="number">0</span>:</div><div class="line">            print(<span class="string">"识别成功"</span>, ret_data[<span class="string">"text"</span>])</div><div class="line">            <span class="keyword">return</span> ret_data[<span class="string">"text"</span>]</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">return</span> <span class="keyword">None</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">ydm</span><span class="params">(file_path)</span>:</span></div><div class="line">    username = <span class="string">'da_ge_da1'</span></div><div class="line">    <span class="comment"># 密码</span></div><div class="line">    password = <span class="string">'da_ge_da'</span></div><div class="line">    <span class="comment"># 软件ＩＤ，开发者分成必要参数。登录开发者后台【我的软件】获得！</span></div><div class="line">    appid = <span class="number">3129</span></div><div class="line">    <span class="comment"># 软件密钥，开发者分成必要参数。登录开发者后台【我的软件】获得！</span></div><div class="line">    appkey = <span class="string">'40d5ad41c047179fc797631e3b9c3025'</span></div><div class="line">    <span class="comment"># 图片文件</span></div><div class="line">    filename = <span class="string">'image/captcha.jpg'</span></div><div class="line">    <span class="comment"># 验证码类型，# 例：1004表示4位字母数字，不同类型收费不同。请准确填写，否则影响识别率。在此查询所有类型 http://www.yundama.com/price.html</span></div><div class="line">    codetype = <span class="number">5000</span></div><div class="line">    <span class="comment"># 超时时间，秒</span></div><div class="line">    timeout = <span class="number">60</span></div><div class="line">    <span class="comment"># 检查</span></div><div class="line"></div><div class="line">    yundama = YDMHttp(username, password, appid, appkey)</div><div class="line">    <span class="keyword">if</span> (username == <span class="string">'username'</span>):</div><div class="line">        print(<span class="string">'请设置好相关参数再测试'</span>)</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="comment"># 开始识别，图片路径，验证码类型ID，超时时间（秒），识别结果</span></div><div class="line">        <span class="keyword">return</span> yundama.decode(file_path, codetype, timeout);</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</div><div class="line">    <span class="comment"># 用户名</span></div><div class="line">    username = <span class="string">'da_ge_da1'</span></div><div class="line">    <span class="comment"># 密码</span></div><div class="line">    password = <span class="string">'da_ge_da'</span></div><div class="line">    <span class="comment"># 软件ＩＤ，开发者分成必要参数。登录开发者后台【我的软件】获得！</span></div><div class="line">    appid = <span class="number">3129</span></div><div class="line">    <span class="comment"># 软件密钥，开发者分成必要参数。登录开发者后台【我的软件】获得！</span></div><div class="line">    appkey = <span class="string">'40d5ad41c047179fc797631e3b9c3025'</span></div><div class="line">    <span class="comment"># 图片文件</span></div><div class="line">    filename = <span class="string">'image/captcha.jpg'</span></div><div class="line">    <span class="comment"># 验证码类型，# 例：1004表示4位字母数字，不同类型收费不同。请准确填写，否则影响识别率。在此查询所有类型 http://www.yundama.com/price.html</span></div><div class="line">    codetype = <span class="number">5000</span></div><div class="line">    <span class="comment"># 超时时间，秒</span></div><div class="line">    timeout = <span class="number">60</span></div><div class="line">    <span class="comment"># 检查</span></div><div class="line">    <span class="keyword">if</span> (username == <span class="string">'username'</span>):</div><div class="line">        print(<span class="string">'请设置好相关参数再测试'</span>)</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="comment"># 初始化</span></div><div class="line">        yundama = YDMHttp(username, password, appid, appkey)</div><div class="line"></div><div class="line">        <span class="comment"># 登陆云打码</span></div><div class="line">        uid = yundama.login()</div><div class="line">        print(<span class="string">'uid: %s'</span> % uid)</div><div class="line"></div><div class="line">        <span class="comment"># 登陆云打码</span></div><div class="line">        uid = yundama.login()</div><div class="line">        print(<span class="string">'uid: %s'</span> % uid)</div><div class="line"></div><div class="line">        <span class="comment"># 查询余额</span></div><div class="line">        balance = yundama.balance()</div><div class="line">        print(<span class="string">'balance: %s'</span> % balance)</div><div class="line"></div><div class="line">        <span class="comment"># 开始识别，图片路径，验证码类型ID，超时时间（秒），识别结果</span></div><div class="line">        text = yundama.decode(filename, codetype, timeout)</div></pre></td></tr></table></figure>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;验证码识别大致有如下几种方式：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;编码实现（Tesseract-OCR）&lt;/li&gt;
-&lt;li&gt;在线打码&lt;/li&gt;
-&lt;li&gt;人工打码&lt;/li&gt;
-&lt;/ul&gt;
     
     </summary>
     
@@ -1439,41 +1463,6 @@
     
     
       <category term="Scrapy，Requests，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CRequests%EF%BC%8CPython/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy模拟登录知乎</title>
-    <link href="http://yoursite.com/2017/05/11/scrapy-login-zhihu/"/>
-    <id>http://yoursite.com/2017/05/11/scrapy-login-zhihu/</id>
-    <published>2017-05-11T06:18:54.000Z</published>
-    <updated>2017-05-12T08:12:46.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>Scrapy登录知乎要解决两个问题</p>
-<ol>
-<li>session的传递，保证处理登录是同一个状态。</li>
-<li>首个登录页面的改变，由直接爬取的页面变为登录页面，再去爬取页面。</li>
-</ol>
-<a id="more"></a>
-<p>话不多说，直接上代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"><span class="keyword">import</span> scrapy</div><div class="line"><span class="keyword">import</span> re</div><div class="line"><span class="keyword">import</span> json</div><div class="line"><span class="keyword">import</span> time</div><div class="line"></div><div class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ZhihuSpider</span><span class="params">(scrapy.Spider)</span>:</span></div><div class="line">    name = <span class="string">"zhihu"</span></div><div class="line">    allowed_domains = [<span class="string">"www.zhihu.com"</span>]</div><div class="line">    start_urls = [<span class="string">'http://www.zhihu.com/'</span>]</div><div class="line">    headers = &#123;</div><div class="line">        <span class="string">"Host"</span>: <span class="string">"www.zhihu.com"</span>,</div><div class="line">        <span class="string">"Referer"</span>: <span class="string">"https://www.zhihu.com/"</span>,</div><div class="line">        <span class="string">'User-Agent'</span>: <span class="string">'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.96 Safari/537.36'</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="keyword">pass</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">start_requests</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> [scrapy.Request(<span class="string">"https://www.zhihu.com/#signin"</span>, headers=self.headers, callback=self.login)]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">login</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        登录</div><div class="line">        :param response: </div><div class="line">        :return: </div><div class="line">        """</div><div class="line">        response_text = response.text</div><div class="line">        match_obj = re.match(<span class="string">'.*name="_xsrf" value="(.*?)"'</span>, response_text, re.DOTALL)</div><div class="line">        xsrf = <span class="string">''</span></div><div class="line">        <span class="keyword">if</span> match_obj:</div><div class="line">            xsrf = match_obj.group(<span class="number">1</span>)</div><div class="line"></div><div class="line">        <span class="keyword">if</span> xsrf:</div><div class="line">            post_data = &#123;</div><div class="line">                <span class="string">"_xsrf"</span>: xsrf,</div><div class="line">                <span class="string">"phone_num"</span>: <span class="string">"18951855817"</span>,</div><div class="line">                <span class="string">"password"</span>: <span class="string">"tracy584563542"</span></div><div class="line">            &#125;</div><div class="line">            t = str(int(time.time() * <span class="number">1000</span>))</div><div class="line">            captcha_url = <span class="string">'https://www.zhihu.com/captcha.gif?r='</span> + t + <span class="string">"&amp;type=login"</span></div><div class="line">            <span class="keyword">yield</span> scrapy.Request(captcha_url, headers=self.headers, meta=&#123;<span class="string">"post_data"</span>: post_data&#125;,</div><div class="line">                                 callback=self.login_after_captcha)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">login_after_captcha</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="keyword">with</span> open(<span class="string">"captcha.jpg"</span>, <span class="string">"wb"</span>) <span class="keyword">as</span> f:</div><div class="line">            f.write(response.body)</div><div class="line">        im = Image.open(<span class="string">'captcha.jpg'</span>)</div><div class="line">        im.show()</div><div class="line">        im.close()</div><div class="line">        captcha = input(<span class="string">"请输入验证码：\n"</span>)</div><div class="line">        post_data = response.meta.get(<span class="string">"post_data"</span>, &#123;&#125;)</div><div class="line">        post_data[<span class="string">"captcha"</span>] = captcha</div><div class="line">        post_url = <span class="string">"https://www.zhihu.com/login/phone_num"</span></div><div class="line">        <span class="keyword">return</span> [scrapy.FormRequest(</div><div class="line">            url=post_url,</div><div class="line">            formdata=post_data,</div><div class="line">            headers=self.headers,</div><div class="line">            callback=self.check_login</div><div class="line">        )]</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">check_login</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        验证服务器的返回数据判断登录是否成功</div><div class="line">        :param response: </div><div class="line">        :return: </div><div class="line">        """</div><div class="line">        text_json = json.loads(response.text)</div><div class="line">        <span class="keyword">if</span> <span class="string">'msg'</span> <span class="keyword">in</span> text_json <span class="keyword">and</span> text_json[<span class="string">'msg'</span>] == <span class="string">'登陆成功'</span>:</div><div class="line">            <span class="comment"># 从继承的Spider类中拿的内容，恢复到正确执行</span></div><div class="line">            <span class="keyword">for</span> url <span class="keyword">in</span> self.start_urls:</div><div class="line">                <span class="keyword">yield</span> scrapy.Request(url, dont_filter=<span class="keyword">True</span>, headers=self.headers)</div></pre></td></tr></table></figure>
-<p>首先对 <code>scrapy.Spider</code> 类中的 <code>start_requests(self)</code> 进行重载，改变首先要处理的页面为登录页面。<br>得到登录页面后，获得xsrf，并下载验证码，通过 <code>scrapy.FormRequest</code>构造登录数据，通过check_login回调函数判断登录是否成功。在代码的最后一行转回正常的登录流程。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;Scrapy登录知乎要解决两个问题&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;session的传递，保证处理登录是同一个状态。&lt;/li&gt;
-&lt;li&gt;首个登录页面的改变，由直接爬取的页面变为登录页面，再去爬取页面。&lt;/li&gt;
-&lt;/ol&gt;
-    
-    </summary>
-    
-      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
-    
-    
-      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
     
   </entry>
   
