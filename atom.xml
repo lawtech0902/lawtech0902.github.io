@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-12-07T01:44:29.883Z</updated>
+  <updated>2017-12-07T06:23:11.503Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,287 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>RESTful API设计指南</title>
+    <link href="http://yoursite.com/2017/12/07/RESTful-API/"/>
+    <id>http://yoursite.com/2017/12/07/RESTful-API/</id>
+    <published>2017-12-07T06:20:54.000Z</published>
+    <updated>2017-12-07T06:23:11.503Z</updated>
+    
+    <content type="html"><![CDATA[<p>网络应用程序，分为前端和后端两个部分。当前的发展趋势，就是前端设备层出不穷（手机、平板、桌面电脑、其他专用设备……）。</p>
+<p>因此，必须有一种统一的机制，方便不同的前端设备与后端进行通信。这导致API构架的流行，甚至出现<a href="http://www.google.com.hk/search?q=API+first" target="_blank" rel="external">“API First”</a>的设计思想。<a href="http://en.wikipedia.org/wiki/Representational_state_transfer" target="_blank" rel="external">RESTful API</a>是目前比较成熟的一套互联网应用程序的API设计理论。</p>
+<p><img src="http://image.beekka.com/blog/2014/bg2014052201.png" alt="RESTful API"></p>
+<h2 id="一、协议"><a href="#一、协议" class="headerlink" title="一、协议"></a>一、协议</h2><p>API与用户的通信协议，总是使用<a href="http://www.ruanyifeng.com/blog/2014/02/ssl_tls.html" target="_blank" rel="external">HTTPs协议</a>。</p>
+<h2 id="二、域名"><a href="#二、域名" class="headerlink" title="二、域名"></a>二、域名</h2><p>应该尽量将API部署在专用域名之下。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&gt; https://api.example.com</div><div class="line">&gt;</div><div class="line">&gt;</div></pre></td></tr></table></figure>
+</blockquote>
+<p>如果确定API很简单，不会有进一步扩展，可以考虑放在主域名下。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&gt; https://example.org/api/</div><div class="line">&gt;</div><div class="line">&gt;</div></pre></td></tr></table></figure>
+</blockquote>
+<h2 id="三、版本（Versioning）"><a href="#三、版本（Versioning）" class="headerlink" title="三、版本（Versioning）"></a>三、版本（Versioning）</h2><p>应该将API的版本号放入URL。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&gt; https://api.example.com/v1/</div><div class="line">&gt;</div><div class="line">&gt;</div></pre></td></tr></table></figure>
+</blockquote>
+<p>另一种做法是，将版本号放在HTTP头信息中，但不如放入URL方便和直观。<a href="https://developer.github.com/v3/media/#request-specific-version" target="_blank" rel="external">Github</a>采用这种做法。</p>
+<h2 id="四、路径（Endpoint）"><a href="#四、路径（Endpoint）" class="headerlink" title="四、路径（Endpoint）"></a>四、路径（Endpoint）</h2><p>路径又称”终点”（endpoint），表示API的具体网址。</p>
+<p>在RESTful架构中，每个网址代表一种资源（resource），所以网址中不能有动词，只能有名词，而且所用的名词往往与数据库的表格名对应。一般来说，数据库中的表都是同种记录的”集合”（collection），所以API中的名词也应该使用复数。</p>
+<p>举例来说，有一个API提供动物园（zoo）的信息，还包括各种动物和雇员的信息，则它的路径应该设计成下面这样。</p>
+<blockquote>
+<ul>
+<li><a href="https://api.example.com/v1/zoos" target="_blank" rel="external">https://api.example.com/v1/zoos</a></li>
+<li><a href="https://api.example.com/v1/animals" target="_blank" rel="external">https://api.example.com/v1/animals</a></li>
+<li><a href="https://api.example.com/v1/employees" target="_blank" rel="external">https://api.example.com/v1/employees</a></li>
+</ul>
+</blockquote>
+<h2 id="五、HTTP动词"><a href="#五、HTTP动词" class="headerlink" title="五、HTTP动词"></a>五、HTTP动词</h2><p>对于资源的具体操作类型，由HTTP动词表示。</p>
+<p>常用的HTTP动词有下面五个（括号里是对应的SQL命令）。</p>
+<blockquote>
+<ul>
+<li>GET（SELECT）：从服务器取出资源（一项或多项）。</li>
+<li>POST（CREATE）：在服务器新建一个资源。</li>
+<li>PUT（UPDATE）：在服务器更新资源（客户端提供改变后的完整资源）。</li>
+<li>PATCH（UPDATE）：在服务器更新资源（客户端提供改变的属性）。</li>
+<li>DELETE（DELETE）：从服务器删除资源。</li>
+</ul>
+</blockquote>
+<p>还有两个不常用的HTTP动词。</p>
+<blockquote>
+<ul>
+<li>HEAD：获取资源的元数据。</li>
+<li>OPTIONS：获取信息，关于资源的哪些属性是客户端可以改变的。</li>
+</ul>
+</blockquote>
+<p>下面是一些例子。</p>
+<blockquote>
+<ul>
+<li>GET /zoos：列出所有动物园</li>
+<li>POST /zoos：新建一个动物园</li>
+<li>GET /zoos/ID：获取某个指定动物园的信息</li>
+<li>PUT /zoos/ID：更新某个指定动物园的信息（提供该动物园的全部信息）</li>
+<li>PATCH /zoos/ID：更新某个指定动物园的信息（提供该动物园的部分信息）</li>
+<li>DELETE /zoos/ID：删除某个动物园</li>
+<li>GET /zoos/ID/animals：列出某个指定动物园的所有动物</li>
+<li>DELETE /zoos/ID/animals/ID：删除某个指定动物园的指定动物</li>
+</ul>
+</blockquote>
+<h2 id="六、过滤信息（Filtering）"><a href="#六、过滤信息（Filtering）" class="headerlink" title="六、过滤信息（Filtering）"></a>六、过滤信息（Filtering）</h2><p>如果记录数量很多，服务器不可能都将它们返回给用户。API应该提供参数，过滤返回结果。</p>
+<p>下面是一些常见的参数。</p>
+<blockquote>
+<ul>
+<li>?limit=10：指定返回记录的数量</li>
+<li>?offset=10：指定返回记录的开始位置。</li>
+<li>?page=2&amp;per_page=100：指定第几页，以及每页的记录数。</li>
+<li>?sortby=name&amp;order=asc：指定返回结果按照哪个属性排序，以及排序顺序。</li>
+<li>?animal_type_id=1：指定筛选条件</li>
+</ul>
+</blockquote>
+<p>参数的设计允许存在冗余，即允许API路径和URL参数偶尔有重复。比如，GET /zoo/ID/animals 与 GET /animals?zoo_id=ID 的含义是相同的。</p>
+<h2 id="七、状态码（Status-Codes）"><a href="#七、状态码（Status-Codes）" class="headerlink" title="七、状态码（Status Codes）"></a>七、状态码（Status Codes）</h2><p>服务器向用户返回的状态码和提示信息，常见的有以下一些（方括号中是该状态码对应的HTTP动词）。</p>
+<blockquote>
+<ul>
+<li>200 OK - [GET]：服务器成功返回用户请求的数据，该操作是幂等的（Idempotent）。</li>
+<li>201 CREATED - [POST/PUT/PATCH]：用户新建或修改数据成功。</li>
+<li>202 Accepted - [*]：表示一个请求已经进入后台排队（异步任务）</li>
+<li>204 NO CONTENT - [DELETE]：用户删除数据成功。</li>
+<li>400 INVALID REQUEST - [POST/PUT/PATCH]：用户发出的请求有错误，服务器没有进行新建或修改数据的操作，该操作是幂等的。</li>
+<li>401 Unauthorized - [*]：表示用户没有权限（令牌、用户名、密码错误）。</li>
+<li>403 Forbidden - [*] 表示用户得到授权（与401错误相对），但是访问是被禁止的。</li>
+<li>404 NOT FOUND - [*]：用户发出的请求针对的是不存在的记录，服务器没有进行操作，该操作是幂等的。</li>
+<li>406 Not Acceptable - [GET]：用户请求的格式不可得（比如用户请求JSON格式，但是只有XML格式）。</li>
+<li>410 Gone -[GET]：用户请求的资源被永久删除，且不会再得到的。</li>
+<li>422 Unprocesable entity - [POST/PUT/PATCH] 当创建一个对象时，发生一个验证错误。</li>
+<li>500 INTERNAL SERVER ERROR - [*]：服务器发生错误，用户将无法判断发出的请求是否成功。</li>
+</ul>
+</blockquote>
+<p>状态码的完全列表参见<a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html" target="_blank" rel="external">这里</a>。</p>
+<h2 id="八、错误处理（Error-handling）"><a href="#八、错误处理（Error-handling）" class="headerlink" title="八、错误处理（Error handling）"></a>八、错误处理（Error handling）</h2><p>如果状态码是4xx，就应该向用户返回出错信息。一般来说，返回的信息中将error作为键名，出错信息作为键值即可。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&gt; &#123;</div><div class="line">&gt;     error: &quot;Invalid API key&quot;</div><div class="line">&gt; &#125;</div><div class="line">&gt;</div><div class="line">&gt;</div></pre></td></tr></table></figure>
+</blockquote>
+<h2 id="九、返回结果"><a href="#九、返回结果" class="headerlink" title="九、返回结果"></a>九、返回结果</h2><p>针对不同操作，服务器向用户返回的结果应该符合以下规范。</p>
+<blockquote>
+<ul>
+<li>GET /collection：返回资源对象的列表（数组）</li>
+<li>GET /collection/resource：返回单个资源对象</li>
+<li>POST /collection：返回新生成的资源对象</li>
+<li>PUT /collection/resource：返回完整的资源对象</li>
+<li>PATCH /collection/resource：返回完整的资源对象</li>
+<li>DELETE /collection/resource：返回一个空文档</li>
+</ul>
+</blockquote>
+<h2 id="十、Hypermedia-API"><a href="#十、Hypermedia-API" class="headerlink" title="十、Hypermedia API"></a>十、Hypermedia API</h2><p>RESTful API最好做到Hypermedia，即返回结果中提供链接，连向其他API方法，使得用户不查文档，也知道下一步应该做什么。</p>
+<p>比如，当用户向api.example.com的根目录发出请求，会得到这样一个文档。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&gt; &#123;&quot;link&quot;: &#123;</div><div class="line">&gt;   &quot;rel&quot;:   &quot;collection https://www.example.com/zoos&quot;,</div><div class="line">&gt;   &quot;href&quot;:  &quot;https://api.example.com/zoos&quot;,</div><div class="line">&gt;   &quot;title&quot;: &quot;List of zoos&quot;,</div><div class="line">&gt;   &quot;type&quot;:  &quot;application/vnd.yourformat+json&quot;</div><div class="line">&gt; &#125;&#125;</div><div class="line">&gt;</div><div class="line">&gt;</div></pre></td></tr></table></figure>
+</blockquote>
+<p>上面代码表示，文档中有一个link属性，用户读取这个属性就知道下一步该调用什么API了。rel表示这个API与当前网址的关系（collection关系，并给出该collection的网址），href表示API的路径，title表示API的标题，type表示返回类型。</p>
+<p>Hypermedia API的设计被称为<a href="http://en.wikipedia.org/wiki/HATEOAS" target="_blank" rel="external">HATEOAS</a>。Github的API就是这种设计，访问<a href="https://api.github.com/" target="_blank" rel="external">api.github.com</a>会得到一个所有可用API的网址列表。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&gt; &#123;</div><div class="line">&gt;   &quot;current_user_url&quot;: &quot;https://api.github.com/user&quot;,</div><div class="line">&gt;   &quot;authorizations_url&quot;: &quot;https://api.github.com/authorizations&quot;,</div><div class="line">&gt;   // ...</div><div class="line">&gt; &#125;</div><div class="line">&gt;</div><div class="line">&gt;</div></pre></td></tr></table></figure>
+</blockquote>
+<p>从上面可以看到，如果想获取当前用户的信息，应该去访问<a href="https://api.github.com/user" target="_blank" rel="external">api.github.com/user</a>，然后就得到了下面结果。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&gt; &#123;</div><div class="line">&gt;   &quot;message&quot;: &quot;Requires authentication&quot;,</div><div class="line">&gt;   &quot;documentation_url&quot;: &quot;https://developer.github.com/v3&quot;</div><div class="line">&gt; &#125;</div><div class="line">&gt;</div><div class="line">&gt;</div></pre></td></tr></table></figure>
+</blockquote>
+<p>上面代码表示，服务器给出了提示信息，以及文档的网址。</p>
+<h2 id="十一、其他"><a href="#十一、其他" class="headerlink" title="十一、其他"></a>十一、其他</h2><p>（1）API的身份认证应该使用<a href="http://www.ruanyifeng.com/blog/2014/05/oauth_2_0.html" target="_blank" rel="external">OAuth 2.0</a>框架。</p>
+<p>（2）服务器返回的数据格式，应该尽量使用JSON，避免使用XML。</p>
+<p>（完）</p>
+<p>注：原文地址：<a href="http://www.ruanyifeng.com/blog/2014/05/restful_api.html" target="_blank" rel="external">http://www.ruanyifeng.com/blog/2014/05/restful_api.html</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;网络应用程序，分为前端和后端两个部分。当前的发展趋势，就是前端设备层出不穷（手机、平板、桌面电脑、其他专用设备……）。&lt;/p&gt;
+&lt;p&gt;因此，必须有一种统一的机制，方便不同的前端设备与后端进行通信。这导致API构架的流行，甚至出现&lt;a href=&quot;http://www.goo
+    
+    </summary>
+    
+      <category term="RESTful" scheme="http://yoursite.com/categories/RESTful/"/>
+    
+    
+      <category term="Web" scheme="http://yoursite.com/tags/Web/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>理解RESTful架构</title>
+    <link href="http://yoursite.com/2017/12/07/RESTful/"/>
+    <id>http://yoursite.com/2017/12/07/RESTful/</id>
+    <published>2017-12-07T06:18:54.000Z</published>
+    <updated>2017-12-07T06:16:14.594Z</updated>
+    
+    <content type="html"><![CDATA[<p>越来越多的人开始意识到，<strong>网站即软件</strong>，而且是一种新型的软件。</p>
+<p>这种”互联网软件”采用客户端/服务器模式，建立在分布式体系上，通过互联网通信，具有高延时（high latency）、高并发等特点。</p>
+<p>网站开发，完全可以采用软件开发的模式。但是传统上，软件和网络是两个不同的领域，很少有交集；软件开发主要针对单机环境，网络则主要研究系统之间的通信。互联网的兴起，使得这两个领域开始融合，<strong>现在我们必须考虑，如何开发在互联网环境中使用的软件。</strong></p>
+<p><img src="http://image.beekka.com/blog/201109/bg2011091202.jpg" alt="img"></p>
+<p>RESTful架构，就是目前最流行的一种互联网软件架构。它结构清晰、符合标准、易于理解、扩展方便，所以正得到越来越多网站的采用。</p>
+<p>但是，到底什么是RESTful架构，并不是一个容易说清楚的问题。下面，我就谈谈我理解的RESTful架构。</p>
+<p><strong>一、起源</strong></p>
+<p>REST这个词，是<a href="http://en.wikipedia.org/wiki/Roy_Fielding" target="_blank" rel="external">Roy Thomas Fielding</a>在他2000年的<a href="http://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm" target="_blank" rel="external">博士论文</a>中提出的。</p>
+<p><img src="http://image.beekka.com/blog/201109/bg2011091201.jpg" alt="img"></p>
+<p>Fielding是一个非常重要的人，他是HTTP协议（1.0版和1.1版）的主要设计者、Apache服务器软件的作者之一、Apache基金会的第一任主席。所以，他的这篇论文一经发表，就引起了关注，并且立即对互联网开发产生了深远的影响。</p>
+<p>他这样介绍论文的写作目的：</p>
+<blockquote>
+<p>“本文研究计算机科学两大前沿—-软件和网络—-的交叉点。长期以来，软件研究主要关注软件设计的分类、设计方法的演化，很少客观地评估不同的设计选择对系统行为的影响。而相反地，网络研究主要关注系统之间通信行为的细节、如何改进特定通信机制的表现，常常忽视了一个事实，那就是改变应用程序的互动风格比改变互动协议，对整体表现有更大的影响。<strong>我这篇文章的写作目的，就是想在符合架构原理的前提下，理解和评估以网络为基础的应用软件的架构设计，得到一个功能强、性能好、适宜通信的架构。</strong>“</p>
+<p>(This dissertation explores a junction on the frontiers of two research disciplines in computer science: software and networking. Software research has long been concerned with the categorization of software designs and the development of design methodologies, but has rarely been able to objectively evaluate the impact of various design choices on system behavior. Networking research, in contrast, is focused on the details of generic communication behavior between systems and improving the performance of particular communication techniques, often ignoring the fact that changing the interaction style of an application can have more impact on performance than the communication protocols used for that interaction. My work is motivated by the desire to understand and evaluate the architectural design of network-based application software through principled use of architectural constraints, thereby obtaining the functional, performance, and social properties desired of an architecture. )</p>
+</blockquote>
+<p><strong>二、名称</strong></p>
+<p>Fielding将他对互联网软件的架构原则，定名为REST，即Representational State Transfer的缩写。我对这个词组的翻译是”表现层状态转化”。</p>
+<p>如果一个架构符合REST原则，就称它为RESTful架构。</p>
+<p><strong>要理解RESTful架构，最好的方法就是去理解Representational State Transfer这个词组到底是什么意思，它的每一个词代表了什么涵义。</strong>如果你把这个名称搞懂了，也就不难体会REST是一种什么样的设计。</p>
+<p><strong>三、资源（Resources）</strong></p>
+<p>REST的名称”表现层状态转化”中，省略了主语。”表现层”其实指的是”资源”（Resources）的”表现层”。</p>
+<p><strong>所谓”资源”，就是网络上的一个实体，或者说是网络上的一个具体信息。</strong>它可以是一段文本、一张图片、一首歌曲、一种服务，总之就是一个具体的实在。你可以用一个URI（统一资源定位符）指向它，每种资源对应一个特定的URI。要获取这个资源，访问它的URI就可以，因此URI就成了每一个资源的地址或独一无二的识别符。</p>
+<p>所谓”上网”，就是与互联网上一系列的”资源”互动，调用它的URI。</p>
+<p><strong>四、表现层（Representation）</strong></p>
+<p>“资源”是一种信息实体，它可以有多种外在表现形式。<strong>我们把”资源”具体呈现出来的形式，叫做它的”表现层”（Representation）。</strong></p>
+<p>比如，文本可以用txt格式表现，也可以用HTML格式、XML格式、JSON格式表现，甚至可以采用二进制格式；图片可以用JPG格式表现，也可以用PNG格式表现。</p>
+<p>URI只代表资源的实体，不代表它的形式。严格地说，有些网址最后的”.html”后缀名是不必要的，因为这个后缀名表示格式，属于”表现层”范畴，而URI应该只代表”资源”的位置。它的具体表现形式，应该在HTTP请求的头信息中用Accept和Content-Type字段指定，这两个字段才是对”表现层”的描述。</p>
+<p><strong>五、状态转化（State Transfer）</strong></p>
+<p>访问一个网站，就代表了客户端和服务器的一个互动过程。在这个过程中，势必涉及到数据和状态的变化。</p>
+<p>互联网通信协议HTTP协议，是一个无状态协议。这意味着，所有的状态都保存在服务器端。因此，<strong>如果客户端想要操作服务器，必须通过某种手段，让服务器端发生”状态转化”（State Transfer）。而这种转化是建立在表现层之上的，所以就是”表现层状态转化”。</strong></p>
+<p>客户端用到的手段，只能是HTTP协议。具体来说，就是HTTP协议里面，四个表示操作方式的动词：GET、POST、PUT、DELETE。它们分别对应四种基本操作：<strong>GET用来获取资源，POST用来新建资源（也可以用于更新资源），PUT用来更新资源，DELETE用来删除资源。</strong></p>
+<p><strong>六、综述</strong></p>
+<p>综合上面的解释，我们总结一下什么是RESTful架构：</p>
+<p>　　（1）每一个URI代表一种资源；</p>
+<p>　　（2）客户端和服务器之间，传递这种资源的某种表现层；</p>
+<p>　　（3）客户端通过四个HTTP动词，对服务器端资源进行操作，实现”表现层状态转化”。</p>
+<p><strong>七、误区</strong></p>
+<p>RESTful架构有一些典型的设计误区。</p>
+<p><strong>最常见的一种设计错误，就是URI包含动词。</strong>因为”资源”表示一种实体，所以应该是名词，URI不应该有动词，动词应该放在HTTP协议中。</p>
+<p>举例来说，某个URI是/posts/show/1，其中show是动词，这个URI就设计错了，正确的写法应该是/posts/1，然后用GET方法表示show。</p>
+<p>如果某些动作是HTTP动词表示不了的，你就应该把动作做成一种资源。比如网上汇款，从账户1向账户2汇款500元，错误的URI是：</p>
+<blockquote>
+<p>　　POST /accounts/1/transfer/500/to/2</p>
+</blockquote>
+<p>正确的写法是把动词transfer改成名词transaction，资源不能是动词，但是可以是一种服务：</p>
+<blockquote>
+<p>　　POST /transaction HTTP/1.1<br>　　Host: 127.0.0.1<br>　　from=1&amp;to=2&amp;amount=500.00</p>
+</blockquote>
+<p><strong>另一个设计误区，就是在URI中加入版本号</strong>：</p>
+<blockquote>
+<p>　　<a href="http://www.example.com/app/1.0/foo" target="_blank" rel="external">http://www.example.com/app/1.0/foo</a></p>
+<p>　　<a href="http://www.example.com/app/1.1/foo" target="_blank" rel="external">http://www.example.com/app/1.1/foo</a></p>
+<p>　　<a href="http://www.example.com/app/2.0/foo" target="_blank" rel="external">http://www.example.com/app/2.0/foo</a></p>
+</blockquote>
+<p>因为不同的版本，可以理解成同一种资源的不同表现形式，所以应该采用同一个URI。版本号可以在HTTP请求头信息的Accept字段中进行区分（参见<a href="http://www.informit.com/articles/article.aspx?p=1566460" target="_blank" rel="external">Versioning REST Services</a>）：</p>
+<blockquote>
+<p>　　Accept: vnd.example-com.foo+json; version=1.0</p>
+<p>　　Accept: vnd.example-com.foo+json; version=1.1</p>
+<p>　　Accept: vnd.example-com.foo+json; version=2.0</p>
+</blockquote>
+<p>（完）</p>
+<p>注：原文地址：<a href="http://www.ruanyifeng.com/blog/2011/09/restful.html" target="_blank" rel="external">http://www.ruanyifeng.com/blog/2011/09/restful.html</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;越来越多的人开始意识到，&lt;strong&gt;网站即软件&lt;/strong&gt;，而且是一种新型的软件。&lt;/p&gt;
+&lt;p&gt;这种”互联网软件”采用客户端/服务器模式，建立在分布式体系上，通过互联网通信，具有高延时（high latency）、高并发等特点。&lt;/p&gt;
+&lt;p&gt;网站开发，完全可以
+    
+    </summary>
+    
+      <category term="RESTful" scheme="http://yoursite.com/categories/RESTful/"/>
+    
+    
+      <category term="Web" scheme="http://yoursite.com/tags/Web/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>django从请求到返回都经历了什么</title>
+    <link href="http://yoursite.com/2017/12/06/django-request-process/"/>
+    <id>http://yoursite.com/2017/12/06/django-request-process/</id>
+    <published>2017-12-06T05:18:54.000Z</published>
+    <updated>2017-12-07T01:44:17.860Z</updated>
+    
+    <content type="html"><![CDATA[<h5 id="从runserver说起"><a href="#从runserver说起" class="headerlink" title="从runserver说起"></a>从runserver说起</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ruserver是使用django自己的web server，主要用于开发和调试中， 部署到线上环境一般使用nginx+uwsgi模式</div></pre></td></tr></table></figure>
+<h5 id="manage-py-探秘"><a href="#manage-py-探秘" class="headerlink" title="manage.py 探秘"></a>manage.py 探秘</h5><a id="more"></a>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">看一下manager.py的源码，你会发现上面的命令其实是通过Django的execute_from_command_line方法执行了内部实现的runserver命令，那么现在看一下runserver具体做了什么。。</div><div class="line">通过源码分析可知， ruserserver主要完成两件事：</div><div class="line"></div><div class="line">1). 解析参数，并通过django.core.servers.basehttp.get_internal_wsgi_application方法获取wsgi handler;</div><div class="line">2). 根据ip_address和port生成一个WSGIServer对象，接受用户请求</div></pre></td></tr></table></figure>
+<p>get_internal_wsgi_application的源码如下：</p>
+<p><a href="http://of66as8gb.bkt.clouddn.com/blog/20161017/174541324.png" target="_blank" rel="external"><img src="http://of66as8gb.bkt.clouddn.com/blog/20161017/174541324.png" alt="image"></a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">通过上面的代码我们可以知道，Django会先根据settings中的WSGI_APPLICATION来获取handler；</div><div class="line">在创建project的时候，Django会默认创建一个wsgi.py文件，而settings中的WSGI_APPLICATION配置也会默认指向这个文件。看一下这个wsgi.py文件，其实它也和上面的逻辑一样，最终调用get_wsgi_application实现。</div></pre></td></tr></table></figure>
+<h5 id="django-http请求处理流程"><a href="#django-http请求处理流程" class="headerlink" title="django http请求处理流程"></a>django http请求处理流程</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Django和其他Web框架一样，HTTP的处理流程基本类似：接受request，返回response内容。Django的具体处理流程大致如下：</div></pre></td></tr></table></figure>
+<h6 id="1-加载settings-py"><a href="#1-加载settings-py" class="headerlink" title="1. 加载settings.py"></a>1. 加载settings.py</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">在通过django-admin.py创建project的时候，Django会自动生成默认的settings文件和manager.py等文件，在创建WSGIServer之前会执行下面的引用：</div><div class="line"></div><div class="line">from django.conf import settings</div><div class="line"></div><div class="line">上面引用在执行时，会读取os.environ中的DJANGO_SETTINGS_MODULE配置，加载项目配置文件，生成settings对象。所以，在manager.py文件中你可以看到，在获取WSGIServer之前，会先将project的settings路径加到os路径中。</div></pre></td></tr></table></figure>
+<h6 id="2-创建WSGIServer"><a href="#2-创建WSGIServer" class="headerlink" title="2. 创建WSGIServer"></a>2. 创建WSGIServer</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">不管是使用runserver还是uWSGI运行Django项目，在启动时都会调用django.core.servers.basehttp中的run()方法</div><div class="line">创建一个django.core.servers.basehttp.WSGIServer类的实例，之后调用其serve_forever()方法启动HTTP服务。run方法的源码如下：</div><div class="line"></div><div class="line">def run(addr, port, wsgi_handler, ipv6=False, threading=False):</div><div class="line">    server_address = (addr, port)</div><div class="line">    if threading:</div><div class="line">        httpd_cls = type(str(&apos;WSGIServer&apos;), (socketserver.ThreadingMixIn, WSGIServer), &#123;&#125;)</div><div class="line">    else:</div><div class="line">        httpd_cls = WSGIServer</div><div class="line">    httpd = httpd_cls(server_address, WSGIRequestHandler, ipv6=ipv6)</div><div class="line">    if threading:</div><div class="line">        # ThreadingMixIn.daemon_threads indicates how threads will behave on an</div><div class="line">        # abrupt shutdown; like quitting the server by the user or restarting</div><div class="line">        # by the auto-reloader. True means the server will not wait for thread</div><div class="line">        # termination before it quits. This will make auto-reloader faster</div><div class="line">        # and will prevent the need to kill the server manually if a thread</div><div class="line">        # isn&apos;t terminating correctly.</div><div class="line">        httpd.daemon_threads = True</div><div class="line">    httpd.set_app(wsgi_handler)</div><div class="line">    httpd.serve_forever()</div><div class="line"></div><div class="line">如上，我们可以看到：在创建WSGIServer实例的时候会指定HTTP请求的Handler，</div><div class="line">上述代码使用WSGIRequestHandler。当用户的HTTP请求到达服务器时，</div><div class="line">WSGIServer会创建WSGIRequestHandler实例，使用其handler方法来处理HTTP请求(其实最终是调用wsgiref.handlers.BaseHandler中的run方法处理)。</div><div class="line">WSGIServer通过set_app方法设置一个可调用(callable)的对象作为application，上面提到的handler方法最终会调用设置的application处理request，并返回response。</div><div class="line"></div><div class="line">其中，WSGIServer继承自wsgiref.simple_server.WSGIServer，而WSGIRequestHandler继承自wsgiref.simple_server.WSGIRequestHandler，wsgiref是Python标准库给出的WSGI的参考实现。其源码可自行到wsgiref参看，这里不再细说。</div></pre></td></tr></table></figure>
+<h6 id="3-处理Request"><a href="#3-处理Request" class="headerlink" title="3. 处理Request"></a>3. 处理Request</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">第二步中说到的application，在Django中一般是django.core.handlers.wsgi.WSGIHandler对象，WSGIHandler继承自django.core.handlers.base.BaseHandler，这个是Django处理request的核心逻辑，它会创建一个WSGIRequest实例，而WSGIRequest是从http.HttpRequest继承而来</div></pre></td></tr></table></figure>
+<h6 id="4-返回Response"><a href="#4-返回Response" class="headerlink" title="4. 返回Response"></a>4. 返回Response</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">上面提到的BaseHandler中有个get_response方法，该方法会先加载Django项目的ROOT_URLCONF，然后根据url规则找到对应的view方法(类)，view逻辑会根据request实例生成并返回具体的response。</div><div class="line"></div><div class="line">在Django返回结果之后，第二步中提到wsgiref.handlers.BaseHandler.run方法会调用finish_response结束请求，并将内容返回给用户</div></pre></td></tr></table></figure>
+<h5 id="Django处理Request的详细流程"><a href="#Django处理Request的详细流程" class="headerlink" title="Django处理Request的详细流程"></a>Django处理Request的详细流程</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">首先给大家分享两个网上看到的Django流程图：</div></pre></td></tr></table></figure>
+<p><a href="http://of66as8gb.bkt.clouddn.com/blog/20161017/174911486.png" target="_blank" rel="external"><img src="http://of66as8gb.bkt.clouddn.com/blog/20161017/174911486.png" alt="mark"></a><br>​                        流程图一</p>
+<p><a href="http://of66as8gb.bkt.clouddn.com/blog/20161017/180016921.png" target="_blank" rel="external"><img src="http://of66as8gb.bkt.clouddn.com/blog/20161017/180016921.png" alt="image"></a><br>流程图二</p>
+<p>上面的两张流程图可以大致描述Django处理request的流程，按照流程图2的标注，可以分为以下几个步骤：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">1. 用户通过浏览器请求一个页面</div><div class="line"></div><div class="line">2.请求到达Request Middlewares，中间件对request做一些预处理或者直接response请求</div><div class="line">3.URLConf通过urls.py文件和请求的URL找到相应的View</div><div class="line">4.View Middlewares被访问，它同样可以对request做一些处理或者直接返回response</div><div class="line">5.调用View中的函数</div><div class="line">6.View中的方法可以选择性的通过Models访问底层的数据</div><div class="line">7.所有的Model-to-DB的交互都是通过manager完成的</div><div class="line">8.如果需要，Views可以使用一个特殊的Context</div><div class="line">9.Context被传给Template用来生成页面</div><div class="line">    a.Template使用Filters和Tags去渲染输出</div><div class="line">    b.输出被返回到View</div><div class="line">    c.HTTPResponse被发送到Response Middlewares</div><div class="line">    d.任何Response Middlewares都可以丰富response或者返回一个完全不同的response</div><div class="line">    e.Response返回到浏览器，呈现给用户</div><div class="line"></div><div class="line">上述流程中最主要的几个部分分别是：Middleware(中间件，包括request, view, exception, response)，URLConf(url映射关系)，Template(模板系统)，下面一一介绍一下。</div></pre></td></tr></table></figure>
+<h5 id="1-Middleware-中间件"><a href="#1-Middleware-中间件" class="headerlink" title="1. Middleware(中间件)"></a>1. Middleware(中间件)</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">Middleware并不是Django所独有的东西，在其他的Web框架中也有这种概念。在Django中，Middleware可以渗入处理流程的四个阶段：request，view，response和exception，相应的，在每个Middleware类中都有rocess_request，process_view， process_response 和 process_exception这四个方法。你可以定义其中任意一个活多个方法，这取决于你希望该Middleware作用于哪个处理阶段。每个方法都可以直接返回response对象。</div><div class="line"></div><div class="line">Middleware是在Django BaseHandler的load_middleware方法执行时加载的，加载之后会建立四个列表作为处理器的实例变量：</div><div class="line"></div><div class="line">_request_middleware：process_request方法的列表</div><div class="line"></div><div class="line">_view_middleware：process_view方法的列表</div><div class="line"></div><div class="line">_response_middleware：process_response方法的列表</div><div class="line"></div><div class="line">_exception_middleware：process_exception方法的列表</div><div class="line"></div><div class="line">Django的中间件是在其配置文件(settings.py)的MIDDLEWARE_CLASSES元组中定义的。在MIDDLEWARE_CLASSES中，中间件组件用字符串表示：指向中间件类名的完整Python路径。例如</div><div class="line"></div><div class="line">`MIDDLEWARE_CLASSES = [</div><div class="line">    &apos;django.middleware.security.SecurityMiddleware&apos;,</div><div class="line">    &apos;django.contrib.sessions.middleware.SessionMiddleware&apos;,</div><div class="line">    &apos;django.middleware.common.CommonMiddleware&apos;,</div><div class="line">    &apos;django.middleware.csrf.CsrfViewMiddleware&apos;,</div><div class="line">    &apos;django.contrib.auth.middleware.AuthenticationMiddleware&apos;,</div><div class="line">    &apos;django.contrib.auth.middleware.SessionAuthenticationMiddleware&apos;,</div><div class="line">    &apos;django.contrib.messages.middleware.MessageMiddleware&apos;,</div><div class="line">    &apos;django.middleware.clickjacking.XFrameOptionsMiddleware&apos;,</div><div class="line">]`</div><div class="line"></div><div class="line">Django项目的安装并不强制要求任何中间件，如果你愿意，MIDDLEWARE_CLASSES可以为空。中间件出现的顺序非常重要：在request和view的处理阶段，Django按照MIDDLEWARE_CLASSES中出现的顺序来应用中间件，而在response和exception异常处理阶段，Django则按逆序来调用它们。也就是说，Django将MIDDLEWARE_CLASSES视为view函数外层的顺序包装子：在request阶段按顺序从上到下穿过，而在response则反过来。以下这张图可以更好地帮助你理解：</div></pre></td></tr></table></figure>
+<p><a href="http://of66as8gb.bkt.clouddn.com/blog/20161017/180754931.png" target="_blank" rel="external"><img src="http://of66as8gb.bkt.clouddn.com/blog/20161017/180754931.png" alt="image"></a></p>
+<ol>
+<li>URLConf(URL映射)</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">如果处理request的中间件都没有直接返回response，那么Django会去解析用户请求的URL。URLconf就是Django所支撑网站的目录。它的本质是URL模式以及要为该URL模式调用的视图函数之间的映射表。通过这种方式可以告诉Django，对于这个URL调用这段代码，对于那个URL调用那段代码。具体的，在Django项目的配置文件中有ROOT_URLCONF常量，这个常量加上根目录&quot;/&quot;，作为参数来创建django.core.urlresolvers.RegexURLResolver的实例，然后通过它的resolve方法解析用户请求的URL，找到第一个匹配的view。</div><div class="line"></div><div class="line">有关urlconf的内容，大家可以参考 [理解curlConf]()</div></pre></td></tr></table></figure>
+<ol>
+<li>Template(模板)</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">大部分web框架都有自己的Template(模板)系统，Django也是。但是，Django模板不同于Mako模板和jinja2模板，在Django模板不能直接写Python代码，只能通过额外的定义filter和template tag实现。由于本文主要介绍Django流程，模板内容就不过多介绍。</div></pre></td></tr></table></figure>
+<p>注：原文地址：<a href="http://projectsedu.com/2016/10/17/django%E4%BB%8E%E8%AF%B7%E6%B1%82%E5%88%B0%E8%BF%94%E5%9B%9E%E9%83%BD%E7%BB%8F%E5%8E%86%E4%BA%86%E4%BB%80%E4%B9%88/" target="_blank" rel="external">http://projectsedu.com/2016/10/17/django%E4%BB%8E%E8%AF%B7%E6%B1%82%E5%88%B0%E8%BF%94%E5%9B%9E%E9%83%BD%E7%BB%8F%E5%8E%86%E4%BA%86%E4%BB%80%E4%B9%88/</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h5 id=&quot;从runserver说起&quot;&gt;&lt;a href=&quot;#从runserver说起&quot; class=&quot;headerlink&quot; title=&quot;从runserver说起&quot;&gt;&lt;/a&gt;从runserver说起&lt;/h5&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;ruserver是使用django自己的web server，主要用于开发和调试中， 部署到线上环境一般使用nginx+uwsgi模式&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h5 id=&quot;manage-py-探秘&quot;&gt;&lt;a href=&quot;#manage-py-探秘&quot; class=&quot;headerlink&quot; title=&quot;manage.py 探秘&quot;&gt;&lt;/a&gt;manage.py 探秘&lt;/h5&gt;
+    
+    </summary>
+    
+      <category term="Django" scheme="http://yoursite.com/categories/Django/"/>
+    
+    
+      <category term="Django" scheme="http://yoursite.com/tags/Django/"/>
+    
+  </entry>
   
   <entry>
     <title>前后端分离之JWT用户认证</title>
@@ -100,56 +381,6 @@
     
     
       <category term="Web" scheme="http://yoursite.com/tags/Web/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>django从请求到返回都经历了什么</title>
-    <link href="http://yoursite.com/2017/12/06/django-request-process/"/>
-    <id>http://yoursite.com/2017/12/06/django-request-process/</id>
-    <published>2017-12-06T05:18:54.000Z</published>
-    <updated>2017-12-07T01:44:17.860Z</updated>
-    
-    <content type="html"><![CDATA[<h5 id="从runserver说起"><a href="#从runserver说起" class="headerlink" title="从runserver说起"></a>从runserver说起</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ruserver是使用django自己的web server，主要用于开发和调试中， 部署到线上环境一般使用nginx+uwsgi模式</div></pre></td></tr></table></figure>
-<h5 id="manage-py-探秘"><a href="#manage-py-探秘" class="headerlink" title="manage.py 探秘"></a>manage.py 探秘</h5><a id="more"></a>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">看一下manager.py的源码，你会发现上面的命令其实是通过Django的execute_from_command_line方法执行了内部实现的runserver命令，那么现在看一下runserver具体做了什么。。</div><div class="line">通过源码分析可知， ruserserver主要完成两件事：</div><div class="line"></div><div class="line">1). 解析参数，并通过django.core.servers.basehttp.get_internal_wsgi_application方法获取wsgi handler;</div><div class="line">2). 根据ip_address和port生成一个WSGIServer对象，接受用户请求</div></pre></td></tr></table></figure>
-<p>get_internal_wsgi_application的源码如下：</p>
-<p><a href="http://of66as8gb.bkt.clouddn.com/blog/20161017/174541324.png" target="_blank" rel="external"><img src="http://of66as8gb.bkt.clouddn.com/blog/20161017/174541324.png" alt="image"></a></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">通过上面的代码我们可以知道，Django会先根据settings中的WSGI_APPLICATION来获取handler；</div><div class="line">在创建project的时候，Django会默认创建一个wsgi.py文件，而settings中的WSGI_APPLICATION配置也会默认指向这个文件。看一下这个wsgi.py文件，其实它也和上面的逻辑一样，最终调用get_wsgi_application实现。</div></pre></td></tr></table></figure>
-<h5 id="django-http请求处理流程"><a href="#django-http请求处理流程" class="headerlink" title="django http请求处理流程"></a>django http请求处理流程</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Django和其他Web框架一样，HTTP的处理流程基本类似：接受request，返回response内容。Django的具体处理流程大致如下：</div></pre></td></tr></table></figure>
-<h6 id="1-加载settings-py"><a href="#1-加载settings-py" class="headerlink" title="1. 加载settings.py"></a>1. 加载settings.py</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">在通过django-admin.py创建project的时候，Django会自动生成默认的settings文件和manager.py等文件，在创建WSGIServer之前会执行下面的引用：</div><div class="line"></div><div class="line">from django.conf import settings</div><div class="line"></div><div class="line">上面引用在执行时，会读取os.environ中的DJANGO_SETTINGS_MODULE配置，加载项目配置文件，生成settings对象。所以，在manager.py文件中你可以看到，在获取WSGIServer之前，会先将project的settings路径加到os路径中。</div></pre></td></tr></table></figure>
-<h6 id="2-创建WSGIServer"><a href="#2-创建WSGIServer" class="headerlink" title="2. 创建WSGIServer"></a>2. 创建WSGIServer</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">不管是使用runserver还是uWSGI运行Django项目，在启动时都会调用django.core.servers.basehttp中的run()方法</div><div class="line">创建一个django.core.servers.basehttp.WSGIServer类的实例，之后调用其serve_forever()方法启动HTTP服务。run方法的源码如下：</div><div class="line"></div><div class="line">def run(addr, port, wsgi_handler, ipv6=False, threading=False):</div><div class="line">    server_address = (addr, port)</div><div class="line">    if threading:</div><div class="line">        httpd_cls = type(str(&apos;WSGIServer&apos;), (socketserver.ThreadingMixIn, WSGIServer), &#123;&#125;)</div><div class="line">    else:</div><div class="line">        httpd_cls = WSGIServer</div><div class="line">    httpd = httpd_cls(server_address, WSGIRequestHandler, ipv6=ipv6)</div><div class="line">    if threading:</div><div class="line">        # ThreadingMixIn.daemon_threads indicates how threads will behave on an</div><div class="line">        # abrupt shutdown; like quitting the server by the user or restarting</div><div class="line">        # by the auto-reloader. True means the server will not wait for thread</div><div class="line">        # termination before it quits. This will make auto-reloader faster</div><div class="line">        # and will prevent the need to kill the server manually if a thread</div><div class="line">        # isn&apos;t terminating correctly.</div><div class="line">        httpd.daemon_threads = True</div><div class="line">    httpd.set_app(wsgi_handler)</div><div class="line">    httpd.serve_forever()</div><div class="line"></div><div class="line">如上，我们可以看到：在创建WSGIServer实例的时候会指定HTTP请求的Handler，</div><div class="line">上述代码使用WSGIRequestHandler。当用户的HTTP请求到达服务器时，</div><div class="line">WSGIServer会创建WSGIRequestHandler实例，使用其handler方法来处理HTTP请求(其实最终是调用wsgiref.handlers.BaseHandler中的run方法处理)。</div><div class="line">WSGIServer通过set_app方法设置一个可调用(callable)的对象作为application，上面提到的handler方法最终会调用设置的application处理request，并返回response。</div><div class="line"></div><div class="line">其中，WSGIServer继承自wsgiref.simple_server.WSGIServer，而WSGIRequestHandler继承自wsgiref.simple_server.WSGIRequestHandler，wsgiref是Python标准库给出的WSGI的参考实现。其源码可自行到wsgiref参看，这里不再细说。</div></pre></td></tr></table></figure>
-<h6 id="3-处理Request"><a href="#3-处理Request" class="headerlink" title="3. 处理Request"></a>3. 处理Request</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">第二步中说到的application，在Django中一般是django.core.handlers.wsgi.WSGIHandler对象，WSGIHandler继承自django.core.handlers.base.BaseHandler，这个是Django处理request的核心逻辑，它会创建一个WSGIRequest实例，而WSGIRequest是从http.HttpRequest继承而来</div></pre></td></tr></table></figure>
-<h6 id="4-返回Response"><a href="#4-返回Response" class="headerlink" title="4. 返回Response"></a>4. 返回Response</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">上面提到的BaseHandler中有个get_response方法，该方法会先加载Django项目的ROOT_URLCONF，然后根据url规则找到对应的view方法(类)，view逻辑会根据request实例生成并返回具体的response。</div><div class="line"></div><div class="line">在Django返回结果之后，第二步中提到wsgiref.handlers.BaseHandler.run方法会调用finish_response结束请求，并将内容返回给用户</div></pre></td></tr></table></figure>
-<h5 id="Django处理Request的详细流程"><a href="#Django处理Request的详细流程" class="headerlink" title="Django处理Request的详细流程"></a>Django处理Request的详细流程</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">首先给大家分享两个网上看到的Django流程图：</div></pre></td></tr></table></figure>
-<p><a href="http://of66as8gb.bkt.clouddn.com/blog/20161017/174911486.png" target="_blank" rel="external"><img src="http://of66as8gb.bkt.clouddn.com/blog/20161017/174911486.png" alt="mark"></a><br>​                        流程图一</p>
-<p><a href="http://of66as8gb.bkt.clouddn.com/blog/20161017/180016921.png" target="_blank" rel="external"><img src="http://of66as8gb.bkt.clouddn.com/blog/20161017/180016921.png" alt="image"></a><br>流程图二</p>
-<p>上面的两张流程图可以大致描述Django处理request的流程，按照流程图2的标注，可以分为以下几个步骤：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">1. 用户通过浏览器请求一个页面</div><div class="line"></div><div class="line">2.请求到达Request Middlewares，中间件对request做一些预处理或者直接response请求</div><div class="line">3.URLConf通过urls.py文件和请求的URL找到相应的View</div><div class="line">4.View Middlewares被访问，它同样可以对request做一些处理或者直接返回response</div><div class="line">5.调用View中的函数</div><div class="line">6.View中的方法可以选择性的通过Models访问底层的数据</div><div class="line">7.所有的Model-to-DB的交互都是通过manager完成的</div><div class="line">8.如果需要，Views可以使用一个特殊的Context</div><div class="line">9.Context被传给Template用来生成页面</div><div class="line">    a.Template使用Filters和Tags去渲染输出</div><div class="line">    b.输出被返回到View</div><div class="line">    c.HTTPResponse被发送到Response Middlewares</div><div class="line">    d.任何Response Middlewares都可以丰富response或者返回一个完全不同的response</div><div class="line">    e.Response返回到浏览器，呈现给用户</div><div class="line"></div><div class="line">上述流程中最主要的几个部分分别是：Middleware(中间件，包括request, view, exception, response)，URLConf(url映射关系)，Template(模板系统)，下面一一介绍一下。</div></pre></td></tr></table></figure>
-<h5 id="1-Middleware-中间件"><a href="#1-Middleware-中间件" class="headerlink" title="1. Middleware(中间件)"></a>1. Middleware(中间件)</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">Middleware并不是Django所独有的东西，在其他的Web框架中也有这种概念。在Django中，Middleware可以渗入处理流程的四个阶段：request，view，response和exception，相应的，在每个Middleware类中都有rocess_request，process_view， process_response 和 process_exception这四个方法。你可以定义其中任意一个活多个方法，这取决于你希望该Middleware作用于哪个处理阶段。每个方法都可以直接返回response对象。</div><div class="line"></div><div class="line">Middleware是在Django BaseHandler的load_middleware方法执行时加载的，加载之后会建立四个列表作为处理器的实例变量：</div><div class="line"></div><div class="line">_request_middleware：process_request方法的列表</div><div class="line"></div><div class="line">_view_middleware：process_view方法的列表</div><div class="line"></div><div class="line">_response_middleware：process_response方法的列表</div><div class="line"></div><div class="line">_exception_middleware：process_exception方法的列表</div><div class="line"></div><div class="line">Django的中间件是在其配置文件(settings.py)的MIDDLEWARE_CLASSES元组中定义的。在MIDDLEWARE_CLASSES中，中间件组件用字符串表示：指向中间件类名的完整Python路径。例如</div><div class="line"></div><div class="line">`MIDDLEWARE_CLASSES = [</div><div class="line">    &apos;django.middleware.security.SecurityMiddleware&apos;,</div><div class="line">    &apos;django.contrib.sessions.middleware.SessionMiddleware&apos;,</div><div class="line">    &apos;django.middleware.common.CommonMiddleware&apos;,</div><div class="line">    &apos;django.middleware.csrf.CsrfViewMiddleware&apos;,</div><div class="line">    &apos;django.contrib.auth.middleware.AuthenticationMiddleware&apos;,</div><div class="line">    &apos;django.contrib.auth.middleware.SessionAuthenticationMiddleware&apos;,</div><div class="line">    &apos;django.contrib.messages.middleware.MessageMiddleware&apos;,</div><div class="line">    &apos;django.middleware.clickjacking.XFrameOptionsMiddleware&apos;,</div><div class="line">]`</div><div class="line"></div><div class="line">Django项目的安装并不强制要求任何中间件，如果你愿意，MIDDLEWARE_CLASSES可以为空。中间件出现的顺序非常重要：在request和view的处理阶段，Django按照MIDDLEWARE_CLASSES中出现的顺序来应用中间件，而在response和exception异常处理阶段，Django则按逆序来调用它们。也就是说，Django将MIDDLEWARE_CLASSES视为view函数外层的顺序包装子：在request阶段按顺序从上到下穿过，而在response则反过来。以下这张图可以更好地帮助你理解：</div></pre></td></tr></table></figure>
-<p><a href="http://of66as8gb.bkt.clouddn.com/blog/20161017/180754931.png" target="_blank" rel="external"><img src="http://of66as8gb.bkt.clouddn.com/blog/20161017/180754931.png" alt="image"></a></p>
-<ol>
-<li>URLConf(URL映射)</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">如果处理request的中间件都没有直接返回response，那么Django会去解析用户请求的URL。URLconf就是Django所支撑网站的目录。它的本质是URL模式以及要为该URL模式调用的视图函数之间的映射表。通过这种方式可以告诉Django，对于这个URL调用这段代码，对于那个URL调用那段代码。具体的，在Django项目的配置文件中有ROOT_URLCONF常量，这个常量加上根目录&quot;/&quot;，作为参数来创建django.core.urlresolvers.RegexURLResolver的实例，然后通过它的resolve方法解析用户请求的URL，找到第一个匹配的view。</div><div class="line"></div><div class="line">有关urlconf的内容，大家可以参考 [理解curlConf]()</div></pre></td></tr></table></figure>
-<ol>
-<li>Template(模板)</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">大部分web框架都有自己的Template(模板)系统，Django也是。但是，Django模板不同于Mako模板和jinja2模板，在Django模板不能直接写Python代码，只能通过额外的定义filter和template tag实现。由于本文主要介绍Django流程，模板内容就不过多介绍。</div></pre></td></tr></table></figure>
-<p>注：原文地址：<a href="http://projectsedu.com/2016/10/17/django%E4%BB%8E%E8%AF%B7%E6%B1%82%E5%88%B0%E8%BF%94%E5%9B%9E%E9%83%BD%E7%BB%8F%E5%8E%86%E4%BA%86%E4%BB%80%E4%B9%88/" target="_blank" rel="external">http://projectsedu.com/2016/10/17/django%E4%BB%8E%E8%AF%B7%E6%B1%82%E5%88%B0%E8%BF%94%E5%9B%9E%E9%83%BD%E7%BB%8F%E5%8E%86%E4%BA%86%E4%BB%80%E4%B9%88/</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h5 id=&quot;从runserver说起&quot;&gt;&lt;a href=&quot;#从runserver说起&quot; class=&quot;headerlink&quot; title=&quot;从runserver说起&quot;&gt;&lt;/a&gt;从runserver说起&lt;/h5&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;ruserver是使用django自己的web server，主要用于开发和调试中， 部署到线上环境一般使用nginx+uwsgi模式&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;h5 id=&quot;manage-py-探秘&quot;&gt;&lt;a href=&quot;#manage-py-探秘&quot; class=&quot;headerlink&quot; title=&quot;manage.py 探秘&quot;&gt;&lt;/a&gt;manage.py 探秘&lt;/h5&gt;
-    
-    </summary>
-    
-      <category term="Django" scheme="http://yoursite.com/categories/Django/"/>
-    
-    
-      <category term="Django" scheme="http://yoursite.com/tags/Django/"/>
     
   </entry>
   
@@ -1300,43 +1531,6 @@
   </entry>
   
   <entry>
-    <title>Python分布式爬虫打造搜索引擎项目学习笔记——云打码实现验证码识别</title>
-    <link href="http://yoursite.com/2017/06/12/scrapy-yundama/"/>
-    <id>http://yoursite.com/2017/06/12/scrapy-yundama/</id>
-    <published>2017-06-12T06:18:54.000Z</published>
-    <updated>2017-06-22T07:19:19.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>验证码识别大致有如下几种方式：</p>
-<ul>
-<li>编码实现（Tesseract-OCR）</li>
-<li>在线打码</li>
-<li>人工打码</li>
-</ul>
-<a id="more"></a>
-<p>这里我们简单介绍一下在线打码，选择的打码平台为：<a href="http://www.yundama.com" target="_blank" rel="external">云打码</a></p>
-<p>具体方式查看调用示例即可。</p>
-<p>下面给出代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> json</div><div class="line"><span class="keyword">import</span> requests</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">YDMHttp</span><span class="params">(object)</span>:</span></div><div class="line">    apiurl = <span class="string">'http://api.yundama.com/api.php'</span></div><div class="line">    username = <span class="string">''</span></div><div class="line">    password = <span class="string">''</span></div><div class="line">    appid = <span class="string">''</span></div><div class="line">    appkey = <span class="string">''</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, username, password, appid, appkey)</span>:</span></div><div class="line">        self.username = username</div><div class="line">        self.password = password</div><div class="line">        self.appid = str(appid)</div><div class="line">        self.appkey = appkey</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">balance</span><span class="params">(self)</span>:</span></div><div class="line">        data = &#123;<span class="string">'method'</span>: <span class="string">'balance'</span>, <span class="string">'username'</span>: self.username, <span class="string">'password'</span>: self.password, <span class="string">'appid'</span>: self.appid,</div><div class="line">                <span class="string">'appkey'</span>: self.appkey&#125;</div><div class="line">        response_data = requests.post(self.apiurl, data=data)</div><div class="line">        ret_data = json.loads(response_data.text)</div><div class="line">        <span class="keyword">if</span> ret_data[<span class="string">"ret"</span>] == <span class="number">0</span>:</div><div class="line">            print(<span class="string">"获取剩余积分"</span>, ret_data[<span class="string">"balance"</span>])</div><div class="line">            <span class="keyword">return</span> ret_data[<span class="string">"balance"</span>]</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">return</span> <span class="keyword">None</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">login</span><span class="params">(self)</span>:</span></div><div class="line">        data = &#123;<span class="string">'method'</span>: <span class="string">'login'</span>, <span class="string">'username'</span>: self.username, <span class="string">'password'</span>: self.password, <span class="string">'appid'</span>: self.appid,</div><div class="line">                <span class="string">'appkey'</span>: self.appkey&#125;</div><div class="line">        response_data = requests.post(self.apiurl, data=data)</div><div class="line">        ret_data = json.loads(response_data.text)</div><div class="line">        <span class="keyword">if</span> ret_data[<span class="string">"ret"</span>] == <span class="number">0</span>:</div><div class="line">            print(<span class="string">"登录成功"</span>, ret_data[<span class="string">"uid"</span>])</div><div class="line">            <span class="keyword">return</span> ret_data[<span class="string">"uid"</span>]</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">return</span> <span class="keyword">None</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">decode</span><span class="params">(self, filename, codetype, timeout)</span>:</span></div><div class="line">        data = &#123;<span class="string">'method'</span>: <span class="string">'upload'</span>, <span class="string">'username'</span>: self.username, <span class="string">'password'</span>: self.password, <span class="string">'appid'</span>: self.appid,</div><div class="line">                <span class="string">'appkey'</span>: self.appkey, <span class="string">'codetype'</span>: str(codetype), <span class="string">'timeout'</span>: str(timeout)&#125;</div><div class="line">        files = &#123;<span class="string">'file'</span>: open(filename, <span class="string">'rb'</span>)&#125;</div><div class="line">        response_data = requests.post(self.apiurl, files=files, data=data)</div><div class="line">        ret_data = json.loads(response_data.text)</div><div class="line">        <span class="keyword">if</span> ret_data[<span class="string">"ret"</span>] == <span class="number">0</span>:</div><div class="line">            print(<span class="string">"识别成功"</span>, ret_data[<span class="string">"text"</span>])</div><div class="line">            <span class="keyword">return</span> ret_data[<span class="string">"text"</span>]</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">return</span> <span class="keyword">None</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">ydm</span><span class="params">(file_path)</span>:</span></div><div class="line">    username = <span class="string">'da_ge_da1'</span></div><div class="line">    <span class="comment"># 密码</span></div><div class="line">    password = <span class="string">'da_ge_da'</span></div><div class="line">    <span class="comment"># 软件ＩＤ，开发者分成必要参数。登录开发者后台【我的软件】获得！</span></div><div class="line">    appid = <span class="number">3129</span></div><div class="line">    <span class="comment"># 软件密钥，开发者分成必要参数。登录开发者后台【我的软件】获得！</span></div><div class="line">    appkey = <span class="string">'40d5ad41c047179fc797631e3b9c3025'</span></div><div class="line">    <span class="comment"># 图片文件</span></div><div class="line">    filename = <span class="string">'image/captcha.jpg'</span></div><div class="line">    <span class="comment"># 验证码类型，# 例：1004表示4位字母数字，不同类型收费不同。请准确填写，否则影响识别率。在此查询所有类型 http://www.yundama.com/price.html</span></div><div class="line">    codetype = <span class="number">5000</span></div><div class="line">    <span class="comment"># 超时时间，秒</span></div><div class="line">    timeout = <span class="number">60</span></div><div class="line">    <span class="comment"># 检查</span></div><div class="line"></div><div class="line">    yundama = YDMHttp(username, password, appid, appkey)</div><div class="line">    <span class="keyword">if</span> (username == <span class="string">'username'</span>):</div><div class="line">        print(<span class="string">'请设置好相关参数再测试'</span>)</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="comment"># 开始识别，图片路径，验证码类型ID，超时时间（秒），识别结果</span></div><div class="line">        <span class="keyword">return</span> yundama.decode(file_path, codetype, timeout);</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</div><div class="line">    <span class="comment"># 用户名</span></div><div class="line">    username = <span class="string">'da_ge_da1'</span></div><div class="line">    <span class="comment"># 密码</span></div><div class="line">    password = <span class="string">'da_ge_da'</span></div><div class="line">    <span class="comment"># 软件ＩＤ，开发者分成必要参数。登录开发者后台【我的软件】获得！</span></div><div class="line">    appid = <span class="number">3129</span></div><div class="line">    <span class="comment"># 软件密钥，开发者分成必要参数。登录开发者后台【我的软件】获得！</span></div><div class="line">    appkey = <span class="string">'40d5ad41c047179fc797631e3b9c3025'</span></div><div class="line">    <span class="comment"># 图片文件</span></div><div class="line">    filename = <span class="string">'image/captcha.jpg'</span></div><div class="line">    <span class="comment"># 验证码类型，# 例：1004表示4位字母数字，不同类型收费不同。请准确填写，否则影响识别率。在此查询所有类型 http://www.yundama.com/price.html</span></div><div class="line">    codetype = <span class="number">5000</span></div><div class="line">    <span class="comment"># 超时时间，秒</span></div><div class="line">    timeout = <span class="number">60</span></div><div class="line">    <span class="comment"># 检查</span></div><div class="line">    <span class="keyword">if</span> (username == <span class="string">'username'</span>):</div><div class="line">        print(<span class="string">'请设置好相关参数再测试'</span>)</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="comment"># 初始化</span></div><div class="line">        yundama = YDMHttp(username, password, appid, appkey)</div><div class="line"></div><div class="line">        <span class="comment"># 登陆云打码</span></div><div class="line">        uid = yundama.login()</div><div class="line">        print(<span class="string">'uid: %s'</span> % uid)</div><div class="line"></div><div class="line">        <span class="comment"># 登陆云打码</span></div><div class="line">        uid = yundama.login()</div><div class="line">        print(<span class="string">'uid: %s'</span> % uid)</div><div class="line"></div><div class="line">        <span class="comment"># 查询余额</span></div><div class="line">        balance = yundama.balance()</div><div class="line">        print(<span class="string">'balance: %s'</span> % balance)</div><div class="line"></div><div class="line">        <span class="comment"># 开始识别，图片路径，验证码类型ID，超时时间（秒），识别结果</span></div><div class="line">        text = yundama.decode(filename, codetype, timeout)</div></pre></td></tr></table></figure>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;验证码识别大致有如下几种方式：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;编码实现（Tesseract-OCR）&lt;/li&gt;
-&lt;li&gt;在线打码&lt;/li&gt;
-&lt;li&gt;人工打码&lt;/li&gt;
-&lt;/ul&gt;
-    
-    </summary>
-    
-      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
-    
-    
-      <category term="Scrapy，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Python分布式爬虫打造搜索引擎项目学习笔记——cookie禁用、自动限速、自定义Spider的settings</title>
     <link href="http://yoursite.com/2017/06/12/scrapy-cookies-settings/"/>
     <id>http://yoursite.com/2017/06/12/scrapy-cookies-settings/</id>
@@ -1391,104 +1585,32 @@
   </entry>
   
   <entry>
-    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy核心架构分析</title>
-    <link href="http://yoursite.com/2017/06/11/scrapy-framework/"/>
-    <id>http://yoursite.com/2017/06/11/scrapy-framework/</id>
-    <published>2017-06-11T06:18:54.000Z</published>
-    <updated>2017-06-21T04:04:54.000Z</updated>
+    <title>Python分布式爬虫打造搜索引擎项目学习笔记——云打码实现验证码识别</title>
+    <link href="http://yoursite.com/2017/06/12/scrapy-yundama/"/>
+    <id>http://yoursite.com/2017/06/12/scrapy-yundama/</id>
+    <published>2017-06-12T06:18:54.000Z</published>
+    <updated>2017-06-22T07:19:19.000Z</updated>
     
-    <content type="html"><![CDATA[<h2 id="概览"><a href="#概览" class="headerlink" title="概览"></a><strong>概览</strong></h2><p>首先看一下Scrapy的架构图：</p>
+    <content type="html"><![CDATA[<p>验证码识别大致有如下几种方式：</p>
+<ul>
+<li>编码实现（Tesseract-OCR）</li>
+<li>在线打码</li>
+<li>人工打码</li>
+</ul>
 <a id="more"></a>
-<p><img src="https://ws4.sinaimg.cn/large/006tNc79ly1fgsotbkiowj31240oagp5.jpg" alt=""></p>
-<h2 id="核心组件"><a href="#核心组件" class="headerlink" title="核心组件"></a><strong>核心组件</strong></h2><p>Scrapy有以下几大组件：</p>
-<ul>
-<li><code>Scrapy Engine</code>：核心引擎，负责控制和调度各个组件，保证数据流转；</li>
-<li><code>Scheduler</code>：负责管理任务、过滤任务、输出任务的调度器，存储、去重任务都在此控制；</li>
-<li><code>Downloader</code>：下载器，负责在网络上下载网页数据，输入待下载URL，输出下载结果；</li>
-<li><code>Spiders</code>：用户自己编写的爬虫脚本，可自定义抓取意图；</li>
-<li><code>Item Pipeline</code>：负责输出结构化数据，可自定义输出位置；</li>
-</ul>
-<p>除此之外，还有两大中间件组件：</p>
-<ul>
-<li><code>Downloader middlewares</code>：介于引擎和下载器之间，可以在网页在下载前、后进行逻辑处理；</li>
-<li><code>Spider middlewares</code>：介于引擎和爬虫之间，可以在调用爬虫输入下载结果和输出请求/数据时进行逻辑处理</li>
-</ul>
-<h2 id="数据流转"><a href="#数据流转" class="headerlink" title="数据流转"></a><strong>数据流转</strong></h2><p>按照架构图的序号，数据流转大概是这样的：</p>
-<ol>
-<li><strong>引擎</strong>从<strong>自定义爬虫</strong>中获取初始化请求（也叫种子URL）；</li>
-<li>引擎把该请求放入<strong>调度器</strong>中，同时<strong>引擎向调度器</strong>获取一个<strong>待下载的请求</strong>（这两部是异步执行的）；</li>
-<li>调度器返回给引擎一个<strong>待下载</strong>的请求；</li>
-<li>引擎发送请求给<strong>下载器</strong>，中间会经过一系列<strong>下载器中间件</strong>；</li>
-<li>这个请求通过下载器下载完成后，生成一个<strong>响应对象</strong>，返回给引擎，这中间会再次经过一系列<strong>下载器中间件</strong>；</li>
-<li>引擎接收到下载返回的响应对象后，然后发送给爬虫，执行<strong>自定义爬虫逻辑</strong>，中间会经过一系列<strong>爬虫中间件</strong>；</li>
-<li>爬虫执行对应的回调方法，处理这个响应，完成用户逻辑后，会生成<strong>结果对象</strong>或<strong>新的请求对象</strong>给引擎，再次经过一系列<strong>爬虫中间件</strong>；</li>
-<li>引擎把爬虫返回的结果对象交由<strong>结果处理器</strong>处理，把<strong>新的请求</strong>对象通过引擎再交给<strong>调度器</strong>；</li>
-<li>从1开始重复执行，直到<strong>调度器</strong>中没有新的请求处理；</li>
-</ol>
-<h2 id="核心组件交互图"><a href="#核心组件交互图" class="headerlink" title="核心组件交互图"></a><strong>核心组件交互图</strong></h2><p><img src="https://ws3.sinaimg.cn/large/006tNc79ly1fgsowftl9fj31f60zjtco.jpg" alt=""></p>
-<p>这里需要说明一下图中的<code>Scrapyer</code>，其实这也是在源码的一个核心类，但官方架构图中没有展示出来，这个类其实是处于<code>Engine</code>、<code>Spiders</code>、<code>Pipeline</code>之间，是连通这3个组件的桥梁。</p>
-<h2 id="核心类图"><a href="#核心类图" class="headerlink" title="核心类图"></a><strong>核心类图</strong></h2><p>涉及到的一些核心类如下：</p>
-<p><img src="https://ws2.sinaimg.cn/large/006tNc79ly1fgsoxkf4ntj30tc14hq6c.jpg" alt=""></p>
-<p>其中没有样式的<strong>黑色文字</strong>是类的核心<strong>属性</strong>，<strong>黄色样式</strong>的文字都是核心<strong>方法</strong>。</p>
-<p>可以看到，Scrapy的核心类，其实主要包含5大组件、4大中间件管理器、爬虫类和爬虫管理器、请求、响应对象和数据解析类这几大块。</p>
-]]></content>
+<p>这里我们简单介绍一下在线打码，选择的打码平台为：<a href="http://www.yundama.com" target="_blank" rel="external">云打码</a></p>
+<p>具体方式查看调用示例即可。</p>
+<p>下面给出代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> json</div><div class="line"><span class="keyword">import</span> requests</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">YDMHttp</span><span class="params">(object)</span>:</span></div><div class="line">    apiurl = <span class="string">'http://api.yundama.com/api.php'</span></div><div class="line">    username = <span class="string">''</span></div><div class="line">    password = <span class="string">''</span></div><div class="line">    appid = <span class="string">''</span></div><div class="line">    appkey = <span class="string">''</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, username, password, appid, appkey)</span>:</span></div><div class="line">        self.username = username</div><div class="line">        self.password = password</div><div class="line">        self.appid = str(appid)</div><div class="line">        self.appkey = appkey</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">balance</span><span class="params">(self)</span>:</span></div><div class="line">        data = &#123;<span class="string">'method'</span>: <span class="string">'balance'</span>, <span class="string">'username'</span>: self.username, <span class="string">'password'</span>: self.password, <span class="string">'appid'</span>: self.appid,</div><div class="line">                <span class="string">'appkey'</span>: self.appkey&#125;</div><div class="line">        response_data = requests.post(self.apiurl, data=data)</div><div class="line">        ret_data = json.loads(response_data.text)</div><div class="line">        <span class="keyword">if</span> ret_data[<span class="string">"ret"</span>] == <span class="number">0</span>:</div><div class="line">            print(<span class="string">"获取剩余积分"</span>, ret_data[<span class="string">"balance"</span>])</div><div class="line">            <span class="keyword">return</span> ret_data[<span class="string">"balance"</span>]</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">return</span> <span class="keyword">None</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">login</span><span class="params">(self)</span>:</span></div><div class="line">        data = &#123;<span class="string">'method'</span>: <span class="string">'login'</span>, <span class="string">'username'</span>: self.username, <span class="string">'password'</span>: self.password, <span class="string">'appid'</span>: self.appid,</div><div class="line">                <span class="string">'appkey'</span>: self.appkey&#125;</div><div class="line">        response_data = requests.post(self.apiurl, data=data)</div><div class="line">        ret_data = json.loads(response_data.text)</div><div class="line">        <span class="keyword">if</span> ret_data[<span class="string">"ret"</span>] == <span class="number">0</span>:</div><div class="line">            print(<span class="string">"登录成功"</span>, ret_data[<span class="string">"uid"</span>])</div><div class="line">            <span class="keyword">return</span> ret_data[<span class="string">"uid"</span>]</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">return</span> <span class="keyword">None</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">decode</span><span class="params">(self, filename, codetype, timeout)</span>:</span></div><div class="line">        data = &#123;<span class="string">'method'</span>: <span class="string">'upload'</span>, <span class="string">'username'</span>: self.username, <span class="string">'password'</span>: self.password, <span class="string">'appid'</span>: self.appid,</div><div class="line">                <span class="string">'appkey'</span>: self.appkey, <span class="string">'codetype'</span>: str(codetype), <span class="string">'timeout'</span>: str(timeout)&#125;</div><div class="line">        files = &#123;<span class="string">'file'</span>: open(filename, <span class="string">'rb'</span>)&#125;</div><div class="line">        response_data = requests.post(self.apiurl, files=files, data=data)</div><div class="line">        ret_data = json.loads(response_data.text)</div><div class="line">        <span class="keyword">if</span> ret_data[<span class="string">"ret"</span>] == <span class="number">0</span>:</div><div class="line">            print(<span class="string">"识别成功"</span>, ret_data[<span class="string">"text"</span>])</div><div class="line">            <span class="keyword">return</span> ret_data[<span class="string">"text"</span>]</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">return</span> <span class="keyword">None</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">ydm</span><span class="params">(file_path)</span>:</span></div><div class="line">    username = <span class="string">'da_ge_da1'</span></div><div class="line">    <span class="comment"># 密码</span></div><div class="line">    password = <span class="string">'da_ge_da'</span></div><div class="line">    <span class="comment"># 软件ＩＤ，开发者分成必要参数。登录开发者后台【我的软件】获得！</span></div><div class="line">    appid = <span class="number">3129</span></div><div class="line">    <span class="comment"># 软件密钥，开发者分成必要参数。登录开发者后台【我的软件】获得！</span></div><div class="line">    appkey = <span class="string">'40d5ad41c047179fc797631e3b9c3025'</span></div><div class="line">    <span class="comment"># 图片文件</span></div><div class="line">    filename = <span class="string">'image/captcha.jpg'</span></div><div class="line">    <span class="comment"># 验证码类型，# 例：1004表示4位字母数字，不同类型收费不同。请准确填写，否则影响识别率。在此查询所有类型 http://www.yundama.com/price.html</span></div><div class="line">    codetype = <span class="number">5000</span></div><div class="line">    <span class="comment"># 超时时间，秒</span></div><div class="line">    timeout = <span class="number">60</span></div><div class="line">    <span class="comment"># 检查</span></div><div class="line"></div><div class="line">    yundama = YDMHttp(username, password, appid, appkey)</div><div class="line">    <span class="keyword">if</span> (username == <span class="string">'username'</span>):</div><div class="line">        print(<span class="string">'请设置好相关参数再测试'</span>)</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="comment"># 开始识别，图片路径，验证码类型ID，超时时间（秒），识别结果</span></div><div class="line">        <span class="keyword">return</span> yundama.decode(file_path, codetype, timeout);</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</div><div class="line">    <span class="comment"># 用户名</span></div><div class="line">    username = <span class="string">'da_ge_da1'</span></div><div class="line">    <span class="comment"># 密码</span></div><div class="line">    password = <span class="string">'da_ge_da'</span></div><div class="line">    <span class="comment"># 软件ＩＤ，开发者分成必要参数。登录开发者后台【我的软件】获得！</span></div><div class="line">    appid = <span class="number">3129</span></div><div class="line">    <span class="comment"># 软件密钥，开发者分成必要参数。登录开发者后台【我的软件】获得！</span></div><div class="line">    appkey = <span class="string">'40d5ad41c047179fc797631e3b9c3025'</span></div><div class="line">    <span class="comment"># 图片文件</span></div><div class="line">    filename = <span class="string">'image/captcha.jpg'</span></div><div class="line">    <span class="comment"># 验证码类型，# 例：1004表示4位字母数字，不同类型收费不同。请准确填写，否则影响识别率。在此查询所有类型 http://www.yundama.com/price.html</span></div><div class="line">    codetype = <span class="number">5000</span></div><div class="line">    <span class="comment"># 超时时间，秒</span></div><div class="line">    timeout = <span class="number">60</span></div><div class="line">    <span class="comment"># 检查</span></div><div class="line">    <span class="keyword">if</span> (username == <span class="string">'username'</span>):</div><div class="line">        print(<span class="string">'请设置好相关参数再测试'</span>)</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="comment"># 初始化</span></div><div class="line">        yundama = YDMHttp(username, password, appid, appkey)</div><div class="line"></div><div class="line">        <span class="comment"># 登陆云打码</span></div><div class="line">        uid = yundama.login()</div><div class="line">        print(<span class="string">'uid: %s'</span> % uid)</div><div class="line"></div><div class="line">        <span class="comment"># 登陆云打码</span></div><div class="line">        uid = yundama.login()</div><div class="line">        print(<span class="string">'uid: %s'</span> % uid)</div><div class="line"></div><div class="line">        <span class="comment"># 查询余额</span></div><div class="line">        balance = yundama.balance()</div><div class="line">        print(<span class="string">'balance: %s'</span> % balance)</div><div class="line"></div><div class="line">        <span class="comment"># 开始识别，图片路径，验证码类型ID，超时时间（秒），识别结果</span></div><div class="line">        text = yundama.decode(filename, codetype, timeout)</div></pre></td></tr></table></figure>]]></content>
     
     <summary type="html">
     
-      &lt;h2 id=&quot;概览&quot;&gt;&lt;a href=&quot;#概览&quot; class=&quot;headerlink&quot; title=&quot;概览&quot;&gt;&lt;/a&gt;&lt;strong&gt;概览&lt;/strong&gt;&lt;/h2&gt;&lt;p&gt;首先看一下Scrapy的架构图：&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
-    
-    
-      <category term="Scrapy，Requests，Python" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CRequests%EF%BC%8CPython/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy随机更换User-Agent和实现IP代理池</title>
-    <link href="http://yoursite.com/2017/06/11/scrapy-useragent-proxyip/"/>
-    <id>http://yoursite.com/2017/06/11/scrapy-useragent-proxyip/</id>
-    <published>2017-06-11T06:18:54.000Z</published>
-    <updated>2017-06-21T10:13:36.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>之前有一节用于介绍<code>Request</code>和<code>Response</code>，还是<a href="https://doc.scrapy.org/en/latest/index.html" target="_blank" rel="external">官方文档</a>介绍的比较详尽，所以就不做笔记了。</p>
-<p>这一节用于介绍随机更换User-Agent和实现IP代理池的方法，首先来看一下现在网站中所做的反爬虫工作。</p>
-<a id="more"></a>
-<h2 id="常见的反爬虫和应对方法"><a href="#常见的反爬虫和应对方法" class="headerlink" title="常见的反爬虫和应对方法"></a><strong>常见的反爬虫和应对方法</strong></h2><p>一般网站从三个方面反爬虫：用户请求的Headers，用户行为，网站目录和数据加载方式。前两种比较容易遇到，大多数网站都从这些角度来反爬虫。第三种一些应用ajax的网站会采用，这样增大了爬取的难度。</p>
-<h3 id="通过Headers反爬虫"><a href="#通过Headers反爬虫" class="headerlink" title="通过Headers反爬虫"></a><strong>通过</strong>Headers反爬虫</h3><p>从用户请求的Headers反爬虫是最常见的反爬虫策略。很多网站都会对Headers的User-Agent进行检测，还有一部分网站会对Referer进行检测（一些资源网站的防盗链就是检测Referer）。如果遇到了这类反爬虫机制，可以直接在爬虫中添加Headers，将浏览器的User-Agent复制到爬虫的Headers中；或者将Referer值修改为目标网站域名。对于检测Headers的反爬虫，在爬虫中修改或者添加Headers就能很好的绕过。</p>
-<p>针对这样的反爬虫方法，我们在Scrapy中实现随机更换User-Agent就很有必要了。</p>
-<h3 id="基于用户行为反爬虫"><a href="#基于用户行为反爬虫" class="headerlink" title="基于用户行为反爬虫"></a>基于用户行为反爬虫</h3><p>还有一部分网站是通过检测用户行为，例如同一IP短时间内多次访问同一页面，或者同一账户短时间内多次进行相同操作。</p>
-<p>大多数网站都是前一种情况，对于这种情况，使用IP代理就可以解决。可以专门写一个爬虫，爬取网上公开的代理ip，检测后全部保存起来。这样的代理ip爬虫经常会用到，最好自己准备一个。有了大量代理ip后可以每请求几次更换一个ip，这在requests或者urllib2中很容易做到，这样就能很容易的绕过第一种反爬虫。</p>
-<p>对于第二种情况，可以在每次请求后随机间隔几秒再进行下一次请求。有些有逻辑漏洞的网站，可以通过请求几次，退出登录，重新登录，继续请求来绕过同一账号短时间内不能多次进行相同请求的限制。</p>
-<p>对于这样的反爬虫方法，我们可以在Scrapy中实现IP代理池，问题便迎刃而解。</p>
-<h3 id="动态页面的反爬虫"><a href="#动态页面的反爬虫" class="headerlink" title="动态页面的反爬虫"></a>动态页面的反爬虫</h3><p>上述的几种情况大多都是出现在静态页面，还有一部分网站，我们需要爬取的数据是通过ajax请求得到，或者通过JavaScript生成的。首先用Firebug或者HttpFox对网络请求进行分析。如果能够找到ajax请求，也能分析出具体的参数和响应的具体含义，我们就能采用上面的方法，直接利用requests或者urllib2模拟ajax请求，对响应的json进行分析得到需要的数据。</p>
-<p>能够直接模拟ajax请求获取数据固然是极好的，但是有些网站把ajax请求的所有参数全部加密了。我们根本没办法构造自己所需要的数据的请求。我这几天爬的那个网站就是这样，除了加密ajax参数，它还把一些基本的功能都封装了，全部都是在调用自己的接口，而接口参数都是加密的。遇到这样的网站，我们就不能用上面的方法了，我用的是selenium+phantomJS框架，调用浏览器内核，并利用phantomJS执行js来模拟人为操作以及触发页面中的js脚本。从填写表单到点击按钮再到滚动页面，全部都可以模拟，不考虑具体的请求和响应过程，只是完完整整的把人浏览页面获取数据的过程模拟一遍。 </p>
-<p>用这套框架几乎能绕过大多数的反爬虫，因为它不是在伪装成浏览器来获取数据（上述的通过添加 Headers一定程度上就是为了伪装成浏览器），它本身就是浏览器，phantomJS就是一个没有界面的浏览器，只是操控这个浏览器的不是人。利用 selenium+phantomJS能干很多事情，例如识别点触式（12306）或者滑动式的验证码，对页面表单进行暴力破解等等。它在自动化渗透中还 会大展身手，以后还会提到这个。</p>
-<h2 id="随机更换User-Agent"><a href="#随机更换User-Agent" class="headerlink" title="随机更换User-Agent"></a><strong>随机更换User-Agent</strong></h2><p>首先将下面的代码添加到<code>settings.py</code>文件，替换默认的user-agent处理模块：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">DOWNLOADER_MIDDLEWARES = &#123;</div><div class="line">    <span class="string">'ArticleSpider.middlewares.RandomUserAgentMiddleware'</span>: <span class="number">543</span>,</div><div class="line">    <span class="string">'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware'</span>: <span class="keyword">None</span>,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>在<code>middlewares.py</code>文件中自定义User-Agent处理模块：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> fake_useragent <span class="keyword">import</span> UserAgent</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">RandomUserAgentMiddleware</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    随机更换User-Agent</div><div class="line">    """</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, crawler)</span>:</span></div><div class="line">        super(RandomUserAgentMiddleware, self).__init__()</div><div class="line">        self.ua = UserAgent()</div><div class="line">        self.ua_type = crawler.settings.get(<span class="string">'RANDOM_UA_TYPE'</span>, <span class="string">'random'</span>)</div><div class="line"></div><div class="line"><span class="meta">    @classmethod</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">from_crawler</span><span class="params">(cls, crawler)</span>:</span></div><div class="line">        <span class="keyword">return</span> cls(crawler)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_request</span><span class="params">(self, request, spider)</span>:</span></div><div class="line">        <span class="function"><span class="keyword">def</span> <span class="title">get_ua</span><span class="params">()</span>:</span></div><div class="line">            <span class="keyword">return</span> getattr(self.ua, self.ua_type)</div><div class="line"></div><div class="line">        request.headers.setdefault(<span class="string">'User-Agent'</span>, get_ua())</div></pre></td></tr></table></figure>
-<p>其中，<a href="https://github.com/hellysmile/fake-useragent" target="_blank" rel="external">fake_useragent</a>这个第三方库维护了大量的User-Agent，我们就没必要自己去维护了，直接使用就好。</p>
-<p>下图为其的安装和使用方法：</p>
-<p><img src="https://ws1.sinaimg.cn/large/006tNc79ly1fgspyd3gulj31e8150n6o.jpg" alt=""></p>
-<h2 id="实现IP代理池"><a href="#实现IP代理池" class="headerlink" title="实现IP代理池"></a><strong>实现IP代理池</strong></h2><p>我们用<a href="http://www.xicidaili.com/nn" target="_blank" rel="external">西刺免费代理IP网站</a>来实现这个IP代理池。我们选择爬取这个网站，然后将获取的数据写入数据库以供我们自己使用。</p>
-<p><img src="https://ws1.sinaimg.cn/large/006tNc79ly1fgsqbcp5abj31kw180b29.jpg" alt=""></p>
-<p>调试之后，用CSS选择器来获取我们所需的内容，并将其保存到数据库中。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> requests</div><div class="line"><span class="keyword">from</span> scrapy.selector <span class="keyword">import</span> Selector</div><div class="line"><span class="keyword">import</span> MySQLdb</div><div class="line"></div><div class="line">conn = MySQLdb.connect(host=<span class="string">"127.0.0.1"</span>, user=<span class="string">"root"</span>, passwd=<span class="string">"123"</span>, db=<span class="string">"article_spider"</span>, charset=<span class="string">"utf8"</span>)</div><div class="line">cursor = conn.cursor()</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">crawl_ips</span><span class="params">()</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    爬取西刺网的免费代理IP</div><div class="line">    """</div><div class="line">    headers = &#123;</div><div class="line">        <span class="string">'User-Agent'</span>: <span class="string">"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/603.2.4 (KHTML, like Gecko) Version/10.1.1 Safari/603.2.4"</span></div><div class="line">    &#125;</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">2093</span>):</div><div class="line">        re = requests.get(<span class="string">"http://www.xicidaili.com/nn/&#123;0&#125;"</span>.format(i), headers=headers)</div><div class="line"></div><div class="line">        selector = Selector(text=re.text)</div><div class="line">        all_trs = selector.css(<span class="string">"#ip_list tr"</span>)</div><div class="line"></div><div class="line">        ip_list = []</div><div class="line"></div><div class="line">        <span class="keyword">for</span> tr <span class="keyword">in</span> all_trs[<span class="number">1</span>:]:</div><div class="line">            speed_str = tr.css(<span class="string">".bar::attr(title)"</span>).extract()[<span class="number">0</span>]</div><div class="line">            <span class="keyword">if</span> speed_str:</div><div class="line">                speed = float(speed_str.split(<span class="string">"秒"</span>)[<span class="number">0</span>])</div><div class="line">            ip = tr.css(<span class="string">"td:nth-child(2)::text"</span>).extract_first()</div><div class="line">            port = tr.css(<span class="string">"td:nth-child(3)::text"</span>).extract_first()</div><div class="line">            proxy_type = tr.css(<span class="string">"td:nth-child(6)::text"</span>).extract_first()</div><div class="line">            ip_list.append((ip, port, proxy_type, speed))</div><div class="line"></div><div class="line">        <span class="keyword">for</span> ip_info <span class="keyword">in</span> ip_list:</div><div class="line">            cursor.execute(</div><div class="line">                <span class="string">"insert proxy_ip(ip, port, speed, proxy_type) VALUES('&#123;0&#125;', '&#123;1&#125;', '&#123;2&#125;', '&#123;3&#125;')"</span>.format(</div><div class="line">                    ip_info[<span class="number">0</span>], ip_info[<span class="number">1</span>], ip_info[<span class="number">3</span>], ip_info[<span class="number">2</span>]</div><div class="line">                )</div><div class="line">            )</div><div class="line">            conn.commit()</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">GetIP</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">delete_ip</span><span class="params">(self, ip)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        从数据库中删除无效的IP </div><div class="line">        """</div><div class="line">        delete_sql = <span class="string">"""</span></div><div class="line">            DELETE FROM proxy_ip WHERE ip='&#123;0&#125;'</div><div class="line">        """.format(ip)</div><div class="line">        cursor.execute(delete_sql)</div><div class="line">        conn.commit()</div><div class="line">        <span class="keyword">return</span> <span class="keyword">True</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">judge_ip</span><span class="params">(self, ip, port)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        判断IP是否可用</div><div class="line">        """</div><div class="line">        http_url = <span class="string">"http://www.baidu.com"</span></div><div class="line">        proxy_url = <span class="string">"http://&#123;0&#125;:&#123;1&#125;"</span>.format(ip, port)</div><div class="line">        <span class="keyword">try</span>:</div><div class="line">            proxy_dict = &#123;</div><div class="line">                <span class="string">"http"</span>: proxy_url,</div><div class="line">            &#125;</div><div class="line">            response = requests.get(http_url, proxies=proxy_dict)</div><div class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</div><div class="line">            print(<span class="string">"invalid ip and port"</span>)</div><div class="line">            self.delete_ip(ip)</div><div class="line">            <span class="keyword">return</span> <span class="keyword">False</span></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            code = response.status_code</div><div class="line">            <span class="keyword">if</span> code &gt;= <span class="number">200</span> <span class="keyword">and</span> code &lt; <span class="number">300</span>:</div><div class="line">                print(<span class="string">"effective ip"</span>)</div><div class="line">                <span class="keyword">return</span> <span class="keyword">True</span></div><div class="line">            <span class="keyword">else</span>:</div><div class="line">                print(<span class="string">"invalid ip and port"</span>)</div><div class="line">                self.delete_ip(ip)</div><div class="line">                <span class="keyword">return</span> <span class="keyword">False</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_random_ip</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="string">"""</span></div><div class="line">        从数据库中随机获取一个可用的IP</div><div class="line">        """</div><div class="line">        random_sql = <span class="string">"""</span></div><div class="line">            SELECT ip, port FROM proxy_ip</div><div class="line">            ORDER BY RAND()</div><div class="line">            LIMIT 1</div><div class="line">        """</div><div class="line">        result = cursor.execute(random_sql)</div><div class="line"></div><div class="line">        <span class="keyword">for</span> ip_info <span class="keyword">in</span> cursor.fetchall():</div><div class="line">            ip = ip_info[<span class="number">0</span>]</div><div class="line">            port = ip_info[<span class="number">1</span>]</div><div class="line"></div><div class="line">            judge_re = self.judge_ip(ip, port)</div><div class="line">            <span class="keyword">if</span> judge_re:</div><div class="line">                <span class="keyword">return</span> <span class="string">"http://&#123;0&#125;:&#123;1&#125;"</span>.format(ip, port)</div><div class="line">            <span class="keyword">else</span>:</div><div class="line">                <span class="keyword">return</span> self.get_random_ip()</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    get_ip = GetIP()</div><div class="line">    get_ip.get_random_ip()</div></pre></td></tr></table></figure>
-<p>最后，在<code>middlewares.py</code>文件中写入我们用于设置IP代理的逻辑即可：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">RandomProxyMiddleware</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    动态设置IP代理</div><div class="line">    """</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_request</span><span class="params">(self, request, spider)</span>:</span></div><div class="line">        get_ip = GetIP()</div><div class="line">        request.meta[<span class="string">"proxy"</span>] = get_ip.get_random_ip()</div></pre></td></tr></table></figure>
-<h2 id="可参考的第三方库"><a href="#可参考的第三方库" class="headerlink" title="可参考的第三方库"></a><strong>可参考的第三方库</strong></h2><ul>
-<li><a href="https://github.com/scrapy-plugins/scrapy-crawlera" target="_blank" rel="external"><strong>scrapy-crawlera</strong></a></li>
-<li><a href="https://github.com/aivarsk/scrapy-proxies" target="_blank" rel="external"><strong>scrapy-proxies</strong></a></li>
-</ul>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;之前有一节用于介绍&lt;code&gt;Request&lt;/code&gt;和&lt;code&gt;Response&lt;/code&gt;，还是&lt;a href=&quot;https://doc.scrapy.org/en/latest/index.html&quot;&gt;官方文档&lt;/a&gt;介绍的比较详尽，所以就不做笔记了。&lt;/p&gt;
-&lt;p&gt;这一节用于介绍随机更换User-Agent和实现IP代理池的方法，首先来看一下现在网站中所做的反爬虫工作。&lt;/p&gt;
+      &lt;p&gt;验证码识别大致有如下几种方式：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;编码实现（Tesseract-OCR）&lt;/li&gt;
+&lt;li&gt;在线打码&lt;/li&gt;
+&lt;li&gt;人工打码&lt;/li&gt;
+&lt;/ul&gt;
     
     </summary>
     

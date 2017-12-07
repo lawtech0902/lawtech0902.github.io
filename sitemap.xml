@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2017/12/07/RESTful-API/</loc>
+    
+    <lastmod>2017-12-07T06:23:11.503Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2017/12/07/RESTful/</loc>
+    
+    <lastmod>2017-12-07T06:16:14.594Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2017/12/06/jwt/</loc>
     
     <lastmod>2017-12-07T01:44:29.883Z</lastmod>
