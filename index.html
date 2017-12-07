@@ -299,6 +299,463 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/06/django-request-process/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="LawTech.">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="LawTech's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="LawTech's Blog" src="/images/avatar.jpg">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/12/06/django-request-process/" itemprop="url">
+                  django从请求到返回都经历了什么
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-06T13:18:54+08:00">
+                2017-12-06
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2017-12-07T09:36:57+08:00">
+                2017-12-07
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Django/" itemprop="url" rel="index">
+                    <span itemprop="name">Django</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/12/06/django-request-process/" class="leancloud_visitors" data-flag-title="django从请求到返回都经历了什么">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+ 
+        
+
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+          
+          
+            <div class="post-gallery-row">
+              <a class="post-gallery-img fancybox"
+                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fm7ychcn9xj30xc0f60sv.jpg" rel="gallery_cjavtc5t7000lq3qzy167lcj6"
+                 itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
+                <img src="https://ws3.sinaimg.cn/large/006tNc79gy1fm7ychcn9xj30xc0f60sv.jpg" itemprop="contentUrl"/>
+              </a>
+            
+          
+
+          
+          </div>
+        </div>
+      
+
+      
+        
+          
+            <h5 id="从runserver说起"><a href="#从runserver说起" class="headerlink" title="从runserver说起"></a>从runserver说起</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ruserver是使用django自己的web server，主要用于开发和调试中， 部署到线上环境一般使用nginx+uwsgi模式</div></pre></td></tr></table></figure>
+<h5 id="manage-py-探秘"><a href="#manage-py-探秘" class="headerlink" title="manage.py 探秘"></a>manage.py 探秘</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">看一下manager.py的源码，你会发现上面的命令其实是通过Django的execute_from_command_line方法执行了内部实现的runserver命令，那么现在看一下runserver具体做了什么。。</div><div class="line">通过源码分析可知， ruserserver主要完成两件事：</div><div class="line"></div><div class="line">1). 解析参数，并通过django.core.servers.basehttp.get_internal_wsgi_application方法获取wsgi handler;</div><div class="line">2). 根据ip_address和port生成一个WSGIServer对象，接受用户请求</div></pre></td></tr></table></figure>
+<p>get_internal_wsgi_application的源码如下：</p>
+<p><a href="http://of66as8gb.bkt.clouddn.com/blog/20161017/174541324.png" target="_blank" rel="external"><img src="http://of66as8gb.bkt.clouddn.com/blog/20161017/174541324.png" alt="image"></a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">通过上面的代码我们可以知道，Django会先根据settings中的WSGI_APPLICATION来获取handler；</div><div class="line">在创建project的时候，Django会默认创建一个wsgi.py文件，而settings中的WSGI_APPLICATION配置也会默认指向这个文件。看一下这个wsgi.py文件，其实它也和上面的逻辑一样，最终调用get_wsgi_application实现。</div></pre></td></tr></table></figure>
+<h5 id="django-http请求处理流程"><a href="#django-http请求处理流程" class="headerlink" title="django http请求处理流程"></a>django http请求处理流程</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Django和其他Web框架一样，HTTP的处理流程基本类似：接受request，返回response内容。Django的具体处理流程大致如下：</div></pre></td></tr></table></figure>
+<h6 id="1-加载settings-py"><a href="#1-加载settings-py" class="headerlink" title="1. 加载settings.py"></a>1. 加载settings.py</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">在通过django-admin.py创建project的时候，Django会自动生成默认的settings文件和manager.py等文件，在创建WSGIServer之前会执行下面的引用：</div><div class="line"></div><div class="line">from django.conf import settings</div><div class="line"></div><div class="line">上面引用在执行时，会读取os.environ中的DJANGO_SETTINGS_MODULE配置，加载项目配置文件，生成settings对象。所以，在manager.py文件中你可以看到，在获取WSGIServer之前，会先将project的settings路径加到os路径中。</div></pre></td></tr></table></figure>
+<h6 id="2-创建WSGIServer"><a href="#2-创建WSGIServer" class="headerlink" title="2. 创建WSGIServer"></a>2. 创建WSGIServer</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">不管是使用runserver还是uWSGI运行Django项目，在启动时都会调用django.core.servers.basehttp中的run()方法</div><div class="line">创建一个django.core.servers.basehttp.WSGIServer类的实例，之后调用其serve_forever()方法启动HTTP服务。run方法的源码如下：</div><div class="line"></div><div class="line">def run(addr, port, wsgi_handler, ipv6=False, threading=False):</div><div class="line">    server_address = (addr, port)</div><div class="line">    if threading:</div><div class="line">        httpd_cls = type(str(&apos;WSGIServer&apos;), (socketserver.ThreadingMixIn, WSGIServer), &#123;&#125;)</div><div class="line">    else:</div><div class="line">        httpd_cls = WSGIServer</div><div class="line">    httpd = httpd_cls(server_address, WSGIRequestHandler, ipv6=ipv6)</div><div class="line">    if threading:</div><div class="line">        # ThreadingMixIn.daemon_threads indicates how threads will behave on an</div><div class="line">        # abrupt shutdown; like quitting the server by the user or restarting</div><div class="line">        # by the auto-reloader. True means the server will not wait for thread</div><div class="line">        # termination before it quits. This will make auto-reloader faster</div><div class="line">        # and will prevent the need to kill the server manually if a thread</div><div class="line">        # isn&apos;t terminating correctly.</div><div class="line">        httpd.daemon_threads = True</div><div class="line">    httpd.set_app(wsgi_handler)</div><div class="line">    httpd.serve_forever()</div><div class="line"></div><div class="line">如上，我们可以看到：在创建WSGIServer实例的时候会指定HTTP请求的Handler，</div><div class="line">上述代码使用WSGIRequestHandler。当用户的HTTP请求到达服务器时，</div><div class="line">WSGIServer会创建WSGIRequestHandler实例，使用其handler方法来处理HTTP请求(其实最终是调用wsgiref.handlers.BaseHandler中的run方法处理)。</div><div class="line">WSGIServer通过set_app方法设置一个可调用(callable)的对象作为application，上面提到的handler方法最终会调用设置的application处理request，并返回response。</div><div class="line"></div><div class="line">其中，WSGIServer继承自wsgiref.simple_server.WSGIServer，而WSGIRequestHandler继承自wsgiref.simple_server.WSGIRequestHandler，wsgiref是Python标准库给出的WSGI的参考实现。其源码可自行到wsgiref参看，这里不再细说。</div></pre></td></tr></table></figure>
+<h6 id="3-处理Request"><a href="#3-处理Request" class="headerlink" title="3. 处理Request"></a>3. 处理Request</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">第二步中说到的application，在Django中一般是django.core.handlers.wsgi.WSGIHandler对象，WSGIHandler继承自django.core.handlers.base.BaseHandler，这个是Django处理request的核心逻辑，它会创建一个WSGIRequest实例，而WSGIRequest是从http.HttpRequest继承而来</div></pre></td></tr></table></figure>
+<h6 id="4-返回Response"><a href="#4-返回Response" class="headerlink" title="4. 返回Response"></a>4. 返回Response</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">上面提到的BaseHandler中有个get_response方法，该方法会先加载Django项目的ROOT_URLCONF，然后根据url规则找到对应的view方法(类)，view逻辑会根据request实例生成并返回具体的response。</div><div class="line"></div><div class="line">在Django返回结果之后，第二步中提到wsgiref.handlers.BaseHandler.run方法会调用finish_response结束请求，并将内容返回给用户</div></pre></td></tr></table></figure>
+<h5 id="Django处理Request的详细流程"><a href="#Django处理Request的详细流程" class="headerlink" title="Django处理Request的详细流程"></a>Django处理Request的详细流程</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">首先给大家分享两个网上看到的Django流程图：</div></pre></td></tr></table></figure>
+<p><a href="http://of66as8gb.bkt.clouddn.com/blog/20161017/174911486.png" target="_blank" rel="external"><img src="http://of66as8gb.bkt.clouddn.com/blog/20161017/174911486.png" alt="mark"></a><br>​                        流程图一</p>
+<p><a href="http://of66as8gb.bkt.clouddn.com/blog/20161017/180016921.png" target="_blank" rel="external"><img src="http://of66as8gb.bkt.clouddn.com/blog/20161017/180016921.png" alt="image"></a><br>流程图二</p>
+<p>上面的两张流程图可以大致描述Django处理request的流程，按照流程图2的标注，可以分为以下几个步骤：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">1. 用户通过浏览器请求一个页面</div><div class="line"></div><div class="line">2.请求到达Request Middlewares，中间件对request做一些预处理或者直接response请求</div><div class="line">3.URLConf通过urls.py文件和请求的URL找到相应的View</div><div class="line">4.View Middlewares被访问，它同样可以对request做一些处理或者直接返回response</div><div class="line">5.调用View中的函数</div><div class="line">6.View中的方法可以选择性的通过Models访问底层的数据</div><div class="line">7.所有的Model-to-DB的交互都是通过manager完成的</div><div class="line">8.如果需要，Views可以使用一个特殊的Context</div><div class="line">9.Context被传给Template用来生成页面</div><div class="line">    a.Template使用Filters和Tags去渲染输出</div><div class="line">    b.输出被返回到View</div><div class="line">    c.HTTPResponse被发送到Response Middlewares</div><div class="line">    d.任何Response Middlewares都可以丰富response或者返回一个完全不同的response</div><div class="line">    e.Response返回到浏览器，呈现给用户</div><div class="line"></div><div class="line">上述流程中最主要的几个部分分别是：Middleware(中间件，包括request, view, exception, response)，URLConf(url映射关系)，Template(模板系统)，下面一一介绍一下。</div></pre></td></tr></table></figure>
+<h5 id="1-Middleware-中间件"><a href="#1-Middleware-中间件" class="headerlink" title="1. Middleware(中间件)"></a>1. Middleware(中间件)</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">Middleware并不是Django所独有的东西，在其他的Web框架中也有这种概念。在Django中，Middleware可以渗入处理流程的四个阶段：request，view，response和exception，相应的，在每个Middleware类中都有rocess_request，process_view， process_response 和 process_exception这四个方法。你可以定义其中任意一个活多个方法，这取决于你希望该Middleware作用于哪个处理阶段。每个方法都可以直接返回response对象。</div><div class="line"></div><div class="line">Middleware是在Django BaseHandler的load_middleware方法执行时加载的，加载之后会建立四个列表作为处理器的实例变量：</div><div class="line"></div><div class="line">_request_middleware：process_request方法的列表</div><div class="line"></div><div class="line">_view_middleware：process_view方法的列表</div><div class="line"></div><div class="line">_response_middleware：process_response方法的列表</div><div class="line"></div><div class="line">_exception_middleware：process_exception方法的列表</div><div class="line"></div><div class="line">Django的中间件是在其配置文件(settings.py)的MIDDLEWARE_CLASSES元组中定义的。在MIDDLEWARE_CLASSES中，中间件组件用字符串表示：指向中间件类名的完整Python路径。例如</div><div class="line"></div><div class="line">`MIDDLEWARE_CLASSES = [</div><div class="line">    &apos;django.middleware.security.SecurityMiddleware&apos;,</div><div class="line">    &apos;django.contrib.sessions.middleware.SessionMiddleware&apos;,</div><div class="line">    &apos;django.middleware.common.CommonMiddleware&apos;,</div><div class="line">    &apos;django.middleware.csrf.CsrfViewMiddleware&apos;,</div><div class="line">    &apos;django.contrib.auth.middleware.AuthenticationMiddleware&apos;,</div><div class="line">    &apos;django.contrib.auth.middleware.SessionAuthenticationMiddleware&apos;,</div><div class="line">    &apos;django.contrib.messages.middleware.MessageMiddleware&apos;,</div><div class="line">    &apos;django.middleware.clickjacking.XFrameOptionsMiddleware&apos;,</div><div class="line">]`</div><div class="line"></div><div class="line">Django项目的安装并不强制要求任何中间件，如果你愿意，MIDDLEWARE_CLASSES可以为空。中间件出现的顺序非常重要：在request和view的处理阶段，Django按照MIDDLEWARE_CLASSES中出现的顺序来应用中间件，而在response和exception异常处理阶段，Django则按逆序来调用它们。也就是说，Django将MIDDLEWARE_CLASSES视为view函数外层的顺序包装子：在request阶段按顺序从上到下穿过，而在response则反过来。以下这张图可以更好地帮助你理解：</div></pre></td></tr></table></figure>
+<p><a href="http://of66as8gb.bkt.clouddn.com/blog/20161017/180754931.png" target="_blank" rel="external"><img src="http://of66as8gb.bkt.clouddn.com/blog/20161017/180754931.png" alt="image"></a></p>
+<ol>
+<li>URLConf(URL映射)</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">如果处理request的中间件都没有直接返回response，那么Django会去解析用户请求的URL。URLconf就是Django所支撑网站的目录。它的本质是URL模式以及要为该URL模式调用的视图函数之间的映射表。通过这种方式可以告诉Django，对于这个URL调用这段代码，对于那个URL调用那段代码。具体的，在Django项目的配置文件中有ROOT_URLCONF常量，这个常量加上根目录&quot;/&quot;，作为参数来创建django.core.urlresolvers.RegexURLResolver的实例，然后通过它的resolve方法解析用户请求的URL，找到第一个匹配的view。</div><div class="line"></div><div class="line">有关urlconf的内容，大家可以参考 [理解curlConf]()</div></pre></td></tr></table></figure>
+<ol>
+<li>Template(模板)</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">大部分web框架都有自己的Template(模板)系统，Django也是。但是，Django模板不同于Mako模板和jinja2模板，在Django模板不能直接写Python代码，只能通过额外的定义filter和template tag实现。由于本文主要介绍Django流程，模板内容就不过多介绍。</div></pre></td></tr></table></figure>
+<p>注：原文地址：<a href="http://projectsedu.com/2016/10/17/django%E4%BB%8E%E8%AF%B7%E6%B1%82%E5%88%B0%E8%BF%94%E5%9B%9E%E9%83%BD%E7%BB%8F%E5%8E%86%E4%BA%86%E4%BB%80%E4%B9%88/" target="_blank" rel="external">http://projectsedu.com/2016/10/17/django%E4%BB%8E%E8%AF%B7%E6%B1%82%E5%88%B0%E8%BF%94%E5%9B%9E%E9%83%BD%E7%BB%8F%E5%8E%86%E4%BA%86%E4%BB%80%E4%B9%88/</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+  
+
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+         
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/06/jwt/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="LawTech.">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="LawTech's Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="LawTech's Blog" src="/images/avatar.jpg">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2017/12/06/jwt/" itemprop="url">
+                  前后端分离之JWT用户认证
+                </a>
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-06T13:18:54+08:00">
+                2017-12-06
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2017-12-07T09:29:50+08:00">
+                2017-12-07
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JWT/" itemprop="url" rel="index">
+                    <span itemprop="name">JWT</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/12/06/jwt/" class="leancloud_visitors" data-flag-title="前后端分离之JWT用户认证">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+ 
+        
+
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+          
+          
+            <div class="post-gallery-row">
+              <a class="post-gallery-img fancybox"
+                 href="https://ws2.sinaimg.cn/large/006tNc79gy1fm7y5uygmnj313i0d80ya.jpg" rel="gallery_cjavtc5tb000tq3qzxe9ulu6f"
+                 itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
+                <img src="https://ws2.sinaimg.cn/large/006tNc79gy1fm7y5uygmnj313i0d80ya.jpg" itemprop="contentUrl"/>
+              </a>
+            
+          
+
+          
+          </div>
+        </div>
+      
+
+      
+        
+          
+            <p>在前后端分离开发时为什么需要用户认证呢？原因是由于HTTP协定是不储存状态的(stateless)，这意味着当我们透过帐号密码验证一个使用者时，当下一个request请求时它就把刚刚的资料忘了。于是我们的程序就不知道谁是谁，就要再验证一次。所以为了保证系统安全，我们就需要验证用户否处于登录状态。</p>
+<h3 id="传统方式"><a href="#传统方式" class="headerlink" title="传统方式"></a>传统方式</h3><p>前后端分离通过Restful API进行数据交互时，如何验证用户的登录信息及权限。在原来的项目中，使用的是最传统也是最简单的方式，前端登录，后端根据用户信息生成一个<code>token</code>，并保存这个 <code>token</code> 和对应的用户id到数据库或Session中，接着把 <code>token</code> 传给用户，存入浏览器 cookie，之后浏览器请求带上这个cookie，后端根据这个cookie值来查询用户，验证是否过期。</p>
+<p>但这样做问题就很多，如果我们的页面出现了 XSS 漏洞，由于 cookie 可以被 JavaScript 读取，XSS 漏洞会导致用户 token 泄露，而作为后端识别用户的标识，cookie 的泄露意味着用户信息不再安全。尽管我们通过转义输出内容，使用 CDN 等可以尽量避免 XSS 注入，但谁也不能保证在大型的项目中不会出现这个问题。</p>
+<p>在设置 cookie 的时候，其实你还可以设置 httpOnly 以及 secure 项。设置 httpOnly 后 cookie 将不能被 JS 读取，浏览器会自动的把它加在请求的 header 当中，设置 secure 的话，cookie 就只允许通过 HTTPS 传输。secure 选项可以过滤掉一些使用 HTTP 协议的 XSS 注入，但并不能完全阻止。</p>
+<p>httpOnly 选项使得 JS 不能读取到 cookie，那么 XSS 注入的问题也基本不用担心了。但设置 httpOnly 就带来了另一个问题，就是很容易的被 XSRF，即跨站请求伪造。当你浏览器开着这个页面的时候，另一个页面可以很容易的跨站请求这个页面的内容。因为 cookie 默认被发了出去。</p>
+<p>另外，如果将验证信息保存在数据库中，后端每次都需要根据<code>token</code>查出用户<code>id</code>，这就增加了数据库的查询和存储开销。若把验证信息保存在session中，有加大了服务器端的存储压力。那我们可不可以不要服务器去查询呢？如果我们生成<code>token</code>遵循一定的规律，比如我们使用对称加密算法来加密用户<code>id</code>形成<code>token</code>，那么服务端以后其实只要解密该<code>token</code>就可以知道用户的<code>id</code>是什么了。不过呢，我只是举个例子而已，要是真这么做，只要你的对称加密算法泄露了，其他人可以通过这种加密方式进行伪造<code>token</code>，那么所有用户信息都不再安全了。恩，那用非对称加密算法来做呢，其实现在有个规范就是这样做的，就是我们接下来要介绍的 JWT。</p>
+<h3 id="Json-Web-Token（JWT）"><a href="#Json-Web-Token（JWT）" class="headerlink" title="Json Web Token（JWT）"></a>Json Web Token（JWT）</h3><p>JWT 是一个开放标准(RFC 7519)，它定义了一种用于简洁，自包含的用于通信双方之间以 JSON 对象的形式安全传递信息的方法。JWT 可以使用 HMAC 算法或者是 RSA 的公钥密钥对进行签名。它具备两个特点：</p>
+<ul>
+<li><p>简洁(Compact)</p>
+<p>  可以通过URL, POST 参数或者在 HTTP header 发送，因为数据量小，传输速度快</p>
+</li>
+<li><p>自包含(Self-contained)</p>
+<p>  负载中包含了所有用户所需要的信息，避免了多次查询数据库</p>
+</li>
+</ul>
+<h4 id="JWT-组成"><a href="#JWT-组成" class="headerlink" title="JWT 组成"></a>JWT 组成</h4><p><img src="https://ww4.sinaimg.cn/large/006tNc79gy1fbv54tfilmj31120b2wl9.jpg" alt="img"></p>
+<ul>
+<li>Header 头部</li>
+</ul>
+<p>头部包含了两部分，token 类型和采用的加密算法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  &quot;alg&quot;: &quot;HS256&quot;,</div><div class="line">  &quot;typ&quot;: &quot;JWT&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>它会使用 Base64 编码组成 JWT 结构的第一部分,如果你使用Node.js，可以用Node.js的包base64url来得到这个字符串。</p>
+<blockquote>
+<p>Base64是一种编码，也就是说，它是可以被翻译回原来的样子来的。它并不是一种加密过程。</p>
+</blockquote>
+<ul>
+<li>Payload 负载</li>
+</ul>
+<p>这部分就是我们存放信息的地方了，你可以把用户 ID 等信息放在这里，JWT 规范里面对这部分有进行了比较详细的介绍，常用的由 iss（签发者），exp（过期时间），sub（面向的用户），aud（接收方），iat（签发时间）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    &quot;iss&quot;: &quot;lion1ou JWT&quot;,</div><div class="line">    &quot;iat&quot;: 1441593502,</div><div class="line">    &quot;exp&quot;: 1441594722,</div><div class="line">    &quot;aud&quot;: &quot;www.example.com&quot;,</div><div class="line">    &quot;sub&quot;: &quot;lion1ou@163.com&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>同样的，它会使用 Base64 编码组成 JWT 结构的第二部分</p>
+<ul>
+<li>Signature 签名</li>
+</ul>
+<p>前面两部分都是使用 Base64 进行编码的，即前端可以解开知道里面的信息。Signature 需要使用编码后的 header 和 payload 以及我们提供的一个密钥，然后使用 header 中指定的签名算法（HS256）进行签名。签名的作用是保证 JWT 没有被篡改过。</p>
+<p>三个部分通过<code>.</code>连接在一起就是我们的 JWT 了，它可能长这个样子，长度貌似和你的加密算法和私钥有关系。</p>
+<p><code>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9</code>.<code>eyJpZCI6IjU3ZmVmMTY0ZTU0YWY2NGZmYzUzZGJkNSIsInhzcmYiOiI0ZWE1YzUwOGE2NTY2ZTc2MjQwNTQzZjhmZWIwNmZkNDU3Nzc3YmUzOTU0OWM0MDE2NDM2YWZkYTY1ZDIzMzBlIiwiaWF0IjoxNDc2NDI3OTMzfQ</code>.<code>PA3QjeyZSUh7H0GfE0vJaKW4LjKJuC3dVLQiY4hii8s</code></p>
+<p>其实到这一步可能就有人会想了，HTTP 请求总会带上 token，这样这个 token 传来传去占用不必要的带宽啊。如果你这么想了，那你可以去了解下 HTTP2，HTTP2 对头部进行了压缩，相信也解决了这个问题。</p>
+<ul>
+<li>签名的目的</li>
+</ul>
+<p>最后一步签名的过程，实际上是对头部以及负载内容进行签名，防止内容被窜改。如果有人对头部以及负载的内容解码之后进行修改，再进行编码，最后加上之前的签名组合形成新的JWT的话，那么服务器端会判断出新的头部和负载形成的签名和JWT附带上的签名是不一样的。如果要对新的头部和负载进行签名，在不知道服务器加密时用的密钥的话，得出来的签名也是不一样的。</p>
+<ul>
+<li>信息暴露</li>
+</ul>
+<p>在这里大家一定会问一个问题：Base64是一种编码，是可逆的，那么我的信息不就被暴露了吗？</p>
+<p>是的。所以，在JWT中，不应该在负载里面加入任何敏感的数据。在上面的例子中，我们传输的是用户的User ID。这个值实际上不是什么敏感内容，一般情况下被知道也是安全的。但是像密码这样的内容就不能被放在JWT中了。如果将用户的密码放在了JWT中，那么怀有恶意的第三方通过Base64解码就能很快地知道你的密码了。</p>
+<p>因此JWT适合用于向Web应用传递一些非敏感信息。JWT还经常用于设计用户认证和授权系统，甚至实现Web应用的单点登录。</p>
+<h3 id="JWT-使用"><a href="#JWT-使用" class="headerlink" title="JWT 使用"></a>JWT 使用</h3><p><img src="https://ww3.sinaimg.cn/large/006tNc79gy1fbv63pzqocj30pj0h8t9m.jpg" alt="img"></p>
+<ol>
+<li>首先，前端通过Web表单将自己的用户名和密码发送到后端的接口。这一过程一般是一个HTTP POST请求。建议的方式是通过SSL加密的传输（https协议），从而避免敏感信息被嗅探。</li>
+<li>后端核对用户名和密码成功后，将用户的id等其他信息作为JWT Payload（负载），将其与头部分别进行Base64编码拼接后签名，形成一个JWT。形成的JWT就是一个形同lll.zzz.xxx的字符串。</li>
+<li>后端将JWT字符串作为登录成功的返回结果返回给前端。前端可以将返回的结果保存在localStorage或sessionStorage上，退出登录时前端删除保存的JWT即可。</li>
+<li>前端在每次请求时将JWT放入HTTP Header中的Authorization位。(解决XSS和XSRF问题)</li>
+<li>后端检查是否存在，如存在验证JWT的有效性。例如，检查签名是否正确；检查Token是否过期；检查Token的接收方是否是自己（可选）。</li>
+<li>验证通过后后端使用JWT中包含的用户信息进行其他逻辑操作，返回相应结果。</li>
+</ol>
+<h3 id="和Session方式存储id的差异"><a href="#和Session方式存储id的差异" class="headerlink" title="和Session方式存储id的差异"></a>和Session方式存储id的差异</h3><p>Session方式存储用户id的最大弊病在于Session是存储在服务器端的，所以需要占用大量服务器内存，对于较大型应用而言可能还要保存许多的状态。一般而言，大型应用还需要借助一些KV数据库和一系列缓存机制来实现Session的存储。</p>
+<p>而JWT方式将用户状态分散到了客户端中，可以明显减轻服务端的内存压力。除了用户id之外，还可以存储其他的和用户相关的信息，例如该用户是否是管理员、用户所在的分组等。虽说JWT方式让服务器有一些计算压力（例如加密、编码和解码），但是这些压力相比磁盘存储而言可能就不算什么了。具体是否采用，需要在不同场景下用数据说话。</p>
+<ul>
+<li>单点登录</li>
+</ul>
+<p>Session方式来存储用户id，一开始用户的Session只会存储在一台服务器上。对于有多个子域名的站点，每个子域名至少会对应一台不同的服务器，例如：<code>www.taobao.com</code>，<code>nv.taobao.com</code>，<code>nz.taobao.com</code>，<code>login.taobao.com</code>。所以如果要实现在<code>login.taobao.com</code>登录后，在其他的子域名下依然可以取到Session，这要求我们在多台服务器上同步Session。使用JWT的方式则没有这个问题的存在，因为用户的状态已经被传送到了客户端。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>JWT的主要作用在于（一）可附带用户信息，后端直接通过JWT获取相关信息。（二）使用本地保存，通过HTTP Header中的Authorization位提交验证。但其实关于JWT存放到哪里一直有很多讨论，有人说存放到本地存储，有人说存 cookie。个人偏向于放在本地存储，如果你有什么意见和看法欢迎提出。</p>
+<p>注：原文地址：<a href="http://lion1ou.win/2017/01/18/" target="_blank" rel="external">http://lion1ou.win/2017/01/18/</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+  
+
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+         
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/05/essay-12-05/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -428,7 +885,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg" rel="gallery_cjataeyly000kfrqzhf5x6vb6"
+                 href="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg" rel="gallery_cjavtc5t5000jq3qze6hyr5nz"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg" itemprop="contentUrl"/>
               </a>
@@ -612,7 +1069,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg" rel="gallery_cjataeyop0046frqzcivdixuy"
+                 href="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg" rel="gallery_cjavtc5vq004eq3qz8qdngr77"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg" itemprop="contentUrl"/>
               </a>
@@ -806,7 +1263,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg" rel="gallery_cjataeyor004afrqzhs3jbs5m"
+                 href="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg" rel="gallery_cjavtc5vy004nq3qzk2usunpj"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg" itemprop="contentUrl"/>
               </a>
@@ -1006,7 +1463,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg" rel="gallery_cjataeyoi003zfrqzbhbt6ha5"
+                 href="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg" rel="gallery_cjavtc5vk0048q3qzle22iayu"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg" itemprop="contentUrl"/>
               </a>
@@ -1199,7 +1656,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg" rel="gallery_cjataeyos004dfrqzz43ozuj6"
+                 href="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg" rel="gallery_cjavtc5vm004bq3qz12bczm06"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg" itemprop="contentUrl"/>
               </a>
@@ -1396,7 +1853,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg" rel="gallery_cjataeyo6003kfrqzz835as4i"
+                 href="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg" rel="gallery_cjavtc5vh0044q3qz8yigccny"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg" itemprop="contentUrl"/>
               </a>
@@ -1419,388 +1876,6 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2017/11/04/vue-django-2-1/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-  
-
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-         
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/03/vue-django-1-1/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="LawTech.">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="LawTech's Blog">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="LawTech's Blog" src="/images/avatar.jpg">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/11/03/vue-django-1-1/" itemprop="url">
-                  Vue+Django REST Framework生鲜电商项目学习笔记——概览
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-11-03T13:18:54+08:00">
-                2017-11-03
-              </time>
-            
-
-            
-              <span class="post-meta-divider">|</span>
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2017-11-08T17:49:49+08:00">
-                2017-11-08
-              </time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Django，Vue/" itemprop="url" rel="index">
-                    <span itemprop="name">Django，Vue</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/11/03/vue-django-1-1/" class="leancloud_visitors" data-flag-title="Vue+Django REST Framework生鲜电商项目学习笔记——概览">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
- 
-        
-
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
-          
-          
-            <div class="post-gallery-row">
-              <a class="post-gallery-img fancybox"
-                 href="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg" rel="gallery_cjataeyof003wfrqzbhi5ptzj"
-                 itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
-                <img src="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg" itemprop="contentUrl"/>
-              </a>
-            
-          
-
-          
-          </div>
-        </div>
-      
-
-      
-        
-          <h2 id="技术要点"><a href="#技术要点" class="headerlink" title="技术要点"></a><strong>技术要点</strong></h2><ol>
-<li>Vue + Django REST Framework前后端分离技术</li>
-<li>restful api开发流程</li>
-<li>Django REST Framework的功能实现和核心源码分析</li>
-<li>Sentry完成线上系统的错误日志的监控和告警</li>
-<li>第三方登录和支付宝支付的集成</li>
-</ol>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/11/03/vue-django-1-1/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-  
-
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-         
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/17/mac-privoxy/">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="LawTech.">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="LawTech's Blog">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="LawTech's Blog" src="/images/avatar.jpg">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/10/17/mac-privoxy/" itemprop="url">
-                  Mac配置Privoxy设置go get代理
-                </a>
-              
-            
-          </h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-10-17T13:18:54+08:00">
-                2017-10-17
-              </time>
-            
-
-            
-              <span class="post-meta-divider">|</span>
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2017-10-17T13:56:35+08:00">
-                2017-10-17
-              </time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Go/" itemprop="url" rel="index">
-                    <span itemprop="name">Go</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/10/17/mac-privoxy/" class="leancloud_visitors" data-flag-title="Mac配置Privoxy设置go get代理">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数 </span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
- 
-        
-
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
-          
-          
-            <div class="post-gallery-row">
-              <a class="post-gallery-img fancybox"
-                 href="http://networkstatic.net/wp-content/uploads/2015/01/twitter-gopher-banner-small.jpg" rel="gallery_cjataeym5000wfrqznaz82w0u"
-                 itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
-                <img src="http://networkstatic.net/wp-content/uploads/2015/01/twitter-gopher-banner-small.jpg" itemprop="contentUrl"/>
-              </a>
-            
-          
-
-          
-          </div>
-        </div>
-      
-
-      
-        
-          <h2 id="安装Privoxy"><a href="#安装Privoxy" class="headerlink" title="安装Privoxy"></a><strong>安装Privoxy</strong></h2><p>地址：<a href="https://www.privoxy.org/sf-download-mirror/">https://www.privoxy.org/sf-download-mirror/</a></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/10/17/mac-privoxy/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1880,7 +1955,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">50</span>
+                <span class="site-state-item-count">52</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1889,7 +1964,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1898,7 +1973,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

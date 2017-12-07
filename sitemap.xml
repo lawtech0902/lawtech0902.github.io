@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2017/12/06/django-request-process/</loc>
+    
+    <lastmod>2017-12-07T01:36:57.534Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2017/12/06/jwt/</loc>
+    
+    <lastmod>2017-12-07T01:29:50.836Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2017/12/05/essay-12-05/</loc>
     
     <lastmod>2017-12-05T07:11:53.666Z</lastmod>
