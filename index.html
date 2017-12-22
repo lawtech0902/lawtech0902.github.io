@@ -357,7 +357,7 @@
               
                 <span class="post-meta-item-text">更新于</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2017-12-22T19:30:53+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2017-12-22T19:48:08+08:00">
                 2017-12-22
               </time>
             
@@ -428,7 +428,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fmprtw51noj31180e8k29.jpg" rel="gallery_cjbhu5ba9000dapqzuwlryyvv"
+                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fmprtw51noj31180e8k29.jpg" rel="gallery_cjbhur3ow000gfiqzd99pcj7o"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws3.sinaimg.cn/large/006tNc79gy1fmprtw51noj31180e8k29.jpg" itemprop="contentUrl"/>
               </a>
@@ -442,29 +442,14 @@
 
       
         
-          
-            <h5 id="1-安装python3-6"><a href="#1-安装python3-6" class="headerlink" title="1. 安装python3.6"></a>1. 安装python3.6</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">1. 获取</div><div class="line"></div><div class="line">wget https://www.python.org/ftp/python/3.6.2/Python-3.6.2.tgz</div><div class="line">tar -xzvf Python-3.6.2.tgz -C  /tmp</div><div class="line">cd  /tmp/Python-3.6.2/</div><div class="line"></div><div class="line">2. 把Python3.6安装到 /usr/local 目录</div><div class="line"></div><div class="line">./configure --prefix=/usr/local</div><div class="line">make</div><div class="line">make altinstall</div><div class="line"></div><div class="line">3. 更改/usr/bin/python链接</div><div class="line"></div><div class="line">ln -s /usr/local/bin/python3.6 /usr/bin/python3</div></pre></td></tr></table></figure>
-<h5 id="2-maridb"><a href="#2-maridb" class="headerlink" title="2. maridb"></a>2. maridb</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">1. 安装</div><div class="line"></div><div class="line">    sudo yum install mariadb-server</div><div class="line">2. 启动， 重启</div><div class="line"></div><div class="line">    sudo systemctl start mariadb</div><div class="line">    sudo systemctl restart mariadb</div><div class="line"></div><div class="line">3. 设置bind-ip</div><div class="line"></div><div class="line">    vim /etc/my.cnf</div><div class="line">    在 [mysqld]:</div><div class="line">        下面加一行</div><div class="line">        bind-address = 0.0.0.0</div><div class="line"></div><div class="line">4. 设置外部ip可以访问</div><div class="line"></div><div class="line">    先进入mysql才能运行下面命令:</div><div class="line">        mysql 直接进入就行</div><div class="line"></div><div class="line">    GRANT ALL PRIVILEGES ON *.* TO &apos;root&apos;@&apos;%&apos; IDENTIFIED BY &apos;123456&apos; WITH GRANT OPTION;</div><div class="line"></div><div class="line">    FLUSH PRIVILEGES</div><div class="line"></div><div class="line">5. 设置阿里云的对外端口</div><div class="line"></div><div class="line">   视频中有讲解这部分</div><div class="line"></div><div class="line">6. 安装mysqlclient出问题</div><div class="line"></div><div class="line">    centos 7：</div><div class="line">        yum install python-devel mariadb-devel -y</div><div class="line"></div><div class="line">    ubuntu：</div><div class="line">        sudo apt-get install libmysqlclient-dev</div><div class="line"></div><div class="line">    然后：</div><div class="line">        pip install mysqlclient</div></pre></td></tr></table></figure>
-<h5 id="3-安装nginx"><a href="#3-安装nginx" class="headerlink" title="3. 安装nginx"></a>3. 安装nginx</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-centos-7</div></pre></td></tr></table></figure>
-<h5 id="4-安装virtualenvwrapper"><a href="#4-安装virtualenvwrapper" class="headerlink" title="4. 安装virtualenvwrapper"></a>4. 安装virtualenvwrapper</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">yum install python-setuptools python-devel</div><div class="line">pip install virtualenvwrapper</div></pre></td></tr></table></figure>
-<blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&gt; 编辑.bashrc文件</div><div class="line">&gt;</div><div class="line">&gt;</div></pre></td></tr></table></figure>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">export WORKON_HOME=$HOME/.virtualenvs</div><div class="line">source /usr/local/bin/virtualenvwrapper.sh</div></pre></td></tr></table></figure>
-<blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&gt; 重新加载.bashrc文件</div><div class="line">&gt; source  ~/.bashrc</div><div class="line">&gt;</div><div class="line">&gt; 新建虚拟环境</div><div class="line">&gt; mkvirtualenv mxonline</div><div class="line">&gt;</div><div class="line">&gt; 进入虚拟环境 </div><div class="line">&gt; workon mxonline</div><div class="line">&gt;</div><div class="line">&gt; 安装pip包</div><div class="line">&gt;</div><div class="line">&gt;</div></pre></td></tr></table></figure>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">我们可以通过 pip freeze &gt; requirements.txt 将本地的虚拟环境安装包相信信息导出来</div><div class="line"></div><div class="line">然后将requirements.txt文件上传到服务器之后运行：</div><div class="line"></div><div class="line">pip install -r requirements.txt</div><div class="line">安装依赖包</div></pre></td></tr></table></figure>
-<h5 id="5-安装uwsgi"><a href="#5-安装uwsgi" class="headerlink" title="5. 安装uwsgi"></a>5. 安装uwsgi</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pip install uwsgi</div></pre></td></tr></table></figure>
-<h5 id="6-测试uwsgi"><a href="#6-测试uwsgi" class="headerlink" title="6. 测试uwsgi"></a>6. 测试uwsgi</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">uwsgi --http :8000 --module MxOnline.wsgi</div></pre></td></tr></table></figure>
-<h5 id="7-配置nginx"><a href="#7-配置nginx" class="headerlink" title="7. 配置nginx"></a>7. 配置nginx</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">新建uc_nginx.conf</div><div class="line"></div><div class="line"></div><div class="line"># the upstream component nginx needs to connect to</div><div class="line">upstream django &#123;</div><div class="line"># server unix:///path/to/your/mysite/mysite.sock; # for a file socket</div><div class="line">server 127.0.0.1:8000; # for a web port socket (we&apos;ll use this first)</div><div class="line">&#125;</div><div class="line"># configuration of the server</div><div class="line"></div><div class="line">server &#123;</div><div class="line"># the port your site will be served on</div><div class="line">listen      80;</div><div class="line"># the domain name it will serve for</div><div class="line">server_name 你的ip地址 ; # substitute your machine&apos;s IP address or FQDN</div><div class="line">charset     utf-8;</div><div class="line"></div><div class="line"># max upload size</div><div class="line">client_max_body_size 75M;   # adjust to taste</div><div class="line"></div><div class="line"># Django media</div><div class="line">location /media  &#123;</div><div class="line">    alias 你的目录/Mxonline/media;  # 指向django的media目录</div><div class="line">&#125;</div><div class="line"></div><div class="line">location /static &#123;</div><div class="line">    alias 你的目录/Mxonline/static; # 指向django的static目录</div><div class="line">&#125;</div><div class="line"></div><div class="line"># Finally, send all non-media requests to the Django server.</div><div class="line">location / &#123;</div><div class="line">    uwsgi_pass  django;</div><div class="line">    include     uwsgi_params; # the uwsgi_params file you installed</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h5 id="8-将该配置文件加入到nginx的启动配置文件中"><a href="#8-将该配置文件加入到nginx的启动配置文件中" class="headerlink" title="8. 将该配置文件加入到nginx的启动配置文件中"></a>8. 将该配置文件加入到nginx的启动配置文件中</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo ln -s 你的目录/Mxonline/conf/nginx/uc_nginx.conf /etc/nginx/conf.d/</div></pre></td></tr></table></figure>
-<h5 id="8-拉取所有需要的static-file-到同一个目录"><a href="#8-拉取所有需要的static-file-到同一个目录" class="headerlink" title="8. 拉取所有需要的static file 到同一个目录"></a>8. 拉取所有需要的static file 到同一个目录</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">在django的setting文件中，添加下面一行内容：</div><div class="line"></div><div class="line">    STATIC_ROOT = os.path.join(BASE_DIR, &quot;static/&quot;)</div><div class="line">运行命令</div><div class="line">    python manage.py collectstatic</div></pre></td></tr></table></figure>
-<h5 id="9-运行nginx"><a href="#9-运行nginx" class="headerlink" title="9. 运行nginx"></a>9. 运行nginx</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sudo /usr/sbin/nginx</div></pre></td></tr></table></figure>
-<p>这里需要注意 一定是直接用nginx命令启动， 不要用systemctl启动nginx不然会有权限问题</p>
-<h5 id="10-通过配置文件启动uwsgi"><a href="#10-通过配置文件启动uwsgi" class="headerlink" title="10. 通过配置文件启动uwsgi"></a>10. 通过配置文件启动uwsgi</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">新建uwsgi.ini 配置文件， 内容如下：</div><div class="line"></div><div class="line">    # mysite_uwsgi.ini file</div><div class="line">    [uwsgi]</div><div class="line"></div><div class="line">    # Django-related settings</div><div class="line">    # the base directory (full path)</div><div class="line">    chdir           = /home/bobby/Projects/MxOnline</div><div class="line">    # Django&apos;s wsgi file</div><div class="line">    module          = MxOnline.wsgi</div><div class="line">    # the virtualenv (full path)</div><div class="line"></div><div class="line">    # process-related settings</div><div class="line">    # master</div><div class="line">    master          = true</div><div class="line">    # maximum number of worker processes</div><div class="line">    processes       = 10</div><div class="line">    # the socket (use the full path to be safe</div><div class="line">    socket          = 127.0.0.1:8000</div><div class="line">    # ... with appropriate permissions - may be needed</div><div class="line">    # chmod-socket    = 664</div><div class="line">    # clear environment on exit</div><div class="line">    vacuum          = true</div><div class="line">    virtualenv = /home/bobby/.virtualenvs/mxonline</div><div class="line"></div><div class="line">    logto = /tmp/mylog.log</div><div class="line"></div><div class="line">注：</div><div class="line">    chdir： 表示需要操作的目录，也就是项目的目录</div><div class="line">    module： wsgi文件的路径</div><div class="line">    processes： 进程数</div><div class="line">    virtualenv：虚拟环境的目录</div><div class="line"></div><div class="line"></div><div class="line">workon mxonline</div><div class="line">uwsgi -i 你的目录/Mxonline/conf/uwsgi.ini &amp;</div></pre></td></tr></table></figure>
-<h5 id="访问"><a href="#访问" class="headerlink" title="访问"></a>访问</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://你的ip地址/</div></pre></td></tr></table></figure>
-          
+          <h5 id="1-安装python3-6"><a href="#1-安装python3-6" class="headerlink" title="1. 安装python3.6"></a>1. 安装python3.6</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">1. 获取</div><div class="line"></div><div class="line">wget https://www.python.org/ftp/python/3.6.2/Python-3.6.2.tgz</div><div class="line">tar -xzvf Python-3.6.2.tgz -C  /tmp</div><div class="line">cd  /tmp/Python-3.6.2/</div><div class="line"></div><div class="line">2. 把Python3.6安装到 /usr/local 目录</div><div class="line"></div><div class="line">./configure --prefix=/usr/local</div><div class="line">make</div><div class="line">make altinstall</div><div class="line"></div><div class="line">3. 更改/usr/bin/python链接</div><div class="line"></div><div class="line">ln -s /usr/local/bin/python3.6 /usr/bin/python3</div></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/12/22/centos-django/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -631,7 +616,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fm86gbv2zgj30jp09p3yl.jpg" rel="gallery_cjbhu5b9d0002apqzg9ncsf6u"
+                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fm86gbv2zgj30jp09p3yl.jpg" rel="gallery_cjbhur3oa0002fiqz3soubz3b"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws3.sinaimg.cn/large/006tNc79gy1fm86gbv2zgj30jp09p3yl.jpg" itemprop="contentUrl"/>
               </a>
@@ -820,7 +805,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fm86gbv2zgj30jp09p3yl.jpg" rel="gallery_cjbhu5b9w0005apqzbghlcdk5"
+                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fm86gbv2zgj30jp09p3yl.jpg" rel="gallery_cjbhur3oj0005fiqzotb4tyb8"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws3.sinaimg.cn/large/006tNc79gy1fm86gbv2zgj30jp09p3yl.jpg" itemprop="contentUrl"/>
               </a>
@@ -1010,7 +995,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws2.sinaimg.cn/large/006tNc79gy1fm7y5uygmnj313i0d80ya.jpg" rel="gallery_cjbhu5bas0010apqzkuuv5ljq"
+                 href="https://ws2.sinaimg.cn/large/006tNc79gy1fm7y5uygmnj313i0d80ya.jpg" rel="gallery_cjbhur3pp0018fiqz0ym42ulz"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws2.sinaimg.cn/large/006tNc79gy1fm7y5uygmnj313i0d80ya.jpg" itemprop="contentUrl"/>
               </a>
@@ -1198,7 +1183,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fm7ychcn9xj30xc0f60sv.jpg" rel="gallery_cjbhu5bal000sapqz1m1c8f7z"
+                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fm7ychcn9xj30xc0f60sv.jpg" rel="gallery_cjbhur3po0016fiqze6jdn5w9"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws3.sinaimg.cn/large/006tNc79gy1fm7ychcn9xj30xc0f60sv.jpg" itemprop="contentUrl"/>
               </a>
@@ -1387,7 +1372,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws4.sinaimg.cn/large/006tNc79gy1fm7ygicau6j31kw0zknpe.jpg" rel="gallery_cjbhu5ban000uapqzxpmfgdou"
+                 href="https://ws4.sinaimg.cn/large/006tNc79gy1fm7ygicau6j31kw0zknpe.jpg" rel="gallery_cjbhur3pl0012fiqz4v6xvl9q"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws4.sinaimg.cn/large/006tNc79gy1fm7ygicau6j31kw0zknpe.jpg" itemprop="contentUrl"/>
               </a>
@@ -1571,7 +1556,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg" rel="gallery_cjbhu5bcz004kapqzyfosjvq5"
+                 href="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg" rel="gallery_cjbhur3rv004hfiqzo3hme9bj"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg" itemprop="contentUrl"/>
               </a>
@@ -1765,7 +1750,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg" rel="gallery_cjbhu5bd5004vapqz136dpp84"
+                 href="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg" rel="gallery_cjbhur3rz004pfiqzwui32r6k"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws2.sinaimg.cn/large/006tKfTcgy1fl4y1wcc2tj30oo051js4.jpg" itemprop="contentUrl"/>
               </a>
