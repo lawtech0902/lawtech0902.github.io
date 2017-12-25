@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2017/12/25/ubuntu-tensorflow-gpu/</loc>
+    
+    <lastmod>2017-12-25T07:59:45.906Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2017/12/22/centos-django/</loc>
     
     <lastmod>2017-12-22T11:49:28.071Z</lastmod>

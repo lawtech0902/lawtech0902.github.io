@@ -72,7 +72,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Scrapy，Python," />
+  <meta name="keywords" content="TensorFlow, GPU, Ubuntu, Cuda," />
 
 
 
@@ -90,18 +90,39 @@
 
 
 
-<meta name="description" content="Scrapy的item是进行数据保存不可缺少的步骤，通过它进行数据的整理并通过Pipelines进行数据的数据库保存，图片下载等，它只有一种类型 scrapy.Field() 。">
+<meta name="description" content="基本工作
+更新系统
+
+123sudo apt-get updatesudo apt-get upgrade -ysudo apt-get dist-upgrade -y
+
+安装linux kernel modules，linux source和headers
+
+12345sudo apt-get install linux-image-extra-virtualsudo apt-get insta">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——items设计">
-<meta property="og:url" content="http://yoursite.com/2017/05/05/scrapy-items-design/index.html">
+<meta property="og:title" content="Ubuntu16.04安装配置GPU版TensorFlow">
+<meta property="og:url" content="http://yoursite.com/2017/12/25/ubuntu-tensorflow-gpu/index.html">
 <meta property="og:site_name" content="LawTech's Blog">
-<meta property="og:description" content="Scrapy的item是进行数据保存不可缺少的步骤，通过它进行数据的整理并通过Pipelines进行数据的数据库保存，图片下载等，它只有一种类型 scrapy.Field() 。">
-<meta property="og:image" content="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg">
-<meta property="og:updated_time" content="2017-05-06T10:36:18.000Z">
+<meta property="og:description" content="基本工作
+更新系统
+
+123sudo apt-get updatesudo apt-get upgrade -ysudo apt-get dist-upgrade -y
+
+安装linux kernel modules，linux source和headers
+
+12345sudo apt-get install linux-image-extra-virtualsudo apt-get insta">
+<meta property="og:image" content="https://ws2.sinaimg.cn/large/006tKfTcgy1fmt1g3h0xqj30xc0ir3yo.jpg">
+<meta property="og:updated_time" content="2017-12-25T07:59:45.906Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——items设计">
-<meta name="twitter:description" content="Scrapy的item是进行数据保存不可缺少的步骤，通过它进行数据的整理并通过Pipelines进行数据的数据库保存，图片下载等，它只有一种类型 scrapy.Field() 。">
-<meta name="twitter:image" content="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg">
+<meta name="twitter:title" content="Ubuntu16.04安装配置GPU版TensorFlow">
+<meta name="twitter:description" content="基本工作
+更新系统
+
+123sudo apt-get updatesudo apt-get upgrade -ysudo apt-get dist-upgrade -y
+
+安装linux kernel modules，linux source和headers
+
+12345sudo apt-get install linux-image-extra-virtualsudo apt-get insta">
+<meta name="twitter:image" content="https://ws2.sinaimg.cn/large/006tKfTcgy1fmt1g3h0xqj30xc0ir3yo.jpg">
 
 
 
@@ -129,13 +150,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/05/05/scrapy-items-design/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/12/25/ubuntu-tensorflow-gpu/"/>
 
 
 
 
 
-  <title> Python分布式爬虫打造搜索引擎项目学习笔记——items设计 | LawTech's Blog </title>
+  <title> Ubuntu16.04安装配置GPU版TensorFlow | LawTech's Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -300,7 +321,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/05/scrapy-items-design/">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/25/ubuntu-tensorflow-gpu/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="LawTech.">
@@ -324,7 +345,7 @@
             
             
               
-                Python分布式爬虫打造搜索引擎项目学习笔记——items设计
+                Ubuntu16.04安装配置GPU版TensorFlow
               
             
           </h2>
@@ -339,8 +360,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-05T14:18:54+08:00">
-                2017-05-05
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-25T13:18:54+08:00">
+                2017-12-25
               </time>
             
 
@@ -355,8 +376,8 @@
               
                 <span class="post-meta-item-text">更新于</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2017-05-06T18:36:18+08:00">
-                2017-05-06
+              <time title="更新于" itemprop="dateModified" datetime="2017-12-25T15:59:45+08:00">
+                2017-12-25
               </time>
             
           </span>
@@ -374,8 +395,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Scrapy/" itemprop="url" rel="index">
-                    <span itemprop="name">Scrapy</span>
+                  <a href="/categories/TensorFlow/" itemprop="url" rel="index">
+                    <span itemprop="name">TensorFlow</span>
                   </a>
                 </span>
 
@@ -392,7 +413,7 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a class="cloud-tie-join-count" href="/2017/05/05/scrapy-items-design/#comments" itemprop="discussionUrl">
+                <a class="cloud-tie-join-count" href="/2017/12/25/ubuntu-tensorflow-gpu/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count join-count" itemprop="commentCount"></span>
                 </a>
               </span>
@@ -403,7 +424,7 @@
 
           
           
-             <span id="/2017/05/05/scrapy-items-design/" class="leancloud_visitors" data-flag-title="Python分布式爬虫打造搜索引擎项目学习笔记——items设计">
+             <span id="/2017/12/25/ubuntu-tensorflow-gpu/" class="leancloud_visitors" data-flag-title="Ubuntu16.04安装配置GPU版TensorFlow">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -436,9 +457,9 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjblwxz2a002kktqz1uwnh4fy"
+                 href="https://ws2.sinaimg.cn/large/006tKfTcgy1fmt1g3h0xqj30xc0ir3yo.jpg" rel="gallery_cjblwxz36003wktqz1mwt4b1g"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
-                <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
+                <img src="https://ws2.sinaimg.cn/large/006tKfTcgy1fmt1g3h0xqj30xc0ir3yo.jpg" itemprop="contentUrl"/>
               </a>
             
           
@@ -449,33 +470,38 @@
       
 
       
-        <p>Scrapy的item是进行数据保存不可缺少的步骤，通过它进行数据的整理并通过Pipelines进行数据的数据库保存，图片下载等，它只有一种类型 <code>scrapy.Field()</code> 。</p>
+        <h3 id="基本工作"><a href="#基本工作" class="headerlink" title="基本工作"></a><strong>基本工作</strong></h3><ol>
+<li>更新系统</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">sudo apt-get update</div><div class="line">sudo apt-get upgrade -y</div><div class="line">sudo apt-get dist-upgrade -y</div></pre></td></tr></table></figure>
+<ol>
+<li>安装linux kernel modules，linux source和headers</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">sudo apt-get install linux-image-extra-virtual</div><div class="line">sudo apt-get install linux-source-$(uname -r)</div><div class="line">sudo apt-get install sysdig-dkms</div><div class="line">sudo apt-get source linux-image-$(uname -r)</div><div class="line">sudo apt-get install linux-headers-$(uname -r)</div></pre></td></tr></table></figure>
+<ol>
+<li>禁用nouveau内核</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">sudo vim /etc/modprobe.d/blacklist.conf </div><div class="line"></div><div class="line"># 添加如下内容：</div><div class="line">blacklist nouveau</div><div class="line">blacklist lbm-nouveau</div><div class="line">options nouveau modeset=0</div><div class="line">alias nouveau off</div><div class="line">alias lbm-nouveau off</div><div class="line"></div><div class="line"># 然后运行以下命令即可：</div><div class="line">echo options nouveau modeset=0 | sudo tee -a /etc/modprobe.d/nouveau-kms.conf</div><div class="line">sudo update-initramfs -u</div></pre></td></tr></table></figure>
+<p>重启之后即可禁用nouveau，可以运行<code>$ lsmod | grep nouveau</code>检查是否禁用成功，如果运行后没有任何输出，则代表禁用成功。</p>
 <a id="more"></a>
-<h2 id="定义-items"><a href="#定义-items" class="headerlink" title="定义 items"></a><strong>定义 items</strong></h2><p>由于需要添加一个封面图，对上面的爬虫添加一个 <code>front_image_url</code> 字段对 <code>parse</code> 函数进行修改：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></div><div class="line">    <span class="string">"""</span></div><div class="line">    1. 获取文章列表页中的文章url并交给解析函数进行具体字段的解析</div><div class="line">    2. 获取下一页的url并交给scrapy进行下载</div><div class="line">    :param response: </div><div class="line">    :return: </div><div class="line">    """</div><div class="line"></div><div class="line">    <span class="comment"># 解析列表页中的所有文章url并交给解析函数进行具体字段的解析</span></div><div class="line">    post_nodes = response.css(<span class="string">"#archive .floated-thumb .post-thumb a"</span>)</div><div class="line">    <span class="keyword">for</span> post_node <span class="keyword">in</span> post_nodes:</div><div class="line">        image_url = post_node.css(<span class="string">"img::attr(src)"</span>).extract_first(<span class="string">""</span>)</div><div class="line">        post_url = post_node.css(<span class="string">"::attr(href)"</span>).extract_first(<span class="string">""</span>)</div><div class="line">        <span class="keyword">yield</span> Request(url=parse.urljoin(response.url, post_url), meta=&#123;<span class="string">"front_image_url"</span>: image_url&#125;, callback=self.parse_detail)</div></pre></td></tr></table></figure>
-<p>其中的 <code>meta</code> 字段是传递值的方法。在调试时返回的 <code>response</code> 中会出现 <code>meta</code> 的内容，它是一个字典，故在传递时可以直接通过 <code>response.meta[&#39;front_image_url&#39;]</code> 进行引用（也可以使用get的方法，附默认值防止出现异常）：</p>
-<p><img src="http://ww1.sinaimg.cn/large/006tNc79gy1ffaslwq4mqj30l1058t9b.jpg" alt=""></p>
-<p>在 <code>items.py</code> 文件中，定义一个item并声明其字段：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">JobBoleArticleItem</span><span class="params">(scrapy.Item)</span>:</span></div><div class="line">    title = scrapy.Field()</div><div class="line">    create_date = scrapy.Field()</div><div class="line">    url = scrapy.Field()</div><div class="line">    url_object_id = scrapy.Field()</div><div class="line">    front_image_url = scrapy.Field()</div><div class="line">    front_image_path = scrapy.Field()</div><div class="line">    praise_nums = scrapy.Field()</div><div class="line">    comment_nums = scrapy.Field()</div><div class="line">    fav_nums = scrapy.Field()</div><div class="line">    tags = scrapy.Field()</div><div class="line">    content = scrapy.Field()</div></pre></td></tr></table></figure>
-<p>在 <code>jobbole.py</code> 中添加 <code>from ArticleSpider.items import JobBoleArticleItem</code> 对item进行引用，然后在 <code>parse_detail</code> 中进行初始化 <code>article_item = JobBoleArticleItem()</code> ，之后将获取到的字段内容存入初始化的item中，最终代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse_detail</span><span class="params">(self, response)</span>:</span></div><div class="line">    article_item = JobBoleArticleItem()</div><div class="line"></div><div class="line">    <span class="comment"># 通过css选择器提取字段</span></div><div class="line">    front_image_url = response.meta.get(<span class="string">"front_image_url"</span>, <span class="string">""</span>)  <span class="comment"># 文章封面图</span></div><div class="line">    title = response.css(<span class="string">".entry-header h1::text"</span>).extract()[<span class="number">0</span>]</div><div class="line">    create_date = response.css(<span class="string">"p.entry-meta-hide-on-mobile::text"</span>).extract()[<span class="number">0</span>].strip().replace(<span class="string">"·"</span>, <span class="string">""</span>).strip()</div><div class="line">    praise_nums = int(response.css(<span class="string">".vote-post-up h10::text"</span>).extract()[<span class="number">0</span>])</div><div class="line">    fav_nums = response.css(<span class="string">".bookmark-btn::text"</span>).extract()[<span class="number">0</span>]</div><div class="line">    match_re = re.match(<span class="string">".*?(\d+).*?"</span>, fav_nums)</div><div class="line">    <span class="keyword">if</span> match_re:</div><div class="line">        fav_nums = int(match_re.group(<span class="number">1</span>))</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        fav_nums = <span class="number">0</span></div><div class="line">    comment_nums = response.css(<span class="string">"a[href='#article-comment'] span::text"</span>).extract()[<span class="number">0</span>]</div><div class="line">    match_re = re.match(<span class="string">".*?(\d+).*?"</span>, comment_nums)</div><div class="line">    <span class="keyword">if</span> match_re:</div><div class="line">        comment_nums = int(match_re.group(<span class="number">1</span>))</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        comment_nums = <span class="number">0</span></div><div class="line">    content = response.css(<span class="string">"div.entry"</span>).extract()[<span class="number">0</span>]</div><div class="line">    tag_list = response.css(<span class="string">"p.entry-meta-hide-on-mobile a::text"</span>).extract()</div><div class="line">    tag_list = [element <span class="keyword">for</span> element <span class="keyword">in</span> tag_list <span class="keyword">if</span> <span class="keyword">not</span> element.strip().endswith(<span class="string">"评论"</span>)]</div><div class="line">    tags = <span class="string">","</span>.join(tag_list)</div><div class="line"></div><div class="line">    article_item[<span class="string">"title"</span>] = title</div><div class="line">    article_item[<span class="string">"url"</span>] = response.url</div><div class="line">    article_item[<span class="string">"create_date"</span>] = create_date</div><div class="line">    article_item[<span class="string">"front_image_url"</span>] = front_image_url</div><div class="line">    article_item[<span class="string">"praise_nums"</span>] = praise_nums</div><div class="line">    article_item[<span class="string">"comment_nums"</span>] = comment_nums</div><div class="line">    article_item[<span class="string">"fav_nums"</span>] = fav_nums</div><div class="line">    article_item[<span class="string">"content"</span>] = content</div><div class="line">    article_item[<span class="string">"tags"</span>] = tags</div><div class="line">    </div><div class="line">    <span class="keyword">yield</span> article_item</div></pre></td></tr></table></figure>
-<p>其中 <code>yield article_item</code> 会自动提交到 <code>settings</code> 中的 <code>ITEM_PIPELINES</code> 进行处理。<br>此时在 <code>pipelines.py</code> 中设置断点调试，可以看到 <code>article_item</code> 中的值已经传递到这里了。</p>
-<p><img src="http://ww3.sinaimg.cn/large/006tNc79gy1ffasxu8jauj31ge0my46y.jpg" alt=""></p>
-<h2 id="自定义-Pipelines"><a href="#自定义-Pipelines" class="headerlink" title="自定义 Pipelines"></a><strong>自定义 Pipelines</strong></h2><p>在 <code>settings.py</code> 中有一个ITEM_PIPELINES的选项，把它的注释去掉增加下载图片的代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Configure item pipelines</span></div><div class="line"><span class="comment"># See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html</span></div><div class="line">ITEM_PIPELINES = &#123;</div><div class="line">    <span class="string">'ArticleSpider.pipelines.ArticlespiderPipeline'</span>: <span class="number">300</span>,</div><div class="line">    <span class="string">'scrapy.pipelines.images.ImagesPipeline'</span>: <span class="number">1</span>,</div><div class="line">&#125;</div><div class="line">IMAGES_URLS_FIELD = <span class="string">"front_image_url"</span></div><div class="line">project_dir = os.path.abspath(os.path.dirname(__file__))</div><div class="line">IMAGES_STORE = os.path.join(project_dir, <span class="string">'images'</span>)</div></pre></td></tr></table></figure>
-<p>上面的代码启用了下载图片piplines，并定义了存储地址及想要存储的图片地址。<br>在settings.py同级目录下建立文件夹 <code>images</code> 用来保存图片。当运行爬虫时，图片就会自动下载图片并保存到本地。<br>如果想要得到存储的图片路径的话，需要自定义pipelines。</p>
-<p>首先，在 <code>pipeines.py</code> 中引入 <code>from scrapy.pipelines.images import ImagesPipeline</code> ， 然后自定义一个pipeline对ImagesPipeline进行重载：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ArticleImagePipeline</span><span class="params">(ImagesPipeline)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">item_completed</span><span class="params">(self, results, item, info)</span>:</span></div><div class="line">        <span class="keyword">pass</span></div></pre></td></tr></table></figure>
-<p>进行断点调试，查看results中的信息：</p>
-<p><img src="http://ww4.sinaimg.cn/large/006tNc79gy1ffblwnn93tj31aq0t2wmq.jpg" alt=""></p>
-<p>调试结果中，results是一个list，第一个值是一个bool值表示图片是否获取成功，第二个值是一个字典，保存了图片路径，图片地址等信息。</p>
-<p>最终自定义的pipeline代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ArticleImagePipeline</span><span class="params">(ImagesPipeline)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">item_completed</span><span class="params">(self, results, item, info)</span>:</span></div><div class="line">        <span class="keyword">for</span> ok, value <span class="keyword">in</span> results:</div><div class="line">            image_file_path = value[<span class="string">"path"</span>]</div><div class="line">        item[<span class="string">"front_image_path"</span>] = image_file_path</div><div class="line">        <span class="keyword">return</span> item</div></pre></td></tr></table></figure>
-<p>上面代码得到image_path保存到 <code>item[&quot;front_image_path&quot;]</code> 中并返回，这时会根据pipelines的顺序进行下一个pipelines进行处理。通过断点调试可以得到想要的结果。</p>
-<p><img src="http://ww3.sinaimg.cn/large/006tNc79gy1ffbpccuulfj31kw0w7dqk.jpg" alt=""></p>
-<h2 id="完善-items-获取"><a href="#完善-items-获取" class="headerlink" title="完善 items 获取"></a><strong>完善 items 获取</strong></h2><p>对之前定义的items中的 <code>url_object_id</code> 字段，需要对url进行md5处理，因此在 <code>items.py</code> 同级目录下新建一个名为 <code>utils</code> 的 <code>python package</code>，新建 <code>common.py</code> ，代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> hashlib</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_md5</span><span class="params">(url)</span>:</span></div><div class="line">    <span class="keyword">if</span> isinstance(url, str):</div><div class="line">        url = url.encode(<span class="string">"utf-8"</span>)</div><div class="line">    m = hashlib.md5()</div><div class="line">    m.update(url)</div><div class="line">    <span class="keyword">return</span> m.hexdigest()</div></pre></td></tr></table></figure>
-<p>然后在 <code>jobbole.py</code> 下引入 <code>from ArticleSpider.utils.common import get_md5</code> ，在item内容填充时加上 <code>article_item[&quot;url_object_id&quot;] = get_md5(response.url)</code> 即可。</p>
+<h3 id="安装anaconda"><a href="#安装anaconda" class="headerlink" title="安装anaconda"></a><strong>安装anaconda</strong></h3><p>下载anaconda，执行命令<code>bash Anaconda3-4.3.1-Linux-x86_64.sh</code> ，然后一路yes即可。</p>
+<h3 id="安装显卡驱动"><a href="#安装显卡驱动" class="headerlink" title="安装显卡驱动"></a><strong>安装显卡驱动</strong></h3><p>首先<code>lspci</code>查看自己的GPU显卡版本，然后到<a href="http://www.nvidia.com/Download/index.aspx下载对应版本的显卡驱动，之后执行命令`sudo" target="_blank" rel="external">http://www.nvidia.com/Download/index.aspx下载对应版本的显卡驱动，之后执行命令`sudo</a> service lightdm stop`，通过Ctrl+Alt+F1进入init3(文本模式)，输入账号密码进行安装，执行以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo chmod +x NVIDIA-Linux-x86_64-375.51.run</div><div class="line">sudo ./NVIDIA-Linux-x86_64-375.51.run</div></pre></td></tr></table></figure>
+<p>一路yes和回车就搞定了。</p>
+<p>然后<code>sudo service lightdm start</code>，可以通过<code>sudo nvidia-xconfig -query-gpu-info</code>查看GPU信息。</p>
+<h3 id="安装CUDA"><a href="#安装CUDA" class="headerlink" title="安装CUDA"></a><strong>安装CUDA</strong></h3><p>到<a href="https://developer.nvidia.com/cuda-downloads官网下载，这里下载的是8.0版本CUDA，然后执行命令安装：" target="_blank" rel="external">https://developer.nvidia.com/cuda-downloads官网下载，这里下载的是8.0版本CUDA，然后执行命令安装：</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo chmod +x cuda_8.0.61_375.26_linux.run</div><div class="line">sudo ./cuda_8.0.61_375.26_linux.run</div></pre></td></tr></table></figure>
+<p>除了OpenGL选no，其他一路yes和回车就搞定了。如果报错比如X server is running或者unable to locate the kernel的问题，确保之前提到的准备工作全部做好，绝对不会有问题。</p>
+<p>安装好CUDA之后，添加环境变量：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">sudo vim /etc/profile </div><div class="line"></div><div class="line"># 添加内容如下：</div><div class="line">PATH=/usr/local/cuda-8.0/bin:$PATH   </div><div class="line">export PATH  </div><div class="line">export LD_LIBRARY_PATH=/usr/local/cuda-8.0/lib64:/lib  </div><div class="line"></div><div class="line"># 保存退出，使之立即生效</div><div class="line">source /etc/profile</div><div class="line"></div><div class="line"># 添加lib库路径</div><div class="line">sudo vim /etc/ld.so.conf.d/cuda.conf  </div><div class="line"></div><div class="line"># 添加内容如下：</div><div class="line">/usr/local/cuda-8.0/lib64 </div><div class="line"></div><div class="line"># 保存退出，使之立即生效</div><div class="line">sudo ldconfig</div><div class="line"></div><div class="line"># 验证安装结果，有服务器信息和cuda版本号即可</div><div class="line">nvcc -V</div></pre></td></tr></table></figure>
+<h3 id="安装cuDNN"><a href="#安装cuDNN" class="headerlink" title="安装cuDNN"></a><strong>安装cuDNN</strong></h3><p>在<a href="https://developer.nvidia.com/cudnn官网上下载，需要注册，必须下载[cuDNN" target="_blank" rel="external">https://developer.nvidia.com/cudnn官网上下载，需要注册，必须下载[cuDNN</a> v5.1 Library for Linux](<a href="https://developer.nvidia.com/compute/machine-learning/cudnn/secure/v5.1/prod_20161129/7.5/cudnn-7.5-linux-x64-v5.1-tgz)版本，执行以下命令：" target="_blank" rel="external">https://developer.nvidia.com/compute/machine-learning/cudnn/secure/v5.1/prod_20161129/7.5/cudnn-7.5-linux-x64-v5.1-tgz)版本，执行以下命令：</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">sudo tar -zxvf cudnn-8.0-linux-x64-v5.1.tgz</div><div class="line">cd cuda</div><div class="line">sudo cp lib64/lib* /usr/local/cuda/lib64/  </div><div class="line">sudo cp include/cudnn.h /usr/local/cuda/include/ </div><div class="line">cd /usr/local/cuda/lib64/  </div><div class="line">sudo rm -rf libcudnn.so libcudnn.so.5  </div><div class="line">sudo ln -s libcudnn.so.5.1.10 libcudnn.so.5  </div><div class="line">sudo ln -s libcudnn.so.5 libcudnn.so</div></pre></td></tr></table></figure>
+<p>然后可以测试CUDA等是否成功配置，编译运行某个sample：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">cd /usr/local/cuda/samples</div><div class="line">sudo make all -j4</div><div class="line"></div><div class="line"># 全部编译完成之后</div><div class="line">cd /usr/local/cuda/samples/bin/x86_64/linux/release</div><div class="line">./deviceQuery	# 如果显示有可用的GPU即为成功</div></pre></td></tr></table></figure>
+<h3 id="安装TensorFlow"><a href="#安装TensorFlow" class="headerlink" title="安装TensorFlow"></a><strong>安装TensorFlow</strong></h3><p>选择用conda创建独立环境：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">conda create -n tensor_test python==3.5</div><div class="line">source activate tensor_test</div><div class="line"></div><div class="line"># 直接用pip安装</div><div class="line">pip install tensorflow-gpu==1.2</div><div class="line"></div><div class="line"># 进入python环境测试</div><div class="line">import tensorflow as tf</div><div class="line"></div><div class="line"># 如下可以查看tensorflow的版本号和安装路径</div><div class="line">tf.__version__</div><div class="line">tf.__path__</div></pre></td></tr></table></figure>
+<p>一定注意版本，tensorflow-gpu最新版本为1.4，但是会报<code>libcudnn.so.6:cannot open sharedobject file: No such file or directory</code>错误，说明1.4已经开始去找cudnn6了，但我们这是5.1，理论上可以换用cudnn6，算了，还是做一个没有梦想的咸鱼吧，能用就行，换用tensorflow-gpu 1.2版本完美解决。</p>
+<p>重重困难，还得靠自己解决。（Fuck the Christmas!!!）</p>
 
       
     </div>
@@ -489,7 +515,7 @@
   
         <div class="post-tags">
           
-            <a href="/tags/Scrapy，Python/" rel="tag"># Scrapy，Python</a>
+            <a href="/tags/TensorFlow-GPU-Ubuntu-Cuda/" rel="tag"># TensorFlow, GPU, Ubuntu, Cuda</a>
           
         </div>
       
@@ -530,8 +556,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/05/05/scrapy-selectors/" rel="next" title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Selectors">
-                <i class="fa fa-chevron-left"></i> Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Selectors
+              <a href="/2017/12/22/centos-django/" rel="next" title="centos7部署django应用">
+                <i class="fa fa-chevron-left"></i> centos7部署django应用
               </a>
             
           </div>
@@ -539,10 +565,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/05/06/scrapy-item-pipeline/" rel="prev" title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Item Pipeline">
-                Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Item Pipeline <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -711,7 +733,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#定义-items"><span class="nav-number">1.</span> <span class="nav-text">定义 items</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义-Pipelines"><span class="nav-number">2.</span> <span class="nav-text">自定义 Pipelines</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#完善-items-获取"><span class="nav-number">3.</span> <span class="nav-text">完善 items 获取</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本工作"><span class="nav-number">1.</span> <span class="nav-text">基本工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装anaconda"><span class="nav-number">2.</span> <span class="nav-text">安装anaconda</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装显卡驱动"><span class="nav-number">3.</span> <span class="nav-text">安装显卡驱动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装CUDA"><span class="nav-number">4.</span> <span class="nav-text">安装CUDA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装cuDNN"><span class="nav-number">5.</span> <span class="nav-text">安装cuDNN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装TensorFlow"><span class="nav-number">6.</span> <span class="nav-text">安装TensorFlow</span></a></li></ol></div>
             
 
           </div>
