@@ -111,7 +111,7 @@
 
 12345sudo apt-get install linux-image-extra-virtualsudo apt-get insta">
 <meta property="og:image" content="https://ws2.sinaimg.cn/large/006tKfTcgy1fmt1g3h0xqj30xc0ir3yo.jpg">
-<meta property="og:updated_time" content="2017-12-25T07:59:45.906Z">
+<meta property="og:updated_time" content="2017-12-25T08:06:35.902Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Ubuntu16.04安装配置GPU版TensorFlow">
 <meta name="twitter:description" content="基本工作
@@ -376,7 +376,7 @@
               
                 <span class="post-meta-item-text">更新于</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2017-12-25T15:59:45+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2017-12-25T16:06:35+08:00">
                 2017-12-25
               </time>
             
@@ -457,7 +457,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws2.sinaimg.cn/large/006tKfTcgy1fmt1g3h0xqj30xc0ir3yo.jpg" rel="gallery_cjblwxz36003wktqz1mwt4b1g"
+                 href="https://ws2.sinaimg.cn/large/006tKfTcgy1fmt1g3h0xqj30xc0ir3yo.jpg" rel="gallery_cjblx5px7003nn2qz59xu2ciz"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws2.sinaimg.cn/large/006tKfTcgy1fmt1g3h0xqj30xc0ir3yo.jpg" itemprop="contentUrl"/>
               </a>
@@ -485,16 +485,16 @@
 <p>重启之后即可禁用nouveau，可以运行<code>$ lsmod | grep nouveau</code>检查是否禁用成功，如果运行后没有任何输出，则代表禁用成功。</p>
 <a id="more"></a>
 <h3 id="安装anaconda"><a href="#安装anaconda" class="headerlink" title="安装anaconda"></a><strong>安装anaconda</strong></h3><p>下载anaconda，执行命令<code>bash Anaconda3-4.3.1-Linux-x86_64.sh</code> ，然后一路yes即可。</p>
-<h3 id="安装显卡驱动"><a href="#安装显卡驱动" class="headerlink" title="安装显卡驱动"></a><strong>安装显卡驱动</strong></h3><p>首先<code>lspci</code>查看自己的GPU显卡版本，然后到<a href="http://www.nvidia.com/Download/index.aspx下载对应版本的显卡驱动，之后执行命令`sudo" target="_blank" rel="external">http://www.nvidia.com/Download/index.aspx下载对应版本的显卡驱动，之后执行命令`sudo</a> service lightdm stop`，通过Ctrl+Alt+F1进入init3(文本模式)，输入账号密码进行安装，执行以下命令：</p>
+<h3 id="安装显卡驱动"><a href="#安装显卡驱动" class="headerlink" title="安装显卡驱动"></a><strong>安装显卡驱动</strong></h3><p>首先<code>lspci</code>查看自己的GPU显卡版本，然后到<a href="http://www.nvidia.com/Download/index.aspx" target="_blank" rel="external">Nvidia官方网站</a>下载对应版本的显卡驱动，之后执行命令<code>sudo service lightdm stop</code>，通过Ctrl+Alt+F1进入init3(文本模式)，输入账号密码进行安装，执行以下命令：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo chmod +x NVIDIA-Linux-x86_64-375.51.run</div><div class="line">sudo ./NVIDIA-Linux-x86_64-375.51.run</div></pre></td></tr></table></figure>
 <p>一路yes和回车就搞定了。</p>
 <p>然后<code>sudo service lightdm start</code>，可以通过<code>sudo nvidia-xconfig -query-gpu-info</code>查看GPU信息。</p>
-<h3 id="安装CUDA"><a href="#安装CUDA" class="headerlink" title="安装CUDA"></a><strong>安装CUDA</strong></h3><p>到<a href="https://developer.nvidia.com/cuda-downloads官网下载，这里下载的是8.0版本CUDA，然后执行命令安装：" target="_blank" rel="external">https://developer.nvidia.com/cuda-downloads官网下载，这里下载的是8.0版本CUDA，然后执行命令安装：</a></p>
+<h3 id="安装CUDA"><a href="#安装CUDA" class="headerlink" title="安装CUDA"></a><strong>安装CUDA</strong></h3><p>到<a href="https://developer.nvidia.com/cuda-downloads" target="_blank" rel="external">CUDA</a>官网下载，这里下载的是8.0版本CUDA，然后执行命令安装：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo chmod +x cuda_8.0.61_375.26_linux.run</div><div class="line">sudo ./cuda_8.0.61_375.26_linux.run</div></pre></td></tr></table></figure>
 <p>除了OpenGL选no，其他一路yes和回车就搞定了。如果报错比如X server is running或者unable to locate the kernel的问题，确保之前提到的准备工作全部做好，绝对不会有问题。</p>
 <p>安装好CUDA之后，添加环境变量：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">sudo vim /etc/profile </div><div class="line"></div><div class="line"># 添加内容如下：</div><div class="line">PATH=/usr/local/cuda-8.0/bin:$PATH   </div><div class="line">export PATH  </div><div class="line">export LD_LIBRARY_PATH=/usr/local/cuda-8.0/lib64:/lib  </div><div class="line"></div><div class="line"># 保存退出，使之立即生效</div><div class="line">source /etc/profile</div><div class="line"></div><div class="line"># 添加lib库路径</div><div class="line">sudo vim /etc/ld.so.conf.d/cuda.conf  </div><div class="line"></div><div class="line"># 添加内容如下：</div><div class="line">/usr/local/cuda-8.0/lib64 </div><div class="line"></div><div class="line"># 保存退出，使之立即生效</div><div class="line">sudo ldconfig</div><div class="line"></div><div class="line"># 验证安装结果，有服务器信息和cuda版本号即可</div><div class="line">nvcc -V</div></pre></td></tr></table></figure>
-<h3 id="安装cuDNN"><a href="#安装cuDNN" class="headerlink" title="安装cuDNN"></a><strong>安装cuDNN</strong></h3><p>在<a href="https://developer.nvidia.com/cudnn官网上下载，需要注册，必须下载[cuDNN" target="_blank" rel="external">https://developer.nvidia.com/cudnn官网上下载，需要注册，必须下载[cuDNN</a> v5.1 Library for Linux](<a href="https://developer.nvidia.com/compute/machine-learning/cudnn/secure/v5.1/prod_20161129/7.5/cudnn-7.5-linux-x64-v5.1-tgz)版本，执行以下命令：" target="_blank" rel="external">https://developer.nvidia.com/compute/machine-learning/cudnn/secure/v5.1/prod_20161129/7.5/cudnn-7.5-linux-x64-v5.1-tgz)版本，执行以下命令：</a></p>
+<h3 id="安装cuDNN"><a href="#安装cuDNN" class="headerlink" title="安装cuDNN"></a><strong>安装cuDNN</strong></h3><p>在<a href="https://developer.nvidia.com/cudnn" target="_blank" rel="external">cuDNN官网</a>上下载，需要注册，必须下载<a href="https://developer.nvidia.com/compute/machine-learning/cudnn/secure/v5.1/prod_20161129/7.5/cudnn-7.5-linux-x64-v5.1-tgz" target="_blank" rel="external">cuDNN v5.1 Library for Linux</a>版本，执行以下命令：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">sudo tar -zxvf cudnn-8.0-linux-x64-v5.1.tgz</div><div class="line">cd cuda</div><div class="line">sudo cp lib64/lib* /usr/local/cuda/lib64/  </div><div class="line">sudo cp include/cudnn.h /usr/local/cuda/include/ </div><div class="line">cd /usr/local/cuda/lib64/  </div><div class="line">sudo rm -rf libcudnn.so libcudnn.so.5  </div><div class="line">sudo ln -s libcudnn.so.5.1.10 libcudnn.so.5  </div><div class="line">sudo ln -s libcudnn.so.5 libcudnn.so</div></pre></td></tr></table></figure>
 <p>然后可以测试CUDA等是否成功配置，编译运行某个sample：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">cd /usr/local/cuda/samples</div><div class="line">sudo make all -j4</div><div class="line"></div><div class="line"># 全部编译完成之后</div><div class="line">cd /usr/local/cuda/samples/bin/x86_64/linux/release</div><div class="line">./deviceQuery	# 如果显示有可用的GPU即为成功</div></pre></td></tr></table></figure>
