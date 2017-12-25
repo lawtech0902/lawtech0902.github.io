@@ -114,7 +114,7 @@
     fancybox: true,
     motion: true,
     duoshuo: {
-      userId: '0',
+      userId: 'undefined',
       author: '博主'
     },
     algolia: {
@@ -436,7 +436,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjbly4wcy001ywxqz6dbhjiyn"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjblygqvz0020zrqz6grf4nxe"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
               </a>
@@ -506,7 +506,7 @@
       
         
   <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
-    <div>🐶 怕是要给老板下跪了哦~ 🐶</div>
+    <div>🐶 ~怕是要给老板下跪了哦~ 🐶</div>
     <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
       <span>赞赏</span>
     </button>
@@ -537,8 +537,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/06/09/scrapy-crawlspider-lagou/" rel="next" title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy爬取拉勾网">
-                <i class="fa fa-chevron-left"></i> Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy爬取拉勾网
+              <a href="/2017/06/11/scrapy-useragent-proxyip/" rel="next" title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy随机更换User-Agent和实现IP代理池">
+                <i class="fa fa-chevron-left"></i> Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy随机更换User-Agent和实现IP代理池
               </a>
             
           </div>
@@ -547,8 +547,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/06/11/scrapy-useragent-proxyip/" rel="prev" title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy随机更换User-Agent和实现IP代理池">
-                Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy随机更换User-Agent和实现IP代理池 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/06/12/scrapy-cookies-settings/" rel="prev" title="Python分布式爬虫打造搜索引擎项目学习笔记——cookie禁用、自动限速、自定义Spider的settings">
+                Python分布式爬虫打造搜索引擎项目学习笔记——cookie禁用、自动限速、自定义Spider的settings <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -571,9 +571,6 @@
           </div>
           
 
-  <p>热评文章</p>
-  <div class="ds-top-threads" data-range="monthly" data-num-items="4"></div>
-
 
           
   <div class="comments" id="comments"></div>
@@ -582,16 +579,16 @@
     <script src="//cdn.jsdelivr.net/npm/valine@1.1.6/dist/Valine.min.js"></script>
     <script>
         new Valine({
-            av: AV,
             el: '.comments',
             notify: false,
             verify: false,
             app_id: '',
             app_key: '',
             placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!',
-            avatar: mm,
+            avatar: wavatar,
             guest_info: nick, mail, link,
             pageSize: 10,
+            lang: 'zh-cn',
         });
     </script>
     
@@ -704,7 +701,7 @@
           <div class="links-of-blogroll motion-element links-of-blogroll-inline">
             <div class="links-of-blogroll-title">
               <i class="fa  fa-fw fa-globe"></i>
-              友情链接
+              https://weibo.com/u/2869466040
             </div>
             <ul class="links-of-blogroll-list">
               
