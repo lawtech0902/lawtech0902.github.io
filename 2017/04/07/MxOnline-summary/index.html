@@ -589,12 +589,25 @@
 
 
           
-  <div class="comments" id="comments">
+  <div class="comments" id="comments"></div>
     
-      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/valine@1.1.6/dist/Valine.min.js"></script>
+    <script>
+        new Valine({
+            av: AV,
+            el: '.comments',
+            notify: false,
+            verify: false,
+            app_id: '',
+            app_key: '',
+            placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!',
+            avatar: mm,
+            guest_info: nick, mail, link,
+            pageSize: 10,
+        });
+    </script>
     
-  </div>
-
 
         </div>
         

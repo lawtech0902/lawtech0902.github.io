@@ -436,7 +436,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjblx5pwo002qn2qzvypaa9c6"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjbly4wde002qwxqzsot6oxdz"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
               </a>
@@ -530,8 +530,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/05/05/scrapy-selectors/" rel="prev" title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Selectors">
-                Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Selectors <i class="fa fa-chevron-right"></i>
+              <a href="/2017/05/05/scrapy-items-design/" rel="prev" title="Python分布式爬虫打造搜索引擎项目学习笔记——items设计">
+                Python分布式爬虫打造搜索引擎项目学习笔记——items设计 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -559,12 +559,25 @@
 
 
           
-  <div class="comments" id="comments">
+  <div class="comments" id="comments"></div>
     
-      <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/valine@1.1.6/dist/Valine.min.js"></script>
+    <script>
+        new Valine({
+            av: AV,
+            el: '.comments',
+            notify: false,
+            verify: false,
+            app_id: '',
+            app_key: '',
+            placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!',
+            avatar: mm,
+            guest_info: nick, mail, link,
+            pageSize: 10,
+        });
+    </script>
     
-  </div>
-
 
         </div>
         
