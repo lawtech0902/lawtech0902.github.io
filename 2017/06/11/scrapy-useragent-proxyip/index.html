@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Scrapy，Python," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="LawTech's Blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="之前有一节用于介绍Request和Response，还是官方文档介绍的比较详尽，所以就不做笔记了。 这一节用于介绍随机更换User-Agent和实现IP代理池的方法，首先来看一下现在网站中所做的反爬虫工作。">
+<meta name="keywords" content="Scrapy，Python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy随机更换User-Agent和实现IP代理池">
+<meta property="og:url" content="http://yoursite.com/2017/06/11/scrapy-useragent-proxyip/index.html">
+<meta property="og:site_name" content="LawTech&#39;s Blog">
+<meta property="og:description" content="之前有一节用于介绍Request和Response，还是官方文档介绍的比较详尽，所以就不做笔记了。 这一节用于介绍随机更换User-Agent和实现IP代理池的方法，首先来看一下现在网站中所做的反爬虫工作。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg">
+<meta property="og:updated_time" content="2017-06-21T10:13:36.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy随机更换User-Agent和实现IP代理池">
+<meta name="twitter:description" content="之前有一节用于介绍Request和Response，还是官方文档介绍的比较详尽，所以就不做笔记了。 这一节用于介绍随机更换User-Agent和实现IP代理池的方法，首先来看一下现在网站中所做的反爬虫工作。">
+<meta name="twitter:image" content="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/11/scrapy-useragent-proxyip/"/>
+
+
+
+
+
+  <title>Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy随机更换User-Agent和实现IP代理池 | LawTech's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LawTech's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">不破不立</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/11/scrapy-useragent-proxyip/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LawTech.">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LawTech's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy随机更换User-Agent和实现IP代理池</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-11T14:18:54+08:00">
+                2017-06-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Scrapy/" itemprop="url" rel="index">
+                    <span itemprop="name">Scrapy</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/06/11/scrapy-useragent-proxyip/" class="leancloud_visitors" data-flag-title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy随机更换User-Agent和实现IP代理池">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+          
+          
+            <div class="post-gallery-row">
+              <a class="post-gallery-img fancybox"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjbysvnwd003tdoqz5ooe2fyp"
+                 itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
+                <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
+              </a>
+            
+          
+
+          
+          </div>
+        </div>
+      
+
+      
+        <p>之前有一节用于介绍<code>Request</code>和<code>Response</code>，还是<a href="https://doc.scrapy.org/en/latest/index.html" target="_blank" rel="noopener">官方文档</a>介绍的比较详尽，所以就不做笔记了。</p>
+<p>这一节用于介绍随机更换User-Agent和实现IP代理池的方法，首先来看一下现在网站中所做的反爬虫工作。</p>
+<a id="more"></a>
+<h2 id="常见的反爬虫和应对方法"><a href="#常见的反爬虫和应对方法" class="headerlink" title="常见的反爬虫和应对方法"></a><strong>常见的反爬虫和应对方法</strong></h2><p>一般网站从三个方面反爬虫：用户请求的Headers，用户行为，网站目录和数据加载方式。前两种比较容易遇到，大多数网站都从这些角度来反爬虫。第三种一些应用ajax的网站会采用，这样增大了爬取的难度。</p>
+<h3 id="通过Headers反爬虫"><a href="#通过Headers反爬虫" class="headerlink" title="通过Headers反爬虫"></a><strong>通过</strong>Headers反爬虫</h3><p>从用户请求的Headers反爬虫是最常见的反爬虫策略。很多网站都会对Headers的User-Agent进行检测，还有一部分网站会对Referer进行检测（一些资源网站的防盗链就是检测Referer）。如果遇到了这类反爬虫机制，可以直接在爬虫中添加Headers，将浏览器的User-Agent复制到爬虫的Headers中；或者将Referer值修改为目标网站域名。对于检测Headers的反爬虫，在爬虫中修改或者添加Headers就能很好的绕过。</p>
+<p>针对这样的反爬虫方法，我们在Scrapy中实现随机更换User-Agent就很有必要了。</p>
+<h3 id="基于用户行为反爬虫"><a href="#基于用户行为反爬虫" class="headerlink" title="基于用户行为反爬虫"></a>基于用户行为反爬虫</h3><p>还有一部分网站是通过检测用户行为，例如同一IP短时间内多次访问同一页面，或者同一账户短时间内多次进行相同操作。</p>
+<p>大多数网站都是前一种情况，对于这种情况，使用IP代理就可以解决。可以专门写一个爬虫，爬取网上公开的代理ip，检测后全部保存起来。这样的代理ip爬虫经常会用到，最好自己准备一个。有了大量代理ip后可以每请求几次更换一个ip，这在requests或者urllib2中很容易做到，这样就能很容易的绕过第一种反爬虫。</p>
+<p>对于第二种情况，可以在每次请求后随机间隔几秒再进行下一次请求。有些有逻辑漏洞的网站，可以通过请求几次，退出登录，重新登录，继续请求来绕过同一账号短时间内不能多次进行相同请求的限制。</p>
+<p>对于这样的反爬虫方法，我们可以在Scrapy中实现IP代理池，问题便迎刃而解。</p>
+<h3 id="动态页面的反爬虫"><a href="#动态页面的反爬虫" class="headerlink" title="动态页面的反爬虫"></a>动态页面的反爬虫</h3><p>上述的几种情况大多都是出现在静态页面，还有一部分网站，我们需要爬取的数据是通过ajax请求得到，或者通过JavaScript生成的。首先用Firebug或者HttpFox对网络请求进行分析。如果能够找到ajax请求，也能分析出具体的参数和响应的具体含义，我们就能采用上面的方法，直接利用requests或者urllib2模拟ajax请求，对响应的json进行分析得到需要的数据。</p>
+<p>能够直接模拟ajax请求获取数据固然是极好的，但是有些网站把ajax请求的所有参数全部加密了。我们根本没办法构造自己所需要的数据的请求。我这几天爬的那个网站就是这样，除了加密ajax参数，它还把一些基本的功能都封装了，全部都是在调用自己的接口，而接口参数都是加密的。遇到这样的网站，我们就不能用上面的方法了，我用的是selenium+phantomJS框架，调用浏览器内核，并利用phantomJS执行js来模拟人为操作以及触发页面中的js脚本。从填写表单到点击按钮再到滚动页面，全部都可以模拟，不考虑具体的请求和响应过程，只是完完整整的把人浏览页面获取数据的过程模拟一遍。 </p>
+<p>用这套框架几乎能绕过大多数的反爬虫，因为它不是在伪装成浏览器来获取数据（上述的通过添加 Headers一定程度上就是为了伪装成浏览器），它本身就是浏览器，phantomJS就是一个没有界面的浏览器，只是操控这个浏览器的不是人。利用 selenium+phantomJS能干很多事情，例如识别点触式（12306）或者滑动式的验证码，对页面表单进行暴力破解等等。它在自动化渗透中还 会大展身手，以后还会提到这个。</p>
+<h2 id="随机更换User-Agent"><a href="#随机更换User-Agent" class="headerlink" title="随机更换User-Agent"></a><strong>随机更换User-Agent</strong></h2><p>首先将下面的代码添加到<code>settings.py</code>文件，替换默认的user-agent处理模块：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DOWNLOADER_MIDDLEWARES = &#123;</span><br><span class="line">    <span class="string">'ArticleSpider.middlewares.RandomUserAgentMiddleware'</span>: <span class="number">543</span>,</span><br><span class="line">    <span class="string">'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware'</span>: <span class="keyword">None</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在<code>middlewares.py</code>文件中自定义User-Agent处理模块：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> fake_useragent <span class="keyword">import</span> UserAgent</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RandomUserAgentMiddleware</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    随机更换User-Agent</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, crawler)</span>:</span></span><br><span class="line">        super(RandomUserAgentMiddleware, self).__init__()</span><br><span class="line">        self.ua = UserAgent()</span><br><span class="line">        self.ua_type = crawler.settings.get(<span class="string">'RANDOM_UA_TYPE'</span>, <span class="string">'random'</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">    @classmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">from_crawler</span><span class="params">(cls, crawler)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> cls(crawler)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_request</span><span class="params">(self, request, spider)</span>:</span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">get_ua</span><span class="params">()</span>:</span></span><br><span class="line">            <span class="keyword">return</span> getattr(self.ua, self.ua_type)</span><br><span class="line"></span><br><span class="line">        request.headers.setdefault(<span class="string">'User-Agent'</span>, get_ua())</span><br></pre></td></tr></table></figure>
+<p>其中，<a href="https://github.com/hellysmile/fake-useragent" target="_blank" rel="noopener">fake_useragent</a>这个第三方库维护了大量的User-Agent，我们就没必要自己去维护了，直接使用就好。</p>
+<p>下图为其的安装和使用方法：</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tNc79ly1fgspyd3gulj31e8150n6o.jpg" alt=""></p>
+<h2 id="实现IP代理池"><a href="#实现IP代理池" class="headerlink" title="实现IP代理池"></a><strong>实现IP代理池</strong></h2><p>我们用<a href="http://www.xicidaili.com/nn" target="_blank" rel="noopener">西刺免费代理IP网站</a>来实现这个IP代理池。我们选择爬取这个网站，然后将获取的数据写入数据库以供我们自己使用。</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tNc79ly1fgsqbcp5abj31kw180b29.jpg" alt=""></p>
+<p>调试之后，用CSS选择器来获取我们所需的内容，并将其保存到数据库中。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> scrapy.selector <span class="keyword">import</span> Selector</span><br><span class="line"><span class="keyword">import</span> MySQLdb</span><br><span class="line"></span><br><span class="line">conn = MySQLdb.connect(host=<span class="string">"127.0.0.1"</span>, user=<span class="string">"root"</span>, passwd=<span class="string">"123"</span>, db=<span class="string">"article_spider"</span>, charset=<span class="string">"utf8"</span>)</span><br><span class="line">cursor = conn.cursor()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">crawl_ips</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    爬取西刺网的免费代理IP</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    headers = &#123;</span><br><span class="line">        <span class="string">'User-Agent'</span>: <span class="string">"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/603.2.4 (KHTML, like Gecko) Version/10.1.1 Safari/603.2.4"</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">2093</span>):</span><br><span class="line">        re = requests.get(<span class="string">"http://www.xicidaili.com/nn/&#123;0&#125;"</span>.format(i), headers=headers)</span><br><span class="line"></span><br><span class="line">        selector = Selector(text=re.text)</span><br><span class="line">        all_trs = selector.css(<span class="string">"#ip_list tr"</span>)</span><br><span class="line"></span><br><span class="line">        ip_list = []</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> tr <span class="keyword">in</span> all_trs[<span class="number">1</span>:]:</span><br><span class="line">            speed_str = tr.css(<span class="string">".bar::attr(title)"</span>).extract()[<span class="number">0</span>]</span><br><span class="line">            <span class="keyword">if</span> speed_str:</span><br><span class="line">                speed = float(speed_str.split(<span class="string">"秒"</span>)[<span class="number">0</span>])</span><br><span class="line">            ip = tr.css(<span class="string">"td:nth-child(2)::text"</span>).extract_first()</span><br><span class="line">            port = tr.css(<span class="string">"td:nth-child(3)::text"</span>).extract_first()</span><br><span class="line">            proxy_type = tr.css(<span class="string">"td:nth-child(6)::text"</span>).extract_first()</span><br><span class="line">            ip_list.append((ip, port, proxy_type, speed))</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> ip_info <span class="keyword">in</span> ip_list:</span><br><span class="line">            cursor.execute(</span><br><span class="line">                <span class="string">"insert proxy_ip(ip, port, speed, proxy_type) VALUES('&#123;0&#125;', '&#123;1&#125;', '&#123;2&#125;', '&#123;3&#125;')"</span>.format(</span><br><span class="line">                    ip_info[<span class="number">0</span>], ip_info[<span class="number">1</span>], ip_info[<span class="number">3</span>], ip_info[<span class="number">2</span>]</span><br><span class="line">                )</span><br><span class="line">            )</span><br><span class="line">            conn.commit()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GetIP</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">delete_ip</span><span class="params">(self, ip)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        从数据库中删除无效的IP </span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        delete_sql = <span class="string">"""</span></span><br><span class="line"><span class="string">            DELETE FROM proxy_ip WHERE ip='&#123;0&#125;'</span></span><br><span class="line"><span class="string">        """</span>.format(ip)</span><br><span class="line">        cursor.execute(delete_sql)</span><br><span class="line">        conn.commit()</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">True</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">judge_ip</span><span class="params">(self, ip, port)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        判断IP是否可用</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        http_url = <span class="string">"http://www.baidu.com"</span></span><br><span class="line">        proxy_url = <span class="string">"http://&#123;0&#125;:&#123;1&#125;"</span>.format(ip, port)</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            proxy_dict = &#123;</span><br><span class="line">                <span class="string">"http"</span>: proxy_url,</span><br><span class="line">            &#125;</span><br><span class="line">            response = requests.get(http_url, proxies=proxy_dict)</span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">            print(<span class="string">"invalid ip and port"</span>)</span><br><span class="line">            self.delete_ip(ip)</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">False</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            code = response.status_code</span><br><span class="line">            <span class="keyword">if</span> code &gt;= <span class="number">200</span> <span class="keyword">and</span> code &lt; <span class="number">300</span>:</span><br><span class="line">                print(<span class="string">"effective ip"</span>)</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">True</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                print(<span class="string">"invalid ip and port"</span>)</span><br><span class="line">                self.delete_ip(ip)</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">False</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_random_ip</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        从数据库中随机获取一个可用的IP</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        random_sql = <span class="string">"""</span></span><br><span class="line"><span class="string">            SELECT ip, port FROM proxy_ip</span></span><br><span class="line"><span class="string">            ORDER BY RAND()</span></span><br><span class="line"><span class="string">            LIMIT 1</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        result = cursor.execute(random_sql)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> ip_info <span class="keyword">in</span> cursor.fetchall():</span><br><span class="line">            ip = ip_info[<span class="number">0</span>]</span><br><span class="line">            port = ip_info[<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">            judge_re = self.judge_ip(ip, port)</span><br><span class="line">            <span class="keyword">if</span> judge_re:</span><br><span class="line">                <span class="keyword">return</span> <span class="string">"http://&#123;0&#125;:&#123;1&#125;"</span>.format(ip, port)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                <span class="keyword">return</span> self.get_random_ip()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    get_ip = GetIP()</span><br><span class="line">    get_ip.get_random_ip()</span><br></pre></td></tr></table></figure>
+<p>最后，在<code>middlewares.py</code>文件中写入我们用于设置IP代理的逻辑即可：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RandomProxyMiddleware</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    动态设置IP代理</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">process_request</span><span class="params">(self, request, spider)</span>:</span></span><br><span class="line">        get_ip = GetIP()</span><br><span class="line">        request.meta[<span class="string">"proxy"</span>] = get_ip.get_random_ip()</span><br></pre></td></tr></table></figure>
+<h2 id="可参考的第三方库"><a href="#可参考的第三方库" class="headerlink" title="可参考的第三方库"></a><strong>可参考的第三方库</strong></h2><ul>
+<li><a href="https://github.com/scrapy-plugins/scrapy-crawlera" target="_blank" rel="noopener"><strong>scrapy-crawlera</strong></a></li>
+<li><a href="https://github.com/aivarsk/scrapy-proxies" target="_blank" rel="noopener"><strong>scrapy-proxies</strong></a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>🐶 ~怕是要给老板下跪了哦~ 🐶</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat-reward-img.jpg" alt="LawTech. 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay-reward-img.jpg" alt="LawTech. 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Scrapy，Python/" rel="tag"># Scrapy，Python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/09/scrapy-crawlspider-lagou/" rel="next" title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy爬取拉勾网">
+                <i class="fa fa-chevron-left"></i> Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy爬取拉勾网
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/11/scrapy-framework/" rel="prev" title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy核心架构分析">
+                Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy核心架构分析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg"
+                alt="LawTech." />
+            
+              <p class="site-author-name" itemprop="name">LawTech.</p>
+              <p class="site-description motion-element" itemprop="description">破邮python爱好者。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/lawtech0902" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/LawRev1s1on" target="_blank" title="weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#常见的反爬虫和应对方法"><span class="nav-number">1.</span> <span class="nav-text">常见的反爬虫和应对方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#通过Headers反爬虫"><span class="nav-number">1.1.</span> <span class="nav-text">通过Headers反爬虫</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基于用户行为反爬虫"><span class="nav-number">1.2.</span> <span class="nav-text">基于用户行为反爬虫</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动态页面的反爬虫"><span class="nav-number">1.3.</span> <span class="nav-text">动态页面的反爬虫</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#随机更换User-Agent"><span class="nav-number">2.</span> <span class="nav-text">随机更换User-Agent</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现IP代理池"><span class="nav-number">3.</span> <span class="nav-text">实现IP代理池</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#可参考的第三方库"><span class="nav-number">4.</span> <span class="nav-text">可参考的第三方库</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LawTech.</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("R025aEVl3sFz6nIRV8p0nqRB-gzGzoHsz", "g1roHmmHckuQSu2n9JW16T5b");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

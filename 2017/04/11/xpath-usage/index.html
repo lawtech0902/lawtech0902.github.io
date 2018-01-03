@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Scrapy，XPath，Python," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="LawTech's Blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="XPath的用法XPath简介 XPath 使用路径表达式在 XML / HTML 文档中进行导航 XPath 包含一个标准函数库 XPath 是 XSLT 中的主要元素 XPath 是一个 W3C 标准">
+<meta name="keywords" content="Scrapy，XPath，Python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——Xpath教程">
+<meta property="og:url" content="http://yoursite.com/2017/04/11/xpath-usage/index.html">
+<meta property="og:site_name" content="LawTech&#39;s Blog">
+<meta property="og:description" content="XPath的用法XPath简介 XPath 使用路径表达式在 XML / HTML 文档中进行导航 XPath 包含一个标准函数库 XPath 是 XSLT 中的主要元素 XPath 是一个 W3C 标准">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg">
+<meta property="og:updated_time" content="2017-06-09T08:20:49.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——Xpath教程">
+<meta name="twitter:description" content="XPath的用法XPath简介 XPath 使用路径表达式在 XML / HTML 文档中进行导航 XPath 包含一个标准函数库 XPath 是 XSLT 中的主要元素 XPath 是一个 W3C 标准">
+<meta name="twitter:image" content="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/11/xpath-usage/"/>
+
+
+
+
+
+  <title>Python分布式爬虫打造搜索引擎项目学习笔记——Xpath教程 | LawTech's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LawTech's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">不破不立</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/11/xpath-usage/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LawTech.">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LawTech's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Python分布式爬虫打造搜索引擎项目学习笔记——Xpath教程</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-11T20:18:54+08:00">
+                2017-04-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Scrapy/" itemprop="url" rel="index">
+                    <span itemprop="name">Scrapy</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/04/11/xpath-usage/" class="leancloud_visitors" data-flag-title="Python分布式爬虫打造搜索引擎项目学习笔记——Xpath教程">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+          
+          
+            <div class="post-gallery-row">
+              <a class="post-gallery-img fancybox"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjbysvnx8004wdoqzx76yae96"
+                 itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
+                <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
+              </a>
+            
+          
+
+          
+          </div>
+        </div>
+      
+
+      
+        <h2 id="XPath的用法"><a href="#XPath的用法" class="headerlink" title="XPath的用法"></a><strong>XPath的用法</strong></h2><h3 id="XPath简介"><a href="#XPath简介" class="headerlink" title="XPath简介"></a><strong>XPath简介</strong></h3><ul>
+<li>XPath 使用路径表达式在 XML / HTML 文档中进行导航</li>
+<li>XPath 包含一个标准函数库</li>
+<li>XPath 是 XSLT 中的主要元素</li>
+<li>XPath 是一个 W3C 标准</li>
+</ul>
+<a id="more"></a>
+<h3 id="XPath术语"><a href="#XPath术语" class="headerlink" title="XPath术语"></a><strong>XPath术语</strong></h3><h4 id="节点（Node）"><a href="#节点（Node）" class="headerlink" title="节点（Node）"></a><strong>节点（Node）</strong></h4><p>在 XPath 中，有七种类型的节点：元素、属性、文本、命名空间、处理指令、注释以及文档（根）节点。XML 文档是被作为节点树来对待的。树的根被称为文档节点或者根节点。</p>
+<p>请看下面这个 XML 文档：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span>Harry Potter<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">author</span>&gt;</span>J K. Rowling<span class="tag">&lt;/<span class="name">author</span>&gt;</span> </span><br><span class="line">  <span class="tag">&lt;<span class="name">year</span>&gt;</span>2005<span class="tag">&lt;/<span class="name">year</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>29.99<span class="tag">&lt;/<span class="name">price</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">bookstore</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>上面的XML文档中的节点例子：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span> （文档节点）</span><br><span class="line"><span class="tag">&lt;<span class="name">author</span>&gt;</span>J K. Rowling<span class="tag">&lt;/<span class="name">author</span>&gt;</span> （元素节点）</span><br><span class="line">lang="en" （属性节点）</span><br></pre></td></tr></table></figure>
+<h4 id="基本值（或称原子值，Atomic-value）"><a href="#基本值（或称原子值，Atomic-value）" class="headerlink" title="基本值（或称原子值，Atomic value）"></a><strong>基本值（或称原子值，Atomic value）</strong></h4><p>基本值是无父或无子的节点。</p>
+<p>基本值的例子：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">J K. Rowling</span><br><span class="line">"en"</span><br></pre></td></tr></table></figure>
+<h4 id="项目（Item）"><a href="#项目（Item）" class="headerlink" title="项目（Item）"></a><strong>项目（Item）</strong></h4><p>项目是基本值或者节点。</p>
+<h4 id="节点关系"><a href="#节点关系" class="headerlink" title="节点关系"></a><strong>节点关系</strong></h4><p>参考示例：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Harry Potter<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">author</span>&gt;</span>J K. Rowling<span class="tag">&lt;/<span class="name">author</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">year</span>&gt;</span>2005<span class="tag">&lt;/<span class="name">year</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>29.99<span class="tag">&lt;/<span class="name">price</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">bookstore</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>父节点（Parent）</p>
+<p>每个元素以及属性都有一个父节点。</p>
+<p>在上面的例子中，book 元素是 title、author、year 以及 price 元素的父节点</p>
+</li>
+<li><p>子节点（Children）</p>
+<p>元素节点可有零个、一个或多个子节点。</p>
+<p>在上面的例子中，title、author、year 以及 price 元素都是 book 元素的子节点</p>
+</li>
+<li><p>同胞节点（Sibling）</p>
+<p>拥有相同的父节点的节点</p>
+<p>在上面的例子中，title、author、year 以及 price 元素都是同胞节点</p>
+</li>
+<li><p>先辈节点（Ancestor）</p>
+<p>某节点的父节点、父节点的父节点，等等。</p>
+<p>在上面的例子中，title 元素的先辈节点是 book 元素和 bookstore 元素</p>
+</li>
+<li><p>后代节点（Descendant）</p>
+<p>某个节点的子节点，子节点的子节点，等等。</p>
+<p>在上面的例子中，bookstore 的后代节点是 book、title、author、year 以及 price 元素</p>
+</li>
+</ul>
+<h3 id="XPath语法"><a href="#XPath语法" class="headerlink" title="XPath语法"></a><strong>XPath语法</strong></h3><p>参考示例：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">bookstore</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span> <span class="attr">lang</span>=<span class="string">"eng"</span>&gt;</span>Harry Potter<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>29.99<span class="tag">&lt;/<span class="name">price</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">book</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span> <span class="attr">lang</span>=<span class="string">"eng"</span>&gt;</span>Learning XML<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">price</span>&gt;</span>39.95<span class="tag">&lt;/<span class="name">price</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">book</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">bookstore</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h4 id="选取节点"><a href="#选取节点" class="headerlink" title="选取节点"></a><strong>选取节点</strong></h4><p>XPath 使用路径表达式在 XML 文档中选取节点。节点是通过沿着路径或者 step 来选取的。下面列出了最有用的路径表达式：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">表达式</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">nodename</td>
+<td style="text-align:left">选取此节点的所有子节点</td>
+</tr>
+<tr>
+<td style="text-align:left">/</td>
+<td style="text-align:left">从根节点选取</td>
+</tr>
+<tr>
+<td style="text-align:left">//</td>
+<td style="text-align:left">从匹配选择的当前节点选择文档中的节点，而不考虑它们的位置</td>
+</tr>
+<tr>
+<td style="text-align:left">.</td>
+<td style="text-align:left">选取当前节点</td>
+</tr>
+<tr>
+<td style="text-align:left">..</td>
+<td style="text-align:left">选取当前节点的父节点。</td>
+</tr>
+<tr>
+<td style="text-align:left">@</td>
+<td style="text-align:left">选取属性。</td>
+</tr>
+</tbody>
+</table>
+<p>实例：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">路径表达式</th>
+<th style="text-align:left">结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">bookstore</td>
+<td style="text-align:left">选取bookstore元素的所有子节点</td>
+</tr>
+<tr>
+<td style="text-align:left">/bookstore</td>
+<td style="text-align:left">选取根元素bookstore 注释：假如路径起始于正斜杠( / )，则此路径始终代表到某元素的绝对路径！</td>
+</tr>
+<tr>
+<td style="text-align:left">bookstore/book</td>
+<td style="text-align:left">选取属于bookstore的子元素的所有book元素</td>
+</tr>
+<tr>
+<td style="text-align:left">//book</td>
+<td style="text-align:left">选取所有book元素，而不考虑它们的位置</td>
+</tr>
+<tr>
+<td style="text-align:left">bookstore//book</td>
+<td style="text-align:left">选择属于 bookstore 元素的后代的所有 book 元素，而不管它们位于 bookstore 之下的什么位置</td>
+</tr>
+<tr>
+<td style="text-align:left">//@lang</td>
+<td style="text-align:left">选取名为 lang 的所有属性</td>
+</tr>
+</tbody>
+</table>
+<h4 id="谓语（Predicates）"><a href="#谓语（Predicates）" class="headerlink" title="谓语（Predicates）"></a><strong>谓语（Predicates）</strong></h4><p>谓语用来查找某个特定的节点或者包含某个指定的值的节点。</p>
+<p>谓语被嵌在方括号中。</p>
+<p>实例</p>
+<p>在下面的表格中，我们列出了带有谓语的一些路径表达式，以及表达式的结果：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">路径表达式</th>
+<th style="text-align:left">结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">/bookstore/book[1]</td>
+<td style="text-align:left">选取属于 bookstore 子元素的第一个 book 元素</td>
+</tr>
+<tr>
+<td style="text-align:left">/bookstore/book[last()]</td>
+<td style="text-align:left">选取属于 bookstore 子元素的最后一个 book 元素</td>
+</tr>
+<tr>
+<td style="text-align:left">/bookstore/book[last()-1]</td>
+<td style="text-align:left">选取属于 bookstore 子元素的倒数第二个 book 元素</td>
+</tr>
+<tr>
+<td style="text-align:left">/bookstore/book[postion()&lt;3]</td>
+<td style="text-align:left">选取最前面的两个属于 bookstore 元素的子元素的 book 元素</td>
+</tr>
+<tr>
+<td style="text-align:left">//title[@lang]</td>
+<td style="text-align:left">选取所有拥有名为 lang 的属性的 title 元素</td>
+</tr>
+<tr>
+<td style="text-align:left">//title[@lang=’eng’]</td>
+<td style="text-align:left">选取所有 title 元素，且这些元素拥有值为 eng 的 lang 属性</td>
+</tr>
+<tr>
+<td style="text-align:left">/bookstore/book[price&gt;35.00]</td>
+<td style="text-align:left">选取 bookstore 元素的所有 book 元素，且其中的 price 元素的值须大于 35.00</td>
+</tr>
+<tr>
+<td style="text-align:left">/bookstore/book[price&gt;35.00]/title</td>
+<td style="text-align:left">选取 bookstore 元素中的 book 元素的所有 title 元素，且其中的 price 元素的值须大于 35.00</td>
+</tr>
+</tbody>
+</table>
+<h4 id="选取未知节点"><a href="#选取未知节点" class="headerlink" title="选取未知节点"></a><strong>选取未知节点</strong></h4><p>XPath 通配符可用来选取未知的 XML 元素</p>
+<table>
+<thead>
+<tr>
+<th>通配符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>*</td>
+<td>匹配任何元素节点</td>
+</tr>
+<tr>
+<td>@*</td>
+<td>匹配任何属性节点</td>
+</tr>
+<tr>
+<td>node()</td>
+<td>匹配任何节点</td>
+</tr>
+</tbody>
+</table>
+<p>实例</p>
+<p>在下面的表格中，我们列出了一些路径表达式，以及这些表达式的结果：</p>
+<table>
+<thead>
+<tr>
+<th>路径表达式</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/bookstore/*</td>
+<td>选取 bookstore 元素的所有子元素</td>
+</tr>
+<tr>
+<td>//*</td>
+<td>选取文档中的所有元素</td>
+</tr>
+<tr>
+<td>//title[@*]</td>
+<td>选取所有带有属性的 title 元素</td>
+</tr>
+</tbody>
+</table>
+<h4 id="选取若干路径"><a href="#选取若干路径" class="headerlink" title="选取若干路径"></a><strong>选取若干路径</strong></h4><p>通过在路径表达式中使用“|”运算符，您可以选取若干个路径。</p>
+<p>实例</p>
+<p>在下面的表格中，我们列出了一些路径表达式，以及这些表达式的结果：</p>
+<table>
+<thead>
+<tr>
+<th>路径表达式</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>//book/title &#124; //book/price</td>
+<td>选取 book 元素的所有 title 和 price 元素</td>
+</tr>
+<tr>
+<td>//title &#124; //price</td>
+<td>选取文档中的所有 title 和 price 元素</td>
+</tr>
+<tr>
+<td>/bookstore/book/title &#124; //price</td>
+<td>选取属于 bookstore 元素的 book 元素的所有 title 元素，以及文档中所有的 price 元素</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>🐶 ~怕是要给老板下跪了哦~ 🐶</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat-reward-img.jpg" alt="LawTech. 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay-reward-img.jpg" alt="LawTech. 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Scrapy，XPath，Python/" rel="tag"># Scrapy，XPath，Python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/10/Redis-5/" rel="next" title="Redis学习笔记(五)：数据安全与性能保障——复制">
+                <i class="fa fa-chevron-left"></i> Redis学习笔记(五)：数据安全与性能保障——复制
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/11/scrapy-install/" rel="prev" title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy安装及调试">
+                Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy安装及调试 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg"
+                alt="LawTech." />
+            
+              <p class="site-author-name" itemprop="name">LawTech.</p>
+              <p class="site-description motion-element" itemprop="description">破邮python爱好者。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/lawtech0902" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/LawRev1s1on" target="_blank" title="weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#XPath的用法"><span class="nav-number">1.</span> <span class="nav-text">XPath的用法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#XPath简介"><span class="nav-number">1.1.</span> <span class="nav-text">XPath简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#XPath术语"><span class="nav-number">1.2.</span> <span class="nav-text">XPath术语</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#节点（Node）"><span class="nav-number">1.2.1.</span> <span class="nav-text">节点（Node）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#基本值（或称原子值，Atomic-value）"><span class="nav-number">1.2.2.</span> <span class="nav-text">基本值（或称原子值，Atomic value）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#项目（Item）"><span class="nav-number">1.2.3.</span> <span class="nav-text">项目（Item）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#节点关系"><span class="nav-number">1.2.4.</span> <span class="nav-text">节点关系</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#XPath语法"><span class="nav-number">1.3.</span> <span class="nav-text">XPath语法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#选取节点"><span class="nav-number">1.3.1.</span> <span class="nav-text">选取节点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#谓语（Predicates）"><span class="nav-number">1.3.2.</span> <span class="nav-text">谓语（Predicates）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#选取未知节点"><span class="nav-number">1.3.3.</span> <span class="nav-text">选取未知节点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#选取若干路径"><span class="nav-number">1.3.4.</span> <span class="nav-text">选取若干路径</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LawTech.</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("R025aEVl3sFz6nIRV8p0nqRB-gzGzoHsz", "g1roHmmHckuQSu2n9JW16T5b");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Scrapy，XPath，Python," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="LawTech's Blog" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Scrapy 中 XPath 获取相应内容为了方便调试，在终端下输入以下命令进入Scrapy shell： 1scrapy shell &apos;http://blog.jobbole.com/110287&apos;">
+<meta name="keywords" content="Scrapy，XPath，Python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——Xpath用法示例">
+<meta property="og:url" content="http://yoursite.com/2017/04/16/xpath-example/index.html">
+<meta property="og:site_name" content="LawTech&#39;s Blog">
+<meta property="og:description" content="Scrapy 中 XPath 获取相应内容为了方便调试，在终端下输入以下命令进入Scrapy shell： 1scrapy shell &apos;http://blog.jobbole.com/110287&apos;">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg">
+<meta property="og:updated_time" content="2017-06-09T08:20:10.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——Xpath用法示例">
+<meta name="twitter:description" content="Scrapy 中 XPath 获取相应内容为了方便调试，在终端下输入以下命令进入Scrapy shell： 1scrapy shell &apos;http://blog.jobbole.com/110287&apos;">
+<meta name="twitter:image" content="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/16/xpath-example/"/>
+
+
+
+
+
+  <title>Python分布式爬虫打造搜索引擎项目学习笔记——Xpath用法示例 | LawTech's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LawTech's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">不破不立</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/xpath-example/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LawTech.">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LawTech's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Python分布式爬虫打造搜索引擎项目学习笔记——Xpath用法示例</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T20:18:54+08:00">
+                2017-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Scrapy/" itemprop="url" rel="index">
+                    <span itemprop="name">Scrapy</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/04/16/xpath-example/" class="leancloud_visitors" data-flag-title="Python分布式爬虫打造搜索引擎项目学习笔记——Xpath用法示例">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+          
+          
+            <div class="post-gallery-row">
+              <a class="post-gallery-img fancybox"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjbysvnx6004tdoqzr73dm9fz"
+                 itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
+                <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
+              </a>
+            
+          
+
+          
+          </div>
+        </div>
+      
+
+      
+        <h2 id="Scrapy-中-XPath-获取相应内容"><a href="#Scrapy-中-XPath-获取相应内容" class="headerlink" title="Scrapy 中 XPath 获取相应内容"></a><strong>Scrapy 中 XPath 获取相应内容</strong></h2><p>为了方便调试，在终端下输入以下命令进入Scrapy shell：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scrapy shell 'http://blog.jobbole.com/110287'</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h3 id="获取标题"><a href="#获取标题" class="headerlink" title="获取标题"></a><strong>获取标题</strong></h3><p><img src="http://ww3.sinaimg.cn/large/006tNc79gy1feomdj05qkj31aw03yq47.jpg" alt=""></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash">&gt;&gt; response.xpath(<span class="string">"//div[@class='entry-header']/h1/text()"</span>).extract()[0]</span></span><br><span class="line">'2016 腾讯软件开发面试题（部分）'</span><br><span class="line"><span class="meta">&gt;</span><span class="bash">&gt;&gt; response.xpath(<span class="string">'//*[@id="post-110287"]/div[1]/h1/text()'</span>).extract()[0]</span></span><br><span class="line">'2016 腾讯软件开发面试题（部分）'</span><br></pre></td></tr></table></figure>
+<p>以上两种方法都可以得到文章标题，第一种方法通过标题class的属性得到，第二种方法通过确定id，然后通过列表切片得到标题字符串。</p>
+<h3 id="获得文章发布时间"><a href="#获得文章发布时间" class="headerlink" title="获得文章发布时间"></a><strong>获得文章发布时间</strong></h3><p><img src="http://ww2.sinaimg.cn/large/006tNc79gy1feomdvqxpxj30hs01g3yo.jpg" alt=""></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash">&gt;&gt; response.xpath(<span class="string">"//p[@class='entry-meta-hide-on-mobile']/text()"</span>).extract()[0]</span></span><br><span class="line">'\r\n\r\n            2017/02/18 ·  '</span><br><span class="line"><span class="meta">&gt;</span><span class="bash">&gt;&gt; response.xpath(<span class="string">"//p[@class='entry-meta-hide-on-mobile']/text()"</span>).extract()[0].strip().replace(<span class="string">'·'</span>, <span class="string">''</span>).strip()</span></span><br><span class="line">'2017/02/18'</span><br></pre></td></tr></table></figure>
+<p>第一条命令只能获取p标签中的内容，还需要对获取的数据用 <code>strip()</code> 和 <code>replace()</code> 方法进行清洗。</p>
+<h3 id="获取点赞数、收藏数、评论数"><a href="#获取点赞数、收藏数、评论数" class="headerlink" title="获取点赞数、收藏数、评论数"></a><strong>获取点赞数</strong>、收藏数、评论数</h3><p><img src="http://ww3.sinaimg.cn/large/006tNc79gy1feomjmf5h8j30gi03at8w.jpg" alt=""></p>
+<p><img src="http://ww1.sinaimg.cn/large/006tNc79gy1feomjq25ixj31eg0cq77q.jpg" alt=""></p>
+<p>对于含有多个属性的class如：<code>class=&quot; btn-bluet-bigger href-style vote-post-up   register-user-only &quot;</code>，若只使用其中的一个属性得到值，可以使用<code>contains</code>。</p>
+<h4 id="获取点赞数"><a href="#获取点赞数" class="headerlink" title="获取点赞数"></a><strong>获取点赞数</strong></h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash">&gt;&gt; int(response.xpath(<span class="string">"//span[contains(@class, 'vote-post-up')]/h10/text()"</span>).extract()[0])</span></span><br><span class="line">2</span><br></pre></td></tr></table></figure>
+<h4 id="获取收藏数、评论数"><a href="#获取收藏数、评论数" class="headerlink" title="获取收藏数、评论数"></a><strong>获取收藏数、评论数</strong></h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash">&gt;&gt; response.xpath(<span class="string">"//span[contains(@class, 'bookmark-btn')]/text()"</span>).extract()[0]</span></span><br><span class="line">' 23 收藏'</span><br></pre></td></tr></table></figure>
+<p>得到的内容为’ 23 收藏’，需要使用正则表达式进行数据清洗。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">fav_nums = response.xpath(<span class="string">"//span[contains(@class, 'bookmark-btn')]/text()"</span>).extract()[<span class="number">0</span>]</span><br><span class="line">match_re = re.match(<span class="string">".*?(\d+).*?"</span>, fav_nums)</span><br><span class="line"><span class="keyword">if</span> match_re:</span><br><span class="line">	fav_nums = int(match_re.group(<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+<p>同样的，评论数的获取也需要正则表达式的帮忙。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">comment_nums = response.xpath(<span class="string">"//a[@href='#article-comment']/span/text()"</span>).extract()[<span class="number">0</span>]</span><br><span class="line">match_re = re.match(<span class="string">".*?(\d+).*?"</span>, comment_nums)</span><br><span class="line"><span class="keyword">if</span> match_re:</span><br><span class="line">	comment_nums = int(match_re.group(<span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+<h3 id="获取正文"><a href="#获取正文" class="headerlink" title="获取正文"></a><strong>获取正文</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">content = response.xpath(<span class="string">"//div[@class='entry']"</span>).extract()[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+<h3 id="获取tags"><a href="#获取tags" class="headerlink" title="获取tags"></a><strong>获取tags</strong></h3><p><img src="http://ww1.sinaimg.cn/large/006tNc79gy1feooy0mzgpj30bi01ydfw.jpg" alt=""></p>
+<p><img src="http://ww1.sinaimg.cn/large/006tNc79gy1feooya6zapj30x2072jt4.jpg" alt=""></p>
+<p>所有的tag都在a标签下，类似获得日期的方式，增加一个a标签路径即可。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash">&gt;&gt; response.xpath(<span class="string">"//p[@class='entry-meta-hide-on-mobile']/a/text()"</span>).extract()</span></span><br><span class="line">['职场', ' 7 评论 ', '面试']</span><br></pre></td></tr></table></figure>
+<p>现在需要对数据进行清洗，去除评论标签。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tag_list = response.xpath(<span class="string">"//p[@class='entry-meta-hide-on-mobile']/a/text()"</span>).extract()</span><br><span class="line">tag_list = [element <span class="keyword">for</span> element <span class="keyword">in</span> tag_list <span class="keyword">if</span> <span class="keyword">not</span> element.strip().endswith(<span class="string">"评论"</span>)]</span><br><span class="line">tags = <span class="string">","</span>.join(tag_list)</span><br></pre></td></tr></table></figure>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h3><p>最后我们构造的spider文件如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> scrapy</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">JobboleSpider</span><span class="params">(scrapy.Spider)</span>:</span></span><br><span class="line">    name = <span class="string">"jobbole"</span></span><br><span class="line">    allowed_domains = [<span class="string">"blog.jobbole.com"</span>]</span><br><span class="line">    start_urls = [<span class="string">'http://blog.jobbole.com/110287'</span>]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></span><br><span class="line">        title = response.xpath(<span class="string">"//div[@class='entry-header']/h1/text()"</span>).extract()[<span class="number">0</span>]</span><br><span class="line">        create_date = response.xpath(<span class="string">"//p[@class='entry-meta-hide-on-mobile']/text()"</span>).extract()[<span class="number">0</span>].strip().replace(<span class="string">"·"</span>,</span><br><span class="line">                                                                                                                          <span class="string">""</span>).strip()</span><br><span class="line">        praise_nums = int(response.xpath(<span class="string">"//span[contains(@class, 'vote-post-up')]/h10/text()"</span>).extract()[<span class="number">0</span>])</span><br><span class="line">        fav_nums = response.xpath(<span class="string">"//span[contains(@class, 'bookmark-btn')]/text()"</span>).extract()[<span class="number">0</span>]</span><br><span class="line">        match_re = re.match(<span class="string">".*?(\d+).*?"</span>, fav_nums)</span><br><span class="line">        <span class="keyword">if</span> match_re:</span><br><span class="line">            fav_nums = int(match_re.group(<span class="number">1</span>))</span><br><span class="line">        comment_nums = response.xpath(<span class="string">"//a[@href='#article-comment']/span/text()"</span>).extract()[<span class="number">0</span>]</span><br><span class="line">        match_re = re.match(<span class="string">".*?(\d+).*?"</span>, comment_nums)</span><br><span class="line">        <span class="keyword">if</span> match_re:</span><br><span class="line">            comment_nums = int(match_re.group(<span class="number">1</span>))</span><br><span class="line">        content = response.xpath(<span class="string">"//div[@class='entry']"</span>).extract()[<span class="number">0</span>]</span><br><span class="line">        tag_list = response.xpath(<span class="string">"//p[@class='entry-meta-hide-on-mobile']/a/text()"</span>).extract()</span><br><span class="line">        tag_list = [element <span class="keyword">for</span> element <span class="keyword">in</span> tag_list <span class="keyword">if</span> <span class="keyword">not</span> element.strip().endswith(<span class="string">"评论"</span>)]</span><br><span class="line">        tags = <span class="string">","</span>.join(tag_list)</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>🐶 ~怕是要给老板下跪了哦~ 🐶</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat-reward-img.jpg" alt="LawTech. 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay-reward-img.jpg" alt="LawTech. 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Scrapy，XPath，Python/" rel="tag"># Scrapy，XPath，Python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/16/scrapy-simple-intro/" rel="next" title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy简单入门">
+                <i class="fa fa-chevron-left"></i> Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy简单入门
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/20/scrapy-command-line-tools/" rel="prev" title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy命令行工具">
+                Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy命令行工具 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg"
+                alt="LawTech." />
+            
+              <p class="site-author-name" itemprop="name">LawTech.</p>
+              <p class="site-description motion-element" itemprop="description">破邮python爱好者。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/lawtech0902" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/LawRev1s1on" target="_blank" title="weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Scrapy-中-XPath-获取相应内容"><span class="nav-number">1.</span> <span class="nav-text">Scrapy 中 XPath 获取相应内容</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#获取标题"><span class="nav-number">1.1.</span> <span class="nav-text">获取标题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获得文章发布时间"><span class="nav-number">1.2.</span> <span class="nav-text">获得文章发布时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取点赞数、收藏数、评论数"><span class="nav-number">1.3.</span> <span class="nav-text">获取点赞数、收藏数、评论数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#获取点赞数"><span class="nav-number">1.3.1.</span> <span class="nav-text">获取点赞数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#获取收藏数、评论数"><span class="nav-number">1.3.2.</span> <span class="nav-text">获取收藏数、评论数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取正文"><span class="nav-number">1.4.</span> <span class="nav-text">获取正文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取tags"><span class="nav-number">1.5.</span> <span class="nav-text">获取tags</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">1.6.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LawTech.</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("R025aEVl3sFz6nIRV8p0nqRB-gzGzoHsz", "g1roHmmHckuQSu2n9JW16T5b");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
