@@ -275,7 +275,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/11/scrapy-useragent-proxyip/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/11/scrapy-framework/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="LawTech.">
@@ -294,7 +294,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/06/11/scrapy-useragent-proxyip/" itemprop="url">Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy随机更换User-Agent和实现IP代理池</a></h1>
+                <a class="post-title-link" href="/2017/06/11/scrapy-framework/" itemprop="url">Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy核心架构分析</a></h1>
         
 
         <div class="post-meta">
@@ -346,7 +346,7 @@
 
           
           
-             <span id="/2017/06/11/scrapy-useragent-proxyip/" class="leancloud_visitors" data-flag-title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy随机更换User-Agent和实现IP代理池">
+             <span id="/2017/06/11/scrapy-framework/" class="leancloud_visitors" data-flag-title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy核心架构分析">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -380,7 +380,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjbysvnwd003tdoqz5ooe2fyp"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjbyt53db002jh3qze4beuhm6"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
               </a>
@@ -394,11 +394,10 @@
 
       
         
-          <p>之前有一节用于介绍<code>Request</code>和<code>Response</code>，还是<a href="https://doc.scrapy.org/en/latest/index.html" target="_blank" rel="noopener">官方文档</a>介绍的比较详尽，所以就不做笔记了。</p>
-<p>这一节用于介绍随机更换User-Agent和实现IP代理池的方法，首先来看一下现在网站中所做的反爬虫工作。</p>
+          <h2 id="概览"><a href="#概览" class="headerlink" title="概览"></a><strong>概览</strong></h2><p>首先看一下Scrapy的架构图：</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/06/11/scrapy-useragent-proxyip/#more" rel="contents">
+            <a class="btn" href="/2017/06/11/scrapy-framework/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -554,7 +553,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjbysvnv10024doqzx7wnvgbf"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjbyt53cy0027h3qzym9fkt3s"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
               </a>
@@ -727,7 +726,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjbysvnwj003zdoqzzie1huxx"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjbyt53f2004bh3qzr0v5xe41"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
               </a>
@@ -900,7 +899,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjbysvnvw0038doqzzcud8xm0"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjbyt53ed003kh3qzu5o0iwkf"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
               </a>
@@ -1080,7 +1079,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjbysvnvp002ydoqznl2ztv18"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjbyt53e40036h3qzodsc8wqe"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
               </a>
@@ -1257,7 +1256,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjbysvnw2003fdoqzoyhq1s3y"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjbyt53eh003oh3qz7uc9td1w"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
               </a>
@@ -1430,7 +1429,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjbysvnve002hdoqz5z5ls07g"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjbyt53do002sh3qz8e3u0ihi"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
               </a>
@@ -1605,7 +1604,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjbysvnv7002adoqzflmt0ei4"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjbyt53dg002mh3qz2seegeab"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
               </a>
@@ -1820,9 +1819,38 @@
 
 
         
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
 
 
 
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=61398861";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
 
 
 
