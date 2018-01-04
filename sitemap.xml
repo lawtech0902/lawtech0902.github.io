@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2018/01/04/centos-sentry/</loc>
+    
+    <lastmod>2018-01-04T07:17:01.775Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2018/01/03/go-base-tips/</loc>
     
     <lastmod>2018-01-03T06:47:13.727Z</lastmod>

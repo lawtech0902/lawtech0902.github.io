@@ -275,6 +275,221 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/04/centos-sentry/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LawTech.">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LawTech's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/04/centos-sentry/" itemprop="url">centos7下部署sentry日志管理服务</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-04T13:18:54+08:00">
+                2018-01-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Django/" itemprop="url" rel="index">
+                    <span itemprop="name">Django</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/01/04/centos-sentry/" class="leancloud_visitors" data-flag-title="centos7下部署sentry日志管理服务">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+          
+          
+            <div class="post-gallery-row">
+              <a class="post-gallery-img fancybox"
+                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fmprtw51noj31180e8k29.jpg" rel="gallery_cjc05tmac000lf8qz3qox2sa3"
+                 itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
+                <img src="https://ws3.sinaimg.cn/large/006tNc79gy1fmprtw51noj31180e8k29.jpg" itemprop="contentUrl"/>
+              </a>
+            
+          
+
+          
+          </div>
+        </div>
+      
+
+      
+        
+          
+            <h2 id="1-Docker安装"><a href="#1-Docker安装" class="headerlink" title="1.Docker安装"></a><strong>1.Docker安装</strong></h2><h3 id="方法1"><a href="#方法1" class="headerlink" title="方法1"></a>方法1</h3><p>1.确保yum packages 是最新的</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yum update</span><br></pre></td></tr></table></figure>
+<p>2.添加yum repo</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ sudo tee /etc/yum.repos.d/docker.repo &lt;&lt;-<span class="string">'EOF'</span></span><br><span class="line">[dockerrepo]</span><br><span class="line">name=Docker Repository</span><br><span class="line">baseurl=https://yum.dockerproject.org/repo/main/centos/7/</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=1</span><br><span class="line">gpgkey=https://yum.dockerproject.org/gpg</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<p>3.安装docker</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yum install docker-engine</span><br></pre></td></tr></table></figure>
+<p>4.启动docker</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo service docker start</span><br></pre></td></tr></table></figure>
+<p>5.验证docker已经启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">$ sudo docker run hello-world</span><br><span class="line"></span><br><span class="line">Unable to find image <span class="string">'hello-world:latest'</span> locally</span><br><span class="line">latest: Pulling from hello-world</span><br><span class="line">a8219747be10: Pull complete</span><br><span class="line">91c95931e552: Already exists</span><br><span class="line">hello-world:latest: The image you are pulling has been verified.      Important: image verification is a tech preview feature and should not be relied on to provide security.</span><br><span class="line">Digest: sha256:aa03e5d0d5553b4c3473e89c8619cf79df368babd1.7.1cf5daeb82aab55838d</span><br><span class="line">Status: Downloaded newer image <span class="keyword">for</span> hello-world:latest</span><br><span class="line">Hello from Docker.</span><br><span class="line">This message shows that your installation appears to be working correctly.</span><br><span class="line"></span><br><span class="line">To generate this message, Docker took the following steps:</span><br><span class="line"> 1. The Docker client contacted the Docker daemon.</span><br><span class="line"> 2. The Docker daemon pulled the <span class="string">"hello-world"</span> image from the Docker Hub.</span><br><span class="line">        (Assuming it was not already locally available.)</span><br><span class="line"> 3. The Docker daemon created a new container from that image <span class="built_in">which</span> runs the</span><br><span class="line">        executable that produces the output you are currently reading.</span><br><span class="line"> 4. The Docker daemon streamed that output to the Docker client, <span class="built_in">which</span> sent it</span><br><span class="line">        to your terminal.</span><br><span class="line"></span><br><span class="line">To try something more ambitious, you can run an Ubuntu container with:</span><br><span class="line"> $ docker run -it ubuntu bash</span><br><span class="line"></span><br><span class="line">For more examples and ideas, visit:</span><br><span class="line"> http://docs.docker.com/userguide/</span><br></pre></td></tr></table></figure>
+<h3 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h3><p>1.确保yum packages 是最新的</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yum update</span><br></pre></td></tr></table></figure>
+<p>2.运行docker 安装脚本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl -fsSL https://get.docker.com/ | sh</span><br></pre></td></tr></table></figure>
+<p>3.启动docker服务器</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo service docker start</span><br></pre></td></tr></table></figure>
+<p>4.验证docker已经启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo docker run hello-world</span><br></pre></td></tr></table></figure>
+<h2 id="2-sentry安装"><a href="#2-sentry安装" class="headerlink" title="2.sentry安装"></a><strong>2.sentry安装</strong></h2><p>sentry 依赖的组件比较多 包括 redis、 postgresql、 outbound email</p>
+<p>在安装sentry前请确保 docker 版本大于1.10</p>
+<p>1.安装git</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yum install git</span><br></pre></td></tr></table></figure>
+<p>2.下载docker镜像并构建容器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git clone  https://github.com/getsentry/onpremise.git</span><br><span class="line">$ cd onpremise</span><br><span class="line">$ sudo make build</span><br></pre></td></tr></table></figure>
+<p>注： 所有命令都要以sudo权限运行 否则会报错docker 未启动</p>
+<p>3.用docker安装sentry依赖的组件</p>
+<h6 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker run \</span><br><span class="line">--detach \</span><br><span class="line">--name sentry-redis \</span><br><span class="line">redis:3.2-alpine</span><br></pre></td></tr></table></figure>
+<h6 id="PostgreSQL"><a href="#PostgreSQL" class="headerlink" title="PostgreSQL"></a>PostgreSQL</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run \</span><br><span class="line">--detach \</span><br><span class="line">--name sentry-postgres \</span><br><span class="line">--env POSTGRES_PASSWORD=secret \</span><br><span class="line">--env POSTGRES_USER=sentry \</span><br><span class="line">postgres:9.5</span><br></pre></td></tr></table></figure>
+<h6 id="Outbound-Email"><a href="#Outbound-Email" class="headerlink" title="Outbound Email"></a>Outbound Email</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker run \</span><br><span class="line">--detach \</span><br><span class="line">--name sentry-smtp \</span><br><span class="line">tianon/exim4</span><br></pre></td></tr></table></figure>
+<p>注意：接下来所有命令都需要用到 Redis、 PostgreSQL、 Outbound Email中的环境变量，所有命令中需要将将三个镜像连接起来</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ sudo docker run \</span><br><span class="line">--detach \</span><br><span class="line">--rm \</span><br><span class="line">--link sentry-redis:redis \</span><br><span class="line">--link sentry-postgres:postgres \</span><br><span class="line">--link sentry-smtp:smtp \</span><br><span class="line">--env SENTRY_SECRET_KEY=$&#123;SENTRY_SECRET_KEY&#125; \</span><br><span class="line">$&#123;REPOSITORY&#125; \</span><br><span class="line">&lt;command&gt;</span><br><span class="line"></span><br><span class="line">其中 SENTRY_SECRET_KEY 可以自己生成</span><br></pre></td></tr></table></figure>
+<p>4.在PostgreSQL中生成sentry需要的表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ sudo docker run \</span><br><span class="line">--detach \</span><br><span class="line">--rm \</span><br><span class="line">--link sentry-redis:redis \</span><br><span class="line">--link sentry-postgres:postgres \</span><br><span class="line">--link sentry-smtp:smtp \</span><br><span class="line">--env SENTRY_SECRET_KEY=$&#123;SENTRY_SECRET_KEY&#125; \</span><br><span class="line">-it sentry-onpremise upgrade</span><br><span class="line"></span><br><span class="line">在创建过程中会提示创建一个superuser， 根据提示自动输入邮箱和密码，该账户和密码很重要， 在sentry部署好以后需要用该账号登录， 请必须记住账号和密码</span><br></pre></td></tr></table></figure>
+<p>5.拉起sentry需要的后台服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ sudo docker run \</span><br><span class="line">--detach \</span><br><span class="line">--rm \</span><br><span class="line">--link sentry-redis:redis \</span><br><span class="line">--link sentry-postgres:postgres \</span><br><span class="line">--link sentry-smtp:smtp \</span><br><span class="line">--env SENTRY_SECRET_KEY=$&#123;SENTRY_SECRET_KEY&#125; \</span><br><span class="line">--name sentry-worker-01 \</span><br><span class="line">sentry-onpremise run worker</span><br></pre></td></tr></table></figure>
+<p>6.拉起sentry需要的cron后台服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ sudo docker run \</span><br><span class="line">--detach \</span><br><span class="line">--rm \</span><br><span class="line">--link sentry-redis:redis \</span><br><span class="line">--link sentry-postgres:postgres \</span><br><span class="line">--link sentry-smtp:smtp \</span><br><span class="line">--env SENTRY_SECRET_KEY=$&#123;SENTRY_SECRET_KEY&#125; \</span><br><span class="line">--name sentry-cron \</span><br><span class="line">sentry-onpremise run cron</span><br></pre></td></tr></table></figure>
+<p>7.最后拉起sentry的web服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ sudo docker run \</span><br><span class="line">--detach \</span><br><span class="line">--rm \</span><br><span class="line">--link sentry-redis:redis \</span><br><span class="line">--link sentry-postgres:postgres \</span><br><span class="line">--link sentry-smtp:smtp \</span><br><span class="line">--env SENTRY_SECRET_KEY=$&#123;SENTRY_SECRET_KEY&#125; \</span><br><span class="line">--name sentry-web-01 \</span><br><span class="line">--port 9000:9000 \</span><br><span class="line">sentry-onpremise \</span><br><span class="line">run web</span><br></pre></td></tr></table></figure>
+<ol>
+<li><p>关闭注册</p>
+<p> 修改 server.py<br> SENTRY_FEATURES[‘auth:register’] = True</p>
+<p> 注：不同版本的docker可能会在–port 参数上有报错，如果出错可以尝试-p 或者–p 同时有些会提示 –d和-rm冲突，去掉–detach即可</p>
+</li>
+</ol>
+<p>最后在浏览器中访问 <a href="http://localhost:9000/" target="_blank" rel="noopener">http://localhost:9000/</a></p>
+<p>注意启动顺序 woker-&gt;cron-&gt;web, 如果不启动worker和cron可能会遇到报错</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/03/go-base-tips/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -380,7 +595,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://static.oschina.net/uploads/space/2017/0615/184715_SGsr_2918182.png" rel="gallery_cjbytn6q8001jklqzcj7p5dab"
+                 href="https://static.oschina.net/uploads/space/2017/0615/184715_SGsr_2918182.png" rel="gallery_cjc05tmb5001nf8qzbh5cyhwa"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://static.oschina.net/uploads/space/2017/0615/184715_SGsr_2918182.png" itemprop="contentUrl"/>
               </a>
@@ -553,7 +768,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws2.sinaimg.cn/large/006tKfTcgy1fmt1g3h0xqj30xc0ir3yo.jpg" rel="gallery_cjbytn6sv004fklqz7wxbzq8t"
+                 href="https://ws2.sinaimg.cn/large/006tKfTcgy1fmt1g3h0xqj30xc0ir3yo.jpg" rel="gallery_cjc05tmdk004gf8qzn2d57kh7"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws2.sinaimg.cn/large/006tKfTcgy1fmt1g3h0xqj30xc0ir3yo.jpg" itemprop="contentUrl"/>
               </a>
@@ -738,7 +953,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fmprtw51noj31180e8k29.jpg" rel="gallery_cjbytn6pl000oklqz3j84pdot"
+                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fmprtw51noj31180e8k29.jpg" rel="gallery_cjc05tmai000sf8qzisgx45dv"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws3.sinaimg.cn/large/006tNc79gy1fmprtw51noj31180e8k29.jpg" itemprop="contentUrl"/>
               </a>
@@ -911,7 +1126,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fm86gbv2zgj30jp09p3yl.jpg" rel="gallery_cjbytn6p60009klqzgzx2jk0x"
+                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fm86gbv2zgj30jp09p3yl.jpg" rel="gallery_cjc05tm9c0003f8qzbzo08lwr"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws3.sinaimg.cn/large/006tNc79gy1fm86gbv2zgj30jp09p3yl.jpg" itemprop="contentUrl"/>
               </a>
@@ -1085,7 +1300,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fm86gbv2zgj30jp09p3yl.jpg" rel="gallery_cjbytn6p20008klqzt7m9cro3"
+                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fm86gbv2zgj30jp09p3yl.jpg" rel="gallery_cjc05tm9x0009f8qz0ufx406w"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws3.sinaimg.cn/large/006tNc79gy1fm86gbv2zgj30jp09p3yl.jpg" itemprop="contentUrl"/>
               </a>
@@ -1105,179 +1320,6 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2017/12/07/RESTful/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/06/jwt/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="LawTech.">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="LawTech's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/12/06/jwt/" itemprop="url">前后端分离之JWT用户认证</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-06T13:18:54+08:00">
-                2017-12-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JWT/" itemprop="url" rel="index">
-                    <span itemprop="name">JWT</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/12/06/jwt/" class="leancloud_visitors" data-flag-title="前后端分离之JWT用户认证">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
-          
-          
-            <div class="post-gallery-row">
-              <a class="post-gallery-img fancybox"
-                 href="https://ws2.sinaimg.cn/large/006tNc79gy1fm7y5uygmnj313i0d80ya.jpg" rel="gallery_cjbytn6qc001lklqzllit4hh8"
-                 itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
-                <img src="https://ws2.sinaimg.cn/large/006tNc79gy1fm7y5uygmnj313i0d80ya.jpg" itemprop="contentUrl"/>
-              </a>
-            
-          
-
-          
-          </div>
-        </div>
-      
-
-      
-        
-          <p>在前后端分离开发时为什么需要用户认证呢？原因是由于HTTP协定是不储存状态的(stateless)，这意味着当我们透过帐号密码验证一个使用者时，当下一个request请求时它就把刚刚的资料忘了。于是我们的程序就不知道谁是谁，就要再验证一次。所以为了保证系统安全，我们就需要验证用户否处于登录状态。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/12/06/jwt/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1433,7 +1475,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fm7ychcn9xj30xc0f60sv.jpg" rel="gallery_cjbytn6q3001cklqzabg79b6z"
+                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fm7ychcn9xj30xc0f60sv.jpg" rel="gallery_cjc05tmas0017f8qzw6yx4pdg"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws3.sinaimg.cn/large/006tNc79gy1fm7ychcn9xj30xc0f60sv.jpg" itemprop="contentUrl"/>
               </a>
@@ -1502,7 +1544,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/05/essay-12-05/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/06/jwt/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="LawTech.">
@@ -1521,7 +1563,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/12/05/essay-12-05/" itemprop="url">随笔12.05</a></h1>
+                <a class="post-title-link" href="/2017/12/06/jwt/" itemprop="url">前后端分离之JWT用户认证</a></h1>
         
 
         <div class="post-meta">
@@ -1533,8 +1575,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-05T13:18:54+08:00">
-                2017-12-05
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-06T13:18:54+08:00">
+                2017-12-06
               </time>
             
 
@@ -1556,8 +1598,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/essay/" itemprop="url" rel="index">
-                    <span itemprop="name">essay</span>
+                  <a href="/categories/JWT/" itemprop="url" rel="index">
+                    <span itemprop="name">JWT</span>
                   </a>
                 </span>
 
@@ -1573,7 +1615,7 @@
 
           
           
-             <span id="/2017/12/05/essay-12-05/" class="leancloud_visitors" data-flag-title="随笔12.05">
+             <span id="/2017/12/06/jwt/" class="leancloud_visitors" data-flag-title="前后端分离之JWT用户认证">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -1607,9 +1649,9 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws4.sinaimg.cn/large/006tNc79gy1fm7ygicau6j31kw0zknpe.jpg" rel="gallery_cjbytn6py0014klqzqr5lnux5"
+                 href="https://ws2.sinaimg.cn/large/006tNc79gy1fm7y5uygmnj313i0d80ya.jpg" rel="gallery_cjc05tmb8001pf8qzmexsxojr"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
-                <img src="https://ws4.sinaimg.cn/large/006tNc79gy1fm7ygicau6j31kw0zknpe.jpg" itemprop="contentUrl"/>
+                <img src="https://ws2.sinaimg.cn/large/006tNc79gy1fm7y5uygmnj313i0d80ya.jpg" itemprop="contentUrl"/>
               </a>
             
           
@@ -1621,10 +1663,14 @@
 
       
         
-          
-            <p>最近不想写这些无聊的blog了~心情也不好，准备搞一搞Java，emmmmm，又回到最初的起点。</p>
-
-          
+          <p>在前后端分离开发时为什么需要用户认证呢？原因是由于HTTP协定是不储存状态的(stateless)，这意味着当我们透过帐号密码验证一个使用者时，当下一个request请求时它就把刚刚的资料忘了。于是我们的程序就不知道谁是谁，就要再验证一次。所以为了保证系统安全，我们就需要验证用户否处于登录状态。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/12/06/jwt/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1712,7 +1758,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-count">58</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1734,7 +1780,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-count">24</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
