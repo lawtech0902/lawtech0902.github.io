@@ -90,7 +90,7 @@
 <meta property="og:description" content="1.Docker安装方法11.确保yum packages 是最新的 1$ sudo yum update 2.添加yum repo 12345678$ sudo tee /etc/yum.repos.d/docker.repo &amp;lt;&amp;lt;-&apos;EOF&apos;[dockerrepo]name=Docker Repositorybaseurl=https://yum.dockerproject.org">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://ws3.sinaimg.cn/large/006tNc79gy1fmprtw51noj31180e8k29.jpg">
-<meta property="og:updated_time" content="2018-01-04T07:17:01.775Z">
+<meta property="og:updated_time" content="2018-01-04T07:20:32.430Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="centos7下部署sentry日志管理服务">
 <meta name="twitter:description" content="1.Docker安装方法11.确保yum packages 是最新的 1$ sudo yum update 2.添加yum repo 12345678$ sudo tee /etc/yum.repos.d/docker.repo &amp;lt;&amp;lt;-&apos;EOF&apos;[dockerrepo]name=Docker Repositorybaseurl=https://yum.dockerproject.org">
@@ -404,6 +404,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ sudo tee /etc/yum.repos.d/docker.repo &lt;&lt;-<span class="string">'EOF'</span></span><br><span class="line">[dockerrepo]</span><br><span class="line">name=Docker Repository</span><br><span class="line">baseurl=https://yum.dockerproject.org/repo/main/centos/7/</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=1</span><br><span class="line">gpgkey=https://yum.dockerproject.org/gpg</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
 <p>3.安装docker</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yum install docker-engine</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
 <p>4.启动docker</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo service docker start</span><br></pre></td></tr></table></figure>
 <p>5.验证docker已经启动</p>
