@@ -380,7 +380,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fmprtw51noj31180e8k29.jpg" rel="gallery_cjc4c2uiq000hw6qzc6lz9gif"
+                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fmprtw51noj31180e8k29.jpg" rel="gallery_cjfwh1h6n000lhnqzx8e348hg"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws3.sinaimg.cn/large/006tNc79gy1fmprtw51noj31180e8k29.jpg" itemprop="contentUrl"/>
               </a>
@@ -556,7 +556,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://static.oschina.net/uploads/space/2017/0615/184715_SGsr_2918182.png" rel="gallery_cjc4c2uk4001ew6qzfwmf9q39"
+                 href="https://static.oschina.net/uploads/space/2017/0615/184715_SGsr_2918182.png" rel="gallery_cjfwh1h7d001chnqzv4myfgpv"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://static.oschina.net/uploads/space/2017/0615/184715_SGsr_2918182.png" itemprop="contentUrl"/>
               </a>
@@ -729,7 +729,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws2.sinaimg.cn/large/006tKfTcgy1fmt1g3h0xqj30xc0ir3yo.jpg" rel="gallery_cjc4c2uoo004fw6qzvtuw549s"
+                 href="https://ws2.sinaimg.cn/large/006tKfTcgy1fmt1g3h0xqj30xc0ir3yo.jpg" rel="gallery_cjfwh1ha5004ahnqzleoiab86"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws2.sinaimg.cn/large/006tKfTcgy1fmt1g3h0xqj30xc0ir3yo.jpg" itemprop="contentUrl"/>
               </a>
@@ -744,13 +744,13 @@
       
         
           <h3 id="基本工作"><a href="#基本工作" class="headerlink" title="基本工作"></a><strong>基本工作</strong></h3><ol>
-<li>更新系统</li>
+<li>更新系统（不更新好像也行）</li>
 </ol>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get upgrade -y</span><br><span class="line">sudo apt-get dist-upgrade -y</span><br></pre></td></tr></table></figure>
 <ol>
-<li>安装linux kernel modules，linux source和headers</li>
+<li>安装依赖</li>
 </ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install linux-image-extra-virtual</span><br><span class="line">sudo apt-get install linux-source-$(uname -r)</span><br><span class="line">sudo apt-get install sysdig-dkms</span><br><span class="line">sudo apt-get source linux-image-$(uname -r)</span><br><span class="line">sudo apt-get install linux-headers-$(uname -r)</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 先执行uname -r，查看结果，比如4.4.0-45-generic，然后再执行</span></span><br><span class="line">sudo apt-get install build-essential pkg-config xserver-xorg-dev linux-headers-4.4.0-45-generic(此处记得替换)</span><br></pre></td></tr></table></figure>
 <ol>
 <li>禁用nouveau内核</li>
 </ol>
@@ -914,7 +914,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fmprtw51noj31180e8k29.jpg" rel="gallery_cjc4c2uj7000rw6qzaps4lazs"
+                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fmprtw51noj31180e8k29.jpg" rel="gallery_cjfwh1h6l000jhnqz7a8rourl"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws3.sinaimg.cn/large/006tNc79gy1fmprtw51noj31180e8k29.jpg" itemprop="contentUrl"/>
               </a>
@@ -1087,7 +1087,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fm86gbv2zgj30jp09p3yl.jpg" rel="gallery_cjc4c2ui40006w6qzyc9wy30a"
+                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fm86gbv2zgj30jp09p3yl.jpg" rel="gallery_cjfwh1h5i0003hnqzvtgftjlq"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws3.sinaimg.cn/large/006tNc79gy1fm86gbv2zgj30jp09p3yl.jpg" itemprop="contentUrl"/>
               </a>
@@ -1261,7 +1261,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fm86gbv2zgj30jp09p3yl.jpg" rel="gallery_cjc4c2uhn0005w6qz8fb66sve"
+                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fm86gbv2zgj30jp09p3yl.jpg" rel="gallery_cjfwh1h5z0007hnqzc2yfgbyd"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws3.sinaimg.cn/large/006tNc79gy1fm86gbv2zgj30jp09p3yl.jpg" itemprop="contentUrl"/>
               </a>
@@ -1281,180 +1281,6 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2017/12/07/RESTful/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/06/django-request-process/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="LawTech.">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="LawTech's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/12/06/django-request-process/" itemprop="url">django从请求到返回都经历了什么</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-06T13:18:54+08:00">
-                2017-12-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Django/" itemprop="url" rel="index">
-                    <span itemprop="name">Django</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/12/06/django-request-process/" class="leancloud_visitors" data-flag-title="django从请求到返回都经历了什么">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
-          
-          
-            <div class="post-gallery-row">
-              <a class="post-gallery-img fancybox"
-                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fm7ychcn9xj30xc0f60sv.jpg" rel="gallery_cjc4c2ukj001nw6qzu6b72gm1"
-                 itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
-                <img src="https://ws3.sinaimg.cn/large/006tNc79gy1fm7ychcn9xj30xc0f60sv.jpg" itemprop="contentUrl"/>
-              </a>
-            
-          
-
-          
-          </div>
-        </div>
-      
-
-      
-        
-          <h5 id="从runserver说起"><a href="#从runserver说起" class="headerlink" title="从runserver说起"></a>从runserver说起</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ruserver是使用django自己的web server，主要用于开发和调试中， 部署到线上环境一般使用nginx+uwsgi模式</span><br></pre></td></tr></table></figure>
-<h5 id="manage-py-探秘"><a href="#manage-py-探秘" class="headerlink" title="manage.py 探秘"></a>manage.py 探秘</h5>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/12/06/django-request-process/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1610,7 +1436,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws2.sinaimg.cn/large/006tNc79gy1fm7y5uygmnj313i0d80ya.jpg" rel="gallery_cjc4c2uke001hw6qzt3ya9a7r"
+                 href="https://ws2.sinaimg.cn/large/006tNc79gy1fm7y5uygmnj313i0d80ya.jpg" rel="gallery_cjfwh1h7o001nhnqzha75mnrm"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws2.sinaimg.cn/large/006tNc79gy1fm7y5uygmnj313i0d80ya.jpg" itemprop="contentUrl"/>
               </a>
@@ -1628,6 +1454,180 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2017/12/06/jwt/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/06/django-request-process/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LawTech.">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LawTech's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/12/06/django-request-process/" itemprop="url">django从请求到返回都经历了什么</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-06T13:18:54+08:00">
+                2017-12-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Django/" itemprop="url" rel="index">
+                    <span itemprop="name">Django</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/12/06/django-request-process/" class="leancloud_visitors" data-flag-title="django从请求到返回都经历了什么">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+          
+          
+            <div class="post-gallery-row">
+              <a class="post-gallery-img fancybox"
+                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fm7ychcn9xj30xc0f60sv.jpg" rel="gallery_cjfwh1h7f001ghnqzyj19dfgp"
+                 itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
+                <img src="https://ws3.sinaimg.cn/large/006tNc79gy1fm7ychcn9xj30xc0f60sv.jpg" itemprop="contentUrl"/>
+              </a>
+            
+          
+
+          
+          </div>
+        </div>
+      
+
+      
+        
+          <h5 id="从runserver说起"><a href="#从runserver说起" class="headerlink" title="从runserver说起"></a>从runserver说起</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ruserver是使用django自己的web server，主要用于开发和调试中， 部署到线上环境一般使用nginx+uwsgi模式</span><br></pre></td></tr></table></figure>
+<h5 id="manage-py-探秘"><a href="#manage-py-探秘" class="headerlink" title="manage.py 探秘"></a>manage.py 探秘</h5>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/12/06/django-request-process/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
