@@ -81,19 +81,19 @@
 
 
 
-<meta name="description" content="###什么是Nginx？ Nginx是一个web服务器和反向代理服务器，用于HTTP、HTTPS、SMTP、POP3和IMAP协议。多进程异步非阻塞事件处理机制：运用了epoll模型">
+<meta name="description" content="什么是Nginx？Nginx是一个web服务器和反向代理服务器，用于HTTP、HTTPS、SMTP、POP3和IMAP协议。多进程异步非阻塞事件处理机制：运用了epoll模型">
 <meta name="keywords" content="Nginx">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Nginx面试准备">
 <meta property="og:url" content="http://yoursite.com/2018/03/06/nginx-interview/index.html">
 <meta property="og:site_name" content="LawTech&#39;s Blog">
-<meta property="og:description" content="###什么是Nginx？ Nginx是一个web服务器和反向代理服务器，用于HTTP、HTTPS、SMTP、POP3和IMAP协议。多进程异步非阻塞事件处理机制：运用了epoll模型">
+<meta property="og:description" content="什么是Nginx？Nginx是一个web服务器和反向代理服务器，用于HTTP、HTTPS、SMTP、POP3和IMAP协议。多进程异步非阻塞事件处理机制：运用了epoll模型">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://ws3.sinaimg.cn/large/006tNc79gy1fqddgef5v5j3098048t8m.jpg">
-<meta property="og:updated_time" content="2018-04-15T07:31:08.611Z">
+<meta property="og:updated_time" content="2018-04-15T07:44:08.011Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Nginx面试准备">
-<meta name="twitter:description" content="###什么是Nginx？ Nginx是一个web服务器和反向代理服务器，用于HTTP、HTTPS、SMTP、POP3和IMAP协议。多进程异步非阻塞事件处理机制：运用了epoll模型">
+<meta name="twitter:description" content="什么是Nginx？Nginx是一个web服务器和反向代理服务器，用于HTTP、HTTPS、SMTP、POP3和IMAP协议。多进程异步非阻塞事件处理机制：运用了epoll模型">
 <meta name="twitter:image" content="https://ws3.sinaimg.cn/large/006tNc79gy1fqddgef5v5j3098048t8m.jpg">
 
 
@@ -385,7 +385,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fqddgef5v5j3098048t8m.jpg" rel="gallery_cjg0hs8ld0022afqzoxdsas7t"
+                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fqddgef5v5j3098048t8m.jpg" rel="gallery_cjg0i8tgv001thrqz4ynhr3ql"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws3.sinaimg.cn/large/006tNc79gy1fqddgef5v5j3098048t8m.jpg" itemprop="contentUrl"/>
               </a>
@@ -398,11 +398,9 @@
       
 
       
-        <p>###什么是Nginx？</p>
-<p>Nginx是一个web服务器和反向代理服务器，用于<code>HTTP</code>、<code>HTTPS</code>、<code>SMTP</code>、<code>POP3</code>和<code>IMAP</code>协议。多进程异步非阻塞事件处理机制：运用了epoll模型</p>
+        <h3 id="什么是Nginx？"><a href="#什么是Nginx？" class="headerlink" title="什么是Nginx？"></a>什么是Nginx？</h3><p>Nginx是一个web服务器和反向代理服务器，用于<code>HTTP</code>、<code>HTTPS</code>、<code>SMTP</code>、<code>POP3</code>和<code>IMAP</code>协议。多进程异步非阻塞事件处理机制：运用了epoll模型</p>
 <a id="more"></a>
-<p>###为什么要用Nginx？</p>
-<p>①跨平台、配置简单</p>
+<h3 id="为什么要用Nginx？"><a href="#为什么要用Nginx？" class="headerlink" title="为什么要用Nginx？"></a>为什么要用Nginx？</h3><p>①跨平台、配置简单</p>
 <p>②非阻塞、高并发连接：官方检测支持5万并发</p>
 <p>③内存消耗低：Nginx采取了分阶段资源分配技术</p>
 <p>④内置的健康检查功能：如果有一个服务器宕机，会做一个健康检查，再发送的请求就不会发送到宕机的服务器了。重新将请求提交到其他的节点上。</p>
@@ -412,8 +410,7 @@
 <p>⑧接收用户异步请求：浏览器将请求发送到nginx服务器，它先将用户请求全部接收下来，再一次性发送给后端web服务器，极大减轻了web服务器的压力，一边接收web服务器的返回数据，一边发送给浏览器客户端</p>
 <p>⑨网络依赖性比较低，只要ping通就可以负载均衡</p>
 <p>⑩可以有多台nginx服务器</p>
-<p>###Nginx和Apache比较</p>
-<p><img src="https://ws4.sinaimg.cn/large/006tNc79gy1fqdctt2ugtj30hs0a7gmj.jpg" alt=""></p>
+<h3 id="Nginx和Apache比较"><a href="#Nginx和Apache比较" class="headerlink" title="Nginx和Apache比较"></a>Nginx和Apache比较</h3><p><img src="https://ws4.sinaimg.cn/large/006tNc79gy1fqdctt2ugtj30hs0a7gmj.jpg" alt=""></p>
 <p>Nginx相对Apache的优点：</p>
 <p>①轻量，配置简单，内存及资源消耗低</p>
 <p>②高并发，Nginx处理请求是异步非阻塞的，而Apache是阻塞的</p>
@@ -442,7 +439,7 @@
 <p>语法:<code>merge_slashes [on/off]</code></p>
 <p>默认值: <code>merge_slashes on</code></p>
 <p>环境: <code>http，server</code></p>
-<h3 id="ngx-http-upstream-module的作用是什么"><a href="#ngx-http-upstream-module的作用是什么" class="headerlink" title="ngx_http_upstream_module的作用是什么"></a><code>ngx_http_upstream_module</code>的作用是什么</h3><p><code>ngx_http_upstream_module</code>用于定义可通过<code>fastcgi</code>传递、<code>proxy</code>传递、<code>uwsgi</code>传递、<code>memcached</code>传递和scgi传递指令来引用的服务器组。</p>
+<h3 id="ngx-http-upstream-module的作用是什么"><a href="#ngx-http-upstream-module的作用是什么" class="headerlink" title="ngx_http_upstream_module的作用是什么"></a>ngx_http_upstream_module的作用是什么</h3><p><code>ngx_http_upstream_module</code>用于定义可通过<code>fastcgi</code>传递、<code>proxy</code>传递、<code>uwsgi</code>传递、<code>memcached</code>传递和scgi传递指令来引用的服务器组。</p>
 <h3 id="什么是C10K问题"><a href="#什么是C10K问题" class="headerlink" title="什么是C10K问题"></a>什么是C10K问题</h3><p><code>C10K</code>问题是指无法同时处理大量客户端(10,000)的网络套接字。</p>
 <h3 id="stub-status和sub-filter指令的作用是什么"><a href="#stub-status和sub-filter指令的作用是什么" class="headerlink" title="stub_status和sub_filter指令的作用是什么"></a><code>stub_status</code>和<code>sub_filter</code>指令的作用是什么</h3><p><code>Stub_status</code>指令：该指令用于了解<code>Nginx</code>当前状态的当前状态，如当前的活动连接，接受和处理当前读/写/等待连接的总数</p>
 <p><code>Sub_filter</code>指令：它用于搜索和替换响应中的内容，并快速修复陈旧的数据</p>
@@ -509,8 +506,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/01/06/django-nginx-uwsgi/" rel="next" title="centos7下通过nginx+uwsgi部署django应用">
-                <i class="fa fa-chevron-left"></i> centos7下通过nginx+uwsgi部署django应用
+              <a href="/2018/01/06/django-celery/" rel="next" title="django celery添加异步任务">
+                <i class="fa fa-chevron-left"></i> django celery添加异步任务
               </a>
             
           </div>
@@ -676,7 +673,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Nginx高性能原因"><span class="nav-number">1.</span> <span class="nav-text">Nginx高性能原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Nginx如何处理HTTP请求"><span class="nav-number">2.</span> <span class="nav-text">Nginx如何处理HTTP请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用反向代理服务器的优点是什么"><span class="nav-number">3.</span> <span class="nav-text">使用反向代理服务器的优点是什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Nginx服务器的最佳用途"><span class="nav-number">4.</span> <span class="nav-text">Nginx服务器的最佳用途</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Nginx为什么不使用多线程"><span class="nav-number">5.</span> <span class="nav-text">Nginx为什么不使用多线程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Nginx上的Master和Worker进程分别是什么？"><span class="nav-number">6.</span> <span class="nav-text">Nginx上的Master和Worker进程分别是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何通过不同于80的端口开启Nginx"><span class="nav-number">7.</span> <span class="nav-text">如何通过不同于80的端口开启Nginx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#是否有可能将Nginx的错误替换为502、503？"><span class="nav-number">8.</span> <span class="nav-text">是否有可能将Nginx的错误替换为502、503？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Nginx中，如何在URL中保留双斜杠"><span class="nav-number">9.</span> <span class="nav-text">Nginx中，如何在URL中保留双斜杠</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ngx-http-upstream-module的作用是什么"><span class="nav-number">10.</span> <span class="nav-text">ngx_http_upstream_module的作用是什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是C10K问题"><span class="nav-number">11.</span> <span class="nav-text">什么是C10K问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#stub-status和sub-filter指令的作用是什么"><span class="nav-number">12.</span> <span class="nav-text">stub_status和sub_filter指令的作用是什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Nginx是否支持将请求压缩到上游"><span class="nav-number">13.</span> <span class="nav-text">Nginx是否支持将请求压缩到上游</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何在Nginx中获取当前时间"><span class="nav-number">14.</span> <span class="nav-text">如何在Nginx中获取当前时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何在Nginx上添加模块"><span class="nav-number">15.</span> <span class="nav-text">如何在Nginx上添加模块</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是Nginx？"><span class="nav-number">1.</span> <span class="nav-text">什么是Nginx？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么要用Nginx？"><span class="nav-number">2.</span> <span class="nav-text">为什么要用Nginx？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Nginx和Apache比较"><span class="nav-number">3.</span> <span class="nav-text">Nginx和Apache比较</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Nginx高性能原因"><span class="nav-number">4.</span> <span class="nav-text">Nginx高性能原因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Nginx如何处理HTTP请求"><span class="nav-number">5.</span> <span class="nav-text">Nginx如何处理HTTP请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用反向代理服务器的优点是什么"><span class="nav-number">6.</span> <span class="nav-text">使用反向代理服务器的优点是什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Nginx服务器的最佳用途"><span class="nav-number">7.</span> <span class="nav-text">Nginx服务器的最佳用途</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Nginx为什么不使用多线程"><span class="nav-number">8.</span> <span class="nav-text">Nginx为什么不使用多线程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Nginx上的Master和Worker进程分别是什么？"><span class="nav-number">9.</span> <span class="nav-text">Nginx上的Master和Worker进程分别是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何通过不同于80的端口开启Nginx"><span class="nav-number">10.</span> <span class="nav-text">如何通过不同于80的端口开启Nginx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#是否有可能将Nginx的错误替换为502、503？"><span class="nav-number">11.</span> <span class="nav-text">是否有可能将Nginx的错误替换为502、503？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Nginx中，如何在URL中保留双斜杠"><span class="nav-number">12.</span> <span class="nav-text">Nginx中，如何在URL中保留双斜杠</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ngx-http-upstream-module的作用是什么"><span class="nav-number">13.</span> <span class="nav-text">ngx_http_upstream_module的作用是什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是C10K问题"><span class="nav-number">14.</span> <span class="nav-text">什么是C10K问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#stub-status和sub-filter指令的作用是什么"><span class="nav-number">15.</span> <span class="nav-text">stub_status和sub_filter指令的作用是什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Nginx是否支持将请求压缩到上游"><span class="nav-number">16.</span> <span class="nav-text">Nginx是否支持将请求压缩到上游</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何在Nginx中获取当前时间"><span class="nav-number">17.</span> <span class="nav-text">如何在Nginx中获取当前时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何在Nginx上添加模块"><span class="nav-number">18.</span> <span class="nav-text">如何在Nginx上添加模块</span></a></li></ol></div>
             
 
           </div>
