@@ -81,19 +81,19 @@
 
 
 
-<meta name="description" content="异步任务的重要性大家在做web项目的时候经常会遇到一些耗时的操作， 比如： 发送邮件、发送短信、生成pdf。这些操作在某些情况下需要立即返回结果给用户，但是可以在后台异步执行。 比如用户邮箱注册的时候， 在发送邮件的时候可以先把”已经发送激活邮件到邮箱”返回给用户， 同时把邮件发送任务提交到异步处理线程中。 现在介绍一款python写的专门用于处理异步任务的框架–celery。当然celery能完">
+<meta name="description" content="异步任务的重要性大家在做web项目的时候经常会遇到一些耗时的操作， 比如： 发送邮件、发送短信、生成pdf。这些操作在某些情况下需要立即返回结果给用户，但是可以在后台异步执行。">
 <meta name="keywords" content="Django，Celery">
 <meta property="og:type" content="article">
 <meta property="og:title" content="django celery添加异步任务">
 <meta property="og:url" content="http://yoursite.com/2018/01/06/django-celery/index.html">
 <meta property="og:site_name" content="LawTech&#39;s Blog">
-<meta property="og:description" content="异步任务的重要性大家在做web项目的时候经常会遇到一些耗时的操作， 比如： 发送邮件、发送短信、生成pdf。这些操作在某些情况下需要立即返回结果给用户，但是可以在后台异步执行。 比如用户邮箱注册的时候， 在发送邮件的时候可以先把”已经发送激活邮件到邮箱”返回给用户， 同时把邮件发送任务提交到异步处理线程中。 现在介绍一款python写的专门用于处理异步任务的框架–celery。当然celery能完">
+<meta property="og:description" content="异步任务的重要性大家在做web项目的时候经常会遇到一些耗时的操作， 比如： 发送邮件、发送短信、生成pdf。这些操作在某些情况下需要立即返回结果给用户，但是可以在后台异步执行。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://ws3.sinaimg.cn/large/006tNc79gy1fm7ychcn9xj30xc0f60sv.jpg">
-<meta property="og:updated_time" content="2018-04-15T06:52:23.572Z">
+<meta property="og:updated_time" content="2018-04-15T07:30:31.803Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="django celery添加异步任务">
-<meta name="twitter:description" content="异步任务的重要性大家在做web项目的时候经常会遇到一些耗时的操作， 比如： 发送邮件、发送短信、生成pdf。这些操作在某些情况下需要立即返回结果给用户，但是可以在后台异步执行。 比如用户邮箱注册的时候， 在发送邮件的时候可以先把”已经发送激活邮件到邮箱”返回给用户， 同时把邮件发送任务提交到异步处理线程中。 现在介绍一款python写的专门用于处理异步任务的框架–celery。当然celery能完">
+<meta name="twitter:description" content="异步任务的重要性大家在做web项目的时候经常会遇到一些耗时的操作， 比如： 发送邮件、发送短信、生成pdf。这些操作在某些情况下需要立即返回结果给用户，但是可以在后台异步执行。">
 <meta name="twitter:image" content="https://ws3.sinaimg.cn/large/006tNc79gy1fm7ychcn9xj30xc0f60sv.jpg">
 
 
@@ -385,7 +385,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fm7ychcn9xj30xc0f60sv.jpg" rel="gallery_cjg0hojfn000m5kqz679kat5w"
+                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fm7ychcn9xj30xc0f60sv.jpg" rel="gallery_cjg0hs8jt0017afqzstes2gx1"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws3.sinaimg.cn/large/006tNc79gy1fm7ychcn9xj30xc0f60sv.jpg" itemprop="contentUrl"/>
               </a>
@@ -399,6 +399,7 @@
 
       
         <h3 id="异步任务的重要性"><a href="#异步任务的重要性" class="headerlink" title="异步任务的重要性"></a>异步任务的重要性</h3><p>大家在做web项目的时候经常会遇到一些耗时的操作， 比如： 发送邮件、发送短信、生成pdf。这些操作在某些情况下需要立即返回结果给用户，但是可以在后台异步执行。</p>
+<a id="more"></a>
 <p>比如用户邮箱注册的时候， 在发送邮件的时候可以先把”已经发送激活邮件到邮箱”返回给用户， 同时把邮件发送任务提交到异步处理线程中。</p>
 <p>现在介绍一款python写的专门用于处理异步任务的框架–celery。当然celery能完成的功能远不止异步任务， 还有一个很常用的功能–定时任务</p>
 <p>celery的功能还包括：定义工作流、监控、任务流控制、资源泄露保护以及自定义用户组件等。</p>
@@ -535,8 +536,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/01/06/django-nginx-uwsgi/" rel="next" title="centos7下通过nginx+uwsgi部署django应用">
-                <i class="fa fa-chevron-left"></i> centos7下通过nginx+uwsgi部署django应用
+              <a href="/2018/01/04/centos-sentry/" rel="next" title="centos7下部署sentry日志管理服务">
+                <i class="fa fa-chevron-left"></i> centos7下部署sentry日志管理服务
               </a>
             
           </div>
@@ -545,8 +546,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/03/06/nginx-interview/" rel="prev" title="Nginx面试准备">
-                Nginx面试准备 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/01/06/django-nginx-uwsgi/" rel="prev" title="centos7下通过nginx+uwsgi部署django应用">
+                centos7下通过nginx+uwsgi部署django应用 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>

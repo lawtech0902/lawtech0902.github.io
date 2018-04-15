@@ -380,7 +380,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fqddgef5v5j3098048t8m.jpg" rel="gallery_cjg0hojgk001k5kqzq9jslh6n"
+                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fqddgef5v5j3098048t8m.jpg" rel="gallery_cjg0hs8ld0022afqzoxdsas7t"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws3.sinaimg.cn/large/006tNc79gy1fqddgef5v5j3098048t8m.jpg" itemprop="contentUrl"/>
               </a>
@@ -394,306 +394,15 @@
 
       
         
-          
-            <p>###什么是Nginx？</p>
+          <p>###什么是Nginx？</p>
 <p>Nginx是一个web服务器和反向代理服务器，用于<code>HTTP</code>、<code>HTTPS</code>、<code>SMTP</code>、<code>POP3</code>和<code>IMAP</code>协议。多进程异步非阻塞事件处理机制：运用了epoll模型</p>
-<p>###为什么要用Nginx？</p>
-<p>①跨平台、配置简单</p>
-<p>②非阻塞、高并发连接：官方检测支持5万并发</p>
-<p>③内存消耗低：Nginx采取了分阶段资源分配技术</p>
-<p>④内置的健康检查功能：如果有一个服务器宕机，会做一个健康检查，再发送的请求就不会发送到宕机的服务器了。重新将请求提交到其他的节点上。</p>
-<p>⑤节省带宽：支持GZIP压缩，可以添加浏览器本地缓存</p>
-<p>⑥稳定性高：宕机的概率低</p>
-<p>⑦master/worker结构：一个master进程，生成一个或多个worker进程</p>
-<p>⑧接收用户异步请求：浏览器将请求发送到nginx服务器，它先将用户请求全部接收下来，再一次性发送给后端web服务器，极大减轻了web服务器的压力，一边接收web服务器的返回数据，一边发送给浏览器客户端</p>
-<p>⑨网络依赖性比较低，只要ping通就可以负载均衡</p>
-<p>⑩可以有多台nginx服务器</p>
-<p>###Nginx和Apache比较</p>
-<p><img src="https://ws4.sinaimg.cn/large/006tNc79gy1fqdctt2ugtj30hs0a7gmj.jpg" alt=""></p>
-<p>Nginx相对Apache的优点：</p>
-<p>①轻量，配置简单，内存及资源消耗低</p>
-<p>②高并发，Nginx处理请求是异步非阻塞的，而Apache是阻塞的</p>
-<p>③高度模块化的设计，编写模块相对简单</p>
-<p>④社区活跃，高性能模块出品迅速</p>
-<p>Apache相对Nginx的优点：</p>
-<p>①rewrite强大</p>
-<p>②模块超多</p>
-<p>③少bug，稳定</p>
-<p>Nginx的优势是处理静态请求，cpu内存使用率低，Apache适合处理动态请求，所以现在一般前端用Nginx作为反向代理抗住压力，Apache作为后端处理动态请求。</p>
-<h3 id="Nginx高性能原因"><a href="#Nginx高性能原因" class="headerlink" title="Nginx高性能原因"></a>Nginx高性能原因</h3><p>得益于Nginx的事件处理机制：异步非阻塞事件处理机制，运用了epoll模型，提供了一个队列，排队解决</p>
-<h3 id="Nginx如何处理HTTP请求"><a href="#Nginx如何处理HTTP请求" class="headerlink" title="Nginx如何处理HTTP请求"></a>Nginx如何处理HTTP请求</h3><p>Nginx使用反应器模式。主事件循环等待操作系统发出准备事件的信号，这样数据就可以从套接字读取，在该实例中读取到缓冲区并进行处理。单个线程可以提供数万个并发连接。</p>
-<h3 id="使用反向代理服务器的优点是什么"><a href="#使用反向代理服务器的优点是什么" class="headerlink" title="使用反向代理服务器的优点是什么"></a>使用反向代理服务器的优点是什么</h3><p>反向代理服务器可以隐藏源服务器的存在和特征。它充当互联网云和web服务器之间的中间层。这对于安全方面来说是很好的，特别是当您使用web托管服务时。</p>
-<h3 id="Nginx服务器的最佳用途"><a href="#Nginx服务器的最佳用途" class="headerlink" title="Nginx服务器的最佳用途"></a>Nginx服务器的最佳用途</h3><p>Nginx服务器的最佳用法是在网络上部署动态<code>HTTP</code>内容，使用<code>SCGI</code>、<code>WSGI</code>应用程序服务器、用于脚本的<code>FastCGI</code>处理程序。它还可以作为负载均衡器。</p>
-<h3 id="Nginx为什么不使用多线程"><a href="#Nginx为什么不使用多线程" class="headerlink" title="Nginx为什么不使用多线程"></a>Nginx为什么不使用多线程</h3><p>Apache: 创建多个进程或线程，而每个进程或线程都会为其分配cpu和内存（线程要比进程小的多，所以worker支持比perfork高的并发），并发过大会榨干服务器资源。</p>
-<p>Nginx: 采用单线程来异步非阻塞处理请求（管理员可以配置Nginx主进程的工作进程的数量）(epoll)，不会为每个请求分配cpu和内存资源，节省了大量资源，同时也减少了大量的CPU的上下文切换。所以才使得Nginx支持更高的并发。</p>
-<h3 id="Nginx上的Master和Worker进程分别是什么？"><a href="#Nginx上的Master和Worker进程分别是什么？" class="headerlink" title="Nginx上的Master和Worker进程分别是什么？"></a>Nginx上的Master和Worker进程分别是什么？</h3><p>Master进程：读取、评估配置和维持</p>
-<p>Worker进程：处理请求</p>
-<h3 id="如何通过不同于80的端口开启Nginx"><a href="#如何通过不同于80的端口开启Nginx" class="headerlink" title="如何通过不同于80的端口开启Nginx"></a>如何通过不同于80的端口开启Nginx</h3><p>必须进入<code>/etc/Nginx/sites-enabled/</code>，如果这是默认文件，那么你必须打开名为<code>“default”</code>的文件。编辑文件，并放置在你想要的端口：</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Like</span> server &#123; <span class="attribute">listen</span> <span class="number">81</span>; &#125;</span><br></pre></td></tr></table></figure>
-<h3 id="是否有可能将Nginx的错误替换为502、503？"><a href="#是否有可能将Nginx的错误替换为502、503？" class="headerlink" title="是否有可能将Nginx的错误替换为502、503？"></a>是否有可能将Nginx的错误替换为502、503？</h3><p>502：错误网关</p>
-<p>503：服务器超载</p>
-<p>有可能，可以确保<code>fastcgi_intercept_errors</code>被设置为<code>ON</code>，并使用错误页面指令。</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Location</span> / &#123;</span><br><span class="line"><span class="attribute">fastcgi_pass</span> <span class="number">127</span>.<span class="number">0</span>.<span class="number">01</span>:<span class="number">9001</span>;</span><br><span class="line"><span class="attribute">fastcgi_intercept_errors</span> <span class="literal">on</span>;</span><br><span class="line"><span class="attribute">error_page</span> <span class="number">502</span> =<span class="number">503</span>/error_page.html;</span><br><span class="line"><span class="comment">#…</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="Nginx中，如何在URL中保留双斜杠"><a href="#Nginx中，如何在URL中保留双斜杠" class="headerlink" title="Nginx中，如何在URL中保留双斜杠"></a>Nginx中，如何在URL中保留双斜杠</h3><p>要在<code>URL</code>中保留双斜线，就必须使用<code>merge_slashes_off</code>;</p>
-<p>语法:<code>merge_slashes [on/off]</code></p>
-<p>默认值: <code>merge_slashes on</code></p>
-<p>环境: <code>http，server</code></p>
-<h3 id="ngx-http-upstream-module的作用是什么"><a href="#ngx-http-upstream-module的作用是什么" class="headerlink" title="ngx_http_upstream_module的作用是什么"></a><code>ngx_http_upstream_module</code>的作用是什么</h3><p><code>ngx_http_upstream_module</code>用于定义可通过<code>fastcgi</code>传递、<code>proxy</code>传递、<code>uwsgi</code>传递、<code>memcached</code>传递和scgi传递指令来引用的服务器组。</p>
-<h3 id="什么是C10K问题"><a href="#什么是C10K问题" class="headerlink" title="什么是C10K问题"></a>什么是C10K问题</h3><p><code>C10K</code>问题是指无法同时处理大量客户端(10,000)的网络套接字。</p>
-<h3 id="stub-status和sub-filter指令的作用是什么"><a href="#stub-status和sub-filter指令的作用是什么" class="headerlink" title="stub_status和sub_filter指令的作用是什么"></a><code>stub_status</code>和<code>sub_filter</code>指令的作用是什么</h3><p><code>Stub_status</code>指令：该指令用于了解<code>Nginx</code>当前状态的当前状态，如当前的活动连接，接受和处理当前读/写/等待连接的总数</p>
-<p><code>Sub_filter</code>指令：它用于搜索和替换响应中的内容，并快速修复陈旧的数据</p>
-<h3 id="Nginx是否支持将请求压缩到上游"><a href="#Nginx是否支持将请求压缩到上游" class="headerlink" title="Nginx是否支持将请求压缩到上游"></a>Nginx是否支持将请求压缩到上游</h3><p>可以使用<code>Nginx</code>模块<code>gunzip</code>将请求压缩到上游。<code>gunzip</code>模块是一个过滤器，它可以对不支持“gzip”编码方法的客户机或服务器使用“内容编码:gzip”来解压缩响应。</p>
-<h3 id="如何在Nginx中获取当前时间"><a href="#如何在Nginx中获取当前时间" class="headerlink" title="如何在Nginx中获取当前时间"></a>如何在Nginx中获取当前时间</h3><p>要获得Nginx的当前时间，必须使用<code>SSI</code>模块、<code>$date_gmt</code>和<code>$date_local</code>的变量。</p>
-<p><code>Proxy_set_header</code> <code>THE-TIME $date_gmt</code>;</p>
-<h3 id="如何在Nginx上添加模块"><a href="#如何在Nginx上添加模块" class="headerlink" title="如何在Nginx上添加模块"></a>如何在Nginx上添加模块</h3><p>在变异过程中，必须选择Nginx模块，因为Nginx不支持模块的运行时间选择</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/06/django-celery/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="LawTech.">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="LawTech's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/06/django-celery/" itemprop="url">django celery添加异步任务</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-06T13:18:54+08:00">
-                2018-01-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Django/" itemprop="url" rel="index">
-                    <span itemprop="name">Django</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2018/01/06/django-celery/" class="leancloud_visitors" data-flag-title="django celery添加异步任务">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
-          
-          
-            <div class="post-gallery-row">
-              <a class="post-gallery-img fancybox"
-                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fm7ychcn9xj30xc0f60sv.jpg" rel="gallery_cjg0hojfn000m5kqz679kat5w"
-                 itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
-                <img src="https://ws3.sinaimg.cn/large/006tNc79gy1fm7ychcn9xj30xc0f60sv.jpg" itemprop="contentUrl"/>
-              </a>
-            
-          
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/03/06/nginx-interview/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
           </div>
-        </div>
-      
-
-      
-        
-          
-            <h3 id="异步任务的重要性"><a href="#异步任务的重要性" class="headerlink" title="异步任务的重要性"></a>异步任务的重要性</h3><p>大家在做web项目的时候经常会遇到一些耗时的操作， 比如： 发送邮件、发送短信、生成pdf。这些操作在某些情况下需要立即返回结果给用户，但是可以在后台异步执行。</p>
-<p>比如用户邮箱注册的时候， 在发送邮件的时候可以先把”已经发送激活邮件到邮箱”返回给用户， 同时把邮件发送任务提交到异步处理线程中。</p>
-<p>现在介绍一款python写的专门用于处理异步任务的框架–celery。当然celery能完成的功能远不止异步任务， 还有一个很常用的功能–定时任务</p>
-<p>celery的功能还包括：定义工作流、监控、任务流控制、资源泄露保护以及自定义用户组件等。</p>
-<h3 id="celery介绍"><a href="#celery介绍" class="headerlink" title="celery介绍"></a>celery介绍</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">说明：</span><br><span class="line">    最新版本的celery支持的python版本必须大于2.7.6，</span><br><span class="line">    如果是python2.7.6及以下版本的时候import celery是会报错滴。</span><br></pre></td></tr></table></figure>
-<p>celery是通过将代码序列然后传输到中间通信组件，这些组件可以采用任何方式实现， 这里最常用的两种是rabbitmq和redis， 然后celery的后台线程不停的从rabbitmq或者redis中读取这些任务并执行然后返回结果到这些组件，这样就实现了一个异步的功能。</p>
-<p>Celery 用redis或者rabbitmq做消息通信，这里redis或者rabbitmq被称为中间人（Broker）Celery 系统可包含多个线程和中间人，以此获得高可用性和横向扩展能力。</p>
-<p>Celery 虽然是用 Python 编写的，但协议可以用任何语言实现。迄今，已有 Ruby 实现的 RCelery 、node.js 实现的 node-celery 以及一个 PHP 客户端 ，语言互通也可以通过 using webhooks 实现。</p>
-<h3 id="django-介绍"><a href="#django-介绍" class="headerlink" title="django 介绍"></a>django 介绍</h3><p>django作为python最主流也是资格最老的的web开发系统，是一个全栈的开发框架，几乎web开发系统中会用到的所有功能django都有，即使没有也可以在网站找到对应的开源解决方案，在stackoverflow上的问答也是最多的。基本上学习懂了django以后学习其他如flask、tornado都会觉得手到擒来。</p>
-<p>本文中我们就介绍一下如何将celery集成到django中来完成django耗时任务的异步执行和定时任务计划。</p>
-<p>我们将采用redis来做为中间人</p>
-<p>###celery 安装和使用</p>
-<blockquote>
-<p>celery安装</p>
-</blockquote>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install -U celery[redis]</span><br></pre></td></tr></table></figure>
-<p>该命令会安装celery以及redis开发相关所有的依赖包。安装完成我们可以看到：<br><a href="http://okwbmb2ka.bkt.clouddn.com/%E5%AE%89%E8%A3%85celery%E5%90%8E%E7%9A%84%E6%88%AA%E5%9B%BE.png" target="_blank" rel="noopener"><img src="http://okwbmb2ka.bkt.clouddn.com/%E5%AE%89%E8%A3%85celery%E5%90%8E%E7%9A%84%E6%88%AA%E5%9B%BE.png" alt="image"></a><br>这里我们可以看到安装了billiard、pytz、vine、amqp、redis、celery等</p>
-<blockquote>
-<p>redis-server安装</p>
-</blockquote>
-<p>既然是用redis做中间人，当然需要安装redis了、我们直接运行：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-getin install redis-server</span><br></pre></td></tr></table></figure>
-<p>运行成功以后可以，redis-server直接就作为服务启动了， 我们可以通过：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps aux|grep redis</span><br></pre></td></tr></table></figure>
-<p>命令来查看redis是否启动如下图：<br><a href="http://okwbmb2ka.bkt.clouddn.com/%E6%9F%A5%E7%9C%8Bredis%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%90%AF%E5%8A%A8%E6%83%85%E5%86%B5.png" target="_blank" rel="noopener"><img src="http://okwbmb2ka.bkt.clouddn.com/%E6%9F%A5%E7%9C%8Bredis%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%90%AF%E5%8A%A8%E6%83%85%E5%86%B5.png" alt="image"></a></p>
-<p>这里我们可以看到redis已经在6379端口监听了</p>
-<blockquote>
-<p>启动celery的worker</p>
-</blockquote>
-<p>前面介绍了celery的处理流程， 既然我们已经启动了redis， 当然我们需要启动一个随时监听异步处理函数的worker了。 这里我们直接启动celery的worker就行了</p>
-<p>首先我们来新建一个tasks.py 文件， 内容如下：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">from celery import Celery</span><br><span class="line"></span><br><span class="line">app = Celery('hello', broker='redis://localhost:6379/0')</span><br><span class="line"></span><br><span class="line">@app.task</span><br><span class="line">def hello():</span><br><span class="line">    return 'hello world'</span><br></pre></td></tr></table></figure>
-<p>然后我们允许下面的命令启动celery的worker</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">celery -A tasks worker --loglevel=info</span><br></pre></td></tr></table></figure>
-<p>注：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">这里tasks表示的是上面创建的文件的名字， 比如如果我们的py文件为tasks.py, 则直接 celery -A tasks worker --loglevel=info。 如果我们的py文件为celery-tasks这命令应该修改为：</span><br><span class="line">celery -A celery-tasks worker --loglevel=info</span><br></pre></td></tr></table></figure>
-<p>启动后我们就可以看到celery已经启动了线程时刻监听redis中的异步函数，如下：<br><a href="http://okwbmb2ka.bkt.clouddn.com/celery%E5%90%AF%E5%8A%A8%E6%88%AA%E5%9B%BE.png" target="_blank" rel="noopener"><img src="http://okwbmb2ka.bkt.clouddn.com/celery%E5%90%AF%E5%8A%A8%E6%88%AA%E5%9B%BE.png" alt="image"></a></p>
-<p>接下来我们分析一下上面的tasks.py文件：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">    1. 首先直接初始化Celery对象， 并指明使用的redis的连接地址</span><br><span class="line">    2. 直接用celery对象的task装饰任何我们需要异步的函数</span><br><span class="line">简单两步就完成了celery的异步函数</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>直接执行异步函数</p>
-</blockquote>
-<p>这一步里面我们直接新建test.py文件， 内容如下：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">from tasks import add</span><br><span class="line"></span><br><span class="line">add.delay(1,2)</span><br></pre></td></tr></table></figure>
-<p>注意这里对add函数的调用采用的是delay函数而不是直接采用add(1,2),因为这样调用就和普通函数调用没有区别了。所以这里一定要注意。运行test.py文件后我们可以看到celery的输出：</p>
-<p><a href="http://okwbmb2ka.bkt.clouddn.com/celery%E6%8E%A5%E6%94%B6%E5%88%B0celery%E7%9A%84%E6%88%AA%E5%9B%BE.png" target="_blank" rel="noopener"><img src="http://okwbmb2ka.bkt.clouddn.com/celery%E6%8E%A5%E6%94%B6%E5%88%B0celery%E7%9A%84%E6%88%AA%E5%9B%BE.png" alt="image"></a></p>
-<p>在最后面我们可以清楚的看到调用了add函数， add函数的执行结果会返回到redis中<br>这里delay函数是将函数执行异步放入到redis中交给celery执行， 这样delay之后就会有个问题就是如果我们需要理解得到结果怎么办呢？</p>
-<p>我们可以直接调用：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">add.delay(1,2).get()</span><br></pre></td></tr></table></figure>
-<p>这样就变成同步的了，等到返回结果才会去执行下一步</p>
-<blockquote>
-<p>celery添加异步任务</p>
-</blockquote>
-<p>celery的使用非常简单 </p>
-<p>这里我们可以看到需要将一个函数变为异步函数非常简单， 只需要添加@app.task装饰器就够了。 是不是非常简单啊。</p>
-<ol>
-<li><p>配置celery连接redis</p>
-<p>app.conf.result_backend = ‘redis://localhost:6379/0’</p>
-</li>
-<li><p>配置任务执行结果保存地址</p>
-<p>app.conf.result_backend = ‘redis://localhost:6379/0’</p>
-<p>前面我们讲到过celery是从中间人取出函数并执行，但是保存结果也需要保存到中间人， 这里实际上取任务的地方和保存结果的中间人实际上可以不一样， 所有这里就提供了中间结果执行的保存地址</p>
-</li>
-</ol>
-<h3 id="集成celery到django中"><a href="#集成celery到django中" class="headerlink" title="集成celery到django中"></a>集成celery到django中</h3><p><em>这里以我的一门django搭建在线教育平台的课程为例来讲解，大家如果有兴趣可以去关注一下，课程强力django+杀手级xadmin</em></p>
-<p>首先我们来看一下完整的系统结构图：<br><a href="http://okwbmb2ka.bkt.clouddn.com/%E7%B3%BB%E7%BB%9F%E7%BB%93%E6%9E%84.png" target="_blank" rel="noopener"><img src="http://okwbmb2ka.bkt.clouddn.com/%E7%B3%BB%E7%BB%9F%E7%BB%93%E6%9E%84.png" alt="image"></a></p>
-<p>1.修改django项目的MxOnline/settings.py文件， 加上：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">##配置Broker</span></span></span><br><span class="line">BROKER_URL = 'redis://127.0.0.1:6379/0'</span><br><span class="line">BROKER_TRANSPORT = 'redis'</span><br></pre></td></tr></table></figure>
-<p>2.在MxOline下面新建celery.py文件</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> absolute_import</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> django</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> celery <span class="keyword">import</span> Celery</span><br><span class="line"><span class="keyword">from</span> django.conf <span class="keyword">import</span> settings</span><br><span class="line"></span><br><span class="line">os.environ.setdefault(<span class="string">'DJANGO_SETTINGS_MODULE'</span>, <span class="string">'MxOnline.settings'</span>)</span><br><span class="line">django.setup()</span><br><span class="line"></span><br><span class="line">app = Celery(<span class="string">'MxOnline'</span>)</span><br><span class="line"></span><br><span class="line">app.config_from_object(<span class="string">'django.conf:settings'</span>)</span><br><span class="line">app.autodiscover_tasks(<span class="keyword">lambda</span>: settings.INSTALLED_APPS)</span><br></pre></td></tr></table></figure>
-<p>结构如图所示：</p>
-<p><a href="http://okwbmb2ka.bkt.clouddn.com/%E6%B7%BB%E5%8A%A0celerypy%E6%96%87%E4%BB%B6%E5%90%8E.png" target="_blank" rel="noopener"><img src="http://okwbmb2ka.bkt.clouddn.com/%E6%B7%BB%E5%8A%A0celerypy%E6%96%87%E4%BB%B6%E5%90%8E.png" alt="image"></a></p>
-<p>3.在对应的app下面新建tasks.py文件， 这里我们在users这个app下面新建， 如图所示：</p>
-<p><a href="http://okwbmb2ka.bkt.clouddn.com/app%E4%B8%8B%E6%96%B0%E5%BB%BAtasks.png" target="_blank" rel="noopener"><img src="http://okwbmb2ka.bkt.clouddn.com/app%E4%B8%8B%E6%96%B0%E5%BB%BAtasks.png" alt="image"></a></p>
-<p>文件源码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> MxOnline.celery <span class="keyword">import</span> app</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.task</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">send_register_email</span><span class="params">(email, send_type=<span class="string">"register"</span>)</span>:</span></span><br><span class="line">    email_record = EmailVerifyRecord()</span><br><span class="line">    <span class="keyword">if</span> send_type == <span class="string">"update_email"</span>:</span><br><span class="line">        code = random_str(<span class="number">4</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        code = random_str(<span class="number">16</span>)</span><br><span class="line">    email_record.code = code</span><br><span class="line">    email_record.email = email</span><br><span class="line">    email_record.send_type = send_type</span><br><span class="line">    email_record.save()</span><br><span class="line"></span><br><span class="line">    email_title = <span class="string">""</span></span><br><span class="line">    email_body = <span class="string">""</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> send_type == <span class="string">"register"</span>:</span><br><span class="line">        email_title = <span class="string">"慕学在线网注册激活链接"</span></span><br><span class="line">        email_body = <span class="string">"请点击下面的链接激活你的账号: http://www.imooc.com/active/&#123;0&#125;"</span>.format(code)</span><br><span class="line"></span><br><span class="line">        send_status = send_mail(email_title, email_body, EMAIL_FROM, [email])</span><br><span class="line">        <span class="keyword">if</span> send_status:</span><br><span class="line">            <span class="keyword">pass</span></span><br><span class="line">    <span class="keyword">elif</span> send_type == <span class="string">"forget"</span>:</span><br><span class="line">        email_title = <span class="string">"慕学在线网注册密码重置链接"</span></span><br><span class="line">        email_body = <span class="string">"请点击下面的链接重置密码: http://www.imooc.com/reset/&#123;0&#125;"</span>.format(code)</span><br><span class="line"></span><br><span class="line">        send_status = send_mail(email_title, email_body, EMAIL_FROM, [email])</span><br><span class="line">        <span class="keyword">if</span> send_status:</span><br><span class="line">            <span class="keyword">pass</span></span><br><span class="line">    <span class="keyword">elif</span> send_type == <span class="string">"update_email"</span>:</span><br><span class="line">        email_title = <span class="string">"慕学在线邮箱修改验证码"</span></span><br><span class="line">        email_body = <span class="string">"你的邮箱验证码为: &#123;0&#125;"</span>.format(code)</span><br><span class="line"></span><br><span class="line">        send_status = send_mail(email_title, email_body, EMAIL_FROM, [email])</span><br><span class="line">        <span class="keyword">if</span> send_status:</span><br><span class="line">            <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="number">4.</span> 编辑views.py文件完成邮件发送异步调用：</span><br><span class="line"></span><br><span class="line">    <span class="comment">#coding:utf-8</span></span><br><span class="line">    <span class="keyword">from</span> django.shortcuts <span class="keyword">import</span> render</span><br><span class="line">    <span class="keyword">from</span> django.http <span class="keyword">import</span> HttpResponse</span><br><span class="line"></span><br><span class="line">    <span class="keyword">from</span> .tasks <span class="keyword">import</span> send_register_email</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">(request)</span>:</span></span><br><span class="line">        send_register_email.delay()</span><br><span class="line">        <span class="keyword">return</span> HttpResponse(<span class="string">u"邮件发送成功， 请查收"</span>)</span><br><span class="line"></span><br><span class="line"><span class="number">5.</span> 进入MxOnline目录运行：</span><br><span class="line">    celery -A demo worker -l debug</span><br><span class="line"></span><br><span class="line">    以此来启动celery的worker服务</span><br></pre></td></tr></table></figure>
-<p>至此，大功告成了！我们可以在我们定义的任何apps中添加tasks来定义需要的异步任务。</p>
-<p>注：原文地址：<a href="http://www.projectsedu.com/2017/02/08/django通过celery添加异步任务/" target="_blank" rel="noopener">http://www.projectsedu.com/2017/02/08/django通过celery添加异步任务/</a></p>
-
-          
+          <!--/noindex-->
         
       
     </div>
@@ -845,7 +554,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fm7ychcn9xj30xc0f60sv.jpg" rel="gallery_cjg0hojfv000s5kqzaze1huy7"
+                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fm7ychcn9xj30xc0f60sv.jpg" rel="gallery_cjg0hs8jz001eafqzoi6tv18w"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws3.sinaimg.cn/large/006tNc79gy1fm7ychcn9xj30xc0f60sv.jpg" itemprop="contentUrl"/>
               </a>
@@ -859,10 +568,183 @@
 
       
         
-          <h5 id="1-安装python3-6"><a href="#1-安装python3-6" class="headerlink" title="1. 安装python3.6"></a>1. 安装python3.6</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">1. 获取</span><br><span class="line"></span><br><span class="line">wget https://www.python.org/ftp/python/3.6.2/Python-3.6.2.tgz</span><br><span class="line">tar -xzvf Python-3.6.2.tgz -C  /tmp</span><br><span class="line">cd  /tmp/Python-3.6.2/</span><br><span class="line"></span><br><span class="line">2. 把Python3.6安装到 /usr/local 目录</span><br><span class="line"></span><br><span class="line">./configure --prefix=/usr/local</span><br><span class="line">make</span><br><span class="line">make altinstall</span><br><span class="line"></span><br><span class="line">3. 更改/usr/bin/python链接</span><br><span class="line"></span><br><span class="line">ln -s /usr/local/bin/python3.6 /usr/bin/python3</span><br></pre></td></tr></table></figure>
+          <h5 id="1-安装python3-6"><a href="#1-安装python3-6" class="headerlink" title="1. 安装python3.6"></a>1. 安装python3.6</h5>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2018/01/06/django-nginx-uwsgi/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/06/django-celery/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LawTech.">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LawTech's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/06/django-celery/" itemprop="url">django celery添加异步任务</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-06T13:18:54+08:00">
+                2018-01-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Django/" itemprop="url" rel="index">
+                    <span itemprop="name">Django</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/01/06/django-celery/" class="leancloud_visitors" data-flag-title="django celery添加异步任务">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
+          
+          
+            <div class="post-gallery-row">
+              <a class="post-gallery-img fancybox"
+                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fm7ychcn9xj30xc0f60sv.jpg" rel="gallery_cjg0hs8jt0017afqzstes2gx1"
+                 itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
+                <img src="https://ws3.sinaimg.cn/large/006tNc79gy1fm7ychcn9xj30xc0f60sv.jpg" itemprop="contentUrl"/>
+              </a>
+            
+          
+
+          
+          </div>
+        </div>
+      
+
+      
+        
+          <h3 id="异步任务的重要性"><a href="#异步任务的重要性" class="headerlink" title="异步任务的重要性"></a>异步任务的重要性</h3><p>大家在做web项目的时候经常会遇到一些耗时的操作， 比如： 发送邮件、发送短信、生成pdf。这些操作在某些情况下需要立即返回结果给用户，但是可以在后台异步执行。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/01/06/django-celery/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1018,7 +900,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fmprtw51noj31180e8k29.jpg" rel="gallery_cjg0hojfk000i5kqzf43sz11o"
+                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fmprtw51noj31180e8k29.jpg" rel="gallery_cjg0hs8j0000uafqz8lc5skiz"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws3.sinaimg.cn/large/006tNc79gy1fmprtw51noj31180e8k29.jpg" itemprop="contentUrl"/>
               </a>
@@ -1194,7 +1076,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://static.oschina.net/uploads/space/2017/0615/184715_SGsr_2918182.png" rel="gallery_cjg0hojgq001p5kqzgyueuw7r"
+                 href="https://static.oschina.net/uploads/space/2017/0615/184715_SGsr_2918182.png" rel="gallery_cjg0hs8ks001qafqzwc9q90do"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://static.oschina.net/uploads/space/2017/0615/184715_SGsr_2918182.png" itemprop="contentUrl"/>
               </a>
@@ -1367,7 +1249,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws2.sinaimg.cn/large/006tKfTcgy1fmt1g3h0xqj30xc0ir3yo.jpg" rel="gallery_cjg0hojjb004g5kqznz0znzm0"
+                 href="https://ws2.sinaimg.cn/large/006tKfTcgy1fmt1g3h0xqj30xc0ir3yo.jpg" rel="gallery_cjg0hs8so004vafqz8lg4y5yl"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws2.sinaimg.cn/large/006tKfTcgy1fmt1g3h0xqj30xc0ir3yo.jpg" itemprop="contentUrl"/>
               </a>
@@ -1552,7 +1434,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fmprtw51noj31180e8k29.jpg" rel="gallery_cjg0hojfh000g5kqzskwqbml9"
+                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fmprtw51noj31180e8k29.jpg" rel="gallery_cjg0hs8ix000rafqzwaxolpit"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws3.sinaimg.cn/large/006tNc79gy1fmprtw51noj31180e8k29.jpg" itemprop="contentUrl"/>
               </a>
@@ -1725,7 +1607,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fm86gbv2zgj30jp09p3yl.jpg" rel="gallery_cjg0hojew00055kqzz6ljlffb"
+                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fm86gbv2zgj30jp09p3yl.jpg" rel="gallery_cjg0hs8h60009afqznbj1zfwo"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws3.sinaimg.cn/large/006tNc79gy1fm86gbv2zgj30jp09p3yl.jpg" itemprop="contentUrl"/>
               </a>

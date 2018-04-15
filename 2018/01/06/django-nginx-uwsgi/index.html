@@ -81,19 +81,19 @@
 
 
 
-<meta name="description" content="1. 安装python3.61234567891011121314151. 获取wget https://www.python.org/ftp/python/3.6.2/Python-3.6.2.tgztar -xzvf Python-3.6.2.tgz -C  /tmpcd  /tmp/Python-3.6.2/2. 把Python3.6安装到 /usr/local 目录./configure">
+<meta name="description" content="1. 安装python3.6">
 <meta name="keywords" content="Django，Celery">
 <meta property="og:type" content="article">
 <meta property="og:title" content="centos7下通过nginx+uwsgi部署django应用">
 <meta property="og:url" content="http://yoursite.com/2018/01/06/django-nginx-uwsgi/index.html">
 <meta property="og:site_name" content="LawTech&#39;s Blog">
-<meta property="og:description" content="1. 安装python3.61234567891011121314151. 获取wget https://www.python.org/ftp/python/3.6.2/Python-3.6.2.tgztar -xzvf Python-3.6.2.tgz -C  /tmpcd  /tmp/Python-3.6.2/2. 把Python3.6安装到 /usr/local 目录./configure">
+<meta property="og:description" content="1. 安装python3.6">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://ws3.sinaimg.cn/large/006tNc79gy1fm7ychcn9xj30xc0f60sv.jpg">
-<meta property="og:updated_time" content="2018-04-15T06:50:51.614Z">
+<meta property="og:updated_time" content="2018-04-15T07:30:50.768Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="centos7下通过nginx+uwsgi部署django应用">
-<meta name="twitter:description" content="1. 安装python3.61234567891011121314151. 获取wget https://www.python.org/ftp/python/3.6.2/Python-3.6.2.tgztar -xzvf Python-3.6.2.tgz -C  /tmpcd  /tmp/Python-3.6.2/2. 把Python3.6安装到 /usr/local 目录./configure">
+<meta name="twitter:description" content="1. 安装python3.6">
 <meta name="twitter:image" content="https://ws3.sinaimg.cn/large/006tNc79gy1fm7ychcn9xj30xc0f60sv.jpg">
 
 
@@ -385,7 +385,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fm7ychcn9xj30xc0f60sv.jpg" rel="gallery_cjg0hojfv000s5kqzaze1huy7"
+                 href="https://ws3.sinaimg.cn/large/006tNc79gy1fm7ychcn9xj30xc0f60sv.jpg" rel="gallery_cjg0hs8jz001eafqzoi6tv18w"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ws3.sinaimg.cn/large/006tNc79gy1fm7ychcn9xj30xc0f60sv.jpg" itemprop="contentUrl"/>
               </a>
@@ -398,8 +398,8 @@
       
 
       
-        <h5 id="1-安装python3-6"><a href="#1-安装python3-6" class="headerlink" title="1. 安装python3.6"></a>1. 安装python3.6</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">1. 获取</span><br><span class="line"></span><br><span class="line">wget https://www.python.org/ftp/python/3.6.2/Python-3.6.2.tgz</span><br><span class="line">tar -xzvf Python-3.6.2.tgz -C  /tmp</span><br><span class="line">cd  /tmp/Python-3.6.2/</span><br><span class="line"></span><br><span class="line">2. 把Python3.6安装到 /usr/local 目录</span><br><span class="line"></span><br><span class="line">./configure --prefix=/usr/local</span><br><span class="line">make</span><br><span class="line">make altinstall</span><br><span class="line"></span><br><span class="line">3. 更改/usr/bin/python链接</span><br><span class="line"></span><br><span class="line">ln -s /usr/local/bin/python3.6 /usr/bin/python3</span><br></pre></td></tr></table></figure>
-<a id="more"></a>
+        <h5 id="1-安装python3-6"><a href="#1-安装python3-6" class="headerlink" title="1. 安装python3.6"></a>1. 安装python3.6</h5><a id="more"></a>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">1. 获取</span><br><span class="line"></span><br><span class="line">wget https://www.python.org/ftp/python/3.6.2/Python-3.6.2.tgz</span><br><span class="line">tar -xzvf Python-3.6.2.tgz -C  /tmp</span><br><span class="line">cd  /tmp/Python-3.6.2/</span><br><span class="line"></span><br><span class="line">2. 把Python3.6安装到 /usr/local 目录</span><br><span class="line"></span><br><span class="line">./configure --prefix=/usr/local</span><br><span class="line">make</span><br><span class="line">make altinstall</span><br><span class="line"></span><br><span class="line">3. 更改/usr/bin/python链接</span><br><span class="line"></span><br><span class="line">ln -s /usr/local/bin/python3.6 /usr/bin/python3</span><br></pre></td></tr></table></figure>
 <h5 id="2-maridb"><a href="#2-maridb" class="headerlink" title="2. maridb"></a>2. maridb</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">1. 安装</span><br><span class="line"></span><br><span class="line">    sudo yum install mariadb-server</span><br><span class="line">2. 启动， 重启</span><br><span class="line"></span><br><span class="line">    sudo systemctl start mariadb</span><br><span class="line">    sudo systemctl restart mariadb</span><br><span class="line"></span><br><span class="line">3. 设置bind-ip</span><br><span class="line"></span><br><span class="line">    vim /etc/my.cnf</span><br><span class="line">    在 [mysqld]:</span><br><span class="line">        下面加一行</span><br><span class="line">        bind-address = 0.0.0.0</span><br><span class="line"></span><br><span class="line">4. 设置外部ip可以访问</span><br><span class="line"></span><br><span class="line">    先进入mysql才能运行下面命令:</span><br><span class="line">        mysql 直接进入就行</span><br><span class="line"></span><br><span class="line">    GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '123456' WITH GRANT OPTION;</span><br><span class="line"></span><br><span class="line">    FLUSH PRIVILEGES</span><br><span class="line"></span><br><span class="line">5. 设置阿里云的对外端口</span><br><span class="line"></span><br><span class="line">6. 安装mysqlclient出问题</span><br><span class="line"></span><br><span class="line">    centos 7：</span><br><span class="line">        yum install python-devel mariadb-devel -y</span><br><span class="line"></span><br><span class="line">    ubuntu：</span><br><span class="line">        sudo apt-get install libmysqlclient-dev</span><br><span class="line"></span><br><span class="line">    然后：</span><br><span class="line">        pip install mysqlclient</span><br></pre></td></tr></table></figure>
 <h5 id="3-安装nginx"><a href="#3-安装nginx" class="headerlink" title="3. 安装nginx"></a>3. 安装nginx</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-centos-7</span><br></pre></td></tr></table></figure>
 <h5 id="4-安装virtualenvwrapper"><a href="#4-安装virtualenvwrapper" class="headerlink" title="4. 安装virtualenvwrapper"></a>4. 安装virtualenvwrapper</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install python-setuptools python-devel</span><br><span class="line">pip install virtualenvwrapper</span><br></pre></td></tr></table></figure>
@@ -472,8 +472,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/01/04/centos-sentry/" rel="next" title="centos7下部署sentry日志管理服务">
-                <i class="fa fa-chevron-left"></i> centos7下部署sentry日志管理服务
+              <a href="/2018/01/06/django-celery/" rel="next" title="django celery添加异步任务">
+                <i class="fa fa-chevron-left"></i> django celery添加异步任务
               </a>
             
           </div>
@@ -482,8 +482,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/01/06/django-celery/" rel="prev" title="django celery添加异步任务">
-                django celery添加异步任务 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/03/06/nginx-interview/" rel="prev" title="Nginx面试准备">
+                Nginx面试准备 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
