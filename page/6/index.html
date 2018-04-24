@@ -275,7 +275,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/05/scrapy-items-design/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/05/scrapy-selectors/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="LawTech.">
@@ -294,7 +294,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/05/05/scrapy-items-design/" itemprop="url">Python分布式爬虫打造搜索引擎项目学习笔记——items设计</a></h1>
+                <a class="post-title-link" href="/2017/05/05/scrapy-selectors/" itemprop="url">Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Selectors</a></h1>
         
 
         <div class="post-meta">
@@ -346,7 +346,7 @@
 
           
           
-             <span id="/2017/05/05/scrapy-items-design/" class="leancloud_visitors" data-flag-title="Python分布式爬虫打造搜索引擎项目学习笔记——items设计">
+             <span id="/2017/05/05/scrapy-selectors/" class="leancloud_visitors" data-flag-title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Selectors">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -380,7 +380,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjgdfn98y00350hqzrg08a2re"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjgdhj18g0050k7qzk9illk8l"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
               </a>
@@ -394,10 +394,15 @@
 
       
         
-          <p>Scrapy的item是进行数据保存不可缺少的步骤，通过它进行数据的整理并通过Pipelines进行数据的数据库保存，图片下载等，它只有一种类型 <code>scrapy.Field()</code> 。</p>
+          <p>当抓取网页时，你做的最常见的任务是从 HTML 源码中提取数据。现有的一些库可以达到这个目的： </p>
+<ul>
+<li><a href="http://beautifulsoup.readthedocs.io/zh_CN/latest/" target="_blank" rel="noopener">BeautifulSoup</a> 是在程序员间非常流行的网页分析库，它基于 HTML 代码的结构来构造一个 Python 对象，对不良标记的处理也非常合理，但它有一个缺点：慢。 </li>
+<li><a href="http://lxml.de/index.html" target="_blank" rel="noopener">lxml</a> 是一个基于 ElementTree（不是 Python 标准库的一部分）的 python 化的 XML 解析库（也可以解析 HTML）。</li>
+</ul>
+<p>Scrapy 提取数据有自己的一套机制。它们被称作选择器（seletors），因为他们通过特定的 XPath 或者 CSS 表达式来“选择” HTML 文件中的某个部分。</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/05/05/scrapy-items-design/#more" rel="contents">
+            <a class="btn" href="/2017/05/05/scrapy-selectors/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -553,7 +558,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjgdfn993003c0hqzf76wu5p4"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjgdhj17r004hk7qzl4s1koeh"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
               </a>
@@ -726,7 +731,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjgdfn96g000l0hqzrw4z4p4f"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjgdhj130000zk7qz70lws5gr"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
               </a>
@@ -899,7 +904,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjgdfn99w00490hqz0khguh0o"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjgdhj19h0059k7qzcykcl25l"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
               </a>
@@ -1072,7 +1077,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjgdfn98v00310hqzrgh3gjyg"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjgdhj17k004bk7qzn9hbaxa9"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
               </a>
@@ -1246,7 +1251,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://redis.io/images/redis-300dpi.png" rel="gallery_cjgdfn964000e0hqz6osfhhiv"
+                 href="https://redis.io/images/redis-300dpi.png" rel="gallery_cjgdhj12h000ok7qzszyiicy3"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://redis.io/images/redis-300dpi.png" itemprop="contentUrl"/>
               </a>
@@ -1419,7 +1424,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjgdfn97w00240hqz74dnmqje"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjgdhj14b001xk7qznwunb96y"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
               </a>
@@ -1592,7 +1597,7 @@
           
             <div class="post-gallery-row">
               <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjgdfn9aq005a0hqzpu3gk1ep"
+                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjgdhj1go006ek7qz62nmasf9"
                  itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
                 <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
               </a>
