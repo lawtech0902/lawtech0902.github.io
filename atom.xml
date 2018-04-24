@@ -501,24 +501,36 @@
   </entry>
   
   <entry>
-    <title>Python分布式爬虫打造搜索引擎项目学习笔记——scrapyd部署scrapy爬虫</title>
-    <link href="http://yoursite.com/2017/07/27/scrapyd/"/>
-    <id>http://yoursite.com/2017/07/27/scrapyd/</id>
+    <title>Python分布式爬虫打造搜索引擎项目学习笔记——总结</title>
+    <link href="http://yoursite.com/2017/07/27/scrapy-summary/"/>
+    <id>http://yoursite.com/2017/07/27/scrapy-summary/</id>
     <published>2017-07-27T12:18:54.000Z</published>
-    <updated>2017-07-27T15:22:43.000Z</updated>
+    <updated>2017-07-27T15:25:55.000Z</updated>
     
-    <content type="html"><![CDATA[<p>在完成scrapy项目之后，就要进入项目实际部署环节。</p><a id="more"></a><p>传送门：<a href="https://github.com/scrapy/scrapyd" target="_blank" rel="noopener">scrapyd</a></p><p>首先在我们之前爬虫项目的虚拟环境<code>article_spider</code>中安装scrapyd：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(article_spider) lawtech@lawdeMacBook-Pro-2:~$ pip install scrapyd lawtech@lawdeMacBook-Pro-2:~$ pip install scrapyd-client</span><br></pre></td></tr></table></figure><p><code>scrapyd-client</code>就没必要在虚拟环境中安装了。</p><p>在scrapy项目中，有一个文件<code>scrapy.cfg</code>：</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Automatically created by: scrapy startproject</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># For more information about the [deploy] section see:</span></span><br><span class="line"><span class="comment"># https://scrapyd.readthedocs.org/en/latest/deploy.html</span></span><br><span class="line"></span><br><span class="line">[settings]</span><br><span class="line">default = ArticleSpider.settings</span><br><span class="line"></span><br><span class="line">[deploy:lawtech]</span><br><span class="line">url = http://localhost:<span class="number">6800</span>/</span><br><span class="line">project = ArticleSpider</span><br></pre></td></tr></table></figure><p>其中的deploy就是为scrapyd服务的。</p><p>要部署项目，首先要启动scrapyd：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">lawtech@lawdeMacBook-Pro-2:~$ workon article_spider</span><br><span class="line">(article_spider) lawtech@lawdeMacBook-Pro-2:~$ scrapyd</span><br><span class="line">2017-07-27T23:14:51+0800 [-] Loading /Users/lawtech/myvirtualenvs/article_spider/lib/python3.5/site-packages/scrapyd/txapp.py...</span><br><span class="line">2017-07-27T23:14:52+0800 [-] Scrapyd web console available at http://127.0.0.1:6800/</span><br><span class="line">2017-07-27T23:14:52+0800 [-] Loaded.</span><br><span class="line">2017-07-27T23:14:52+0800 [twisted.scripts._twistd_unix.UnixAppLogger#info] twistd 17.1.0 (/Users/lawtech/myvirtualenvs/article_spider/bin/python3.5 3.5.2) starting up.</span><br><span class="line">2017-07-27T23:14:52+0800 [twisted.scripts._twistd_unix.UnixAppLogger#info] reactor class: twisted.internet.selectreactor.SelectReactor.</span><br><span class="line">2017-07-27T23:14:52+0800 [-] Site starting on 6800</span><br><span class="line">2017-07-27T23:14:52+0800 [twisted.web.server.Site#info] Starting factory &lt;twisted.web.server.Site object at 0x107a97198&gt;</span><br><span class="line">2017-07-27T23:14:52+0800 [Launcher] Scrapyd 1.2.0 started: max_proc=16, runner='scrapyd.runner'</span><br></pre></td></tr></table></figure><p>部署项目：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">(article_spider) lawtech@lawdeMacBook-Pro-2:~/PycharmProjects/ArticleSpider$ scrapyd-deploy lawtech -p ArticleSpider</span><br><span class="line">Packing version 1501168592</span><br><span class="line">Deploying to project "ArticleSpider" in http://localhost:6800/addversion.json</span><br><span class="line">Server response (200):</span><br><span class="line">&#123;"status": "ok", "version": "1501168592", "spiders": 3, "project": "ArticleSpider", "node_name": "lawdeMacBook-Pro-2.local"&#125;</span><br></pre></td></tr></table></figure><p>现在只是将项目部署到目标地址，但是没有调度爬虫，调度爬虫需要用到curl命令，在<a href="http://localhost:6800" target="_blank" rel="noopener">http://localhost:6800</a>有提示如下：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl http://localhost:6800/schedule.json -d project=default -d spider=somespider</span><br></pre></td></tr></table></figure><p>只需要改动一下即可</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">lawtech@lawdeMacBook-Pro-2:~/PycharmProjects/ArticleSpider$ curl http://localhost:6800/schedule.json -d project=ArticleSpider -d spider=jobbole</span><br><span class="line">&#123;&quot;status&quot;: &quot;ok&quot;, &quot;jobid&quot;: &quot;2466c76872df11e7846da45e60ba3bb7&quot;, &quot;node_name&quot;: &quot;lawdeMacBook-Pro-2.local&quot;&#125;</span><br></pre></td></tr></table></figure><p>然后即可在<a href="http://127.0.0.1:6800/jobs" target="_blank" rel="noopener">http://127.0.0.1:6800/jobs</a>查看调度结果了。</p>]]></content>
+    <content type="html"><![CDATA[<a id="more"></a><ol><li>开发环境搭建</li><li>技术选型</li><li>伯乐在线爬取</li><li>知乎爬虫</li><li>拉勾网站整站爬虫</li><li>爬虫与反爬虫</li><li>scrapy进阶开发</li><li>scrapy-redis分布式开发</li><li>elasticsearch的基础知识</li><li>django搭建搜索网站</li><li>scrapyd部署scrapy项目</li></ol>]]></content>
     
     <summary type="html">
     
-      &lt;p&gt;在完成scrapy项目之后，就要进入项目实际部署环节。&lt;/p&gt;
+      
+      
+        &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;ol&gt;
+&lt;li&gt;开发环境搭建&lt;/li&gt;
+&lt;li&gt;技术选型&lt;/li&gt;
+&lt;li&gt;伯乐在线爬取&lt;/li&gt;
+&lt;li&gt;知乎爬虫&lt;/li&gt;
+&lt;li&gt;拉勾网站整站爬虫&lt;/li&gt;
+&lt;li&gt;爬虫与反爬虫&lt;/li&gt;
+&lt;li&gt;scrapy进阶开发&lt;/li&gt;
+&lt;li
+      
     
     </summary>
     
       <category term="Scrapy" scheme="http://yoursite.com/categories/Scrapy/"/>
     
     
-      <category term="Scrapy，Python，scrapyd" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython%EF%BC%8Cscrapyd/"/>
+      <category term="Scrapy，Python，ElasticSearch" scheme="http://yoursite.com/tags/Scrapy%EF%BC%8CPython%EF%BC%8CElasticSearch/"/>
     
   </entry>
   
