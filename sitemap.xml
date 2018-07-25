@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2018/07/10/golang-sync-map/</loc>
+    
+    <lastmod>2018-07-25T03:08:53.362Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2018/07/05/golang-coding-notations/</loc>
     
     <lastmod>2018-07-23T03:53:21.856Z</lastmod>
