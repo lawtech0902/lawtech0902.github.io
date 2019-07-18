@@ -221,7 +221,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    9 minutes read (About 1387 words)
+                    5 minutes read (About 763 words)
                 </span>
                 
                 
@@ -230,18 +230,23 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2017/06/12/scrapy-cookies-settings/">Python分布式爬虫打造搜索引擎项目学习笔记——cookie禁用、自动限速、自定义Spider的settings</a>
+                <a class="has-link-black-ter" href="/2017/06/12/scrapy-yundama/">Python分布式爬虫打造搜索引擎项目学习笔记——云打码实现验证码识别</a>
             
         </h1>
         <div class="content">
-            <p>像cookie禁用、自动限速这样的设置都在<code>settings.py</code>文件中，下面我们就来简单介绍一下。</p>
+            <p>验证码识别大致有如下几种方式：</p>
+<ul>
+<li>编码实现（Tesseract-OCR）</li>
+<li>在线打码</li>
+<li>人工打码</li>
+</ul>
         </div>
         
         
         <div class="level is-mobile">
             <div class="level-start">
                 <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2017/06/12/scrapy-cookies-settings/#more">Read More</a>
+                <a class="button is-size-7 is-light" href="/2017/06/12/scrapy-yundama/#more">Read More</a>
                 </div>
             </div>
         </div>
@@ -273,7 +278,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    5 minutes read (About 763 words)
+                    9 minutes read (About 1387 words)
                 </span>
                 
                 
@@ -282,23 +287,18 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2017/06/12/scrapy-yundama/">Python分布式爬虫打造搜索引擎项目学习笔记——云打码实现验证码识别</a>
+                <a class="has-link-black-ter" href="/2017/06/12/scrapy-cookies-settings/">Python分布式爬虫打造搜索引擎项目学习笔记——cookie禁用、自动限速、自定义Spider的settings</a>
             
         </h1>
         <div class="content">
-            <p>验证码识别大致有如下几种方式：</p>
-<ul>
-<li>编码实现（Tesseract-OCR）</li>
-<li>在线打码</li>
-<li>人工打码</li>
-</ul>
+            <p>像cookie禁用、自动限速这样的设置都在<code>settings.py</code>文件中，下面我们就来简单介绍一下。</p>
         </div>
         
         
         <div class="level is-mobile">
             <div class="level-start">
                 <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2017/06/12/scrapy-yundama/#more">Read More</a>
+                <a class="button is-size-7 is-light" href="/2017/06/12/scrapy-cookies-settings/#more">Read More</a>
                 </div>
             </div>
         </div>
@@ -493,7 +493,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    2 minutes read (About 254 words)
+                    6 minutes read (About 838 words)
                 </span>
                 
                 
@@ -502,18 +502,18 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2017/05/07/scrapy-item-json/">Python分布式爬虫打造搜索引擎项目学习笔记——保存item到json文件</a>
+                <a class="has-link-black-ter" href="/2017/05/07/scrapy-item-mysql/">Python分布式爬虫打造搜索引擎项目学习笔记——通过Pipeline保存数据到MySQL</a>
             
         </h1>
         <div class="content">
-            <p>在Scrapy中，所有item数据都会通过pipelines进行处理，想要保存为json格式文件，只需要在piplines中进行相应的处理即可。</p>
+            <p>将数据保存到MySQL数据库，需要用到 <code>mysqlclient</code> 模块，需要在我们的虚拟环境中用 <code>pip</code> 进行安装。</p>
         </div>
         
         
         <div class="level is-mobile">
             <div class="level-start">
                 <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2017/05/07/scrapy-item-json/#more">Read More</a>
+                <a class="button is-size-7 is-light" href="/2017/05/07/scrapy-item-mysql/#more">Read More</a>
                 </div>
             </div>
         </div>
@@ -545,7 +545,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    6 minutes read (About 838 words)
+                    2 minutes read (About 254 words)
                 </span>
                 
                 
@@ -554,18 +554,18 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2017/05/07/scrapy-item-mysql/">Python分布式爬虫打造搜索引擎项目学习笔记——通过Pipeline保存数据到MySQL</a>
+                <a class="has-link-black-ter" href="/2017/05/07/scrapy-item-json/">Python分布式爬虫打造搜索引擎项目学习笔记——保存item到json文件</a>
             
         </h1>
         <div class="content">
-            <p>将数据保存到MySQL数据库，需要用到 <code>mysqlclient</code> 模块，需要在我们的虚拟环境中用 <code>pip</code> 进行安装。</p>
+            <p>在Scrapy中，所有item数据都会通过pipelines进行处理，想要保存为json格式文件，只需要在piplines中进行相应的处理即可。</p>
         </div>
         
         
         <div class="level is-mobile">
             <div class="level-start">
                 <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2017/05/07/scrapy-item-mysql/#more">Read More</a>
+                <a class="button is-size-7 is-light" href="/2017/05/07/scrapy-item-json/#more">Read More</a>
                 </div>
             </div>
         </div>
@@ -617,7 +617,7 @@
             <div class="level-item has-text-centered" style="flex-shrink: 1">
                 <div>
                     
-                        <img class="image is-128x128 has-mb-6" src="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg" alt="LawTech">
+                        <img class="image is-128x128 has-mb-6" src="/images/891562131079_.pic.jpg" alt="LawTech">
                     
                     
                     <p class="is-size-4 is-block">
