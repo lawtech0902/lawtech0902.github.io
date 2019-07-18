@@ -149,6 +149,58 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-05-09T06:18:54.000Z">2017-05-09</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Scrapy/">Scrapy</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    29 minutes read (About 4363 words)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2017/05/09/scrapy-session-cookie/">Python分布式爬虫打造搜索引擎项目学习笔记——理解Session和Cookie机制</a>
+            
+        </h1>
+        <div class="content">
+            <h2 id="Cookie-机制"><a href="#Cookie-机制" class="headerlink" title="Cookie 机制"></a><strong>Cookie 机制</strong></h2><p>Cookies是服务器在本地机器上存储的小段文本并随每一个请求发送至同一个服务器。IETF RFC 2965 HTTP State Management Mechanism 是通用cookie规范。网络服务器用HTTP头向客户端发送cookies，在客户终端，浏览器解析这些cookies并将它们保存为一个本地文件，它会自动将同一服务器的任何请求缚上这些cookies 。</p>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2017/05/09/scrapy-session-cookie/#more">Read More</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2017-05-08T06:18:54.000Z">2017-05-08</time>
                 
                 <div class="level-item">
@@ -182,58 +234,6 @@
             <div class="level-start">
                 <div class="level-item">
                 <a class="button is-size-7 is-light" href="/2017/05/08/scrapy-item-loader/#more">Read More</a>
-                </div>
-            </div>
-        </div>
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2017-05-07T06:18:54.000Z">2017-05-07</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Scrapy/">Scrapy</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    6 minutes read (About 838 words)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2017/05/07/scrapy-item-mysql/">Python分布式爬虫打造搜索引擎项目学习笔记——通过Pipeline保存数据到MySQL</a>
-            
-        </h1>
-        <div class="content">
-            <p>将数据保存到MySQL数据库，需要用到 <code>mysqlclient</code> 模块，需要在我们的虚拟环境中用 <code>pip</code> 进行安装。</p>
-        </div>
-        
-        
-        <div class="level is-mobile">
-            <div class="level-start">
-                <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2017/05/07/scrapy-item-mysql/#more">Read More</a>
                 </div>
             </div>
         </div>
@@ -307,7 +307,7 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2017-05-06T06:18:54.000Z">2017-05-06</time>
+                <time class="level-item has-text-grey" datetime="2017-05-07T06:18:54.000Z">2017-05-07</time>
                 
                 <div class="level-item">
                 <a class="has-link-grey -link" href="/categories/Scrapy/">Scrapy</a>
@@ -317,7 +317,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    6 minutes read (About 919 words)
+                    6 minutes read (About 838 words)
                 </span>
                 
                 
@@ -326,19 +326,18 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2017/05/06/scrapy-item-pipeline/">Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Item Pipeline</a>
+                <a class="has-link-black-ter" href="/2017/05/07/scrapy-item-mysql/">Python分布式爬虫打造搜索引擎项目学习笔记——通过Pipeline保存数据到MySQL</a>
             
         </h1>
         <div class="content">
-            <p>当 Item 在 Spider 中被收集之后，它将会被传递到 Item Pipeline，一些组件会按照一定的顺序执行对 Item 的处理。</p>
-<p>每个 item pipeline 组件（有时称之为“Item Pipeline”）是实现了简单方法的 Python 类。他们接收到 Item 并通过它执行一些行为，同时也决定此 Item 是否继续通过 pipeline，或是被丢弃而不再进行处理。</p>
+            <p>将数据保存到MySQL数据库，需要用到 <code>mysqlclient</code> 模块，需要在我们的虚拟环境中用 <code>pip</code> 进行安装。</p>
         </div>
         
         
         <div class="level is-mobile">
             <div class="level-start">
                 <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2017/05/06/scrapy-item-pipeline/#more">Read More</a>
+                <a class="button is-size-7 is-light" href="/2017/05/07/scrapy-item-mysql/#more">Read More</a>
                 </div>
             </div>
         </div>
@@ -413,7 +412,7 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2017-05-05T06:18:54.000Z">2017-05-05</time>
+                <time class="level-item has-text-grey" datetime="2017-05-06T06:18:54.000Z">2017-05-06</time>
                 
                 <div class="level-item">
                 <a class="has-link-grey -link" href="/categories/Scrapy/">Scrapy</a>
@@ -423,7 +422,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    9 minutes read (About 1275 words)
+                    6 minutes read (About 919 words)
                 </span>
                 
                 
@@ -432,18 +431,19 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2017/05/05/scrapy-items-design/">Python分布式爬虫打造搜索引擎项目学习笔记——items设计</a>
+                <a class="has-link-black-ter" href="/2017/05/06/scrapy-item-pipeline/">Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy Item Pipeline</a>
             
         </h1>
         <div class="content">
-            <p>Scrapy的item是进行数据保存不可缺少的步骤，通过它进行数据的整理并通过Pipelines进行数据的数据库保存，图片下载等，它只有一种类型 <code>scrapy.Field()</code> 。</p>
+            <p>当 Item 在 Spider 中被收集之后，它将会被传递到 Item Pipeline，一些组件会按照一定的顺序执行对 Item 的处理。</p>
+<p>每个 item pipeline 组件（有时称之为“Item Pipeline”）是实现了简单方法的 Python 类。他们接收到 Item 并通过它执行一些行为，同时也决定此 Item 是否继续通过 pipeline，或是被丢弃而不再进行处理。</p>
         </div>
         
         
         <div class="level is-mobile">
             <div class="level-start">
                 <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2017/05/05/scrapy-items-design/#more">Read More</a>
+                <a class="button is-size-7 is-light" href="/2017/05/06/scrapy-item-pipeline/#more">Read More</a>
                 </div>
             </div>
         </div>
@@ -522,7 +522,7 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2017-04-26T06:18:54.000Z">2017-04-26</time>
+                <time class="level-item has-text-grey" datetime="2017-05-05T06:18:54.000Z">2017-05-05</time>
                 
                 <div class="level-item">
                 <a class="has-link-grey -link" href="/categories/Scrapy/">Scrapy</a>
@@ -532,7 +532,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    5 minutes read (About 750 words)
+                    9 minutes read (About 1275 words)
                 </span>
                 
                 
@@ -541,18 +541,18 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2017/04/26/scrapy-jobbole-spider/">Python分布式爬虫打造搜索引擎项目学习笔记——编写Spider爬取伯乐在线所有文章</a>
+                <a class="has-link-black-ter" href="/2017/05/05/scrapy-items-design/">Python分布式爬虫打造搜索引擎项目学习笔记——items设计</a>
             
         </h1>
         <div class="content">
-            <p>仍然是以 <code>http://blog.jobbole.com/all-posts/</code> 页面为例</p>
+            <p>Scrapy的item是进行数据保存不可缺少的步骤，通过它进行数据的整理并通过Pipelines进行数据的数据库保存，图片下载等，它只有一种类型 <code>scrapy.Field()</code> 。</p>
         </div>
         
         
         <div class="level is-mobile">
             <div class="level-start">
                 <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2017/04/26/scrapy-jobbole-spider/#more">Read More</a>
+                <a class="button is-size-7 is-light" href="/2017/05/05/scrapy-items-design/#more">Read More</a>
                 </div>
             </div>
         </div>
@@ -573,10 +573,10 @@
 <div class="card card-transparent">
     <nav class="pagination is-centered" role="navigation" aria-label="pagination">
         <div class="pagination-previous">
-            <a class="is-flex-grow has-text-black-ter" href="/page/5/">Previous</a>
+            <a class="is-flex-grow has-text-black-ter" href="/page/5/">Préc</a>
         </div>
         <div class="pagination-next">
-            <a class="is-flex-grow has-text-black-ter" href="/page/7/">Next</a>
+            <a class="is-flex-grow has-text-black-ter" href="/page/7/">Suiv</a>
         </div>
         <ul class="pagination-list is-hidden-mobile">
             
@@ -637,20 +637,20 @@
             <div class="level-item has-text-centered is-marginless">
                 <div>
                     <p class="heading">
-                        Posts
+                        Articles
                     </p>
                     <p class="title has-text-weight-normal">
-                        67
+                        68
                     </p>
                 </div>
             </div>
             <div class="level-item has-text-centered is-marginless">
                 <div>
                     <p class="heading">
-                        Categories
+                        Catégories
                     </p>
                     <p class="title has-text-weight-normal">
-                        13
+                        14
                     </p>
                 </div>
             </div>
@@ -660,14 +660,14 @@
                         Tags
                     </p>
                     <p class="title has-text-weight-normal">
-                        27
+                        28
                     </p>
                 </div>
             </div>
         </nav>
         <div class="level">
             <a class="level-item button is-link is-rounded" href="https://weibo.com/2869466040" target="_blank">
-                Follow</a>
+                SUIVRE</a>
         </div>
         
         
@@ -716,7 +716,7 @@
     <div class="card-content">
         <div class="menu">
         <h3 class="menu-label">
-            Links
+            Liens
         </h3>
         <ul class="menu-list">
         
@@ -743,7 +743,7 @@
     <div class="card-content">
         <div class="menu">
             <h3 class="menu-label">
-                Categories
+                Catégories
             </h3>
             <ul class="menu-list">
             <li>
@@ -777,6 +777,14 @@
             </span>
             <span class="level-end">
                 <span class="level-item tag">6</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/FE/">
+            <span class="level-start">
+                <span class="level-item">FE</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Git/">
@@ -860,9 +868,9 @@
 <div class="card widget">
     <div class="card-content">
         <h3 class="menu-label">
-            Tag Cloud
+            Nuage de tags
         </h3>
-        <a href="/tags/12-05/" style="font-size: 10px;">12.05</a> <a href="/tags/Django/" style="font-size: 10px;">Django</a> <a href="/tags/Django-Centos/" style="font-size: 10px;">Django, Centos</a> <a href="/tags/Django-Centos-nginx-uwsgi/" style="font-size: 10px;">Django, Centos, nginx, uwsgi</a> <a href="/tags/Django-Python/" style="font-size: 10px;">Django, Python</a> <a href="/tags/Django，Celery/" style="font-size: 11.67px;">Django，Celery</a> <a href="/tags/Django，Mysql，Python/" style="font-size: 10px;">Django，Mysql，Python</a> <a href="/tags/Django，Vue，Rest/" style="font-size: 18.33px;">Django，Vue，Rest</a> <a href="/tags/Git/" style="font-size: 11.67px;">Git</a> <a href="/tags/Go/" style="font-size: 16.67px;">Go</a> <a href="/tags/Go，Mac，Privoxy/" style="font-size: 10px;">Go，Mac，Privoxy</a> <a href="/tags/Nginx/" style="font-size: 10px;">Nginx</a> <a href="/tags/Redis-Python/" style="font-size: 18.33px;">Redis, Python</a> <a href="/tags/Scrapy，CSS，Python/" style="font-size: 10px;">Scrapy，CSS，Python</a> <a href="/tags/Scrapy，Django，Python/" style="font-size: 10px;">Scrapy，Django，Python</a> <a href="/tags/Scrapy，Python/" style="font-size: 20px;">Scrapy，Python</a> <a href="/tags/Scrapy，Python-Elasticsearch/" style="font-size: 10px;">Scrapy，Python, Elasticsearch</a> <a href="/tags/Scrapy，Python，Django，Elasticsearch/" style="font-size: 10px;">Scrapy，Python，Django，Elasticsearch</a> <a href="/tags/Scrapy，Python，ElasticSearch/" style="font-size: 10px;">Scrapy，Python，ElasticSearch</a> <a href="/tags/Scrapy，Python，Redis/" style="font-size: 10px;">Scrapy，Python，Redis</a> <a href="/tags/Scrapy，Python，scrapyd/" style="font-size: 10px;">Scrapy，Python，scrapyd</a> <a href="/tags/Scrapy，Regular-Expression，Python/" style="font-size: 10px;">Scrapy，Regular Expression，Python</a> <a href="/tags/Scrapy，Requests，Python/" style="font-size: 15px;">Scrapy，Requests，Python</a> <a href="/tags/Scrapy，Unicode，Python/" style="font-size: 10px;">Scrapy，Unicode，Python</a> <a href="/tags/Scrapy，XPath，Python/" style="font-size: 11.67px;">Scrapy，XPath，Python</a> <a href="/tags/TensorFlow-GPU-Ubuntu-Cuda/" style="font-size: 10px;">TensorFlow, GPU, Ubuntu, Cuda</a> <a href="/tags/Web/" style="font-size: 13.33px;">Web</a>
+        <a href="/tags/12-05/" style="font-size: 10px;">12.05</a> <a href="/tags/Django/" style="font-size: 10px;">Django</a> <a href="/tags/Django-Centos/" style="font-size: 10px;">Django, Centos</a> <a href="/tags/Django-Centos-nginx-uwsgi/" style="font-size: 10px;">Django, Centos, nginx, uwsgi</a> <a href="/tags/Django-Python/" style="font-size: 10px;">Django, Python</a> <a href="/tags/Django，Celery/" style="font-size: 11.67px;">Django，Celery</a> <a href="/tags/Django，Mysql，Python/" style="font-size: 10px;">Django，Mysql，Python</a> <a href="/tags/Django，Vue，Rest/" style="font-size: 18.33px;">Django，Vue，Rest</a> <a href="/tags/FE-webpack/" style="font-size: 10px;">FE, webpack</a> <a href="/tags/Git/" style="font-size: 11.67px;">Git</a> <a href="/tags/Go/" style="font-size: 16.67px;">Go</a> <a href="/tags/Go，Mac，Privoxy/" style="font-size: 10px;">Go，Mac，Privoxy</a> <a href="/tags/Nginx/" style="font-size: 10px;">Nginx</a> <a href="/tags/Redis-Python/" style="font-size: 18.33px;">Redis, Python</a> <a href="/tags/Scrapy，CSS，Python/" style="font-size: 10px;">Scrapy，CSS，Python</a> <a href="/tags/Scrapy，Django，Python/" style="font-size: 10px;">Scrapy，Django，Python</a> <a href="/tags/Scrapy，Python/" style="font-size: 20px;">Scrapy，Python</a> <a href="/tags/Scrapy，Python-Elasticsearch/" style="font-size: 10px;">Scrapy，Python, Elasticsearch</a> <a href="/tags/Scrapy，Python，Django，Elasticsearch/" style="font-size: 10px;">Scrapy，Python，Django，Elasticsearch</a> <a href="/tags/Scrapy，Python，ElasticSearch/" style="font-size: 10px;">Scrapy，Python，ElasticSearch</a> <a href="/tags/Scrapy，Python，Redis/" style="font-size: 10px;">Scrapy，Python，Redis</a> <a href="/tags/Scrapy，Python，scrapyd/" style="font-size: 10px;">Scrapy，Python，scrapyd</a> <a href="/tags/Scrapy，Regular-Expression，Python/" style="font-size: 10px;">Scrapy，Regular Expression，Python</a> <a href="/tags/Scrapy，Requests，Python/" style="font-size: 15px;">Scrapy，Requests，Python</a> <a href="/tags/Scrapy，Unicode，Python/" style="font-size: 10px;">Scrapy，Unicode，Python</a> <a href="/tags/Scrapy，XPath，Python/" style="font-size: 11.67px;">Scrapy，XPath，Python</a> <a href="/tags/TensorFlow-GPU-Ubuntu-Cuda/" style="font-size: 10px;">TensorFlow, GPU, Ubuntu, Cuda</a> <a href="/tags/Web/" style="font-size: 13.33px;">Web</a>
     </div>
 </div>
 
@@ -874,8 +882,27 @@
 <div class="card widget">
     <div class="card-content">
         <h3 class="menu-label">
-            Recent
+            Récents
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/07/18/webpack-dict/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://lc-joyhmcen.cn-n1.lcfile.com/d09302b652cb161bf7f1/1_dQA3VhfjIQc1DYua6KoLFQ.png" alt="webpack详解">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-18T05:18:54.000Z">2019-07-18</time></div>
+                    <a href="/2019/07/18/webpack-dict/" class="has-link-black-ter is-size-6">webpack详解</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/FE/">FE</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -953,25 +980,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2018/04/24/git-workflow/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Git工作流程">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-04-24T05:18:54.000Z">2018-04-24</time></div>
-                    <a href="/2018/04/24/git-workflow/" class="has-link-black-ter is-size-6">Git工作流程</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Git/">Git</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -983,6 +991,17 @@
             Archives
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">July 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2018/07/">
@@ -1193,6 +1212,13 @@
                     <a class="tags has-addons" href="/tags/Django，Vue，Rest/">
                         <span class="tag">Django，Vue，Rest</span>
                         <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/FE-webpack/">
+                        <span class="tag">FE, webpack</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -1349,8 +1375,27 @@
 <div class="card widget">
     <div class="card-content">
         <h3 class="menu-label">
-            Recent
+            Récents
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/07/18/webpack-dict/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://lc-joyhmcen.cn-n1.lcfile.com/d09302b652cb161bf7f1/1_dQA3VhfjIQc1DYua6KoLFQ.png" alt="webpack详解">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-18T05:18:54.000Z">2019-07-18</time></div>
+                    <a href="/2019/07/18/webpack-dict/" class="has-link-black-ter is-size-6">webpack详解</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/FE/">FE</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -1428,25 +1473,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2018/04/24/git-workflow/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Git工作流程">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-04-24T05:18:54.000Z">2018-04-24</time></div>
-                    <a href="/2018/04/24/git-workflow/" class="has-link-black-ter is-size-6">Git工作流程</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Git/">Git</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1458,6 +1484,17 @@
             Archives
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">July 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2018/07/">
@@ -1668,6 +1705,13 @@
                     <a class="tags has-addons" href="/tags/Django，Vue，Rest/">
                         <span class="tag">Django，Vue，Rest</span>
                         <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/FE-webpack/">
+                        <span class="tag">FE, webpack</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -1986,9 +2030,9 @@ document.addEventListener('DOMContentLoaded', function () {
     (function (window) {
         var INSIGHT_CONFIG = {
             TRANSLATION: {
-                POSTS: 'Posts',
+                POSTS: 'Articles',
                 PAGES: 'Pages',
-                CATEGORIES: 'Categories',
+                CATEGORIES: 'Catégories',
                 TAGS: 'Tags',
                 UNTITLED: '(Untitled)',
             },

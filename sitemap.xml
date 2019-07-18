@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2019/07/18/webpack-dict/</loc>
+    
+    <lastmod>2019-07-18T07:23:43.460Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2018/01/03/go-base-tips/</loc>
     
     <lastmod>2019-07-18T07:13:40.926Z</lastmod>
