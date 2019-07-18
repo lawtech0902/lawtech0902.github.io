@@ -1,87 +1,13 @@
 <!DOCTYPE html>
+<html lang="zh">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+<title>Python分布式爬虫打造搜索引擎项目学习笔记——Requests模拟登录知乎 - LawTech&#39;s Blog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-  
-
-
-<html class="theme-next mist use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<meta name="theme-color" content="#222">
-
-
-
-
-
-
-
-
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
-
-
-
-
-
-
-
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
-
-<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
-
-
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
-
-
-  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
-
-
-
-
-
-  <meta name="keywords" content="Scrapy，Requests，Python," />
-
-
-
-
-
-  <link rel="alternate" href="/atom.xml" title="LawTech's Blog" type="application/atom+xml" />
-
-
-
-
-
-
-<meta name="description" content="Requests 是以 PEP 20 的箴言为中心开发的  Beautiful is better than ugly.(美丽优于丑陋) Explicit is better than implicit.(直白优于含蓄) Simple is better than complex.(简单优于复杂) Complex is better than complicated.(复杂优于繁琐) Readab">
+    <meta name="description" content="Requests 是以 PEP 20 的箴言为中心开发的  Beautiful is better than ugly.(美丽优于丑陋) Explicit is better than implicit.(直白优于含蓄) Simple is better than complex.(简单优于复杂) Complex is better than complicated.(复杂优于繁琐) Readab">
 <meta name="keywords" content="Scrapy，Requests，Python">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——Requests模拟登录知乎">
@@ -89,316 +15,169 @@
 <meta property="og:site_name" content="LawTech&#39;s Blog">
 <meta property="og:description" content="Requests 是以 PEP 20 的箴言为中心开发的  Beautiful is better than ugly.(美丽优于丑陋) Explicit is better than implicit.(直白优于含蓄) Simple is better than complex.(简单优于复杂) Complex is better than complicated.(复杂优于繁琐) Readab">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg">
+<meta property="og:image" content="http://yoursite.com/images/og_image.png">
 <meta property="og:updated_time" content="2017-05-12T06:55:07.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——Requests模拟登录知乎">
 <meta name="twitter:description" content="Requests 是以 PEP 20 的箴言为中心开发的  Beautiful is better than ugly.(美丽优于丑陋) Explicit is better than implicit.(直白优于含蓄) Simple is better than complex.(简单优于复杂) Complex is better than complicated.(复杂优于繁琐) Readab">
-<meta name="twitter:image" content="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg">
-
-
-
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Mist',
-    version: '5.1.4',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
-    fancybox: true,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    duoshuo: {
-      userId: '0',
-      author: '博主'
-    },
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-
-  <link rel="canonical" href="http://yoursite.com/2017/05/11/scrapy-requests-zhihu-login/"/>
+<meta name="twitter:image" content="http://yoursite.com/images/og_image.png">
 
 
 
 
 
-  <title>Python分布式爬虫打造搜索引擎项目学习笔记——Requests模拟登录知乎 | LawTech's Blog</title>
-  
 
 
+<link rel="icon" href="/images/favicon.svg">
 
 
-
-  <script type="text/javascript">
-    var _hmt = _hmt || [];
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "https://hm.baidu.com/hm.js?340874ba9357cbe81570aa4ac1185941";
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
-    })();
-  </script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
 
 
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
 
 
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
 </head>
-
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
-
-  
-  
-    
-  
-
-  <div class="container sidebar-position-left page-post-detail">
-    <div class="headband"></div>
-
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta ">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">LawTech's Blog</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.svg" alt="Python分布式爬虫打造搜索引擎项目学习笔记——Requests模拟登录知乎" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="Search" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
     </div>
-      
-        <p class="site-subtitle">不破不立</p>
-      
-  </div>
-
-  <div class="site-nav-toggle">
-    <button>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
-  </div>
-</div>
-
-<nav class="site-nav">
-  
-
-  
-    <ul id="menu" class="menu">
-      
-        
-        <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
-            
-            首页
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-about">
-          <a href="/about/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
-            
-            关于
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-tags">
-          <a href="/tags/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
-            
-            标签
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-categories">
-          <a href="/categories/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
-            
-            分类
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-archives">
-          <a href="/archives/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
-            
-            归档
-          </a>
-        </li>
-      
-
-      
-    </ul>
-  
-
-  
 </nav>
-
-
-
- </div>
-    </header>
-
-    <main id="main" class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          <div id="content" class="content">
-            
-
-  <div id="posts" class="posts-expand">
     
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/11/scrapy-requests-zhihu-login/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="LawTech.">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="LawTech's Blog">
-    </span>
-
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
     
-      <header class="post-header">
-
+    <div class="card-content article ">
         
-        
-          <h1 class="post-title" itemprop="name headline">Python分布式爬虫打造搜索引擎项目学习笔记——Requests模拟登录知乎</h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-11T14:18:54+08:00">
-                2017-05-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Scrapy/" itemprop="url" rel="index">
-                    <span itemprop="name">Scrapy</span>
-                  </a>
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-05-11T06:18:54.000Z">2017-05-11</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Scrapy/">Scrapy</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    9 minutes read (About 1353 words)
                 </span>
-
                 
                 
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/05/11/scrapy-requests-zhihu-login/" class="leancloud_visitors" data-flag-title="Python分布式爬虫打造搜索引擎项目学习笔记——Requests模拟登录知乎">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-            <span class="post-meta-divider">|</span>
-            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
-            </span>
-          
-
-          
-
-          
-
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span> visits
+                </span>
+                
+            </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
-          
-          
-            <div class="post-gallery-row">
-              <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjwg43lgf006duedloua1ilqn"
-                 itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
-                <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
-              </a>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-          
-
-          
-          </div>
-        </div>
-      
-
-      
-        <p><a href="http://docs.python-requests.org/zh_CN/latest/index.html" target="_blank" rel="noopener">Requests</a> 是以 <a href="http://www.python.org/dev/peps/pep-0020" target="_blank" rel="noopener">PEP 20</a> 的箴言为中心开发的</p>
+                Python分布式爬虫打造搜索引擎项目学习笔记——Requests模拟登录知乎
+            
+        </h1>
+        <div class="content">
+            <p><a href="http://docs.python-requests.org/zh_CN/latest/index.html" target="_blank" rel="noopener">Requests</a> 是以 <a href="http://www.python.org/dev/peps/pep-0020" target="_blank" rel="noopener">PEP 20</a> 的箴言为中心开发的</p>
 <ol>
 <li>Beautiful is better than ugly.(美丽优于丑陋)</li>
 <li>Explicit is better than implicit.(直白优于含蓄)</li>
@@ -407,6 +186,7 @@
 <li>Readability counts.(可读性很重要)</li>
 </ol>
 <a id="more"></a>
+
 <h2 id="常见状态码"><a href="#常见状态码" class="headerlink" title="常见状态码"></a><strong>常见状态码</strong></h2><table>
 <thead>
 <tr>
@@ -414,8 +194,7 @@
 <th>说明</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>200</td>
 <td>请求被正确执行</td>
 </tr>
@@ -439,610 +218,1512 @@
 <td>503</td>
 <td>服务器停机或正在维护</td>
 </tr>
-</tbody>
-</table>
-<h2 id="登录分析"><a href="#登录分析" class="headerlink" title="登录分析"></a><strong>登录分析</strong></h2><p><img src="http://ww2.sinaimg.cn/large/006tNbRwgy1ffikxe4s70j30lo05sjsg.jpg" alt="">在登录界面，输入手机号和密码，返回的地址为 <code>Request URL:https://www.zhihu.com/login/phone_num</code><br>当输入email地址后返回的地址为 <code>Request URL:https://www.zhihu.com/login/email</code><br>并且在formdata中出现 <code>_xsrf:a71f46d549979fa192c09e11e4a463b5</code> 这样的字符串。</p>
-<p><img src="http://ww1.sinaimg.cn/large/006tNbRwgy1ffiky17f7cj30uk05mabd.jpg" alt=""></p>
+</tbody></table>
+<h2 id="登录分析"><a href="#登录分析" class="headerlink" title="登录分析"></a><strong>登录分析</strong></h2><p><img src="http://ww2.sinaimg.cn/large/006tNbRwgy1ffikxe4s70j30lo05sjsg.jpg" alt>在登录界面，输入手机号和密码，返回的地址为 <code>Request URL:https://www.zhihu.com/login/phone_num</code><br>当输入email地址后返回的地址为 <code>Request URL:https://www.zhihu.com/login/email</code><br>并且在formdata中出现 <code>_xsrf:a71f46d549979fa192c09e11e4a463b5</code> 这样的字符串。</p>
+<p><img src="http://ww1.sinaimg.cn/large/006tNbRwgy1ffiky17f7cj30uk05mabd.jpg" alt></p>
 <h2 id="抓取xsrf的值"><a href="#抓取xsrf的值" class="headerlink" title="抓取xsrf的值"></a><strong>抓取xsrf的值</strong></h2><p>正则匹配抓取xsrf需要使用header头来进行源代码的获取：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_xsrf</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    获取xsrf code</span></span><br><span class="line"><span class="string">    :return: xsrf code</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    response = requests.get(<span class="string">"https://www.zhihu.com"</span>, headers=headers)</span><br><span class="line">    match_obj = re.match(<span class="string">'.*name="_xsrf" value="(.*?)"'</span>, response.text)</span><br><span class="line">    <span class="keyword">if</span> match_obj:</span><br><span class="line">        print(match_obj.group(<span class="number">1</span>))</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">""</span></span><br></pre></td></tr></table></figure>
-<h2 id="验证码获取"><a href="#验证码获取" class="headerlink" title="验证码获取"></a><strong>验证码获取</strong></h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_captcha</span><span class="params">()</span>:</span></span><br><span class="line">    t = str(int(time.time() * <span class="number">1000</span>))</span><br><span class="line">    captcha_url = <span class="string">'https://www.zhihu.com/captcha.gif?r='</span> + t + <span class="string">"&amp;type=login"</span></span><br><span class="line">    r = session.get(captcha_url, headers=headers)</span><br><span class="line">    <span class="keyword">with</span> open(<span class="string">'captcha.jpg'</span>, <span class="string">'wb'</span>) <span class="keyword">as</span> f:</span><br><span class="line">        f.write(r.content)</span><br><span class="line">        f.close()</span><br><span class="line">    im = Image.open(<span class="string">'captcha.jpg'</span>)</span><br><span class="line">    im.show()</span><br><span class="line">    im.close()</span><br><span class="line">    captcha = input(<span class="string">"请输入验证码：\n"</span>)</span><br><span class="line">    <span class="keyword">return</span> captcha</span><br></pre></td></tr></table></figure>
-<h2 id="登录逻辑"><a href="#登录逻辑" class="headerlink" title="登录逻辑"></a><strong>登录逻辑</strong></h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">zhihu_login</span><span class="params">(account, password)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    知乎登录</span></span><br><span class="line"><span class="string">    :param account: </span></span><br><span class="line"><span class="string">    :param password: </span></span><br><span class="line"><span class="string">    :return: </span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="keyword">if</span> re.match(<span class="string">"^1\d&#123;10&#125;$"</span>, account):</span><br><span class="line">        print(<span class="string">"手机号码登录 \n"</span>)</span><br><span class="line">        post_url = <span class="string">"https://www.zhihu.com/login/phone_num"</span></span><br><span class="line">        post_data = &#123;</span><br><span class="line">            <span class="string">"_xsrf"</span>: get_xsrf(),</span><br><span class="line">            <span class="string">"phone_num"</span>: account,</span><br><span class="line">            <span class="string">"password"</span>: password</span><br><span class="line">        &#125;</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">if</span> <span class="string">"@"</span> <span class="keyword">in</span> account:</span><br><span class="line">            print(<span class="string">"邮箱登录 \n"</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            print(<span class="string">"你的账号输入有问题，请重新登录"</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        post_url = <span class="string">'https://www.zhihu.com/login/email'</span></span><br><span class="line">        post_data = &#123;</span><br><span class="line">            <span class="string">'_xsrf'</span>: get_xsrf(),</span><br><span class="line">            <span class="string">'password'</span>: password,</span><br><span class="line">            <span class="string">'email'</span>: account</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 不需要验证码直接登录成功</span></span><br><span class="line">    login_page = session.post(post_url, post_data, headers=headers)</span><br><span class="line">    login_code = login_page.json()</span><br><span class="line">    <span class="keyword">if</span> login_code[<span class="string">'r'</span>] == <span class="number">1</span>:</span><br><span class="line">        <span class="comment"># 不输入验证码登录失败</span></span><br><span class="line">        <span class="comment"># 使用需要输入验证码的方式登录</span></span><br><span class="line">        post_data[<span class="string">"captcha"</span>] = get_captcha()</span><br><span class="line">        login_page = session.post(post_url, post_data, headers=headers)</span><br><span class="line">        login_code = login_page.json()</span><br><span class="line">        print(login_code[<span class="string">'msg'</span>])</span><br><span class="line">    <span class="comment"># 保存 cookies 到文件，</span></span><br><span class="line">    <span class="comment"># 下次可以使用 cookie 直接登录，不需要输入账号和密码</span></span><br><span class="line">    session.cookies.save()</span><br></pre></td></tr></table></figure>
+<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_xsrf</span><span class="hljs-params">()</span>:</span></span><br><span class="line">    <span class="hljs-string">"""</span></span><br><span class="line"><span class="hljs-string">    获取xsrf code</span></span><br><span class="line"><span class="hljs-string">    :return: xsrf code</span></span><br><span class="line"><span class="hljs-string">    """</span></span><br><span class="line">    response = requests.get(<span class="hljs-string">"https://www.zhihu.com"</span>, headers=headers)</span><br><span class="line">    match_obj = re.match(<span class="hljs-string">'.*name="_xsrf" value="(.*?)"'</span>, response.text)</span><br><span class="line">    <span class="hljs-keyword">if</span> match_obj:</span><br><span class="line">        print(match_obj.group(<span class="hljs-number">1</span>))</span><br><span class="line">    <span class="hljs-keyword">else</span>:</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-string">""</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="验证码获取"><a href="#验证码获取" class="headerlink" title="验证码获取"></a><strong>验证码获取</strong></h2><figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_captcha</span><span class="hljs-params">()</span>:</span></span><br><span class="line">    t = str(int(time.time() * <span class="hljs-number">1000</span>))</span><br><span class="line">    captcha_url = <span class="hljs-string">'https://www.zhihu.com/captcha.gif?r='</span> + t + <span class="hljs-string">"&amp;type=login"</span></span><br><span class="line">    r = session.get(captcha_url, headers=headers)</span><br><span class="line">    <span class="hljs-keyword">with</span> open(<span class="hljs-string">'captcha.jpg'</span>, <span class="hljs-string">'wb'</span>) <span class="hljs-keyword">as</span> f:</span><br><span class="line">        f.write(r.content)</span><br><span class="line">        f.close()</span><br><span class="line">    im = Image.open(<span class="hljs-string">'captcha.jpg'</span>)</span><br><span class="line">    im.show()</span><br><span class="line">    im.close()</span><br><span class="line">    captcha = input(<span class="hljs-string">"请输入验证码：\n"</span>)</span><br><span class="line">    <span class="hljs-keyword">return</span> captcha</span><br></pre></td></tr></table></figure>
+
+<h2 id="登录逻辑"><a href="#登录逻辑" class="headerlink" title="登录逻辑"></a><strong>登录逻辑</strong></h2><figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">zhihu_login</span><span class="hljs-params">(account, password)</span>:</span></span><br><span class="line">    <span class="hljs-string">"""</span></span><br><span class="line"><span class="hljs-string">    知乎登录</span></span><br><span class="line"><span class="hljs-string">    :param account: </span></span><br><span class="line"><span class="hljs-string">    :param password: </span></span><br><span class="line"><span class="hljs-string">    :return: </span></span><br><span class="line"><span class="hljs-string">    """</span></span><br><span class="line">    <span class="hljs-keyword">if</span> re.match(<span class="hljs-string">"^1\d&#123;10&#125;$"</span>, account):</span><br><span class="line">        print(<span class="hljs-string">"手机号码登录 \n"</span>)</span><br><span class="line">        post_url = <span class="hljs-string">"https://www.zhihu.com/login/phone_num"</span></span><br><span class="line">        post_data = &#123;</span><br><span class="line">            <span class="hljs-string">"_xsrf"</span>: get_xsrf(),</span><br><span class="line">            <span class="hljs-string">"phone_num"</span>: account,</span><br><span class="line">            <span class="hljs-string">"password"</span>: password</span><br><span class="line">        &#125;</span><br><span class="line">    <span class="hljs-keyword">else</span>:</span><br><span class="line">        <span class="hljs-keyword">if</span> <span class="hljs-string">"@"</span> <span class="hljs-keyword">in</span> account:</span><br><span class="line">            print(<span class="hljs-string">"邮箱登录 \n"</span>)</span><br><span class="line">        <span class="hljs-keyword">else</span>:</span><br><span class="line">            print(<span class="hljs-string">"你的账号输入有问题，请重新登录"</span>)</span><br><span class="line">            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span></span><br><span class="line">        post_url = <span class="hljs-string">'https://www.zhihu.com/login/email'</span></span><br><span class="line">        post_data = &#123;</span><br><span class="line">            <span class="hljs-string">'_xsrf'</span>: get_xsrf(),</span><br><span class="line">            <span class="hljs-string">'password'</span>: password,</span><br><span class="line">            <span class="hljs-string">'email'</span>: account</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment"># 不需要验证码直接登录成功</span></span><br><span class="line">    login_page = session.post(post_url, post_data, headers=headers)</span><br><span class="line">    login_code = login_page.json()</span><br><span class="line">    <span class="hljs-keyword">if</span> login_code[<span class="hljs-string">'r'</span>] == <span class="hljs-number">1</span>:</span><br><span class="line">        <span class="hljs-comment"># 不输入验证码登录失败</span></span><br><span class="line">        <span class="hljs-comment"># 使用需要输入验证码的方式登录</span></span><br><span class="line">        post_data[<span class="hljs-string">"captcha"</span>] = get_captcha()</span><br><span class="line">        login_page = session.post(post_url, post_data, headers=headers)</span><br><span class="line">        login_code = login_page.json()</span><br><span class="line">        print(login_code[<span class="hljs-string">'msg'</span>])</span><br><span class="line">    <span class="hljs-comment"># 保存 cookies 到文件，</span></span><br><span class="line">    <span class="hljs-comment"># 下次可以使用 cookie 直接登录，不需要输入账号和密码</span></span><br><span class="line">    session.cookies.save()</span><br></pre></td></tr></table></figure>
+
 <p>以上代码是通过引入requests库，使用它的session方法，进行连接，构造post_data，把自己的用户名密码等信息发送到网站，并通过正则判断发送的是邮箱或是手机进行登录。<br>引入<code>import http.cookiejar as cookielib</code>，通过session.cookies.save()，对cookie进行保存。</p>
-<h2 id="通过Cookie登录"><a href="#通过Cookie登录" class="headerlink" title="通过Cookie登录"></a><strong>通过Cookie登录</strong></h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用登录cookie信息</span></span><br><span class="line">session = requests.session()</span><br><span class="line">session.cookies = cookielib.LWPCookieJar(filename=<span class="string">"cookies.txt"</span>)</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    session.cookies.load(ignore_discard=<span class="keyword">True</span>)</span><br><span class="line"><span class="keyword">except</span>:</span><br><span class="line">    print(<span class="string">"Cookie未能加载"</span>)</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">is_login</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    通过查看用户个人信息来判断是否已经登录</span></span><br><span class="line"><span class="string">    :return: </span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    url = <span class="string">"https://www.zhihu.com/settings/profile"</span></span><br><span class="line">    response = session.get(url, headers=headers, allow_redirects=<span class="keyword">False</span>)</span><br><span class="line">    <span class="keyword">if</span> response.status_code == <span class="number">200</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">True</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">False</span></span><br></pre></td></tr></table></figure>
+<h2 id="通过Cookie登录"><a href="#通过Cookie登录" class="headerlink" title="通过Cookie登录"></a><strong>通过Cookie登录</strong></h2><figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment"># 使用登录cookie信息</span></span><br><span class="line">session = requests.session()</span><br><span class="line">session.cookies = cookielib.LWPCookieJar(filename=<span class="hljs-string">"cookies.txt"</span>)</span><br><span class="line"><span class="hljs-keyword">try</span>:</span><br><span class="line">    session.cookies.load(ignore_discard=<span class="hljs-literal">True</span>)</span><br><span class="line"><span class="hljs-keyword">except</span>:</span><br><span class="line">    print(<span class="hljs-string">"Cookie未能加载"</span>)</span><br><span class="line">    </span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">is_login</span><span class="hljs-params">()</span>:</span></span><br><span class="line">    <span class="hljs-string">"""</span></span><br><span class="line"><span class="hljs-string">    通过查看用户个人信息来判断是否已经登录</span></span><br><span class="line"><span class="hljs-string">    :return: </span></span><br><span class="line"><span class="hljs-string">    """</span></span><br><span class="line">    url = <span class="hljs-string">"https://www.zhihu.com/settings/profile"</span></span><br><span class="line">    response = session.get(url, headers=headers, allow_redirects=<span class="hljs-literal">False</span>)</span><br><span class="line">    <span class="hljs-keyword">if</span> response.status_code == <span class="hljs-number">200</span>:</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-literal">True</span></span><br><span class="line">    <span class="hljs-keyword">else</span>:</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span></span><br></pre></td></tr></table></figure>
+
 <p>登录只能一次，如果再次登录，可以直接通过查看cookie来判断是否为登录状态。</p>
 <p>首先把cookie通过session.cookies.load装载进来，执行is_login()函数，如果成功可以访问inbox_url页面，则状态码为200表示成功。这里一定要注意allow_redirects=False，当不允许且登录时会自动跳转到登录页面，则状态码是301或者302。</p>
-<h2 id="完整代码示例"><a href="#完整代码示例" class="headerlink" title="完整代码示例"></a><strong>完整代码示例</strong></h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># _*_ coding: utf-8 _*_</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">__author__ = 'lawtech'</span></span><br><span class="line"><span class="string">__date__ = '2017/5/9 下午3:18'</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    <span class="keyword">import</span> cookielib</span><br><span class="line"><span class="keyword">except</span>:</span><br><span class="line">    <span class="keyword">import</span> http.cookiejar <span class="keyword">as</span> cookielib</span><br><span class="line"></span><br><span class="line"><span class="comment"># 构造requests headers</span></span><br><span class="line">agent = <span class="string">'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.96 Safari/537.36'</span></span><br><span class="line">headers = &#123;</span><br><span class="line">    <span class="string">"Host"</span>: <span class="string">"www.zhihu.com"</span>,</span><br><span class="line">    <span class="string">"Referer"</span>: <span class="string">"https://www.zhihu.com/"</span>,</span><br><span class="line">    <span class="string">'User-Agent'</span>: agent</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用登录cookie信息</span></span><br><span class="line">session = requests.session()</span><br><span class="line">session.cookies = cookielib.LWPCookieJar(filename=<span class="string">"cookies.txt"</span>)</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    session.cookies.load(ignore_discard=<span class="keyword">True</span>)</span><br><span class="line"><span class="keyword">except</span>:</span><br><span class="line">    print(<span class="string">"Cookie未能加载"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_xsrf</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    获取xsrf code</span></span><br><span class="line"><span class="string">    :return: xsrf code</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    response = requests.get(<span class="string">"https://www.zhihu.com"</span>, headers=headers)</span><br><span class="line">    match_obj = re.match(<span class="string">'.*name="_xsrf" value="(.*?)"'</span>, response.text)</span><br><span class="line">    <span class="keyword">if</span> match_obj:</span><br><span class="line">        print(match_obj.group(<span class="number">1</span>))</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">""</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_captcha</span><span class="params">()</span>:</span></span><br><span class="line">    t = str(int(time.time() * <span class="number">1000</span>))</span><br><span class="line">    captcha_url = <span class="string">'https://www.zhihu.com/captcha.gif?r='</span> + t + <span class="string">"&amp;type=login"</span></span><br><span class="line">    r = session.get(captcha_url, headers=headers)</span><br><span class="line">    <span class="keyword">with</span> open(<span class="string">'captcha.jpg'</span>, <span class="string">'wb'</span>) <span class="keyword">as</span> f:</span><br><span class="line">        f.write(r.content)</span><br><span class="line">        f.close()</span><br><span class="line">    im = Image.open(<span class="string">'captcha.jpg'</span>)</span><br><span class="line">    im.show()</span><br><span class="line">    im.close()</span><br><span class="line">    captcha = input(<span class="string">"请输入验证码：\n"</span>)</span><br><span class="line">    <span class="keyword">return</span> captcha</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">zhihu_login</span><span class="params">(account, password)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    知乎登录</span></span><br><span class="line"><span class="string">    :param account: </span></span><br><span class="line"><span class="string">    :param password: </span></span><br><span class="line"><span class="string">    :return: </span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="keyword">if</span> re.match(<span class="string">"^1\d&#123;10&#125;$"</span>, account):</span><br><span class="line">        print(<span class="string">"手机号码登录 \n"</span>)</span><br><span class="line">        post_url = <span class="string">"https://www.zhihu.com/login/phone_num"</span></span><br><span class="line">        post_data = &#123;</span><br><span class="line">            <span class="string">"_xsrf"</span>: get_xsrf(),</span><br><span class="line">            <span class="string">"phone_num"</span>: account,</span><br><span class="line">            <span class="string">"password"</span>: password</span><br><span class="line">        &#125;</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">if</span> <span class="string">"@"</span> <span class="keyword">in</span> account:</span><br><span class="line">            print(<span class="string">"邮箱登录 \n"</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            print(<span class="string">"你的账号输入有问题，请重新登录"</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        post_url = <span class="string">'https://www.zhihu.com/login/email'</span></span><br><span class="line">        post_data = &#123;</span><br><span class="line">            <span class="string">'_xsrf'</span>: get_xsrf(),</span><br><span class="line">            <span class="string">'password'</span>: password,</span><br><span class="line">            <span class="string">'email'</span>: account</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 不需要验证码直接登录成功</span></span><br><span class="line">    login_page = session.post(post_url, post_data, headers=headers)</span><br><span class="line">    login_code = login_page.json()</span><br><span class="line">    <span class="keyword">if</span> login_code[<span class="string">'r'</span>] == <span class="number">1</span>:</span><br><span class="line">        <span class="comment"># 不输入验证码登录失败</span></span><br><span class="line">        <span class="comment"># 使用需要输入验证码的方式登录</span></span><br><span class="line">        post_data[<span class="string">"captcha"</span>] = get_captcha()</span><br><span class="line">        login_page = session.post(post_url, post_data, headers=headers)</span><br><span class="line">        login_code = login_page.json()</span><br><span class="line">        print(login_code[<span class="string">'msg'</span>])</span><br><span class="line">    <span class="comment"># 保存 cookies 到文件，</span></span><br><span class="line">    <span class="comment"># 下次可以使用 cookie 直接登录，不需要输入账号和密码</span></span><br><span class="line">    session.cookies.save()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">is_login</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    通过查看用户个人信息来判断是否已经登录</span></span><br><span class="line"><span class="string">    :return: </span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    url = <span class="string">"https://www.zhihu.com/settings/profile"</span></span><br><span class="line">    response = session.get(url, headers=headers, allow_redirects=<span class="keyword">False</span>)</span><br><span class="line">    <span class="keyword">if</span> response.status_code == <span class="number">200</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">True</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">False</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    <span class="keyword">if</span> is_login():</span><br><span class="line">        print(<span class="string">"您已经登录！"</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        account = input(<span class="string">"请输入用户名：\n"</span>)</span><br><span class="line">        password = input(<span class="string">"请输入密码：\n"</span>)</span><br><span class="line">        zhihu_login(account, password)</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-      <div>
-        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
-  <div>🐶 ~怕是要给老板下跪了哦~ 🐶</div>
-  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
-    <span>打赏</span>
-  </button>
-  <div id="QR" style="display: none;">
-
-    
-      <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="/images/wechat-reward-img.jpg" alt="LawTech. 微信支付"/>
-        <p>微信支付</p>
-      </div>
-    
-
-    
-      <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="/images/alipay-reward-img.jpg" alt="LawTech. 支付宝"/>
-        <p>支付宝</p>
-      </div>
-    
-
-    
-
-  </div>
-</div>
-
-      </div>
-    
-
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/Scrapy，Requests，Python/" rel="tag"># Scrapy，Requests，Python</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2017/05/09/scrapy-session-cookie/" rel="next" title="Python分布式爬虫打造搜索引擎项目学习笔记——理解Session和Cookie机制">
-                <i class="fa fa-chevron-left"></i> Python分布式爬虫打造搜索引擎项目学习笔记——理解Session和Cookie机制
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/05/11/scrapy-login-zhihu/" rel="prev" title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy模拟登录知乎">
-                Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy模拟登录知乎 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-
-    <div class="post-spread">
-      
-    </div>
-  </div>
-
-
-          </div>
-          
-
-
-          
-
-  
-
-
-
+<h2 id="完整代码示例"><a href="#完整代码示例" class="headerlink" title="完整代码示例"></a><strong>完整代码示例</strong></h2><figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment"># _*_ coding: utf-8 _*_</span></span><br><span class="line"><span class="hljs-string">"""</span></span><br><span class="line"><span class="hljs-string">__author__ = 'lawtech'</span></span><br><span class="line"><span class="hljs-string">__date__ = '2017/5/9 下午3:18'</span></span><br><span class="line"><span class="hljs-string">"""</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">import</span> re</span><br><span class="line"><span class="hljs-keyword">import</span> requests</span><br><span class="line"><span class="hljs-keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">from</span> PIL <span class="hljs-keyword">import</span> Image</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">try</span>:</span><br><span class="line">    <span class="hljs-keyword">import</span> cookielib</span><br><span class="line"><span class="hljs-keyword">except</span>:</span><br><span class="line">    <span class="hljs-keyword">import</span> http.cookiejar <span class="hljs-keyword">as</span> cookielib</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># 构造requests headers</span></span><br><span class="line">agent = <span class="hljs-string">'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.96 Safari/537.36'</span></span><br><span class="line">headers = &#123;</span><br><span class="line">    <span class="hljs-string">"Host"</span>: <span class="hljs-string">"www.zhihu.com"</span>,</span><br><span class="line">    <span class="hljs-string">"Referer"</span>: <span class="hljs-string">"https://www.zhihu.com/"</span>,</span><br><span class="line">    <span class="hljs-string">'User-Agent'</span>: agent</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># 使用登录cookie信息</span></span><br><span class="line">session = requests.session()</span><br><span class="line">session.cookies = cookielib.LWPCookieJar(filename=<span class="hljs-string">"cookies.txt"</span>)</span><br><span class="line"><span class="hljs-keyword">try</span>:</span><br><span class="line">    session.cookies.load(ignore_discard=<span class="hljs-literal">True</span>)</span><br><span class="line"><span class="hljs-keyword">except</span>:</span><br><span class="line">    print(<span class="hljs-string">"Cookie未能加载"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_xsrf</span><span class="hljs-params">()</span>:</span></span><br><span class="line">    <span class="hljs-string">"""</span></span><br><span class="line"><span class="hljs-string">    获取xsrf code</span></span><br><span class="line"><span class="hljs-string">    :return: xsrf code</span></span><br><span class="line"><span class="hljs-string">    """</span></span><br><span class="line">    response = requests.get(<span class="hljs-string">"https://www.zhihu.com"</span>, headers=headers)</span><br><span class="line">    match_obj = re.match(<span class="hljs-string">'.*name="_xsrf" value="(.*?)"'</span>, response.text)</span><br><span class="line">    <span class="hljs-keyword">if</span> match_obj:</span><br><span class="line">        print(match_obj.group(<span class="hljs-number">1</span>))</span><br><span class="line">    <span class="hljs-keyword">else</span>:</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-string">""</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_captcha</span><span class="hljs-params">()</span>:</span></span><br><span class="line">    t = str(int(time.time() * <span class="hljs-number">1000</span>))</span><br><span class="line">    captcha_url = <span class="hljs-string">'https://www.zhihu.com/captcha.gif?r='</span> + t + <span class="hljs-string">"&amp;type=login"</span></span><br><span class="line">    r = session.get(captcha_url, headers=headers)</span><br><span class="line">    <span class="hljs-keyword">with</span> open(<span class="hljs-string">'captcha.jpg'</span>, <span class="hljs-string">'wb'</span>) <span class="hljs-keyword">as</span> f:</span><br><span class="line">        f.write(r.content)</span><br><span class="line">        f.close()</span><br><span class="line">    im = Image.open(<span class="hljs-string">'captcha.jpg'</span>)</span><br><span class="line">    im.show()</span><br><span class="line">    im.close()</span><br><span class="line">    captcha = input(<span class="hljs-string">"请输入验证码：\n"</span>)</span><br><span class="line">    <span class="hljs-keyword">return</span> captcha</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">zhihu_login</span><span class="hljs-params">(account, password)</span>:</span></span><br><span class="line">    <span class="hljs-string">"""</span></span><br><span class="line"><span class="hljs-string">    知乎登录</span></span><br><span class="line"><span class="hljs-string">    :param account: </span></span><br><span class="line"><span class="hljs-string">    :param password: </span></span><br><span class="line"><span class="hljs-string">    :return: </span></span><br><span class="line"><span class="hljs-string">    """</span></span><br><span class="line">    <span class="hljs-keyword">if</span> re.match(<span class="hljs-string">"^1\d&#123;10&#125;$"</span>, account):</span><br><span class="line">        print(<span class="hljs-string">"手机号码登录 \n"</span>)</span><br><span class="line">        post_url = <span class="hljs-string">"https://www.zhihu.com/login/phone_num"</span></span><br><span class="line">        post_data = &#123;</span><br><span class="line">            <span class="hljs-string">"_xsrf"</span>: get_xsrf(),</span><br><span class="line">            <span class="hljs-string">"phone_num"</span>: account,</span><br><span class="line">            <span class="hljs-string">"password"</span>: password</span><br><span class="line">        &#125;</span><br><span class="line">    <span class="hljs-keyword">else</span>:</span><br><span class="line">        <span class="hljs-keyword">if</span> <span class="hljs-string">"@"</span> <span class="hljs-keyword">in</span> account:</span><br><span class="line">            print(<span class="hljs-string">"邮箱登录 \n"</span>)</span><br><span class="line">        <span class="hljs-keyword">else</span>:</span><br><span class="line">            print(<span class="hljs-string">"你的账号输入有问题，请重新登录"</span>)</span><br><span class="line">            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span></span><br><span class="line">        post_url = <span class="hljs-string">'https://www.zhihu.com/login/email'</span></span><br><span class="line">        post_data = &#123;</span><br><span class="line">            <span class="hljs-string">'_xsrf'</span>: get_xsrf(),</span><br><span class="line">            <span class="hljs-string">'password'</span>: password,</span><br><span class="line">            <span class="hljs-string">'email'</span>: account</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment"># 不需要验证码直接登录成功</span></span><br><span class="line">    login_page = session.post(post_url, post_data, headers=headers)</span><br><span class="line">    login_code = login_page.json()</span><br><span class="line">    <span class="hljs-keyword">if</span> login_code[<span class="hljs-string">'r'</span>] == <span class="hljs-number">1</span>:</span><br><span class="line">        <span class="hljs-comment"># 不输入验证码登录失败</span></span><br><span class="line">        <span class="hljs-comment"># 使用需要输入验证码的方式登录</span></span><br><span class="line">        post_data[<span class="hljs-string">"captcha"</span>] = get_captcha()</span><br><span class="line">        login_page = session.post(post_url, post_data, headers=headers)</span><br><span class="line">        login_code = login_page.json()</span><br><span class="line">        print(login_code[<span class="hljs-string">'msg'</span>])</span><br><span class="line">    <span class="hljs-comment"># 保存 cookies 到文件，</span></span><br><span class="line">    <span class="hljs-comment"># 下次可以使用 cookie 直接登录，不需要输入账号和密码</span></span><br><span class="line">    session.cookies.save()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">is_login</span><span class="hljs-params">()</span>:</span></span><br><span class="line">    <span class="hljs-string">"""</span></span><br><span class="line"><span class="hljs-string">    通过查看用户个人信息来判断是否已经登录</span></span><br><span class="line"><span class="hljs-string">    :return: </span></span><br><span class="line"><span class="hljs-string">    """</span></span><br><span class="line">    url = <span class="hljs-string">"https://www.zhihu.com/settings/profile"</span></span><br><span class="line">    response = session.get(url, headers=headers, allow_redirects=<span class="hljs-literal">False</span>)</span><br><span class="line">    <span class="hljs-keyword">if</span> response.status_code == <span class="hljs-number">200</span>:</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-literal">True</span></span><br><span class="line">    <span class="hljs-keyword">else</span>:</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:</span><br><span class="line">    <span class="hljs-keyword">if</span> is_login():</span><br><span class="line">        print(<span class="hljs-string">"您已经登录！"</span>)</span><br><span class="line">    <span class="hljs-keyword">else</span>:</span><br><span class="line">        account = input(<span class="hljs-string">"请输入用户名：\n"</span>)</span><br><span class="line">        password = input(<span class="hljs-string">"请输入密码：\n"</span>)</span><br><span class="line">        zhihu_login(account, password)</span><br></pre></td></tr></table></figure>
         </div>
         
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Scrapy，Requests，Python/">Scrapy，Requests，Python</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
     </div>
-  </div>
+</div>
 
-  <aside id="sidebar" class="sidebar">
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">Like this article? Support the author with</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                <!-- Visit https://www.paypal.com/donate/buttons/ to get your donate button -->
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2017/05/11/scrapy-login-zhihu/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy模拟登录知乎</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2017/05/09/scrapy-session-cookie/">
+                <span class="level-item">Python分布式爬虫打造搜索引擎项目学习笔记——理解Session和Cookie机制</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
     
-    <div class="sidebar-inner">
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg" alt="LawTech">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        LawTech
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        CR7 is best!
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Nanjing, Jiangsu</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        Posts
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        67
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        Categories
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        13
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        Tags
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        27
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/lawtech0902" target="_blank">
+                Follow</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="https://github.com/lawtech0902">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Facebook" href="https://facebook.com">
+                
+                <i class="fab fa-facebook"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Twitter" href="https://twitter.com">
+                
+                <i class="fab fa-twitter"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Dribbble" href="/">
+                
+                <i class="fab fa-dribbble"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="RSS" href="/">
+                
+                <i class="fas fa-rss"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+        
 
-      
-
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            Links
+        </h3>
+        <ul class="menu-list">
+        
+            <li>
+                <a class="level is-mobile" href="https://hexo.io" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">Hexo</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">hexo.io</span>
+                    </span>
+                </a>
+            </li>
+        
+            <li>
+                <a class="level is-mobile" href="https://github.com/ppoffice" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">PPOffice</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">github.com</span>
+                    </span>
+                </a>
+            </li>
+        
         </ul>
-      
-
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-            
-              <img class="site-author-image" itemprop="image"
-                src="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg"
-                alt="LawTech." />
-            
-              <p class="site-author-name" itemprop="name">LawTech.</p>
-              <p class="site-description motion-element" itemprop="description">破邮python爱好者。</p>
-          </div>
-
-          <nav class="site-state motion-element">
-
-            
-              <div class="site-state-item site-state-posts">
-              
-                <a href="/archives/">
-              
-                  <span class="site-state-item-count">67</span>
-                  <span class="site-state-item-name">日志</span>
-                </a>
-              </div>
-            
-
-            
-              
-              
-              <div class="site-state-item site-state-categories">
-                <a href="/categories/index.html">
-                  <span class="site-state-item-count">13</span>
-                  <span class="site-state-item-name">分类</span>
-                </a>
-              </div>
-            
-
-            
-              
-              
-              <div class="site-state-item site-state-tags">
-                <a href="/tags/index.html">
-                  <span class="site-state-item-count">27</span>
-                  <span class="site-state-item-name">标签</span>
-                </a>
-              </div>
-            
-
-          </nav>
-
-          
-            <div class="feed-link motion-element">
-              <a href="/atom.xml" rel="alternate">
-                <i class="fa fa-rss"></i>
-                RSS
-              </a>
-            </div>
-          
-
-          
-            <div class="links-of-author motion-element">
-                
-                  <span class="links-of-author-item">
-                    <a href="https://github.com/lawtech0902" target="_blank" title="GitHub">
-                      
-                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
-                  </span>
-                
-                  <span class="links-of-author-item">
-                    <a href="http://weibo.com/LawRev1s1on" target="_blank" title="weibo">
-                      
-                        <i class="fa fa-fw fa-globe"></i>weibo</a>
-                  </span>
-                
-            </div>
-          
-
-          
-          
-
-          
-          
-
-          
-
         </div>
-      </section>
-
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#常见状态码"><span class="nav-number">1.</span> <span class="nav-text">常见状态码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#登录分析"><span class="nav-number">2.</span> <span class="nav-text">登录分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#抓取xsrf的值"><span class="nav-number">3.</span> <span class="nav-text">抓取xsrf的值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#验证码获取"><span class="nav-number">4.</span> <span class="nav-text">验证码获取</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#登录逻辑"><span class="nav-number">5.</span> <span class="nav-text">登录逻辑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过Cookie登录"><span class="nav-number">6.</span> <span class="nav-text">通过Cookie登录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#完整代码示例"><span class="nav-number">7.</span> <span class="nav-text">完整代码示例</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
-      
-
-      
-
     </div>
-  </aside>
-
-
-        
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
-  <span class="with-love">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">LawTech.</span>
-
-  
 </div>
 
 
-  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
-
-
-
-  <span class="post-meta-divider">|</span>
-
-
-
-  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
-
-
-
-
+    
         
-<div class="busuanzi-count">
-  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-  
-    <span class="site-uv">
-      <i class="fa fa-user"></i> 访问人数
-      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
-      
-    </span>
-  
-
-  
-    <span class="site-pv">
-      <i class="fa fa-eye"></i> 总访问量
-      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-      次
-    </span>
-  
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                Categories
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/Basic-knowledge/">
+            <span class="level-start">
+                <span class="level-item">Basic knowledge</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Django/">
+            <span class="level-start">
+                <span class="level-item">Django</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Django-Python/">
+            <span class="level-start">
+                <span class="level-item">Django, Python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Django，Vue/">
+            <span class="level-start">
+                <span class="level-item">Django，Vue</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Git/">
+            <span class="level-start">
+                <span class="level-item">Git</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Go/">
+            <span class="level-start">
+                <span class="level-item">Go</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/JWT/">
+            <span class="level-start">
+                <span class="level-item">JWT</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Nginx/">
+            <span class="level-start">
+                <span class="level-item">Nginx</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/RESTful/">
+            <span class="level-start">
+                <span class="level-item">RESTful</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Redis/">
+            <span class="level-start">
+                <span class="level-item">Redis</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Scrapy/">
+            <span class="level-start">
+                <span class="level-item">Scrapy</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">33</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/TensorFlow/">
+            <span class="level-start">
+                <span class="level-item">TensorFlow</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/essay/">
+            <span class="level-start">
+                <span class="level-item">essay</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            Tag Cloud
+        </h3>
+        <a href="/tags/12-05/" style="font-size: 10px;">12.05</a> <a href="/tags/Django/" style="font-size: 10px;">Django</a> <a href="/tags/Django-Centos/" style="font-size: 10px;">Django, Centos</a> <a href="/tags/Django-Centos-nginx-uwsgi/" style="font-size: 10px;">Django, Centos, nginx, uwsgi</a> <a href="/tags/Django-Python/" style="font-size: 10px;">Django, Python</a> <a href="/tags/Django，Celery/" style="font-size: 11.67px;">Django，Celery</a> <a href="/tags/Django，Mysql，Python/" style="font-size: 10px;">Django，Mysql，Python</a> <a href="/tags/Django，Vue，Rest/" style="font-size: 18.33px;">Django，Vue，Rest</a> <a href="/tags/Git/" style="font-size: 11.67px;">Git</a> <a href="/tags/Go/" style="font-size: 16.67px;">Go</a> <a href="/tags/Go，Mac，Privoxy/" style="font-size: 10px;">Go，Mac，Privoxy</a> <a href="/tags/Nginx/" style="font-size: 10px;">Nginx</a> <a href="/tags/Redis-Python/" style="font-size: 18.33px;">Redis, Python</a> <a href="/tags/Scrapy，CSS，Python/" style="font-size: 10px;">Scrapy，CSS，Python</a> <a href="/tags/Scrapy，Django，Python/" style="font-size: 10px;">Scrapy，Django，Python</a> <a href="/tags/Scrapy，Python/" style="font-size: 20px;">Scrapy，Python</a> <a href="/tags/Scrapy，Python-Elasticsearch/" style="font-size: 10px;">Scrapy，Python, Elasticsearch</a> <a href="/tags/Scrapy，Python，Django，Elasticsearch/" style="font-size: 10px;">Scrapy，Python，Django，Elasticsearch</a> <a href="/tags/Scrapy，Python，ElasticSearch/" style="font-size: 10px;">Scrapy，Python，ElasticSearch</a> <a href="/tags/Scrapy，Python，Redis/" style="font-size: 10px;">Scrapy，Python，Redis</a> <a href="/tags/Scrapy，Python，scrapyd/" style="font-size: 10px;">Scrapy，Python，scrapyd</a> <a href="/tags/Scrapy，Regular-Expression，Python/" style="font-size: 10px;">Scrapy，Regular Expression，Python</a> <a href="/tags/Scrapy，Requests，Python/" style="font-size: 15px;">Scrapy，Requests，Python</a> <a href="/tags/Scrapy，Unicode，Python/" style="font-size: 10px;">Scrapy，Unicode，Python</a> <a href="/tags/Scrapy，XPath，Python/" style="font-size: 11.67px;">Scrapy，XPath，Python</a> <a href="/tags/TensorFlow-GPU-Ubuntu-Cuda/" style="font-size: 10px;">TensorFlow, GPU, Ubuntu, Cuda</a> <a href="/tags/Web/" style="font-size: 13.33px;">Web</a>
+    </div>
 </div>
 
-
-
-
-
-  <script type="text/javascript">
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "//tajs.qq.com/stats?sId=61398861";
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
-    })();
-  </script>
-
-
-
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            Recent
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2018/07/10/golang-sync-map/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Golang sync.Map浅析">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-07-10T05:18:54.000Z">2018-07-10</time></div>
+                    <a href="/2018/07/10/golang-sync-map/" class="has-link-black-ter is-size-6">Golang sync.Map浅析</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Go/">Go</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/07/05/golang-coding-notations/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Golang编码规范">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-07-05T05:18:54.000Z">2018-07-05</time></div>
+                    <a href="/2018/07/05/golang-coding-notations/" class="has-link-black-ter is-size-6">Golang编码规范</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Go/">Go</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/07/03/golang-reflect/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Golang反射浅析">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-07-03T05:18:54.000Z">2018-07-03</time></div>
+                    <a href="/2018/07/03/golang-reflect/" class="has-link-black-ter is-size-6">Golang反射浅析</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Go/">Go</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/06/23/golang-imooc/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Imooc Go基础">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-06-23T05:18:54.000Z">2018-06-23</time></div>
+                    <a href="/2018/06/23/golang-imooc/" class="has-link-black-ter is-size-6">Imooc Go基础</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Go/">Go</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/04/24/git-workflow/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Git工作流程">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-04-24T05:18:54.000Z">2018-04-24</time></div>
+                    <a href="/2018/04/24/git-workflow/" class="has-link-black-ter is-size-6">Git工作流程</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Git/">Git</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
 
         
-      </div>
-    </footer>
-
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            Archives
+        </h3>
+        <ul class="menu-list">
         
-      </div>
+        <li>
+            <a class="level is-marginless" href="/archives/2018/07/">
+                <span class="level-start">
+                    <span class="level-item">July 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/06/">
+                <span class="level-start">
+                    <span class="level-item">June 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/04/">
+                <span class="level-start">
+                    <span class="level-item">April 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/03/">
+                <span class="level-start">
+                    <span class="level-item">March 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/01/">
+                <span class="level-start">
+                    <span class="level-item">January 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/12/">
+                <span class="level-start">
+                    <span class="level-item">December 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">November 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">October 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/07/">
+                <span class="level-start">
+                    <span class="level-item">July 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/06/">
+                <span class="level-start">
+                    <span class="level-item">June 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/05/">
+                <span class="level-start">
+                    <span class="level-item">May 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">10</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">April 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">18</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/03/">
+                <span class="level-start">
+                    <span class="level-item">March 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                Tags
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/12-05/">
+                        <span class="tag">12.05</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django/">
+                        <span class="tag">Django</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django-Centos/">
+                        <span class="tag">Django, Centos</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django-Centos-nginx-uwsgi/">
+                        <span class="tag">Django, Centos, nginx, uwsgi</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django-Python/">
+                        <span class="tag">Django, Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django，Celery/">
+                        <span class="tag">Django，Celery</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django，Mysql，Python/">
+                        <span class="tag">Django，Mysql，Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django，Vue，Rest/">
+                        <span class="tag">Django，Vue，Rest</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Git/">
+                        <span class="tag">Git</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Go/">
+                        <span class="tag">Go</span>
+                        <span class="tag is-grey">5</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Go，Mac，Privoxy/">
+                        <span class="tag">Go，Mac，Privoxy</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Nginx/">
+                        <span class="tag">Nginx</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Redis-Python/">
+                        <span class="tag">Redis, Python</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，CSS，Python/">
+                        <span class="tag">Scrapy，CSS，Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Django，Python/">
+                        <span class="tag">Scrapy，Django，Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python/">
+                        <span class="tag">Scrapy，Python</span>
+                        <span class="tag is-grey">19</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python-Elasticsearch/">
+                        <span class="tag">Scrapy，Python, Elasticsearch</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python，Django，Elasticsearch/">
+                        <span class="tag">Scrapy，Python，Django，Elasticsearch</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python，ElasticSearch/">
+                        <span class="tag">Scrapy，Python，ElasticSearch</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python，Redis/">
+                        <span class="tag">Scrapy，Python，Redis</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python，scrapyd/">
+                        <span class="tag">Scrapy，Python，scrapyd</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Regular-Expression，Python/">
+                        <span class="tag">Scrapy，Regular Expression，Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Requests，Python/">
+                        <span class="tag">Scrapy，Requests，Python</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Unicode，Python/">
+                        <span class="tag">Scrapy，Unicode，Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，XPath，Python/">
+                        <span class="tag">Scrapy，XPath，Python</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/TensorFlow-GPU-Ubuntu-Cuda/">
+                        <span class="tag">TensorFlow, GPU, Ubuntu, Cuda</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Web/">
+                        <span class="tag">Web</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            Recent
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2018/07/10/golang-sync-map/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Golang sync.Map浅析">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-07-10T05:18:54.000Z">2018-07-10</time></div>
+                    <a href="/2018/07/10/golang-sync-map/" class="has-link-black-ter is-size-6">Golang sync.Map浅析</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Go/">Go</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/07/05/golang-coding-notations/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Golang编码规范">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-07-05T05:18:54.000Z">2018-07-05</time></div>
+                    <a href="/2018/07/05/golang-coding-notations/" class="has-link-black-ter is-size-6">Golang编码规范</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Go/">Go</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/07/03/golang-reflect/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Golang反射浅析">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-07-03T05:18:54.000Z">2018-07-03</time></div>
+                    <a href="/2018/07/03/golang-reflect/" class="has-link-black-ter is-size-6">Golang反射浅析</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Go/">Go</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/06/23/golang-imooc/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Imooc Go基础">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-06-23T05:18:54.000Z">2018-06-23</time></div>
+                    <a href="/2018/06/23/golang-imooc/" class="has-link-black-ter is-size-6">Imooc Go基础</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Go/">Go</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/04/24/git-workflow/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Git工作流程">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-04-24T05:18:54.000Z">2018-04-24</time></div>
+                    <a href="/2018/04/24/git-workflow/" class="has-link-black-ter is-size-6">Git工作流程</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Git/">Git</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            Archives
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/07/">
+                <span class="level-start">
+                    <span class="level-item">July 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/06/">
+                <span class="level-start">
+                    <span class="level-item">June 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/04/">
+                <span class="level-start">
+                    <span class="level-item">April 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/03/">
+                <span class="level-start">
+                    <span class="level-item">March 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/01/">
+                <span class="level-start">
+                    <span class="level-item">January 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/12/">
+                <span class="level-start">
+                    <span class="level-item">December 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">November 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">October 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/07/">
+                <span class="level-start">
+                    <span class="level-item">July 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/06/">
+                <span class="level-start">
+                    <span class="level-item">June 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/05/">
+                <span class="level-start">
+                    <span class="level-item">May 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">10</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">April 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">18</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/03/">
+                <span class="level-start">
+                    <span class="level-item">March 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                Tags
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/12-05/">
+                        <span class="tag">12.05</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django/">
+                        <span class="tag">Django</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django-Centos/">
+                        <span class="tag">Django, Centos</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django-Centos-nginx-uwsgi/">
+                        <span class="tag">Django, Centos, nginx, uwsgi</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django-Python/">
+                        <span class="tag">Django, Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django，Celery/">
+                        <span class="tag">Django，Celery</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django，Mysql，Python/">
+                        <span class="tag">Django，Mysql，Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django，Vue，Rest/">
+                        <span class="tag">Django，Vue，Rest</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Git/">
+                        <span class="tag">Git</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Go/">
+                        <span class="tag">Go</span>
+                        <span class="tag is-grey">5</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Go，Mac，Privoxy/">
+                        <span class="tag">Go，Mac，Privoxy</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Nginx/">
+                        <span class="tag">Nginx</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Redis-Python/">
+                        <span class="tag">Redis, Python</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，CSS，Python/">
+                        <span class="tag">Scrapy，CSS，Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Django，Python/">
+                        <span class="tag">Scrapy，Django，Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python/">
+                        <span class="tag">Scrapy，Python</span>
+                        <span class="tag is-grey">19</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python-Elasticsearch/">
+                        <span class="tag">Scrapy，Python, Elasticsearch</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python，Django，Elasticsearch/">
+                        <span class="tag">Scrapy，Python，Django，Elasticsearch</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python，ElasticSearch/">
+                        <span class="tag">Scrapy，Python，ElasticSearch</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python，Redis/">
+                        <span class="tag">Scrapy，Python，Redis</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python，scrapyd/">
+                        <span class="tag">Scrapy，Python，scrapyd</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Regular-Expression，Python/">
+                        <span class="tag">Scrapy，Regular Expression，Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Requests，Python/">
+                        <span class="tag">Scrapy，Requests，Python</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Unicode，Python/">
+                        <span class="tag">Scrapy，Unicode，Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，XPath，Python/">
+                        <span class="tag">Scrapy，XPath，Python</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/TensorFlow-GPU-Ubuntu-Cuda/">
+                        <span class="tag">TensorFlow, GPU, Ubuntu, Cuda</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Web/">
+                        <span class="tag">Web</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.svg" alt="Python分布式爬虫打造搜索引擎项目学习笔记——Requests模拟登录知乎" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2019 LawTech.&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                
+                <br>
+                <span id="busuanzi_container_site_uv">
+                Visited by <span id="busuanzi_value_site_uv">0</span> users
+                </span>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-Hans");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
     
 
     
-
-  </div>
-
-  
-
-<script type="text/javascript">
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
-  }
-</script>
-
-
-
-
-
-
-
-
-
-  
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
-  
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
-
-
-
-  
-  
-
-  
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
-
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
-
-
-
-  
-
-
-  
-
-
-
-
-	
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-  
-  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
-  <script>AV.initialize("R025aEVl3sFz6nIRV8p0nqRB-gzGzoHsz", "g1roHmmHckuQSu2n9JW16T5b");</script>
-  <script>
-    function showTime(Counter) {
-      var query = new AV.Query(Counter);
-      var entries = [];
-      var $visitors = $(".leancloud_visitors");
-
-      $visitors.each(function () {
-        entries.push( $(this).attr("id").trim() );
-      });
-
-      query.containedIn('url', entries);
-      query.find()
-        .done(function (results) {
-          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
-
-          if (results.length === 0) {
-            $visitors.find(COUNT_CONTAINER_REF).text(0);
-            return;
-          }
-
-          for (var i = 0; i < results.length; i++) {
-            var item = results[i];
-            var url = item.get('url');
-            var time = item.get('time');
-            var element = document.getElementById(url);
-
-            $(element).find(COUNT_CONTAINER_REF).text(time);
-          }
-          for(var i = 0; i < entries.length; i++) {
-            var url = entries[i];
-            var element = document.getElementById(url);
-            var countSpan = $(element).find(COUNT_CONTAINER_REF);
-            if( countSpan.text() == '') {
-              countSpan.text(0);
-            }
-          }
-        })
-        .fail(function (object, error) {
-          console.log("Error: " + error.code + " " + error.message);
-        });
-    }
-
-    function addCount(Counter) {
-      var $visitors = $(".leancloud_visitors");
-      var url = $visitors.attr('id').trim();
-      var title = $visitors.attr('data-flag-title').trim();
-      var query = new AV.Query(Counter);
-
-      query.equalTo("url", url);
-      query.find({
-        success: function(results) {
-          if (results.length > 0) {
-            var counter = results[0];
-            counter.fetchWhenSave(true);
-            counter.increment("time");
-            counter.save(null, {
-              success: function(counter) {
-                var $element = $(document.getElementById(url));
-                $element.find('.leancloud-visitors-count').text(counter.get('time'));
-              },
-              error: function(counter, error) {
-                console.log('Failed to save Visitor num, with error message: ' + error.message);
-              }
-            });
-          } else {
-            var newcounter = new Counter();
-            /* Set ACL */
-            var acl = new AV.ACL();
-            acl.setPublicReadAccess(true);
-            acl.setPublicWriteAccess(true);
-            newcounter.setACL(acl);
-            /* End Set ACL */
-            newcounter.set("title", title);
-            newcounter.set("url", url);
-            newcounter.set("time", 1);
-            newcounter.save(null, {
-              success: function(newcounter) {
-                var $element = $(document.getElementById(url));
-                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
-              },
-              error: function(newcounter, error) {
-                console.log('Failed to create');
-              }
-            });
-          }
-        },
-        error: function(error) {
-          console.log('Error:' + error.code + " " + error.message);
-        }
-      });
-    }
-
-    $(function() {
-      var Counter = AV.Object.extend("Counter");
-      if ($('.leancloud_visitors').length == 1) {
-        addCount(Counter);
-      } else if ($('.post-title-link').length > 1) {
-        showTime(Counter);
-      }
-    });
-  </script>
-
-
-
-  
-
-  
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
 <script>
-(function(){
-    var bp = document.createElement('script');
-    var curProtocol = window.location.protocol.split(':')[0];
-    if (curProtocol === 'https') {
-        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
-    }
-    else {
-        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
-    }
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(bp, s);
-})();
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
 </script>
 
 
-  
-  
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
 
-  
+    
+    
 
-  
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
 
-  
 
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="Type something...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: 'Posts',
+                PAGES: 'Pages',
+                CATEGORIES: 'Categories',
+                TAGS: 'Tags',
+                UNTITLED: '(Untitled)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
 </body>
 </html>

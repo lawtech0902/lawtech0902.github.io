@@ -1,87 +1,13 @@
 <!DOCTYPE html>
+<html lang="zh">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+<title>Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy简单入门 - LawTech&#39;s Blog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-  
-
-
-<html class="theme-next mist use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<meta name="theme-color" content="#222">
-
-
-
-
-
-
-
-
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
-
-
-
-
-
-
-
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
-
-<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
-
-
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
-
-
-  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
-
-
-
-
-
-  <meta name="keywords" content="Scrapy，Python," />
-
-
-
-
-
-  <link rel="alternate" href="/atom.xml" title="LawTech's Blog" type="application/atom+xml" />
-
-
-
-
-
-
-<meta name="description" content="创建项目开始爬取前，首先需要创建一个新的Scrapy项目 1scrapy startproject tutorial">
+    <meta name="description" content="创建项目开始爬取前，首先需要创建一个新的Scrapy项目 1scrapy startproject tutorial">
 <meta name="keywords" content="Scrapy，Python">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy简单入门">
@@ -89,320 +15,175 @@
 <meta property="og:site_name" content="LawTech&#39;s Blog">
 <meta property="og:description" content="创建项目开始爬取前，首先需要创建一个新的Scrapy项目 1scrapy startproject tutorial">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg">
+<meta property="og:image" content="http://yoursite.com/images/og_image.png">
 <meta property="og:updated_time" content="2017-04-16T07:13:21.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy简单入门">
 <meta name="twitter:description" content="创建项目开始爬取前，首先需要创建一个新的Scrapy项目 1scrapy startproject tutorial">
-<meta name="twitter:image" content="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg">
-
-
-
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Mist',
-    version: '5.1.4',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
-    fancybox: true,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    duoshuo: {
-      userId: '0',
-      author: '博主'
-    },
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-
-  <link rel="canonical" href="http://yoursite.com/2017/04/16/scrapy-simple-intro/"/>
+<meta name="twitter:image" content="http://yoursite.com/images/og_image.png">
 
 
 
 
 
-  <title>Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy简单入门 | LawTech's Blog</title>
-  
 
 
+<link rel="icon" href="/images/favicon.svg">
 
 
-
-  <script type="text/javascript">
-    var _hmt = _hmt || [];
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "https://hm.baidu.com/hm.js?340874ba9357cbe81570aa4ac1185941";
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
-    })();
-  </script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
 
 
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
 
 
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
 </head>
-
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
-
-  
-  
-    
-  
-
-  <div class="container sidebar-position-left page-post-detail">
-    <div class="headband"></div>
-
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta ">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">LawTech's Blog</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.svg" alt="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy简单入门" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="Search" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
     </div>
-      
-        <p class="site-subtitle">不破不立</p>
-      
-  </div>
-
-  <div class="site-nav-toggle">
-    <button>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
-  </div>
-</div>
-
-<nav class="site-nav">
-  
-
-  
-    <ul id="menu" class="menu">
-      
-        
-        <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
-            
-            首页
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-about">
-          <a href="/about/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
-            
-            关于
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-tags">
-          <a href="/tags/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
-            
-            标签
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-categories">
-          <a href="/categories/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
-            
-            分类
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-archives">
-          <a href="/archives/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
-            
-            归档
-          </a>
-        </li>
-      
-
-      
-    </ul>
-  
-
-  
 </nav>
-
-
-
- </div>
-    </header>
-
-    <main id="main" class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          <div id="content" class="content">
-            
-
-  <div id="posts" class="posts-expand">
     
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/16/scrapy-simple-intro/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="LawTech.">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="LawTech's Blog">
-    </span>
-
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
     
-      <header class="post-header">
-
+    <div class="card-content article ">
         
-        
-          <h1 class="post-title" itemprop="name headline">Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy简单入门</h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-16T14:18:54+08:00">
-                2017-04-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Scrapy/" itemprop="url" rel="index">
-                    <span itemprop="name">Scrapy</span>
-                  </a>
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-04-16T06:18:54.000Z">2017-04-16</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Scrapy/">Scrapy</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    19 minutes read (About 2804 words)
                 </span>
-
                 
                 
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/04/16/scrapy-simple-intro/" class="leancloud_visitors" data-flag-title="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy简单入门">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-            <span class="post-meta-divider">|</span>
-            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
-            </span>
-          
-
-          
-
-          
-
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span> visits
+                </span>
+                
+            </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
-          
-          
-            <div class="post-gallery-row">
-              <a class="post-gallery-img fancybox"
-                 href="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" rel="gallery_cjwg43lgg006guedl6p2b8rux"
-                 itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
-                <img src="https://ww4.sinaimg.cn/large/006tNc79gy1feirgm2h0lj31gi0ag0ve.jpg" itemprop="contentUrl"/>
-              </a>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-          
+                Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy简单入门
+            
+        </h1>
+        <div class="content">
+            <h2 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a><strong>创建项目</strong></h2><p>开始爬取前，首先需要创建一个新的Scrapy项目</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scrapy startproject tutorial</span><br></pre></td></tr></table></figure>
 
-          
-          </div>
-        </div>
-      
-
-      
-        <h2 id="创建项目"><a href="#创建项目" class="headerlink" title="创建项目"></a><strong>创建项目</strong></h2><p>开始爬取前，首先需要创建一个新的Scrapy项目</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scrapy startproject tutorial</span><br></pre></td></tr></table></figure>
 <a id="more"></a>
 <p>该命令将会创建包含下列内容的 tutorial 目录:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">tutorial/</span><br><span class="line">  scrapy.cfg </span><br><span class="line">  tutorial/ </span><br><span class="line">    __init__.py </span><br><span class="line">    items.py </span><br><span class="line">    pipelines.py</span><br><span class="line">    settings.py </span><br><span class="line">    spiders/ </span><br><span class="line">      __init__.py </span><br><span class="line">      ...</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">tutorial/</span><br><span class="line">  scrapy.cfg </span><br><span class="line">  tutorial/ </span><br><span class="line">    __init__.py </span><br><span class="line">    items.py </span><br><span class="line">    pipelines.py</span><br><span class="line">    settings.py </span><br><span class="line">    spiders/ </span><br><span class="line">      __init__.py </span><br><span class="line">      ...</span><br></pre></td></tr></table></figure>
+
 <p>这些文件分别是:</p>
 <ul>
 <li>scrapy.cfg：项目的配置文件</li>
@@ -415,7 +196,8 @@
 <h2 id="定义-Item"><a href="#定义-Item" class="headerlink" title="定义 Item"></a><strong>定义 Item</strong></h2><p>Item 是保存爬取到的数据的容器；其使用方法和 python 字典类似， 并且提供了额外保护机制来避免拼写错误导 致的未定义字段错误。</p>
 <p>类似在 ORM 中做的一样，您可以通过创建一个<code>scrapy.Item</code>类， 并且定义类型为<code>scrapy.Field</code>的类属性来定义一个 Item。 (如果不了解 ORM, 不用担心，您会发现这个步骤非常简单)</p>
 <p>首先根据需要从 dmoz.org 获取到的数据对 item 进行建模。 我们需要从 dmoz 中获取名字，url，以及网站的描 述。 对此，在 item 中定义相应的字段。编辑<code>tutorial</code>目录中的<code>items.py</code>文件:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> scrapy</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DmozItem</span><span class="params">(scrapy.Item)</span>:</span> </span><br><span class="line">    title = scrapy.Field() </span><br><span class="line">    link = scrapy.Field() </span><br><span class="line">    desc = scrapy.Field()</span><br></pre></td></tr></table></figure>
+<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> scrapy</span><br><span class="line"></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DmozItem</span><span class="hljs-params">(scrapy.Item)</span>:</span> </span><br><span class="line">    title = scrapy.Field() </span><br><span class="line">    link = scrapy.Field() </span><br><span class="line">    desc = scrapy.Field()</span><br></pre></td></tr></table></figure>
+
 <p>可能一开始这有些复杂，但是通过定义 item， 我们可以很方便的使用 Scrapy 的其他方法，而这些方法需要知道我们的 item 的定义。</p>
 <h2 id="编写第一个爬虫"><a href="#编写第一个爬虫" class="headerlink" title="编写第一个爬虫"></a><strong>编写第一个爬虫</strong></h2><p>Spider 是用户编写用于从单个网站(或者一些网站)爬取数据的类。 </p>
 <p>其包含了一个用于下载的初始 URL，如何跟进网页中的链接以及如何分析页面中的内容， 提取生成 item 的方 法。 </p>
@@ -426,12 +208,15 @@
 <li><code>parse()</code> : spider 的一个方法。 被调用时，每个初始 URL 完成下载后生成的<code>Response</code>对象将会作为 唯一的参数传递给该函数。 该方法负责解析返回的数据(response data)，提取数据(生成 item)以及生成需 要进一步处理的 URL 的<code>Request</code>对象。 </li>
 </ul>
 <p>以下为我们的第一个 Spider 代码，保存在<code>tutorial/spiders</code>目录下的<code>dmoz_spider.py</code>文件中:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> scrapy</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DmozSpider</span><span class="params">(scrapy.Spider)</span>:</span></span><br><span class="line">    name = <span class="string">"dmoz"</span></span><br><span class="line">    allow_domains = [<span class="string">"dmoz.org"</span>]</span><br><span class="line">    start_urls = [</span><br><span class="line">      <span class="string">"http://www.dmoz.org/Computers/Programming/Languages/Python/Books/"</span>,</span><br><span class="line">      <span class="string">"http://www.dmoz.org/Computers/Programming/Languages/Python/Resources/"</span>  </span><br><span class="line">    ]</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></span><br><span class="line">        filename = response.url.split(<span class="string">"/"</span>)[<span class="number">-2</span>] </span><br><span class="line">        <span class="keyword">with</span> open(filename, <span class="string">'wb'</span>) <span class="keyword">as</span> f: </span><br><span class="line">            f.write(response.body)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> scrapy</span><br><span class="line"></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DmozSpider</span><span class="hljs-params">(scrapy.Spider)</span>:</span></span><br><span class="line">    name = <span class="hljs-string">"dmoz"</span></span><br><span class="line">    allow_domains = [<span class="hljs-string">"dmoz.org"</span>]</span><br><span class="line">    start_urls = [</span><br><span class="line">      <span class="hljs-string">"http://www.dmoz.org/Computers/Programming/Languages/Python/Books/"</span>,</span><br><span class="line">      <span class="hljs-string">"http://www.dmoz.org/Computers/Programming/Languages/Python/Resources/"</span>  </span><br><span class="line">    ]</span><br><span class="line">    </span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">parse</span><span class="hljs-params">(self, response)</span>:</span></span><br><span class="line">        filename = response.url.split(<span class="hljs-string">"/"</span>)[<span class="hljs-number">-2</span>] </span><br><span class="line">        <span class="hljs-keyword">with</span> open(filename, <span class="hljs-string">'wb'</span>) <span class="hljs-keyword">as</span> f: </span><br><span class="line">            f.write(response.body)</span><br></pre></td></tr></table></figure>
+
 <p>其中，allow_domains是搜索的域名范围，也就是爬虫的约束区域，规定爬虫只爬取这个域名下的网页。</p>
 <h3 id="爬取"><a href="#爬取" class="headerlink" title="爬取"></a><strong>爬取</strong></h3><p>进入项目的根目录，执行以下命令启动spider</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scrapy crawl dmoz</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scrapy crawl dmoz</span><br></pre></td></tr></table></figure>
+
 <p><code>crawl dmoz</code>启动用于爬取<code>dmoz.org</code>的 spider，可以得到如下输出：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">2017-04-15 21:51:39 [scrapy.utils.log] INFO: Scrapy 1.3.3 started (bot: tutorial)</span><br><span class="line">2017-04-15 21:51:39 [scrapy.utils.log] INFO: Overridden settings: &#123;'BOT_NAME': 'tutorial', 'ROBOTSTXT_OBEY': True, 'NEWSPIDER_MODULE': 'tutorial.spiders', 'SPIDER_MODULES': ['tutorial.spiders']&#125;</span><br><span class="line">2017-04-15 21:51:39 [scrapy.middleware] INFO: Enabled extensions:</span><br><span class="line">['scrapy.extensions.corestats.CoreStats',</span><br><span class="line"> 'scrapy.extensions.logstats.LogStats',</span><br><span class="line"> 'scrapy.extensions.telnet.TelnetConsole']</span><br><span class="line">2017-04-15 21:51:39 [scrapy.middleware] INFO: Enabled downloader middlewares:</span><br><span class="line">['scrapy.downloadermiddlewares.robotstxt.RobotsTxtMiddleware',</span><br><span class="line"> 'scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',</span><br><span class="line"> 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',</span><br><span class="line"> 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',</span><br><span class="line"> 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',</span><br><span class="line"> 'scrapy.downloadermiddlewares.retry.RetryMiddleware',</span><br><span class="line"> 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',</span><br><span class="line"> 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',</span><br><span class="line"> 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',</span><br><span class="line"> 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',</span><br><span class="line"> 'scrapy.downloadermiddlewares.stats.DownloaderStats']</span><br><span class="line">2017-04-15 21:51:39 [scrapy.middleware] INFO: Enabled spider middlewares:</span><br><span class="line">['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',</span><br><span class="line"> 'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',</span><br><span class="line"> 'scrapy.spidermiddlewares.referer.RefererMiddleware',</span><br><span class="line"> 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',</span><br><span class="line"> 'scrapy.spidermiddlewares.depth.DepthMiddleware']</span><br><span class="line">2017-04-15 21:51:39 [scrapy.middleware] INFO: Enabled item pipelines:</span><br><span class="line">[]</span><br><span class="line">2017-04-15 21:51:39 [scrapy.core.engine] INFO: Spider opened</span><br><span class="line">2017-04-15 21:51:39 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)</span><br><span class="line">2017-04-15 21:51:39 [scrapy.extensions.telnet] DEBUG: Telnet console listening on 127.0.0.1:6023</span><br><span class="line">2017-04-15 21:51:41 [scrapy.core.engine] DEBUG: Crawled (403) &lt;GET http://www.dmoz.org/robots.txt&gt; (referer: None)</span><br><span class="line">2017-04-15 21:51:41 [scrapy.core.engine] DEBUG: Crawled (403) &lt;GET http://www.dmoz.org/Computers/Programming/Languages/Python/Books/&gt; (referer: None)</span><br><span class="line">2017-04-15 21:51:41 [scrapy.spidermiddlewares.httperror] INFO: Ignoring response &lt;403 http://www.dmoz.org/Computers/Programming/Languages/Python/Books/&gt;: HTTP status code is not handled or not allowed</span><br><span class="line">2017-04-15 21:51:41 [scrapy.core.engine] DEBUG: Crawled (403) &lt;GET http://www.dmoz.org/Computers/Programming/Languages/Python/Resources/&gt; (referer: None)</span><br><span class="line">2017-04-15 21:51:41 [scrapy.spidermiddlewares.httperror] INFO: Ignoring response &lt;403 http://www.dmoz.org/Computers/Programming/Languages/Python/Resources/&gt;: HTTP status code is not handled or not allowed</span><br><span class="line">2017-04-15 21:51:41 [scrapy.core.engine] INFO: Closing spider (finished)</span><br><span class="line">2017-04-15 21:51:41 [scrapy.statscollectors] INFO: Dumping Scrapy stats:</span><br><span class="line">&#123;'downloader/request_bytes': 734,</span><br><span class="line"> 'downloader/request_count': 3,</span><br><span class="line"> 'downloader/request_method_count/GET': 3,</span><br><span class="line"> 'downloader/response_bytes': 3525,</span><br><span class="line"> 'downloader/response_count': 3,</span><br><span class="line"> 'downloader/response_status_count/403': 3,</span><br><span class="line"> 'finish_reason': 'finished',</span><br><span class="line"> 'finish_time': datetime.datetime(2017, 4, 15, 13, 51, 41, 968931),</span><br><span class="line"> 'log_count/DEBUG': 4,</span><br><span class="line"> 'log_count/INFO': 9,</span><br><span class="line"> 'response_received_count': 3,</span><br><span class="line"> 'scheduler/dequeued': 2,</span><br><span class="line"> 'scheduler/dequeued/memory': 2,</span><br><span class="line"> 'scheduler/enqueued': 2,</span><br><span class="line"> 'scheduler/enqueued/memory': 2,</span><br><span class="line"> 'start_time': datetime.datetime(2017, 4, 15, 13, 51, 39, 764494)&#125;</span><br><span class="line">2017-04-15 21:51:41 [scrapy.core.engine] INFO: Spider closed (finished)</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">2017-04-15 21:51:39 [scrapy.utils.log] INFO: Scrapy 1.3.3 started (bot: tutorial)</span><br><span class="line">2017-04-15 21:51:39 [scrapy.utils.log] INFO: Overridden settings: &#123;'BOT_NAME': 'tutorial', 'ROBOTSTXT_OBEY': True, 'NEWSPIDER_MODULE': 'tutorial.spiders', 'SPIDER_MODULES': ['tutorial.spiders']&#125;</span><br><span class="line">2017-04-15 21:51:39 [scrapy.middleware] INFO: Enabled extensions:</span><br><span class="line">['scrapy.extensions.corestats.CoreStats',</span><br><span class="line"> 'scrapy.extensions.logstats.LogStats',</span><br><span class="line"> 'scrapy.extensions.telnet.TelnetConsole']</span><br><span class="line">2017-04-15 21:51:39 [scrapy.middleware] INFO: Enabled downloader middlewares:</span><br><span class="line">['scrapy.downloadermiddlewares.robotstxt.RobotsTxtMiddleware',</span><br><span class="line"> 'scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',</span><br><span class="line"> 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',</span><br><span class="line"> 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',</span><br><span class="line"> 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',</span><br><span class="line"> 'scrapy.downloadermiddlewares.retry.RetryMiddleware',</span><br><span class="line"> 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',</span><br><span class="line"> 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',</span><br><span class="line"> 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',</span><br><span class="line"> 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',</span><br><span class="line"> 'scrapy.downloadermiddlewares.stats.DownloaderStats']</span><br><span class="line">2017-04-15 21:51:39 [scrapy.middleware] INFO: Enabled spider middlewares:</span><br><span class="line">['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',</span><br><span class="line"> 'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',</span><br><span class="line"> 'scrapy.spidermiddlewares.referer.RefererMiddleware',</span><br><span class="line"> 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',</span><br><span class="line"> 'scrapy.spidermiddlewares.depth.DepthMiddleware']</span><br><span class="line">2017-04-15 21:51:39 [scrapy.middleware] INFO: Enabled item pipelines:</span><br><span class="line">[]</span><br><span class="line">2017-04-15 21:51:39 [scrapy.core.engine] INFO: Spider opened</span><br><span class="line">2017-04-15 21:51:39 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)</span><br><span class="line">2017-04-15 21:51:39 [scrapy.extensions.telnet] DEBUG: Telnet console listening on 127.0.0.1:6023</span><br><span class="line">2017-04-15 21:51:41 [scrapy.core.engine] DEBUG: Crawled (403) &lt;GET http://www.dmoz.org/robots.txt&gt; (referer: None)</span><br><span class="line">2017-04-15 21:51:41 [scrapy.core.engine] DEBUG: Crawled (403) &lt;GET http://www.dmoz.org/Computers/Programming/Languages/Python/Books/&gt; (referer: None)</span><br><span class="line">2017-04-15 21:51:41 [scrapy.spidermiddlewares.httperror] INFO: Ignoring response &lt;403 http://www.dmoz.org/Computers/Programming/Languages/Python/Books/&gt;: HTTP status code is not handled or not allowed</span><br><span class="line">2017-04-15 21:51:41 [scrapy.core.engine] DEBUG: Crawled (403) &lt;GET http://www.dmoz.org/Computers/Programming/Languages/Python/Resources/&gt; (referer: None)</span><br><span class="line">2017-04-15 21:51:41 [scrapy.spidermiddlewares.httperror] INFO: Ignoring response &lt;403 http://www.dmoz.org/Computers/Programming/Languages/Python/Resources/&gt;: HTTP status code is not handled or not allowed</span><br><span class="line">2017-04-15 21:51:41 [scrapy.core.engine] INFO: Closing spider (finished)</span><br><span class="line">2017-04-15 21:51:41 [scrapy.statscollectors] INFO: Dumping Scrapy stats:</span><br><span class="line">&#123;'downloader/request_bytes': 734,</span><br><span class="line"> 'downloader/request_count': 3,</span><br><span class="line"> 'downloader/request_method_count/GET': 3,</span><br><span class="line"> 'downloader/response_bytes': 3525,</span><br><span class="line"> 'downloader/response_count': 3,</span><br><span class="line"> 'downloader/response_status_count/403': 3,</span><br><span class="line"> 'finish_reason': 'finished',</span><br><span class="line"> 'finish_time': datetime.datetime(2017, 4, 15, 13, 51, 41, 968931),</span><br><span class="line"> 'log_count/DEBUG': 4,</span><br><span class="line"> 'log_count/INFO': 9,</span><br><span class="line"> 'response_received_count': 3,</span><br><span class="line"> 'scheduler/dequeued': 2,</span><br><span class="line"> 'scheduler/dequeued/memory': 2,</span><br><span class="line"> 'scheduler/enqueued': 2,</span><br><span class="line"> 'scheduler/enqueued/memory': 2,</span><br><span class="line"> 'start_time': datetime.datetime(2017, 4, 15, 13, 51, 39, 764494)&#125;</span><br><span class="line">2017-04-15 21:51:41 [scrapy.core.engine] INFO: Spider closed (finished)</span><br></pre></td></tr></table></figure>
+
 <p>查看包含<code>[dmoz]</code>的输出，可以看到输出的 log 中包含定义在<code>start_urls</code>的初始 URL，并且与 spider 中是一 一对应的。在 log 中可以看到其没有指向其他页面( (<code>referer:None</code>) )。 除此之外，更有趣的事情发生了。就像我们 parse 方法指定的那样，有两个包含 url 所对应的内容的文件被创建 了: Book，Resources 。</p>
 <h3 id="发生了什么？"><a href="#发生了什么？" class="headerlink" title="发生了什么？"></a><strong>发生了什么？</strong></h3><p>Scrapy 为 Spider 的<code>start_urls</code>属性中的每个 URL 创建了<code>scrapy.Request</code>对象，并将<code>parse</code>方法作为回调函数(callback)赋值给了<code>Request</code>。 <code>Request</code>对象经过调度，执行生成<code>scrapy.http.Response</code>对象并送回给<code>spider parse()</code>方法。</p>
 <h3 id="提取-Item"><a href="#提取-Item" class="headerlink" title="提取 Item"></a><strong>提取 Item</strong></h3><h4 id="Selectors-选择器简介"><a href="#Selectors-选择器简介" class="headerlink" title="Selectors 选择器简介"></a><strong>Selectors 选择器简介</strong></h4><p>从网页中提取数据有很多方法。Scrapy 使用了一种基于 XPath 和 CSS 表达式机制: <code>Scrapy Selectors</code>。关于 selector 和其他提取机制的信息请参考<code>Selector</code>文档。 </p>
@@ -445,632 +230,1545 @@
 <li><code>re()</code>：根据传入的正则表达式对数据进行提取，返回 unicode 字符串 list 列表。</li>
 </ul>
 <h4 id="在-Shell-中尝试-Selector-选择器"><a href="#在-Shell-中尝试-Selector-选择器" class="headerlink" title="在 Shell 中尝试 Selector 选择器"></a><strong>在 Shell 中尝试 Selector 选择器</strong></h4><p>为了介绍 Selector 的使用方法，接下来我们将要使用内置的 Scrapy shell。Scrapy Shell 需要我们预装好 IPython(一个扩展的 Python 终端)。 我们需要进入项目的根目录，执行下列命令来启动 shell:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scrapy shell "http://www.dmoz.org/Computers/Programming/Languages/Python/Books/"</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scrapy shell "http://www.dmoz.org/Computers/Programming/Languages/Python/Books/"</span><br></pre></td></tr></table></figure>
+
 <p>Shell 的输出类似于：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">2017-04-15 22:04:22 [scrapy.core.engine] INFO: Spider opened</span><br><span class="line">2017-04-15 22:04:23 [scrapy.core.engine] DEBUG: Crawled (403) &lt;GET http://www.dmoz.org/robots.txt&gt; (referer: None)</span><br><span class="line">2017-04-15 22:04:24 [scrapy.core.engine] DEBUG: Crawled (403) &lt;GET http://www.dmoz.org/Computers/Programming/Languages/Python/Books/&gt; (referer: None)</span><br><span class="line">[s] Available Scrapy objects:</span><br><span class="line">[s]   scrapy     scrapy module (contains scrapy.Request, scrapy.Selector, etc)</span><br><span class="line">[s]   crawler    &lt;scrapy.crawler.Crawler object at 0x109728ac8&gt;</span><br><span class="line">[s]   item       &#123;&#125;</span><br><span class="line">[s]   request    &lt;GET http://www.dmoz.org/Computers/Programming/Languages/Python/Books/&gt;</span><br><span class="line">[s]   response   &lt;403 http://www.dmoz.org/Computers/Programming/Languages/Python/Books/&gt;</span><br><span class="line">[s]   settings   &lt;scrapy.settings.Settings object at 0x10a2a0a58&gt;</span><br><span class="line">[s]   spider     &lt;DefaultSpider 'default' at 0x10a4dc3c8&gt;</span><br><span class="line">[s] Useful shortcuts:</span><br><span class="line">[s]   fetch(url[, redirect=True]) Fetch URL and update local objects (by default, redirects are followed)</span><br><span class="line">[s]   fetch(req)                  Fetch a scrapy.Request and update local objects</span><br><span class="line">[s]   shelp()           Shell help (print this help)</span><br><span class="line">[s]   view(response)    View response in a browser</span><br><span class="line"><span class="meta">&gt;</span><span class="bash">&gt;&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">2017-04-15 22:04:22 [scrapy.core.engine] INFO: Spider opened</span><br><span class="line">2017-04-15 22:04:23 [scrapy.core.engine] DEBUG: Crawled (403) &lt;GET http://www.dmoz.org/robots.txt&gt; (referer: None)</span><br><span class="line">2017-04-15 22:04:24 [scrapy.core.engine] DEBUG: Crawled (403) &lt;GET http://www.dmoz.org/Computers/Programming/Languages/Python/Books/&gt; (referer: None)</span><br><span class="line">[s] Available Scrapy objects:</span><br><span class="line">[s]   scrapy     scrapy module (contains scrapy.Request, scrapy.Selector, etc)</span><br><span class="line">[s]   crawler    &lt;scrapy.crawler.Crawler object at 0x109728ac8&gt;</span><br><span class="line">[s]   item       &#123;&#125;</span><br><span class="line">[s]   request    &lt;GET http://www.dmoz.org/Computers/Programming/Languages/Python/Books/&gt;</span><br><span class="line">[s]   response   &lt;403 http://www.dmoz.org/Computers/Programming/Languages/Python/Books/&gt;</span><br><span class="line">[s]   settings   &lt;scrapy.settings.Settings object at 0x10a2a0a58&gt;</span><br><span class="line">[s]   spider     &lt;DefaultSpider 'default' at 0x10a4dc3c8&gt;</span><br><span class="line">[s] Useful shortcuts:</span><br><span class="line">[s]   fetch(url[, redirect=True]) Fetch URL and update local objects (by default, redirects are followed)</span><br><span class="line">[s]   fetch(req)                  Fetch a scrapy.Request and update local objects</span><br><span class="line">[s]   shelp()           Shell help (print this help)</span><br><span class="line">[s]   view(response)    View response in a browser</span><br><span class="line"><span class="hljs-meta">&gt;</span><span class="hljs-bash">&gt;&gt;</span></span><br></pre></td></tr></table></figure>
+
 <p>当 shell 载入后，我们将得到一个包含 response 数据的本地 response 变量。输入 response.body 将输出 resp onse 的包体，输出 response.headers 可以看到 response 的包头。 </p>
 <p>更为重要的是，当输入 response.selector 时， 我们将获取到一个可以用于查询返回数据的 selector(选择器)， 以及映射到 response.selector.xpath() 、response.selector.css() 的 快捷方法(shortcut): response.xpat h() 和 response.css() 。 </p>
 <p>下面就来试试：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash">&gt;&gt; response.xpath(<span class="string">'//title'</span>)</span></span><br><span class="line">[&lt;Selector xpath='//title' data='&lt;title&gt;DMOZ&lt;/title&gt;'&gt;]</span><br><span class="line"><span class="meta">&gt;</span><span class="bash">&gt;&gt; response.xpath(<span class="string">'//title'</span>).extract()</span></span><br><span class="line">['&lt;title&gt;DMOZ&lt;/title&gt;']</span><br><span class="line"><span class="meta">&gt;</span><span class="bash">&gt;&gt; response.xpath(<span class="string">'//title/text()'</span>)</span></span><br><span class="line">[&lt;Selector xpath='//title/text()' data='DMOZ'&gt;]</span><br><span class="line"><span class="meta">&gt;</span><span class="bash">&gt;&gt; response.xpath(<span class="string">'//title/text()'</span>).extract()</span></span><br><span class="line">['DMOZ']</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">&gt;</span><span class="hljs-bash">&gt;&gt; response.xpath(<span class="hljs-string">'//title'</span>)</span></span><br><span class="line">[&lt;Selector xpath='//title' data='&lt;title&gt;DMOZ&lt;/title&gt;'&gt;]</span><br><span class="line"><span class="hljs-meta">&gt;</span><span class="hljs-bash">&gt;&gt; response.xpath(<span class="hljs-string">'//title'</span>).extract()</span></span><br><span class="line">['&lt;title&gt;DMOZ&lt;/title&gt;']</span><br><span class="line"><span class="hljs-meta">&gt;</span><span class="hljs-bash">&gt;&gt; response.xpath(<span class="hljs-string">'//title/text()'</span>)</span></span><br><span class="line">[&lt;Selector xpath='//title/text()' data='DMOZ'&gt;]</span><br><span class="line"><span class="hljs-meta">&gt;</span><span class="hljs-bash">&gt;&gt; response.xpath(<span class="hljs-string">'//title/text()'</span>).extract()</span></span><br><span class="line">['DMOZ']</span><br></pre></td></tr></table></figure>
+
 <h4 id="提取数据"><a href="#提取数据" class="headerlink" title="提取数据"></a><strong>提取数据</strong></h4><p>现在，我们来尝试从这些页面中提取些有用的数据。 </p>
 <p>我们可以在终端中输入 response.body 来观察 HTML 源码并确定合适的 XPath 表达式。不过，这任务非常无聊且不易。您可以考虑使用 Firefox 的 Firebug 扩展来使得工作更为轻松。</p>
 <p>在查看了网页的源码后，您会发现网站的信息是被包含在 第二个 <ul> 元素中。 </ul></p>
 <p>我们可以通过这段代码选择该页面中网站列表里所有 <li> 元素:</li></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response.xpath('//ul/li')</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response.xpath('//ul/li')</span><br></pre></td></tr></table></figure>
+
 <p>网站的描述：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response.xpath('//ul/li/text()').extract()</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response.xpath('//ul/li/text()').extract()</span><br></pre></td></tr></table></figure>
+
 <p>网站的标题：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response.xpath('//ul/li/a/text()').extract()</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response.xpath('//ul/li/a/text()').extract()</span><br></pre></td></tr></table></figure>
+
 <p>以及网站的链接：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response.xpath('//ul/li/a/@href').extract()</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">response.xpath('//ul/li/a/@href').extract()</span><br></pre></td></tr></table></figure>
+
 <p>之前提到过，每个 <code>.xpath()</code> 调用返回 selector 组成的 list，因此我们可以拼接更多的  <code>.xpath()</code> 来进一步获取某个节点。我们将在下边使用这样的特性:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> response <span class="keyword">in</span> response.xpath(<span class="string">'//ul/li'</span>):</span><br><span class="line">	title = response.xpath(<span class="string">'a/text()'</span>).extract()</span><br><span class="line">    link = response.xpath(<span class="string">'a/@href'</span>).extract()</span><br><span class="line">    desc = response.xpath(<span class="string">'text()'</span>).extract()</span><br><span class="line">    print(title, link, desc)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">for</span> response <span class="hljs-keyword">in</span> response.xpath(<span class="hljs-string">'//ul/li'</span>):</span><br><span class="line">	title = response.xpath(<span class="hljs-string">'a/text()'</span>).extract()</span><br><span class="line">    link = response.xpath(<span class="hljs-string">'a/@href'</span>).extract()</span><br><span class="line">    desc = response.xpath(<span class="hljs-string">'text()'</span>).extract()</span><br><span class="line">    print(title, link, desc)</span><br></pre></td></tr></table></figure>
+
 <p>在我们的 spider 中加入如下代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> scrapy</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DmozSpider</span><span class="params">(scrapy.Spider)</span>:</span></span><br><span class="line">    name = <span class="string">"dmoz"</span></span><br><span class="line">    allow_domains = [<span class="string">"dmoz.org"</span>]</span><br><span class="line">    start_urls = [      	     <span class="string">"http://www.dmoz.org/Computers/Programming/Languages/Python/Books/"</span>,</span><br><span class="line">        <span class="string">"http://www.dmoz.org/Computers/Programming/Languages/Python/Resources/"</span>]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></span><br><span class="line">        <span class="keyword">for</span> response <span class="keyword">in</span> response.xpath(<span class="string">'//ul/li'</span>):</span><br><span class="line">            title = response.xpath(<span class="string">'a/text()'</span>).extract()</span><br><span class="line">            link = response.xpath(<span class="string">'a/@href'</span>).extract()</span><br><span class="line">            desc = response.xpath(<span class="string">'text()'</span>).extract()</span><br><span class="line">            print(title, link, desc)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> scrapy</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DmozSpider</span><span class="hljs-params">(scrapy.Spider)</span>:</span></span><br><span class="line">    name = <span class="hljs-string">"dmoz"</span></span><br><span class="line">    allow_domains = [<span class="hljs-string">"dmoz.org"</span>]</span><br><span class="line">    start_urls = [      	     <span class="hljs-string">"http://www.dmoz.org/Computers/Programming/Languages/Python/Books/"</span>,</span><br><span class="line">        <span class="hljs-string">"http://www.dmoz.org/Computers/Programming/Languages/Python/Resources/"</span>]</span><br><span class="line"></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">parse</span><span class="hljs-params">(self, response)</span>:</span></span><br><span class="line">        <span class="hljs-keyword">for</span> response <span class="hljs-keyword">in</span> response.xpath(<span class="hljs-string">'//ul/li'</span>):</span><br><span class="line">            title = response.xpath(<span class="hljs-string">'a/text()'</span>).extract()</span><br><span class="line">            link = response.xpath(<span class="hljs-string">'a/@href'</span>).extract()</span><br><span class="line">            desc = response.xpath(<span class="hljs-string">'text()'</span>).extract()</span><br><span class="line">            print(title, link, desc)</span><br></pre></td></tr></table></figure>
+
 <p>现在尝试再次爬取 dmoz.org，您将看到爬取到的网站信息被成功输出:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scrapy crawl dmoz</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scrapy crawl dmoz</span><br></pre></td></tr></table></figure>
+
 <h3 id="使用-Item"><a href="#使用-Item" class="headerlink" title="使用 Item"></a><strong>使用 Item</strong></h3><p>Item 对象是自定义的 python 字典。您可以使用标准的字典语法来获取到其每个字段的值。(字段就是我们之前用 Field 赋值的属性):</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;</span><span class="bash">&gt;&gt; item = DmozItem() </span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">&gt;&gt; item[<span class="string">'title'</span>] = <span class="string">'Example title'</span> </span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash">&gt;&gt; item[<span class="string">'title'</span>] </span></span><br><span class="line">'Example title'</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">&gt;</span><span class="hljs-bash">&gt;&gt; item = DmozItem() </span></span><br><span class="line"><span class="hljs-meta">&gt;</span><span class="hljs-bash">&gt;&gt; item[<span class="hljs-string">'title'</span>] = <span class="hljs-string">'Example title'</span> </span></span><br><span class="line"><span class="hljs-meta">&gt;</span><span class="hljs-bash">&gt;&gt; item[<span class="hljs-string">'title'</span>] </span></span><br><span class="line">'Example title'</span><br></pre></td></tr></table></figure>
+
 <p>一般来说，Spider 将会将爬取到的数据以 Item 对象返回。所以为了将爬取的数据返回，我们最终的代码将是:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> scrapy</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> tutorial.items <span class="keyword">import</span> DmozItem</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DmozSpider</span><span class="params">(scrapy.Spider)</span>:</span></span><br><span class="line">    name = <span class="string">"dmoz"</span></span><br><span class="line">    allow_domains = [<span class="string">"dmoz.org"</span>]</span><br><span class="line">    start_urls = [</span><br><span class="line">        <span class="string">"http://www.dmoz.org/Computers/Programming/Languages/Python/Books/"</span>,</span><br><span class="line">        <span class="string">"http://www.dmoz.org/Computers/Programming/Languages/Python/Resources/"</span></span><br><span class="line">    ]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">parse</span><span class="params">(self, response)</span>:</span></span><br><span class="line">        <span class="keyword">for</span> response <span class="keyword">in</span> response.xpath(<span class="string">'//ul/li'</span>):</span><br><span class="line">            item = DmozItem()</span><br><span class="line">            item[<span class="string">'title'</span>] = response.xpath(<span class="string">'a/text()'</span>).extract()</span><br><span class="line">            item[<span class="string">'link'</span>] = response.xpath(<span class="string">'a/@href'</span>).extract()</span><br><span class="line">            item[<span class="string">'desc'</span>] = response.xpath(<span class="string">'text()'</span>).extract()</span><br><span class="line">            <span class="keyword">yield</span> item</span><br></pre></td></tr></table></figure>
+<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> scrapy</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">from</span> tutorial.items <span class="hljs-keyword">import</span> DmozItem</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DmozSpider</span><span class="hljs-params">(scrapy.Spider)</span>:</span></span><br><span class="line">    name = <span class="hljs-string">"dmoz"</span></span><br><span class="line">    allow_domains = [<span class="hljs-string">"dmoz.org"</span>]</span><br><span class="line">    start_urls = [</span><br><span class="line">        <span class="hljs-string">"http://www.dmoz.org/Computers/Programming/Languages/Python/Books/"</span>,</span><br><span class="line">        <span class="hljs-string">"http://www.dmoz.org/Computers/Programming/Languages/Python/Resources/"</span></span><br><span class="line">    ]</span><br><span class="line"></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">parse</span><span class="hljs-params">(self, response)</span>:</span></span><br><span class="line">        <span class="hljs-keyword">for</span> response <span class="hljs-keyword">in</span> response.xpath(<span class="hljs-string">'//ul/li'</span>):</span><br><span class="line">            item = DmozItem()</span><br><span class="line">            item[<span class="hljs-string">'title'</span>] = response.xpath(<span class="hljs-string">'a/text()'</span>).extract()</span><br><span class="line">            item[<span class="hljs-string">'link'</span>] = response.xpath(<span class="hljs-string">'a/@href'</span>).extract()</span><br><span class="line">            item[<span class="hljs-string">'desc'</span>] = response.xpath(<span class="hljs-string">'text()'</span>).extract()</span><br><span class="line">            <span class="hljs-keyword">yield</span> item</span><br></pre></td></tr></table></figure>
+
 <p>现在对 dmoz.org 进行爬取将会产生 <code>DmozItem</code> 对象:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[dmoz] DEBUG: Scraped from &lt;200 http://www.dmoz.org/Computers/Programming/Languages/Python/Books/&gt; &#123;'desc': [u' - By David Mertz; Addison Wesley. Book in progress, full text, ASCII format. Asks for feedback. [author webs 'link': [u'http://gnosis.cx/TPiP/'], 'title': [u'Text Processing in Python']&#125; [dmoz] DEBUG: Scraped from &lt;200 http://www.dmoz.org/Computers/Programming/Languages/Python/Books/&gt; &#123;'desc': [u' - By Sean McGrath; Prentice Hall PTR, 2000, ISBN 0130211192, has CD-ROM. Methods to build XML applic 'link': [u'http://www.informit.com/store/product.aspx?isbn=0130211192'], 'title': [u'XML Processing with Python']&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[dmoz] DEBUG: Scraped from &lt;200 http://www.dmoz.org/Computers/Programming/Languages/Python/Books/&gt; &#123;'desc': [u' - By David Mertz; Addison Wesley. Book in progress, full text, ASCII format. Asks for feedback. [author webs 'link': [u'http://gnosis.cx/TPiP/'], 'title': [u'Text Processing in Python']&#125; [dmoz] DEBUG: Scraped from &lt;200 http://www.dmoz.org/Computers/Programming/Languages/Python/Books/&gt; &#123;'desc': [u' - By Sean McGrath; Prentice Hall PTR, 2000, ISBN 0130211192, has CD-ROM. Methods to build XML applic 'link': [u'http://www.informit.com/store/product.aspx?isbn=0130211192'], 'title': [u'XML Processing with Python']&#125;</span><br></pre></td></tr></table></figure>
+
 <h2 id="保存爬取到的数据"><a href="#保存爬取到的数据" class="headerlink" title="保存爬取到的数据"></a><strong>保存爬取到的数据</strong></h2><p>最简单存储爬取的数据的方式是使用 <code>Feed exports</code> :</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scrapy crawl dmoz -o items.json</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scrapy crawl dmoz -o items.json</span><br></pre></td></tr></table></figure>
+
 <p>该命令将采用 JSON 格式对爬取的数据进行序列化，生成 <code>items.json</code> 文件。</p>
 <p>在类似本篇教程里这样小规模的项目中，这种存储方式已经足够。 如果需要对爬取到的 item 做更多更为复杂的 操作，您可以编写 <code>Item Pipeline</code> 。 类似于我们在创建项目时对 Item 做的，用于您编写自己的 <code>tutorial/pipelines.py</code> 也被创建。 不过如果您仅仅想要保存 item，您不需要实现任何的 pipeline。</p>
 
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-      <div>
-        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
-  <div>🐶 ~怕是要给老板下跪了哦~ 🐶</div>
-  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
-    <span>打赏</span>
-  </button>
-  <div id="QR" style="display: none;">
-
-    
-      <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="/images/wechat-reward-img.jpg" alt="LawTech. 微信支付"/>
-        <p>微信支付</p>
-      </div>
-    
-
-    
-      <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="/images/alipay-reward-img.jpg" alt="LawTech. 支付宝"/>
-        <p>支付宝</p>
-      </div>
-    
-
-    
-
-  </div>
-</div>
-
-      </div>
-    
-
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/Scrapy，Python/" rel="tag"># Scrapy，Python</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2017/04/14/django-py3-mysql/" rel="next" title="python3+Django配置mysql连接">
-                <i class="fa fa-chevron-left"></i> python3+Django配置mysql连接
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/04/16/xpath-example/" rel="prev" title="Python分布式爬虫打造搜索引擎项目学习笔记——Xpath用法示例">
-                Python分布式爬虫打造搜索引擎项目学习笔记——Xpath用法示例 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-
-    <div class="post-spread">
-      
-    </div>
-  </div>
-
-
-          </div>
-          
-
-
-          
-
-  
-
-
-
         </div>
         
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Scrapy，Python/">Scrapy，Python</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
     </div>
-  </div>
+</div>
 
-  <aside id="sidebar" class="sidebar">
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">Like this article? Support the author with</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                <!-- Visit https://www.paypal.com/donate/buttons/ to get your donate button -->
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2017/04/16/xpath-example/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">Python分布式爬虫打造搜索引擎项目学习笔记——Xpath用法示例</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2017/04/14/django-py3-mysql/">
+                <span class="level-item">python3+Django配置mysql连接</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
     
-    <div class="sidebar-inner">
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg" alt="LawTech">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        LawTech
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        CR7 is best!
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Nanjing, Jiangsu</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        Posts
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        67
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        Categories
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        13
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        Tags
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        27
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/lawtech0902" target="_blank">
+                Follow</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="https://github.com/lawtech0902">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Facebook" href="https://facebook.com">
+                
+                <i class="fab fa-facebook"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Twitter" href="https://twitter.com">
+                
+                <i class="fab fa-twitter"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Dribbble" href="/">
+                
+                <i class="fab fa-dribbble"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="RSS" href="/">
+                
+                <i class="fas fa-rss"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+        
 
-      
-
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            Links
+        </h3>
+        <ul class="menu-list">
+        
+            <li>
+                <a class="level is-mobile" href="https://hexo.io" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">Hexo</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">hexo.io</span>
+                    </span>
+                </a>
+            </li>
+        
+            <li>
+                <a class="level is-mobile" href="https://github.com/ppoffice" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">PPOffice</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">github.com</span>
+                    </span>
+                </a>
+            </li>
+        
         </ul>
-      
-
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-            
-              <img class="site-author-image" itemprop="image"
-                src="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg"
-                alt="LawTech." />
-            
-              <p class="site-author-name" itemprop="name">LawTech.</p>
-              <p class="site-description motion-element" itemprop="description">破邮python爱好者。</p>
-          </div>
-
-          <nav class="site-state motion-element">
-
-            
-              <div class="site-state-item site-state-posts">
-              
-                <a href="/archives/">
-              
-                  <span class="site-state-item-count">67</span>
-                  <span class="site-state-item-name">日志</span>
-                </a>
-              </div>
-            
-
-            
-              
-              
-              <div class="site-state-item site-state-categories">
-                <a href="/categories/index.html">
-                  <span class="site-state-item-count">13</span>
-                  <span class="site-state-item-name">分类</span>
-                </a>
-              </div>
-            
-
-            
-              
-              
-              <div class="site-state-item site-state-tags">
-                <a href="/tags/index.html">
-                  <span class="site-state-item-count">27</span>
-                  <span class="site-state-item-name">标签</span>
-                </a>
-              </div>
-            
-
-          </nav>
-
-          
-            <div class="feed-link motion-element">
-              <a href="/atom.xml" rel="alternate">
-                <i class="fa fa-rss"></i>
-                RSS
-              </a>
-            </div>
-          
-
-          
-            <div class="links-of-author motion-element">
-                
-                  <span class="links-of-author-item">
-                    <a href="https://github.com/lawtech0902" target="_blank" title="GitHub">
-                      
-                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
-                  </span>
-                
-                  <span class="links-of-author-item">
-                    <a href="http://weibo.com/LawRev1s1on" target="_blank" title="weibo">
-                      
-                        <i class="fa fa-fw fa-globe"></i>weibo</a>
-                  </span>
-                
-            </div>
-          
-
-          
-          
-
-          
-          
-
-          
-
         </div>
-      </section>
-
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建项目"><span class="nav-number">1.</span> <span class="nav-text">创建项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义-Item"><span class="nav-number">2.</span> <span class="nav-text">定义 Item</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编写第一个爬虫"><span class="nav-number">3.</span> <span class="nav-text">编写第一个爬虫</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#爬取"><span class="nav-number">3.1.</span> <span class="nav-text">爬取</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#发生了什么？"><span class="nav-number">3.2.</span> <span class="nav-text">发生了什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#提取-Item"><span class="nav-number">3.3.</span> <span class="nav-text">提取 Item</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Selectors-选择器简介"><span class="nav-number">3.3.1.</span> <span class="nav-text">Selectors 选择器简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#在-Shell-中尝试-Selector-选择器"><span class="nav-number">3.3.2.</span> <span class="nav-text">在 Shell 中尝试 Selector 选择器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#提取数据"><span class="nav-number">3.3.3.</span> <span class="nav-text">提取数据</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用-Item"><span class="nav-number">3.4.</span> <span class="nav-text">使用 Item</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#保存爬取到的数据"><span class="nav-number">4.</span> <span class="nav-text">保存爬取到的数据</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
-      
-
-      
-
     </div>
-  </aside>
-
-
-        
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
-  <span class="with-love">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">LawTech.</span>
-
-  
 </div>
 
 
-  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
-
-
-
-  <span class="post-meta-divider">|</span>
-
-
-
-  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
-
-
-
-
+    
         
-<div class="busuanzi-count">
-  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-  
-    <span class="site-uv">
-      <i class="fa fa-user"></i> 访问人数
-      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
-      
-    </span>
-  
-
-  
-    <span class="site-pv">
-      <i class="fa fa-eye"></i> 总访问量
-      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-      次
-    </span>
-  
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                Categories
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/Basic-knowledge/">
+            <span class="level-start">
+                <span class="level-item">Basic knowledge</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Django/">
+            <span class="level-start">
+                <span class="level-item">Django</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Django-Python/">
+            <span class="level-start">
+                <span class="level-item">Django, Python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Django，Vue/">
+            <span class="level-start">
+                <span class="level-item">Django，Vue</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Git/">
+            <span class="level-start">
+                <span class="level-item">Git</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Go/">
+            <span class="level-start">
+                <span class="level-item">Go</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/JWT/">
+            <span class="level-start">
+                <span class="level-item">JWT</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Nginx/">
+            <span class="level-start">
+                <span class="level-item">Nginx</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/RESTful/">
+            <span class="level-start">
+                <span class="level-item">RESTful</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Redis/">
+            <span class="level-start">
+                <span class="level-item">Redis</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Scrapy/">
+            <span class="level-start">
+                <span class="level-item">Scrapy</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">33</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/TensorFlow/">
+            <span class="level-start">
+                <span class="level-item">TensorFlow</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/essay/">
+            <span class="level-start">
+                <span class="level-item">essay</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            Tag Cloud
+        </h3>
+        <a href="/tags/12-05/" style="font-size: 10px;">12.05</a> <a href="/tags/Django/" style="font-size: 10px;">Django</a> <a href="/tags/Django-Centos/" style="font-size: 10px;">Django, Centos</a> <a href="/tags/Django-Centos-nginx-uwsgi/" style="font-size: 10px;">Django, Centos, nginx, uwsgi</a> <a href="/tags/Django-Python/" style="font-size: 10px;">Django, Python</a> <a href="/tags/Django，Celery/" style="font-size: 11.67px;">Django，Celery</a> <a href="/tags/Django，Mysql，Python/" style="font-size: 10px;">Django，Mysql，Python</a> <a href="/tags/Django，Vue，Rest/" style="font-size: 18.33px;">Django，Vue，Rest</a> <a href="/tags/Git/" style="font-size: 11.67px;">Git</a> <a href="/tags/Go/" style="font-size: 16.67px;">Go</a> <a href="/tags/Go，Mac，Privoxy/" style="font-size: 10px;">Go，Mac，Privoxy</a> <a href="/tags/Nginx/" style="font-size: 10px;">Nginx</a> <a href="/tags/Redis-Python/" style="font-size: 18.33px;">Redis, Python</a> <a href="/tags/Scrapy，CSS，Python/" style="font-size: 10px;">Scrapy，CSS，Python</a> <a href="/tags/Scrapy，Django，Python/" style="font-size: 10px;">Scrapy，Django，Python</a> <a href="/tags/Scrapy，Python/" style="font-size: 20px;">Scrapy，Python</a> <a href="/tags/Scrapy，Python-Elasticsearch/" style="font-size: 10px;">Scrapy，Python, Elasticsearch</a> <a href="/tags/Scrapy，Python，Django，Elasticsearch/" style="font-size: 10px;">Scrapy，Python，Django，Elasticsearch</a> <a href="/tags/Scrapy，Python，ElasticSearch/" style="font-size: 10px;">Scrapy，Python，ElasticSearch</a> <a href="/tags/Scrapy，Python，Redis/" style="font-size: 10px;">Scrapy，Python，Redis</a> <a href="/tags/Scrapy，Python，scrapyd/" style="font-size: 10px;">Scrapy，Python，scrapyd</a> <a href="/tags/Scrapy，Regular-Expression，Python/" style="font-size: 10px;">Scrapy，Regular Expression，Python</a> <a href="/tags/Scrapy，Requests，Python/" style="font-size: 15px;">Scrapy，Requests，Python</a> <a href="/tags/Scrapy，Unicode，Python/" style="font-size: 10px;">Scrapy，Unicode，Python</a> <a href="/tags/Scrapy，XPath，Python/" style="font-size: 11.67px;">Scrapy，XPath，Python</a> <a href="/tags/TensorFlow-GPU-Ubuntu-Cuda/" style="font-size: 10px;">TensorFlow, GPU, Ubuntu, Cuda</a> <a href="/tags/Web/" style="font-size: 13.33px;">Web</a>
+    </div>
 </div>
 
-
-
-
-
-  <script type="text/javascript">
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "//tajs.qq.com/stats?sId=61398861";
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
-    })();
-  </script>
-
-
-
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            Recent
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2018/07/10/golang-sync-map/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Golang sync.Map浅析">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-07-10T05:18:54.000Z">2018-07-10</time></div>
+                    <a href="/2018/07/10/golang-sync-map/" class="has-link-black-ter is-size-6">Golang sync.Map浅析</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Go/">Go</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/07/05/golang-coding-notations/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Golang编码规范">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-07-05T05:18:54.000Z">2018-07-05</time></div>
+                    <a href="/2018/07/05/golang-coding-notations/" class="has-link-black-ter is-size-6">Golang编码规范</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Go/">Go</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/07/03/golang-reflect/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Golang反射浅析">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-07-03T05:18:54.000Z">2018-07-03</time></div>
+                    <a href="/2018/07/03/golang-reflect/" class="has-link-black-ter is-size-6">Golang反射浅析</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Go/">Go</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/06/23/golang-imooc/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Imooc Go基础">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-06-23T05:18:54.000Z">2018-06-23</time></div>
+                    <a href="/2018/06/23/golang-imooc/" class="has-link-black-ter is-size-6">Imooc Go基础</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Go/">Go</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/04/24/git-workflow/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Git工作流程">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-04-24T05:18:54.000Z">2018-04-24</time></div>
+                    <a href="/2018/04/24/git-workflow/" class="has-link-black-ter is-size-6">Git工作流程</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Git/">Git</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
 
         
-      </div>
-    </footer>
-
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            Archives
+        </h3>
+        <ul class="menu-list">
         
-      </div>
+        <li>
+            <a class="level is-marginless" href="/archives/2018/07/">
+                <span class="level-start">
+                    <span class="level-item">July 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/06/">
+                <span class="level-start">
+                    <span class="level-item">June 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/04/">
+                <span class="level-start">
+                    <span class="level-item">April 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/03/">
+                <span class="level-start">
+                    <span class="level-item">March 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/01/">
+                <span class="level-start">
+                    <span class="level-item">January 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/12/">
+                <span class="level-start">
+                    <span class="level-item">December 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">November 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">October 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/07/">
+                <span class="level-start">
+                    <span class="level-item">July 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/06/">
+                <span class="level-start">
+                    <span class="level-item">June 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/05/">
+                <span class="level-start">
+                    <span class="level-item">May 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">10</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">April 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">18</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/03/">
+                <span class="level-start">
+                    <span class="level-item">March 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                Tags
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/12-05/">
+                        <span class="tag">12.05</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django/">
+                        <span class="tag">Django</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django-Centos/">
+                        <span class="tag">Django, Centos</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django-Centos-nginx-uwsgi/">
+                        <span class="tag">Django, Centos, nginx, uwsgi</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django-Python/">
+                        <span class="tag">Django, Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django，Celery/">
+                        <span class="tag">Django，Celery</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django，Mysql，Python/">
+                        <span class="tag">Django，Mysql，Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django，Vue，Rest/">
+                        <span class="tag">Django，Vue，Rest</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Git/">
+                        <span class="tag">Git</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Go/">
+                        <span class="tag">Go</span>
+                        <span class="tag is-grey">5</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Go，Mac，Privoxy/">
+                        <span class="tag">Go，Mac，Privoxy</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Nginx/">
+                        <span class="tag">Nginx</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Redis-Python/">
+                        <span class="tag">Redis, Python</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，CSS，Python/">
+                        <span class="tag">Scrapy，CSS，Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Django，Python/">
+                        <span class="tag">Scrapy，Django，Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python/">
+                        <span class="tag">Scrapy，Python</span>
+                        <span class="tag is-grey">19</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python-Elasticsearch/">
+                        <span class="tag">Scrapy，Python, Elasticsearch</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python，Django，Elasticsearch/">
+                        <span class="tag">Scrapy，Python，Django，Elasticsearch</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python，ElasticSearch/">
+                        <span class="tag">Scrapy，Python，ElasticSearch</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python，Redis/">
+                        <span class="tag">Scrapy，Python，Redis</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python，scrapyd/">
+                        <span class="tag">Scrapy，Python，scrapyd</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Regular-Expression，Python/">
+                        <span class="tag">Scrapy，Regular Expression，Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Requests，Python/">
+                        <span class="tag">Scrapy，Requests，Python</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Unicode，Python/">
+                        <span class="tag">Scrapy，Unicode，Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，XPath，Python/">
+                        <span class="tag">Scrapy，XPath，Python</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/TensorFlow-GPU-Ubuntu-Cuda/">
+                        <span class="tag">TensorFlow, GPU, Ubuntu, Cuda</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Web/">
+                        <span class="tag">Web</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            Recent
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2018/07/10/golang-sync-map/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Golang sync.Map浅析">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-07-10T05:18:54.000Z">2018-07-10</time></div>
+                    <a href="/2018/07/10/golang-sync-map/" class="has-link-black-ter is-size-6">Golang sync.Map浅析</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Go/">Go</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/07/05/golang-coding-notations/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Golang编码规范">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-07-05T05:18:54.000Z">2018-07-05</time></div>
+                    <a href="/2018/07/05/golang-coding-notations/" class="has-link-black-ter is-size-6">Golang编码规范</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Go/">Go</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/07/03/golang-reflect/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Golang反射浅析">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-07-03T05:18:54.000Z">2018-07-03</time></div>
+                    <a href="/2018/07/03/golang-reflect/" class="has-link-black-ter is-size-6">Golang反射浅析</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Go/">Go</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/06/23/golang-imooc/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Imooc Go基础">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-06-23T05:18:54.000Z">2018-06-23</time></div>
+                    <a href="/2018/06/23/golang-imooc/" class="has-link-black-ter is-size-6">Imooc Go基础</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Go/">Go</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/04/24/git-workflow/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Git工作流程">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-04-24T05:18:54.000Z">2018-04-24</time></div>
+                    <a href="/2018/04/24/git-workflow/" class="has-link-black-ter is-size-6">Git工作流程</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Git/">Git</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            Archives
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/07/">
+                <span class="level-start">
+                    <span class="level-item">July 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/06/">
+                <span class="level-start">
+                    <span class="level-item">June 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/04/">
+                <span class="level-start">
+                    <span class="level-item">April 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/03/">
+                <span class="level-start">
+                    <span class="level-item">March 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/01/">
+                <span class="level-start">
+                    <span class="level-item">January 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/12/">
+                <span class="level-start">
+                    <span class="level-item">December 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">November 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">October 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/07/">
+                <span class="level-start">
+                    <span class="level-item">July 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/06/">
+                <span class="level-start">
+                    <span class="level-item">June 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/05/">
+                <span class="level-start">
+                    <span class="level-item">May 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">10</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">April 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">18</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/03/">
+                <span class="level-start">
+                    <span class="level-item">March 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                Tags
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/12-05/">
+                        <span class="tag">12.05</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django/">
+                        <span class="tag">Django</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django-Centos/">
+                        <span class="tag">Django, Centos</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django-Centos-nginx-uwsgi/">
+                        <span class="tag">Django, Centos, nginx, uwsgi</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django-Python/">
+                        <span class="tag">Django, Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django，Celery/">
+                        <span class="tag">Django，Celery</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django，Mysql，Python/">
+                        <span class="tag">Django，Mysql，Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django，Vue，Rest/">
+                        <span class="tag">Django，Vue，Rest</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Git/">
+                        <span class="tag">Git</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Go/">
+                        <span class="tag">Go</span>
+                        <span class="tag is-grey">5</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Go，Mac，Privoxy/">
+                        <span class="tag">Go，Mac，Privoxy</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Nginx/">
+                        <span class="tag">Nginx</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Redis-Python/">
+                        <span class="tag">Redis, Python</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，CSS，Python/">
+                        <span class="tag">Scrapy，CSS，Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Django，Python/">
+                        <span class="tag">Scrapy，Django，Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python/">
+                        <span class="tag">Scrapy，Python</span>
+                        <span class="tag is-grey">19</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python-Elasticsearch/">
+                        <span class="tag">Scrapy，Python, Elasticsearch</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python，Django，Elasticsearch/">
+                        <span class="tag">Scrapy，Python，Django，Elasticsearch</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python，ElasticSearch/">
+                        <span class="tag">Scrapy，Python，ElasticSearch</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python，Redis/">
+                        <span class="tag">Scrapy，Python，Redis</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python，scrapyd/">
+                        <span class="tag">Scrapy，Python，scrapyd</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Regular-Expression，Python/">
+                        <span class="tag">Scrapy，Regular Expression，Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Requests，Python/">
+                        <span class="tag">Scrapy，Requests，Python</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Unicode，Python/">
+                        <span class="tag">Scrapy，Unicode，Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，XPath，Python/">
+                        <span class="tag">Scrapy，XPath，Python</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/TensorFlow-GPU-Ubuntu-Cuda/">
+                        <span class="tag">TensorFlow, GPU, Ubuntu, Cuda</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Web/">
+                        <span class="tag">Web</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.svg" alt="Python分布式爬虫打造搜索引擎项目学习笔记——Scrapy简单入门" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2019 LawTech.&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                
+                <br>
+                <span id="busuanzi_container_site_uv">
+                Visited by <span id="busuanzi_value_site_uv">0</span> users
+                </span>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-Hans");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
     
 
     
-
-  </div>
-
-  
-
-<script type="text/javascript">
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
-  }
-</script>
-
-
-
-
-
-
-
-
-
-  
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
-  
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
-
-
-
-  
-  
-
-  
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
-
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
-
-
-
-  
-
-
-  
-
-
-
-
-	
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-  
-  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
-  <script>AV.initialize("R025aEVl3sFz6nIRV8p0nqRB-gzGzoHsz", "g1roHmmHckuQSu2n9JW16T5b");</script>
-  <script>
-    function showTime(Counter) {
-      var query = new AV.Query(Counter);
-      var entries = [];
-      var $visitors = $(".leancloud_visitors");
-
-      $visitors.each(function () {
-        entries.push( $(this).attr("id").trim() );
-      });
-
-      query.containedIn('url', entries);
-      query.find()
-        .done(function (results) {
-          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
-
-          if (results.length === 0) {
-            $visitors.find(COUNT_CONTAINER_REF).text(0);
-            return;
-          }
-
-          for (var i = 0; i < results.length; i++) {
-            var item = results[i];
-            var url = item.get('url');
-            var time = item.get('time');
-            var element = document.getElementById(url);
-
-            $(element).find(COUNT_CONTAINER_REF).text(time);
-          }
-          for(var i = 0; i < entries.length; i++) {
-            var url = entries[i];
-            var element = document.getElementById(url);
-            var countSpan = $(element).find(COUNT_CONTAINER_REF);
-            if( countSpan.text() == '') {
-              countSpan.text(0);
-            }
-          }
-        })
-        .fail(function (object, error) {
-          console.log("Error: " + error.code + " " + error.message);
-        });
-    }
-
-    function addCount(Counter) {
-      var $visitors = $(".leancloud_visitors");
-      var url = $visitors.attr('id').trim();
-      var title = $visitors.attr('data-flag-title').trim();
-      var query = new AV.Query(Counter);
-
-      query.equalTo("url", url);
-      query.find({
-        success: function(results) {
-          if (results.length > 0) {
-            var counter = results[0];
-            counter.fetchWhenSave(true);
-            counter.increment("time");
-            counter.save(null, {
-              success: function(counter) {
-                var $element = $(document.getElementById(url));
-                $element.find('.leancloud-visitors-count').text(counter.get('time'));
-              },
-              error: function(counter, error) {
-                console.log('Failed to save Visitor num, with error message: ' + error.message);
-              }
-            });
-          } else {
-            var newcounter = new Counter();
-            /* Set ACL */
-            var acl = new AV.ACL();
-            acl.setPublicReadAccess(true);
-            acl.setPublicWriteAccess(true);
-            newcounter.setACL(acl);
-            /* End Set ACL */
-            newcounter.set("title", title);
-            newcounter.set("url", url);
-            newcounter.set("time", 1);
-            newcounter.save(null, {
-              success: function(newcounter) {
-                var $element = $(document.getElementById(url));
-                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
-              },
-              error: function(newcounter, error) {
-                console.log('Failed to create');
-              }
-            });
-          }
-        },
-        error: function(error) {
-          console.log('Error:' + error.code + " " + error.message);
-        }
-      });
-    }
-
-    $(function() {
-      var Counter = AV.Object.extend("Counter");
-      if ($('.leancloud_visitors').length == 1) {
-        addCount(Counter);
-      } else if ($('.post-title-link').length > 1) {
-        showTime(Counter);
-      }
-    });
-  </script>
-
-
-
-  
-
-  
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
 <script>
-(function(){
-    var bp = document.createElement('script');
-    var curProtocol = window.location.protocol.split(':')[0];
-    if (curProtocol === 'https') {
-        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
-    }
-    else {
-        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
-    }
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(bp, s);
-})();
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
 </script>
 
 
-  
-  
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
 
-  
+    
+    
 
-  
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
 
-  
 
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="Type something...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: 'Posts',
+                PAGES: 'Pages',
+                CATEGORIES: 'Categories',
+                TAGS: 'Tags',
+                UNTITLED: '(Untitled)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
 </body>
 </html>

@@ -1,87 +1,13 @@
 <!DOCTYPE html>
+<html lang="zh">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+<title>Redis学习笔记(二)：Redis命令及其Python API - LawTech&#39;s Blog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-  
-
-
-<html class="theme-next mist use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<meta name="theme-color" content="#222">
-
-
-
-
-
-
-
-
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
-
-
-
-
-
-
-
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
-
-<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
-
-
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
-
-
-  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
-
-
-
-
-
-  <meta name="keywords" content="Redis, Python," />
-
-
-
-
-
-  <link rel="alternate" href="/atom.xml" title="LawTech's Blog" type="application/atom+xml" />
-
-
-
-
-
-
-<meta name="description" content="redis-py简介安装在之前的学习笔记(一)中已经安装过redis-py，我的Python版本是3.5.2">
+    <meta name="description" content="redis-py简介安装在之前的学习笔记(一)中已经安装过redis-py，我的Python版本是3.5.2">
 <meta name="keywords" content="Redis, Python">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis学习笔记(二)：Redis命令及其Python API">
@@ -89,317 +15,174 @@
 <meta property="og:site_name" content="LawTech&#39;s Blog">
 <meta property="og:description" content="redis-py简介安装在之前的学习笔记(一)中已经安装过redis-py，我的Python版本是3.5.2">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://redis.io/images/redis-300dpi.png">
+<meta property="og:image" content="http://yoursite.com/images/og_image.png">
 <meta property="og:updated_time" content="2017-03-30T12:17:22.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Redis学习笔记(二)：Redis命令及其Python API">
 <meta name="twitter:description" content="redis-py简介安装在之前的学习笔记(一)中已经安装过redis-py，我的Python版本是3.5.2">
-<meta name="twitter:image" content="https://redis.io/images/redis-300dpi.png">
-
-
-
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Mist',
-    version: '5.1.4',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
-    fancybox: true,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    duoshuo: {
-      userId: '0',
-      author: '博主'
-    },
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-
-  <link rel="canonical" href="http://yoursite.com/2017/03/27/Redis-2/"/>
+<meta name="twitter:image" content="http://yoursite.com/images/og_image.png">
 
 
 
 
 
-  <title>Redis学习笔记(二)：Redis命令及其Python API | LawTech's Blog</title>
-  
 
 
+<link rel="icon" href="/images/favicon.svg">
 
 
-
-  <script type="text/javascript">
-    var _hmt = _hmt || [];
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "https://hm.baidu.com/hm.js?340874ba9357cbe81570aa4ac1185941";
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
-    })();
-  </script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
 
 
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
 
 
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
 </head>
-
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
-
-  
-  
-    
-  
-
-  <div class="container sidebar-position-left page-post-detail">
-    <div class="headband"></div>
-
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta ">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">LawTech's Blog</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.svg" alt="Redis学习笔记(二)：Redis命令及其Python API" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="Search" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
     </div>
-      
-        <p class="site-subtitle">不破不立</p>
-      
-  </div>
-
-  <div class="site-nav-toggle">
-    <button>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
-  </div>
-</div>
-
-<nav class="site-nav">
-  
-
-  
-    <ul id="menu" class="menu">
-      
-        
-        <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
-            
-            首页
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-about">
-          <a href="/about/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
-            
-            关于
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-tags">
-          <a href="/tags/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
-            
-            标签
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-categories">
-          <a href="/categories/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
-            
-            分类
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-archives">
-          <a href="/archives/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
-            
-            归档
-          </a>
-        </li>
-      
-
-      
-    </ul>
-  
-
-  
 </nav>
-
-
-
- </div>
-    </header>
-
-    <main id="main" class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          <div id="content" class="content">
-            
-
-  <div id="posts" class="posts-expand">
     
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/27/Redis-2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="LawTech.">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="LawTech's Blog">
-    </span>
-
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
     
-      <header class="post-header">
-
+    <div class="card-content article ">
         
-        
-          <h1 class="post-title" itemprop="name headline">Redis学习笔记(二)：Redis命令及其Python API</h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-27T16:18:54+08:00">
-                2017-03-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Redis/" itemprop="url" rel="index">
-                    <span itemprop="name">Redis</span>
-                  </a>
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-03-27T08:18:54.000Z">2017-03-27</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Redis/">Redis</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    36 minutes read (About 5398 words)
                 </span>
-
                 
                 
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/03/27/Redis-2/" class="leancloud_visitors" data-flag-title="Redis学习笔记(二)：Redis命令及其Python API">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-            <span class="post-meta-divider">|</span>
-            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
-            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
-            </span>
-          
-
-          
-
-          
-
+                <span class="level-item has-text-grey" id="busuanzi_container_page_pv">
+                    <i class="far fa-eye"></i>
+                    <span id="busuanzi_value_page_pv">0</span> visits
+                </span>
+                
+            </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-        <div class="post-gallery" itemscope itemtype="http://schema.org/ImageGallery">
-          
-          
-            <div class="post-gallery-row">
-              <a class="post-gallery-img fancybox"
-                 href="https://redis.io/images/redis-300dpi.png" rel="gallery_cjwg43li90071uedl2ks0e5t6"
-                 itemscope itemtype="http://schema.org/ImageObject" itemprop="url">
-                <img src="https://redis.io/images/redis-300dpi.png" itemprop="contentUrl"/>
-              </a>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-          
+                Redis学习笔记(二)：Redis命令及其Python API
+            
+        </h1>
+        <div class="content">
+            <h2 id="redis-py简介"><a href="#redis-py简介" class="headerlink" title="redis-py简介"></a><strong>redis-py简介</strong></h2><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a><strong>安装</strong></h3><p>在之前的学习笔记(一)中已经安装过<a href="https://github.com/andymccurdy/redis-py" target="_blank" rel="noopener">redis-py</a>，我的Python版本是3.5.2</p>
+<a id="more"></a>
+<figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pip3 install redis</span><br></pre></td></tr></table></figure>
 
-          
-          </div>
-        </div>
-      
+<h3 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a><strong>快速开始</strong></h3><figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">import</span> redis</span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r = redis.StrictRedis(host=<span class="hljs-string">'localhost'</span>, port=<span class="hljs-number">6379</span>, db=<span class="hljs-number">0</span>)</span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.set(<span class="hljs-string">'key'</span>, <span class="hljs-string">'value'</span>)</span><br><span class="line"><span class="hljs-literal">True</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.get(<span class="hljs-string">'key'</span>)</span><br><span class="line"><span class="hljs-string">b'value'</span></span><br></pre></td></tr></table></figure>
 
-      
-        <h2 id="redis-py简介"><a href="#redis-py简介" class="headerlink" title="redis-py简介"></a><strong>redis-py简介</strong></h2><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a><strong>安装</strong></h3><p>在之前的学习笔记(一)中已经安装过<a href="https://github.com/andymccurdy/redis-py" target="_blank" rel="noopener">redis-py</a>，我的Python版本是3.5.2<br><a id="more"></a><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pip3 install redis</span><br></pre></td></tr></table></figure></p>
-<h3 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a><strong>快速开始</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> redis</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r = redis.StrictRedis(host=<span class="string">'localhost'</span>, port=<span class="number">6379</span>, db=<span class="number">0</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.set(<span class="string">'key'</span>, <span class="string">'value'</span>)</span><br><span class="line"><span class="keyword">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.get(<span class="string">'key'</span>)</span><br><span class="line"><span class="string">b'value'</span></span><br></pre></td></tr></table></figure>
 <h3 id="API参考"><a href="#API参考" class="headerlink" title="API参考"></a><strong>API参考</strong></h3><p>Redis的<a href="http://www.redis.cn/commands.html" target="_blank" rel="noopener">官方命令文档</a>很好地解释了每个命令的详细信息。 redis-py公开了实现这些命令的两个客户端类。 </p>
 <p>第一，StrictRedis类试图遵守官方命令语法， 但是有些一些例外：</p>
 <ul>
@@ -418,8 +201,8 @@
 <li>ZADD: 在Redis类中是这样的：<br>zadd(‘my-key’, ‘name1’, 1.1, ‘name2’, 2.2, name3=3.3, name4=4.4)<br>在StrictRedis中是这样的：<br>zadd(‘my-key’, 1.1, ‘name1’, 2.2, ‘name2’, name3=3.3, name4=4.4)</li>
 <li>SETEX: 在Redis类中是这样的：<br>setex(self, name, value, time)<br>而在StrictRedis中是这样的：<br>setex(self, name, time, value)</li>
 </ul>
-<h3 id="连接池"><a href="#连接池" class="headerlink" title="连接池"></a><strong>连接池</strong></h3><p> redis-py使用connection pool来管理对一个redis server的所有连接，避免每次建立、释放连接的开销。默认情况下，每个Redis实例都会依次创建并维护一个自己的连接池。我们可以直接建立一个连接池，然后传递给Redis或StrictRedis连接命令作为参数，这样就可以实现多个Redis实例共享一个连接池，以实现客户端分片，或者对连接的管理方式进行更高精度的控制。<br> <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>pool = redis.ConnectionPool(host=<span class="string">'localhost'</span>, port=<span class="number">6379</span>, db=<span class="number">0</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r = redis.StrictRedis(connection_pool=pool)</span><br></pre></td></tr></table></figure></p>
-<p> 我们也可以创建自己的Connection子类，用于控制异步框架中的套接字行为，要使用自己的连接实例化客户端类，需要创建一个连接池，将类传递给connection_class参数。<br> <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>pool = redis.ConnectionPool(connection_class=YourConnectionClass,your_arg=<span class="string">'...'</span>, ...)</span><br></pre></td></tr></table></figure></p>
+<h3 id="连接池"><a href="#连接池" class="headerlink" title="连接池"></a><strong>连接池</strong></h3><p> redis-py使用connection pool来管理对一个redis server的所有连接，避免每次建立、释放连接的开销。默认情况下，每个Redis实例都会依次创建并维护一个自己的连接池。我们可以直接建立一个连接池，然后传递给Redis或StrictRedis连接命令作为参数，这样就可以实现多个Redis实例共享一个连接池，以实现客户端分片，或者对连接的管理方式进行更高精度的控制。<br> <figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>pool = redis.ConnectionPool(host=<span class="hljs-string">'localhost'</span>, port=<span class="hljs-number">6379</span>, db=<span class="hljs-number">0</span>)</span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r = redis.StrictRedis(connection_pool=pool)</span><br></pre></td></tr></table></figure></p>
+<p> 我们也可以创建自己的Connection子类，用于控制异步框架中的套接字行为，要使用自己的连接实例化客户端类，需要创建一个连接池，将类传递给connection_class参数。<br> <figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>pool = redis.ConnectionPool(connection_class=YourConnectionClass,your_arg=<span class="hljs-string">'...'</span>, ...)</span><br></pre></td></tr></table></figure></p>
 <p> 释放连接回到连接池：可以使用Redis类的reset()方法，或者使用with上下文管理语法。</p>
 <p> 解析器：解析器控制如何解析Redis-server的响应内容，redis-py提供两种方式的解析器类支持PythonParser和HiredisParser(需要单独安装)。它优先选用HiredisParser,如果不存在，则选用PythonParser. Hiredis是redis核心团队开发的一个高性能c库，能够提高10x的解析速度。</p>
 <p>响应回调：The client class使用一系列的callbacks来完成响应到对应python类型的映射。这些响应回调，定义在 Redis client class中的RESPONSE_CALLBACKS字典中。你可以使用set_response_callback 方法来添加自定义回调类。这个方法接受两个参数：一个命令名字，一个回调类。回调类接受至少一个参数：响应内容，关键字参数作为命令调用时的参数。</p>
@@ -438,8 +221,7 @@
 <th>redis-py API</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>INCR</td>
 <td>INCR key-name</td>
 <td>将键存储的值加1</td>
@@ -469,10 +251,11 @@
 <td>将键存储的值加浮点数amount</td>
 <td>incrbyfloat(name, amount=1.0)</td>
 </tr>
-</tbody>
-</table>
+</tbody></table>
 <p>在redis-py内部，使用了INCRBY和DECRBY命令来实现incr()和decr()方法，并且第二个参数amount是可选的，默认为1。</p>
-<p>下面这个交互示例展示了Redis的INCR和DECR操作<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.get(<span class="string">'key'</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.incr(<span class="string">'key'</span>)</span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.incr(<span class="string">'key'</span>, <span class="number">15</span>)</span><br><span class="line"><span class="number">16</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.get(<span class="string">'key'</span>)</span><br><span class="line"><span class="string">b'16'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.decr(<span class="string">'key'</span>, <span class="number">5</span>)</span><br><span class="line"><span class="number">11</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.set(<span class="string">'key'</span>, <span class="number">13</span>)</span><br><span class="line"><span class="keyword">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.incr(<span class="string">'key'</span>)</span><br><span class="line"><span class="number">14</span></span><br></pre></td></tr></table></figure></p>
+<p>下面这个交互示例展示了Redis的INCR和DECR操作</p>
+<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.get(<span class="hljs-string">'key'</span>)</span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.incr(<span class="hljs-string">'key'</span>)</span><br><span class="line"><span class="hljs-number">1</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.incr(<span class="hljs-string">'key'</span>, <span class="hljs-number">15</span>)</span><br><span class="line"><span class="hljs-number">16</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.get(<span class="hljs-string">'key'</span>)</span><br><span class="line"><span class="hljs-string">b'16'</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.decr(<span class="hljs-string">'key'</span>, <span class="hljs-number">5</span>)</span><br><span class="line"><span class="hljs-number">11</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.set(<span class="hljs-string">'key'</span>, <span class="hljs-number">13</span>)</span><br><span class="line"><span class="hljs-literal">True</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.incr(<span class="hljs-string">'key'</span>)</span><br><span class="line"><span class="hljs-number">14</span></span><br></pre></td></tr></table></figure>
+
 <p>当用户将一个值存储到Redis字符串中时，如果这个值可以被解释(interpet)为十进制整数或者浮点数，那么Redis会允许用户对这个字符串执行各种INCR<em>和DECR</em>操作。如果用户对一个不存在的键或者一个保存了空串的键执行自增或自减操作，Redis会自动将这个键的值当作是0来处理。若非上述情况，则Redis将会返回一个错误。</p>
 <p>除了自增和自减操作，Redis还可以对字节串进行读取和写入的操作。</p>
 <p>下表展示了Redis用来处理字符串子串和二进制位的命令及其redis-py API。</p>
@@ -485,8 +268,7 @@
 <th>redis-py API</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>APPEND</td>
 <td>APPEND key-name value</td>
 <td>将值value追加到给定键key-name当前存储的值的末尾</td>
@@ -528,10 +310,11 @@
 <td>对一个或多个保存二进制位的字符串 key 进行位元操作，并将结果保存到 destkey 上。</td>
 <td>bitop(operation, dest, *keys)</td>
 </tr>
-</tbody>
-</table>
+</tbody></table>
 <p>在执行SETRANGE或者SETBIT命令时，如果offset比当前key对应string还要长，那这个string后面就补空字节(null)以达到offset。使用GETRANGE时超出字符串末尾的数据会被认为是空字符串，而使用GETBIT时超出字符串末尾的二进制位会被视为是0。</p>
-<p>下面这个交互示例展示了Redis的子串操作和二进制位操作<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.append(<span class="string">'new-string-key'</span>, <span class="string">'hello '</span>)</span><br><span class="line"><span class="number">6</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.append(<span class="string">'new-string-key'</span>, <span class="string">'world!'</span>)</span><br><span class="line"><span class="number">12</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.substr(<span class="string">'new-string-key'</span>, <span class="number">3</span>, <span class="number">7</span>)</span><br><span class="line"><span class="string">b'lo wo'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.getrange(<span class="string">'new-string-key'</span>, <span class="number">3</span>, <span class="number">7</span>)</span><br><span class="line"><span class="string">b'lo wo'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.setrange(<span class="string">'new-string-key'</span>, <span class="number">0</span>, <span class="string">'H'</span>)</span><br><span class="line"><span class="number">12</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.get(<span class="string">'new-string-key'</span>)</span><br><span class="line"><span class="string">b'Hello world!'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.setrange(<span class="string">'new-string-key'</span>, <span class="number">11</span>, <span class="string">', how are you?'</span>)</span><br><span class="line"><span class="number">25</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.get(<span class="string">'new-string-key'</span>)</span><br><span class="line"><span class="string">b'Hello world, how are you?'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.setbit(<span class="string">'another-key'</span>, <span class="number">2</span>, <span class="number">1</span>)</span><br><span class="line"><span class="number">0</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.setbit(<span class="string">'another-key'</span>, <span class="number">7</span>, <span class="number">1</span>)</span><br><span class="line"><span class="number">0</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.getbit(<span class="string">'another-key'</span>, <span class="number">1</span>)</span><br><span class="line"><span class="number">0</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.get(<span class="string">'another-key'</span>)</span><br><span class="line"><span class="string">b'!'</span></span><br></pre></td></tr></table></figure></p>
+<p>下面这个交互示例展示了Redis的子串操作和二进制位操作</p>
+<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.append(<span class="hljs-string">'new-string-key'</span>, <span class="hljs-string">'hello '</span>)</span><br><span class="line"><span class="hljs-number">6</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.append(<span class="hljs-string">'new-string-key'</span>, <span class="hljs-string">'world!'</span>)</span><br><span class="line"><span class="hljs-number">12</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.substr(<span class="hljs-string">'new-string-key'</span>, <span class="hljs-number">3</span>, <span class="hljs-number">7</span>)</span><br><span class="line"><span class="hljs-string">b'lo wo'</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.getrange(<span class="hljs-string">'new-string-key'</span>, <span class="hljs-number">3</span>, <span class="hljs-number">7</span>)</span><br><span class="line"><span class="hljs-string">b'lo wo'</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.setrange(<span class="hljs-string">'new-string-key'</span>, <span class="hljs-number">0</span>, <span class="hljs-string">'H'</span>)</span><br><span class="line"><span class="hljs-number">12</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.get(<span class="hljs-string">'new-string-key'</span>)</span><br><span class="line"><span class="hljs-string">b'Hello world!'</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.setrange(<span class="hljs-string">'new-string-key'</span>, <span class="hljs-number">11</span>, <span class="hljs-string">', how are you?'</span>)</span><br><span class="line"><span class="hljs-number">25</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.get(<span class="hljs-string">'new-string-key'</span>)</span><br><span class="line"><span class="hljs-string">b'Hello world, how are you?'</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.setbit(<span class="hljs-string">'another-key'</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>)</span><br><span class="line"><span class="hljs-number">0</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.setbit(<span class="hljs-string">'another-key'</span>, <span class="hljs-number">7</span>, <span class="hljs-number">1</span>)</span><br><span class="line"><span class="hljs-number">0</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.getbit(<span class="hljs-string">'another-key'</span>, <span class="hljs-number">1</span>)</span><br><span class="line"><span class="hljs-number">0</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.get(<span class="hljs-string">'another-key'</span>)</span><br><span class="line"><span class="hljs-string">b'!'</span></span><br></pre></td></tr></table></figure>
+
 <p>Redis现在的GETRANGE命令是由以前的SUBSTR命令改名而来，所以现在redis-py中两者仍然都可以使用，但是最好还是使用getrange()方法来获取子串。</p>
 <h3 id="列表"><a href="#列表" class="headerlink" title="列表"></a><strong>列表</strong></h3><p>下表展示了一些之前介绍过的常用列表命令</p>
 <table>
@@ -543,8 +326,7 @@
 <th>redis-py API</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>RPUSH</td>
 <td>RPUSH key value [value …]</td>
 <td>向存于key的列表的尾部插入所有指定的值</td>
@@ -586,9 +368,10 @@
 <td>修剪(trim)一个已存在的list，这样list就会只包含指定范围的指定元素</td>
 <td>ltrim(name, start, end)</td>
 </tr>
-</tbody>
-</table>
-<p>下面这个交互示例展示了Redis列表的推入和弹出操作<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.rpush(<span class="string">'list-key'</span>, <span class="string">'last'</span>)</span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.lpush(<span class="string">'list-key'</span>, <span class="string">'first'</span>)</span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.rpush(<span class="string">'list-key'</span>, <span class="string">'new last'</span>)</span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.lrange(<span class="string">'list-key'</span>, <span class="number">0</span>, <span class="number">-1</span>)</span><br><span class="line">[<span class="string">b'first'</span>, <span class="string">b'last'</span>, <span class="string">b'new last'</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.lpop(<span class="string">'list-key'</span>)</span><br><span class="line"><span class="string">b'first'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.lpop(<span class="string">'list-key'</span>)</span><br><span class="line"><span class="string">b'last'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.lrange(<span class="string">'list-key'</span>, <span class="number">0</span>, <span class="number">-1</span>)</span><br><span class="line">[<span class="string">b'new last'</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.rpush(<span class="string">'list-key'</span>, <span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>)</span><br><span class="line"><span class="number">4</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.lrange(<span class="string">'list-key'</span>, <span class="number">0</span>, <span class="number">-1</span>)</span><br><span class="line">[<span class="string">b'new last'</span>, <span class="string">b'a'</span>, <span class="string">b'b'</span>, <span class="string">b'c'</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.ltrim(<span class="string">'list-key'</span>, <span class="number">2</span>, <span class="number">-1</span>)</span><br><span class="line"><span class="keyword">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.lrange(<span class="string">'list-key'</span>, <span class="number">0</span>, <span class="number">-1</span>)</span><br><span class="line">[<span class="string">b'b'</span>, <span class="string">b'c'</span>]</span><br></pre></td></tr></table></figure></p>
+</tbody></table>
+<p>下面这个交互示例展示了Redis列表的推入和弹出操作</p>
+<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.rpush(<span class="hljs-string">'list-key'</span>, <span class="hljs-string">'last'</span>)</span><br><span class="line"><span class="hljs-number">1</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.lpush(<span class="hljs-string">'list-key'</span>, <span class="hljs-string">'first'</span>)</span><br><span class="line"><span class="hljs-number">2</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.rpush(<span class="hljs-string">'list-key'</span>, <span class="hljs-string">'new last'</span>)</span><br><span class="line"><span class="hljs-number">3</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.lrange(<span class="hljs-string">'list-key'</span>, <span class="hljs-number">0</span>, <span class="hljs-number">-1</span>)</span><br><span class="line">[<span class="hljs-string">b'first'</span>, <span class="hljs-string">b'last'</span>, <span class="hljs-string">b'new last'</span>]</span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.lpop(<span class="hljs-string">'list-key'</span>)</span><br><span class="line"><span class="hljs-string">b'first'</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.lpop(<span class="hljs-string">'list-key'</span>)</span><br><span class="line"><span class="hljs-string">b'last'</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.lrange(<span class="hljs-string">'list-key'</span>, <span class="hljs-number">0</span>, <span class="hljs-number">-1</span>)</span><br><span class="line">[<span class="hljs-string">b'new last'</span>]</span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.rpush(<span class="hljs-string">'list-key'</span>, <span class="hljs-string">'a'</span>, <span class="hljs-string">'b'</span>, <span class="hljs-string">'c'</span>)</span><br><span class="line"><span class="hljs-number">4</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.lrange(<span class="hljs-string">'list-key'</span>, <span class="hljs-number">0</span>, <span class="hljs-number">-1</span>)</span><br><span class="line">[<span class="hljs-string">b'new last'</span>, <span class="hljs-string">b'a'</span>, <span class="hljs-string">b'b'</span>, <span class="hljs-string">b'c'</span>]</span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.ltrim(<span class="hljs-string">'list-key'</span>, <span class="hljs-number">2</span>, <span class="hljs-number">-1</span>)</span><br><span class="line"><span class="hljs-literal">True</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.lrange(<span class="hljs-string">'list-key'</span>, <span class="hljs-number">0</span>, <span class="hljs-number">-1</span>)</span><br><span class="line">[<span class="hljs-string">b'b'</span>, <span class="hljs-string">b'c'</span>]</span><br></pre></td></tr></table></figure>
+
 <p>还有几个列表命令能将元素从一个列表移动到另一个列表，或者阻塞(block)执行命令的客户端直到有其他客户端给列表添加元素为止。</p>
 <p>下表列出了这些阻塞弹出命令以及列表之间移动元素的命令</p>
 <table>
@@ -600,8 +383,7 @@
 <th>redis-py API</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>BLPOP</td>
 <td>BLPOP key [key …] timeout</td>
 <td>弹出第一个非空列表的头元素，或在timeout秒内阻塞并等待可弹出的元素出现</td>
@@ -625,10 +407,11 @@
 <td>BRPOPLPUSH 是 RPOPLPUSH 的阻塞版本。 当 source 包含元素的时候，这个命令表现得跟 RPOPLPUSH 一模一样。 当 source 是空的时候，Redis将会阻塞这个连接，直到另一个客户端 push 元素进入或者达到 timeout 时限。</td>
 <td>brpoplpush(src, dst, timeout=0)</td>
 </tr>
-</tbody>
-</table>
+</tbody></table>
 <p>注：原子性是指命令正在都区或者修改数据的时候，其他客户端不能读取或修改相同的数据。</p>
-<p>下面这个交互示例展示了Redis列表的阻塞弹出命令以及元素移动命令<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.rpush(<span class="string">'list'</span>, <span class="string">'item1'</span>)</span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.rpush(<span class="string">'list'</span>, <span class="string">'item2'</span>)</span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.rpush(<span class="string">'list2'</span>, <span class="string">'item3'</span>)</span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.brpoplpush(<span class="string">'list2'</span>, <span class="string">'list'</span>, <span class="number">1</span>)</span><br><span class="line"><span class="string">b'item3'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.brpoplpush(<span class="string">'list2'</span>, <span class="string">'list'</span>, <span class="number">1</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.lrange(<span class="string">'list'</span>, <span class="number">0</span>, <span class="number">-1</span>)</span><br><span class="line">[<span class="string">b'item3'</span>, <span class="string">b'item1'</span>, <span class="string">b'item2'</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.brpoplpush(<span class="string">'list'</span>, <span class="string">'list2'</span>, <span class="number">1</span>)</span><br><span class="line"><span class="string">b'item2'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.blpop([<span class="string">'list'</span>, <span class="string">'list2'</span>], <span class="number">1</span>)</span><br><span class="line">(<span class="string">b'list'</span>, <span class="string">b'item3'</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.blpop([<span class="string">'list'</span>, <span class="string">'list2'</span>], <span class="number">1</span>)</span><br><span class="line">(<span class="string">b'list'</span>, <span class="string">b'item1'</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.blpop([<span class="string">'list'</span>, <span class="string">'list2'</span>], <span class="number">1</span>)</span><br><span class="line">(<span class="string">b'list2'</span>, <span class="string">b'item2'</span>)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.blpop([<span class="string">'list'</span>, <span class="string">'list2'</span>], <span class="number">1</span>)</span><br></pre></td></tr></table></figure></p>
+<p>下面这个交互示例展示了Redis列表的阻塞弹出命令以及元素移动命令</p>
+<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.rpush(<span class="hljs-string">'list'</span>, <span class="hljs-string">'item1'</span>)</span><br><span class="line"><span class="hljs-number">1</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.rpush(<span class="hljs-string">'list'</span>, <span class="hljs-string">'item2'</span>)</span><br><span class="line"><span class="hljs-number">2</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.rpush(<span class="hljs-string">'list2'</span>, <span class="hljs-string">'item3'</span>)</span><br><span class="line"><span class="hljs-number">1</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.brpoplpush(<span class="hljs-string">'list2'</span>, <span class="hljs-string">'list'</span>, <span class="hljs-number">1</span>)</span><br><span class="line"><span class="hljs-string">b'item3'</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.brpoplpush(<span class="hljs-string">'list2'</span>, <span class="hljs-string">'list'</span>, <span class="hljs-number">1</span>)</span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.lrange(<span class="hljs-string">'list'</span>, <span class="hljs-number">0</span>, <span class="hljs-number">-1</span>)</span><br><span class="line">[<span class="hljs-string">b'item3'</span>, <span class="hljs-string">b'item1'</span>, <span class="hljs-string">b'item2'</span>]</span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.brpoplpush(<span class="hljs-string">'list'</span>, <span class="hljs-string">'list2'</span>, <span class="hljs-number">1</span>)</span><br><span class="line"><span class="hljs-string">b'item2'</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.blpop([<span class="hljs-string">'list'</span>, <span class="hljs-string">'list2'</span>], <span class="hljs-number">1</span>)</span><br><span class="line">(<span class="hljs-string">b'list'</span>, <span class="hljs-string">b'item3'</span>)</span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.blpop([<span class="hljs-string">'list'</span>, <span class="hljs-string">'list2'</span>], <span class="hljs-number">1</span>)</span><br><span class="line">(<span class="hljs-string">b'list'</span>, <span class="hljs-string">b'item1'</span>)</span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.blpop([<span class="hljs-string">'list'</span>, <span class="hljs-string">'list2'</span>], <span class="hljs-number">1</span>)</span><br><span class="line">(<span class="hljs-string">b'list2'</span>, <span class="hljs-string">b'item2'</span>)</span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.blpop([<span class="hljs-string">'list'</span>, <span class="hljs-string">'list2'</span>], <span class="hljs-number">1</span>)</span><br></pre></td></tr></table></figure>
+
 <p>对于阻塞弹出命令和弹出并推入命令，最常见的用例就是消息传递(messaging)和任务队列(task queue)。</p>
 <h3 id="集合"><a href="#集合" class="headerlink" title="集合"></a><strong>集合</strong></h3><p>下表展示了一部分最常用的集合命令</p>
 <table>
@@ -640,8 +423,7 @@
 <th>redis-py API</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>SADD</td>
 <td>SADD key member [member …]</td>
 <td>添加一个或多个指定的member元素到key集合中</td>
@@ -689,9 +471,10 @@
 <td>将member从source集合移动到destination集合中</td>
 <td>smove(src, dst, value)</td>
 </tr>
-</tbody>
-</table>
-<p>下面这个交互示例展示了这些常用的集合命令<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.sadd(<span class="string">'set-key'</span>, <span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>)</span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.srem(<span class="string">'set-key'</span>, <span class="string">'c'</span>, <span class="string">'d'</span>)</span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.srem(<span class="string">'set-key'</span>, <span class="string">'c'</span>, <span class="string">'d'</span>)</span><br><span class="line"><span class="number">0</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.scard(<span class="string">'set-key'</span>)</span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.smembers(<span class="string">'set-key'</span>)</span><br><span class="line">&#123;<span class="string">b'b'</span>, <span class="string">b'a'</span>&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.smove(<span class="string">'set-key'</span>, <span class="string">'set-key2'</span>, <span class="string">'a'</span>)</span><br><span class="line"><span class="keyword">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.smove(<span class="string">'set-key'</span>, <span class="string">'set-key2'</span>, <span class="string">'c'</span>)</span><br><span class="line"><span class="keyword">False</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.smembers(<span class="string">'set-key2'</span>)</span><br><span class="line">&#123;<span class="string">b'a'</span>&#125;</span><br></pre></td></tr></table></figure></p>
+</tbody></table>
+<p>下面这个交互示例展示了这些常用的集合命令</p>
+<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.sadd(<span class="hljs-string">'set-key'</span>, <span class="hljs-string">'a'</span>, <span class="hljs-string">'b'</span>, <span class="hljs-string">'c'</span>)</span><br><span class="line"><span class="hljs-number">3</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.srem(<span class="hljs-string">'set-key'</span>, <span class="hljs-string">'c'</span>, <span class="hljs-string">'d'</span>)</span><br><span class="line"><span class="hljs-number">1</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.srem(<span class="hljs-string">'set-key'</span>, <span class="hljs-string">'c'</span>, <span class="hljs-string">'d'</span>)</span><br><span class="line"><span class="hljs-number">0</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.scard(<span class="hljs-string">'set-key'</span>)</span><br><span class="line"><span class="hljs-number">2</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.smembers(<span class="hljs-string">'set-key'</span>)</span><br><span class="line">&#123;<span class="hljs-string">b'b'</span>, <span class="hljs-string">b'a'</span>&#125;</span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.smove(<span class="hljs-string">'set-key'</span>, <span class="hljs-string">'set-key2'</span>, <span class="hljs-string">'a'</span>)</span><br><span class="line"><span class="hljs-literal">True</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.smove(<span class="hljs-string">'set-key'</span>, <span class="hljs-string">'set-key2'</span>, <span class="hljs-string">'c'</span>)</span><br><span class="line"><span class="hljs-literal">False</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.smembers(<span class="hljs-string">'set-key2'</span>)</span><br><span class="line">&#123;<span class="hljs-string">b'a'</span>&#125;</span><br></pre></td></tr></table></figure>
+
 <p>但是集合真正厉害的地方在于组合和关联多个集合，下表展示了相关的Redis命令</p>
 <table>
 <thead>
@@ -702,8 +485,7 @@
 <th>redis-py API</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>SDIFF</td>
 <td>SDIFF key [key …]</td>
 <td>返回一个集合与给定集合的差集的元素</td>
@@ -739,9 +521,10 @@
 <td>类似于SUNION命令，不同的是它并不返回结果集，而是将结果存储在destination集合中，如果destination已经存在，则将其覆盖.</td>
 <td>sunionstore(dest, keys, *args)</td>
 </tr>
-</tbody>
-</table>
-<p>这些命令分别是并集运算、交集运算和差集运算这三个基本集合操作的“返回结果”版本和“存储结果”版本，下面这个交互示例展示了这些命令的基本使用<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.sadd(<span class="string">'skey1'</span>, <span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>, <span class="string">'d'</span>)</span><br><span class="line"><span class="number">4</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.sadd(<span class="string">'skey2'</span>, <span class="string">'c'</span>, <span class="string">'d'</span>, <span class="string">'e'</span>, <span class="string">'f'</span>)</span><br><span class="line"><span class="number">4</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.sdiff(<span class="string">'skey1'</span>, <span class="string">'skey2'</span>)</span><br><span class="line">&#123;<span class="string">b'b'</span>, <span class="string">b'a'</span>&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.sinter(<span class="string">'skey1'</span>, <span class="string">'skey2'</span>)</span><br><span class="line">&#123;<span class="string">b'c'</span>, <span class="string">b'd'</span>&#125;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.sunion(<span class="string">'skey1'</span>, <span class="string">'skey2'</span>)</span><br><span class="line">&#123;<span class="string">b'd'</span>, <span class="string">b'a'</span>, <span class="string">b'f'</span>, <span class="string">b'e'</span>, <span class="string">b'c'</span>, <span class="string">b'b'</span>&#125;</span><br></pre></td></tr></table></figure></p>
+</tbody></table>
+<p>这些命令分别是并集运算、交集运算和差集运算这三个基本集合操作的“返回结果”版本和“存储结果”版本，下面这个交互示例展示了这些命令的基本使用</p>
+<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.sadd(<span class="hljs-string">'skey1'</span>, <span class="hljs-string">'a'</span>, <span class="hljs-string">'b'</span>, <span class="hljs-string">'c'</span>, <span class="hljs-string">'d'</span>)</span><br><span class="line"><span class="hljs-number">4</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.sadd(<span class="hljs-string">'skey2'</span>, <span class="hljs-string">'c'</span>, <span class="hljs-string">'d'</span>, <span class="hljs-string">'e'</span>, <span class="hljs-string">'f'</span>)</span><br><span class="line"><span class="hljs-number">4</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.sdiff(<span class="hljs-string">'skey1'</span>, <span class="hljs-string">'skey2'</span>)</span><br><span class="line">&#123;<span class="hljs-string">b'b'</span>, <span class="hljs-string">b'a'</span>&#125;</span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.sinter(<span class="hljs-string">'skey1'</span>, <span class="hljs-string">'skey2'</span>)</span><br><span class="line">&#123;<span class="hljs-string">b'c'</span>, <span class="hljs-string">b'd'</span>&#125;</span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.sunion(<span class="hljs-string">'skey1'</span>, <span class="hljs-string">'skey2'</span>)</span><br><span class="line">&#123;<span class="hljs-string">b'd'</span>, <span class="hljs-string">b'a'</span>, <span class="hljs-string">b'f'</span>, <span class="hljs-string">b'e'</span>, <span class="hljs-string">b'c'</span>, <span class="hljs-string">b'b'</span>&#125;</span><br></pre></td></tr></table></figure>
+
 <p>和Python的集合相比，Redis的集合除了可以被多个客户端远程地进行访问之外，其他的语义和功能基本都是相同的。</p>
 <h3 id="散列"><a href="#散列" class="headerlink" title="散列"></a><strong>散列</strong></h3><p>首先介绍一些常用的添加和删除键值对的Redis散列命令</p>
 <table>
@@ -753,8 +536,7 @@
 <th>redis-py API</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>HMGET</td>
 <td>HMGET key field [field …]</td>
 <td>返回key指定的散列中指定字段的值</td>
@@ -778,10 +560,11 @@
 <td>返回key指定的散列包含的字段的数量</td>
 <td>hlen(name)</td>
 </tr>
-</tbody>
-</table>
+</tbody></table>
 <p>其中，HDEL命令已经介绍过了，而HLEN以及用于一次读取或设置多个键的HMGET和HMSET则是新出现的命令。它们既可以给用户带来方便，又可以通过减少命令的调用次数以及客户端与Redis之间的通信往返次数来提升Redis的性能。</p>
-<p>下面这个交互示例展示了这些命令的使用方法<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.hmset(<span class="string">'hash-key'</span>, &#123;<span class="string">'k1'</span>:<span class="string">'v1'</span>,<span class="string">'k2'</span>:<span class="string">'v2'</span>,<span class="string">'k3'</span>:<span class="string">'v3'</span>&#125;)</span><br><span class="line"><span class="keyword">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.hmget(<span class="string">'hash-key'</span>, [<span class="string">'k2'</span>, <span class="string">'k3'</span>])</span><br><span class="line">[<span class="string">b'v2'</span>, <span class="string">b'v3'</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.hlen(<span class="string">'hash-key'</span>)</span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.hdel(<span class="string">'hash-key'</span>, <span class="string">'k1'</span>, <span class="string">'k3'</span>)</span><br><span class="line"><span class="number">2</span></span><br></pre></td></tr></table></figure></p>
+<p>下面这个交互示例展示了这些命令的使用方法</p>
+<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.hmset(<span class="hljs-string">'hash-key'</span>, &#123;<span class="hljs-string">'k1'</span>:<span class="hljs-string">'v1'</span>,<span class="hljs-string">'k2'</span>:<span class="hljs-string">'v2'</span>,<span class="hljs-string">'k3'</span>:<span class="hljs-string">'v3'</span>&#125;)</span><br><span class="line"><span class="hljs-literal">True</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.hmget(<span class="hljs-string">'hash-key'</span>, [<span class="hljs-string">'k2'</span>, <span class="hljs-string">'k3'</span>])</span><br><span class="line">[<span class="hljs-string">b'v2'</span>, <span class="hljs-string">b'v3'</span>]</span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.hlen(<span class="hljs-string">'hash-key'</span>)</span><br><span class="line"><span class="hljs-number">3</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.hdel(<span class="hljs-string">'hash-key'</span>, <span class="hljs-string">'k1'</span>, <span class="hljs-string">'k3'</span>)</span><br><span class="line"><span class="hljs-number">2</span></span><br></pre></td></tr></table></figure>
+
 <p>之前的学习笔记(一)介绍的HGET命令和HSET命令分别是HMGET和HMSET命令的单参数版本。因为HDEL已经可以同时删除多个键值对了，所以Redis没有实现HMDEL命令。</p>
 <p>下表列出了散列的其他几个批量操作命令，以及一些和字符串操作类似的散列命令。</p>
 <table>
@@ -793,8 +576,7 @@
 <th>redis-py API</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>HEXISTS</td>
 <td>HEXISTS key field</td>
 <td>检查给定键是否存在于散列中</td>
@@ -830,9 +612,10 @@
 <td>将键存储的值加上浮点数increment</td>
 <td>hincrbyfloat(name, key, amount=1.0)</td>
 </tr>
-</tbody>
-</table>
-<p>下面这个交互示例展示了这些命令的使用方法<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.hmset(<span class="string">'hash-key2'</span>, &#123;<span class="string">'short'</span>:<span class="string">'hello'</span>, <span class="string">'long'</span>:<span class="number">1000</span>*<span class="number">1</span>&#125;)</span><br><span class="line"><span class="keyword">True</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.hkeys(<span class="string">'hash-key2'</span>)</span><br><span class="line">[<span class="string">b'short'</span>, <span class="string">b'long'</span>]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.hexists(<span class="string">'hash-key2'</span>, <span class="string">'num'</span>)</span><br><span class="line"><span class="keyword">False</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.hincrby(<span class="string">'hash-key2'</span>, <span class="string">'num'</span>)</span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.hexists(<span class="string">'hash-key2'</span>, <span class="string">'num'</span>)</span><br><span class="line"><span class="keyword">True</span></span><br></pre></td></tr></table></figure></p>
+</tbody></table>
+<p>下面这个交互示例展示了这些命令的使用方法</p>
+<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.hmset(<span class="hljs-string">'hash-key2'</span>, &#123;<span class="hljs-string">'short'</span>:<span class="hljs-string">'hello'</span>, <span class="hljs-string">'long'</span>:<span class="hljs-number">1000</span>*<span class="hljs-number">1</span>&#125;)</span><br><span class="line"><span class="hljs-literal">True</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.hkeys(<span class="hljs-string">'hash-key2'</span>)</span><br><span class="line">[<span class="hljs-string">b'short'</span>, <span class="hljs-string">b'long'</span>]</span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.hexists(<span class="hljs-string">'hash-key2'</span>, <span class="hljs-string">'num'</span>)</span><br><span class="line"><span class="hljs-literal">False</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.hincrby(<span class="hljs-string">'hash-key2'</span>, <span class="hljs-string">'num'</span>)</span><br><span class="line"><span class="hljs-number">1</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.hexists(<span class="hljs-string">'hash-key2'</span>, <span class="hljs-string">'num'</span>)</span><br><span class="line"><span class="hljs-literal">True</span></span><br></pre></td></tr></table></figure>
+
 <p>在对散列进行处理时，如果键值对的值的体积非常大，那么用户可以先用HKEYS获取散列的所有键，然后只获取必要的值，这样可以有效地减少需要传输的数据量，避免服务器阻塞。</p>
 <h3 id="有序集合"><a href="#有序集合" class="headerlink" title="有序集合"></a><strong>有序集合</strong></h3><p>下表展示了一些常用的有序集合命令，大部分在第一章都有介绍</p>
 <table>
@@ -844,8 +627,7 @@
 <th>redis-py API</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>ZADD</td>
 <td>ZADD key score member [score member …]</td>
 <td>将带有给定分值的成员添加到有序集合中</td>
@@ -891,11 +673,12 @@
 <td>ZRANGE</td>
 <td>ZRANGE key start stop [WITHSCORES]</td>
 <td>返回排名介于start和stop之间的成员，如果给定了可选的WITHSCORES选项，那么命令会将成员的分值也一并返回</td>
-<td>zrange(name, start, end, desc=False, withscores=False, score_cast_func=<class 'float'="">)</class></td>
+<td>zrange(name, start, end, desc=False, withscores=False, score_cast_func=&lt;class ‘float’&gt;)</td>
 </tr>
-</tbody>
-</table>
-<p>下面这个交互示例展示了Redis中的一些常用的有序集合命令<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.zadd(<span class="string">'zset-key'</span>, <span class="number">3</span>, <span class="string">'a'</span>, <span class="number">2</span>, <span class="string">'b'</span>, <span class="number">1</span>, <span class="string">'c'</span>)</span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.zcard(<span class="string">'zset-key'</span>)</span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.zincrby(<span class="string">'zset-key'</span>, <span class="string">'c'</span>, <span class="number">3</span>)</span><br><span class="line"><span class="number">4.0</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.zscore(<span class="string">'zset-key'</span>, <span class="string">'b'</span>)</span><br><span class="line"><span class="number">2.0</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.zrank(<span class="string">'zset-key'</span>, <span class="string">'c'</span>)</span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.zcount(<span class="string">'zset-key'</span>, <span class="number">0</span>, <span class="number">3</span>)</span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.zrem(<span class="string">'zset-key'</span>, <span class="string">'b'</span>)</span><br><span class="line"><span class="number">1</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.zrange(<span class="string">'zset-key'</span>, <span class="number">0</span>, <span class="number">-1</span>, withscores=<span class="keyword">True</span>)</span><br><span class="line">[(<span class="string">b'a'</span>, <span class="number">3.0</span>), (<span class="string">b'c'</span>, <span class="number">4.0</span>)]</span><br></pre></td></tr></table></figure></p>
+</tbody></table>
+<p>下面这个交互示例展示了Redis中的一些常用的有序集合命令</p>
+<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.zadd(<span class="hljs-string">'zset-key'</span>, <span class="hljs-number">3</span>, <span class="hljs-string">'a'</span>, <span class="hljs-number">2</span>, <span class="hljs-string">'b'</span>, <span class="hljs-number">1</span>, <span class="hljs-string">'c'</span>)</span><br><span class="line"><span class="hljs-number">3</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.zcard(<span class="hljs-string">'zset-key'</span>)</span><br><span class="line"><span class="hljs-number">3</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.zincrby(<span class="hljs-string">'zset-key'</span>, <span class="hljs-string">'c'</span>, <span class="hljs-number">3</span>)</span><br><span class="line"><span class="hljs-number">4.0</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.zscore(<span class="hljs-string">'zset-key'</span>, <span class="hljs-string">'b'</span>)</span><br><span class="line"><span class="hljs-number">2.0</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.zrank(<span class="hljs-string">'zset-key'</span>, <span class="hljs-string">'c'</span>)</span><br><span class="line"><span class="hljs-number">2</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.zcount(<span class="hljs-string">'zset-key'</span>, <span class="hljs-number">0</span>, <span class="hljs-number">3</span>)</span><br><span class="line"><span class="hljs-number">2</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.zrem(<span class="hljs-string">'zset-key'</span>, <span class="hljs-string">'b'</span>)</span><br><span class="line"><span class="hljs-number">1</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.zrange(<span class="hljs-string">'zset-key'</span>, <span class="hljs-number">0</span>, <span class="hljs-number">-1</span>, withscores=<span class="hljs-literal">True</span>)</span><br><span class="line">[(<span class="hljs-string">b'a'</span>, <span class="hljs-number">3.0</span>), (<span class="hljs-string">b'c'</span>, <span class="hljs-number">4.0</span>)]</span><br></pre></td></tr></table></figure>
+
 <p>其中在Python客户端用StrictRedis客户端类执行ZADD命令需要先输入分值，再输入成员，这也是Redis的标准，而Redis客户端类则截然相反。</p>
 <p>下表展示了另外一下非常有用的有序集合命令</p>
 <table>
@@ -907,8 +690,7 @@
 <th>redis-py API</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>ZREVRANK</td>
 <td>ZREVRANK key member</td>
 <td>返回有序集合里成员member的排名，成员按照分值从大到小排列</td>
@@ -918,19 +700,19 @@
 <td>ZREVRANGE</td>
 <td>ZREVRANGE key start stop [WITHSCORES]</td>
 <td>返回有序集合给定排名范围内的成员，成员按照分值从大到小排列</td>
-<td>zrevrange(name, start, end, withscores=False, score_cast_func=<class 'float'="">)</class></td>
+<td>zrevrange(name, start, end, withscores=False, score_cast_func=&lt;class ‘float’&gt;)</td>
 </tr>
 <tr>
 <td>ZRANGEBYSCORE</td>
 <td>ZRANGEBYSCORE key min max [WITHSCORES] [LIMIT offset count]</td>
 <td>返回有序集合中指定分数区间内的成员</td>
-<td>zrangebyscore(name, min, max, start=None, num=None, withscores=False, score_cast_func=<class 'float'="">)</class></td>
+<td>zrangebyscore(name, min, max, start=None, num=None, withscores=False, score_cast_func=&lt;class ‘float’&gt;)</td>
 </tr>
 <tr>
 <td>ZREVRANGEBYSCORE</td>
 <td>ZREVRANGEBYSCORE key max min [WITHSCORES][LIMIT offset count]</td>
 <td>返回有序集合中指定分数区间内的成员，分数由高到低排序。</td>
-<td>zrevrangebyscore(name, max, min, start=None, num=None, withscores=False, score_cast_func=<class 'float'="">)</class></td>
+<td>zrevrangebyscore(name, max, min, start=None, num=None, withscores=False, score_cast_func=&lt;class ‘float’&gt;)</td>
 </tr>
 <tr>
 <td>ZREMRANGEBYRANK</td>
@@ -949,614 +731,1510 @@
 <td>ZINTERSTORE destination numkeys key [key …] [WEIGHTS weight] [SUM</td>
 <td>MIN</td>
 <td>MAX]</td>
-<td>计算给定的numkeys个有序集合的交集，并且把结果放到destination中</td>
-<td>zinterstore(dest, keys, aggregate=None)</td>
 </tr>
 <tr>
 <td>ZUNIONSTORE</td>
 <td>ZUNIONSTORE destination numkeys key [key …] [WEIGHTS weight] [SUM</td>
 <td>MIN</td>
 <td>MAX]</td>
-<td>计算给定的numkeys个有序集合的并集，并且把结果放到destination中。</td>
-<td>zunionstore(dest, keys, aggregate=None)</td>
 </tr>
-</tbody>
-</table>
+</tbody></table>
 <p>其中有几个是没有介绍过的新命令，除了使用逆序来处理有序集合之外，ZREV*命令的工作方式和相对应的非逆序命令的工作方式完全一样(逆序就是指元素按照分值从大到小地排列)。</p>
-<p>下面这个交互示例展示了ZINTERSTORE和ZUNIONSTORE命令的用法<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.zadd(<span class="string">'zset-1'</span>, <span class="number">1</span>, <span class="string">'a'</span>, <span class="number">2</span>, <span class="string">'b'</span>, <span class="number">3</span>, <span class="string">'c'</span>)</span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.zadd(<span class="string">'zset-2'</span>, <span class="number">4</span>, <span class="string">'b'</span>, <span class="number">1</span>, <span class="string">'c'</span>, <span class="number">0</span>, <span class="string">'d'</span>)</span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.zinterstore(<span class="string">'zset-i'</span>, [<span class="string">'zset-1'</span>, <span class="string">'zset-2'</span>])</span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.zrange(<span class="string">'zset-i'</span>, <span class="number">0</span>, <span class="number">-1</span>, withscores=<span class="keyword">True</span>)</span><br><span class="line">[(<span class="string">b'c'</span>, <span class="number">4.0</span>), (<span class="string">b'b'</span>, <span class="number">6.0</span>)]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.zunionstore(<span class="string">'zset-u'</span>, [<span class="string">'zset-1'</span>, <span class="string">'zset-2'</span>], aggregate=<span class="string">'min'</span>)</span><br><span class="line"><span class="number">4</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.zrange(<span class="string">'zset-u'</span>, <span class="number">0</span>, <span class="number">-1</span>, withscores=<span class="keyword">True</span>)</span><br><span class="line">[(<span class="string">b'd'</span>, <span class="number">0.0</span>), (<span class="string">b'a'</span>, <span class="number">1.0</span>), (<span class="string">b'c'</span>, <span class="number">1.0</span>), (<span class="string">b'b'</span>, <span class="number">2.0</span>)]</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.sadd(<span class="string">'set-1'</span>, <span class="string">'a'</span>, <span class="string">'d'</span>)</span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.zunionstore(<span class="string">'zset-u2'</span>, [<span class="string">'zset-1'</span>, <span class="string">'zset-2'</span>, <span class="string">'set-1'</span>])</span><br><span class="line"><span class="number">4</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.zrange(<span class="string">'zset-u2'</span>, <span class="number">0</span>, <span class="number">-1</span>, withscores=<span class="keyword">True</span>)</span><br><span class="line">[(<span class="string">b'd'</span>, <span class="number">1.0</span>), (<span class="string">b'a'</span>, <span class="number">2.0</span>), (<span class="string">b'c'</span>, <span class="number">4.0</span>), (<span class="string">b'b'</span>, <span class="number">6.0</span>)]</span><br></pre></td></tr></table></figure></p>
+<p>下面这个交互示例展示了ZINTERSTORE和ZUNIONSTORE命令的用法</p>
+<figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.zadd(<span class="hljs-string">'zset-1'</span>, <span class="hljs-number">1</span>, <span class="hljs-string">'a'</span>, <span class="hljs-number">2</span>, <span class="hljs-string">'b'</span>, <span class="hljs-number">3</span>, <span class="hljs-string">'c'</span>)</span><br><span class="line"><span class="hljs-number">3</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.zadd(<span class="hljs-string">'zset-2'</span>, <span class="hljs-number">4</span>, <span class="hljs-string">'b'</span>, <span class="hljs-number">1</span>, <span class="hljs-string">'c'</span>, <span class="hljs-number">0</span>, <span class="hljs-string">'d'</span>)</span><br><span class="line"><span class="hljs-number">3</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.zinterstore(<span class="hljs-string">'zset-i'</span>, [<span class="hljs-string">'zset-1'</span>, <span class="hljs-string">'zset-2'</span>])</span><br><span class="line"><span class="hljs-number">2</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.zrange(<span class="hljs-string">'zset-i'</span>, <span class="hljs-number">0</span>, <span class="hljs-number">-1</span>, withscores=<span class="hljs-literal">True</span>)</span><br><span class="line">[(<span class="hljs-string">b'c'</span>, <span class="hljs-number">4.0</span>), (<span class="hljs-string">b'b'</span>, <span class="hljs-number">6.0</span>)]</span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.zunionstore(<span class="hljs-string">'zset-u'</span>, [<span class="hljs-string">'zset-1'</span>, <span class="hljs-string">'zset-2'</span>], aggregate=<span class="hljs-string">'min'</span>)</span><br><span class="line"><span class="hljs-number">4</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.zrange(<span class="hljs-string">'zset-u'</span>, <span class="hljs-number">0</span>, <span class="hljs-number">-1</span>, withscores=<span class="hljs-literal">True</span>)</span><br><span class="line">[(<span class="hljs-string">b'd'</span>, <span class="hljs-number">0.0</span>), (<span class="hljs-string">b'a'</span>, <span class="hljs-number">1.0</span>), (<span class="hljs-string">b'c'</span>, <span class="hljs-number">1.0</span>), (<span class="hljs-string">b'b'</span>, <span class="hljs-number">2.0</span>)]</span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.sadd(<span class="hljs-string">'set-1'</span>, <span class="hljs-string">'a'</span>, <span class="hljs-string">'d'</span>)</span><br><span class="line"><span class="hljs-number">2</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.zunionstore(<span class="hljs-string">'zset-u2'</span>, [<span class="hljs-string">'zset-1'</span>, <span class="hljs-string">'zset-2'</span>, <span class="hljs-string">'set-1'</span>])</span><br><span class="line"><span class="hljs-number">4</span></span><br><span class="line"><span class="hljs-meta">&gt;&gt;&gt; </span>r.zrange(<span class="hljs-string">'zset-u2'</span>, <span class="hljs-number">0</span>, <span class="hljs-number">-1</span>, withscores=<span class="hljs-literal">True</span>)</span><br><span class="line">[(<span class="hljs-string">b'd'</span>, <span class="hljs-number">1.0</span>), (<span class="hljs-string">b'a'</span>, <span class="hljs-number">2.0</span>), (<span class="hljs-string">b'c'</span>, <span class="hljs-number">4.0</span>), (<span class="hljs-string">b'b'</span>, <span class="hljs-number">6.0</span>)]</span><br></pre></td></tr></table></figure>
+
 <p>用户可以在执行交并运算时传入不同的聚合函数，共有sum、min、max三种可选；用户还可以把集合作为输入传给ZINTERSTORE和ZUNIONSTORE，命令会将集合看作是成员分值全为1的有序集合来处理。</p>
 
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-      <div>
-        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
-  <div>🐶 ~怕是要给老板下跪了哦~ 🐶</div>
-  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
-    <span>打赏</span>
-  </button>
-  <div id="QR" style="display: none;">
-
-    
-      <div id="wechat" style="display: inline-block">
-        <img id="wechat_qr" src="/images/wechat-reward-img.jpg" alt="LawTech. 微信支付"/>
-        <p>微信支付</p>
-      </div>
-    
-
-    
-      <div id="alipay" style="display: inline-block">
-        <img id="alipay_qr" src="/images/alipay-reward-img.jpg" alt="LawTech. 支付宝"/>
-        <p>支付宝</p>
-      </div>
-    
-
-    
-
-  </div>
-</div>
-
-      </div>
-    
-
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/Redis-Python/" rel="tag"># Redis, Python</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2017/03/25/Redis-1/" rel="next" title="Redis学习笔记(一)：初识Redis">
-                <i class="fa fa-chevron-left"></i> Redis学习笔记(一)：初识Redis
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/04/06/Redis-3/" rel="prev" title="Redis学习笔记(三)：Redis命令补充">
-                Redis学习笔记(三)：Redis命令补充 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-
-    <div class="post-spread">
-      
-    </div>
-  </div>
-
-
-          </div>
-          
-
-
-          
-
-  
-
-
-
         </div>
         
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Redis-Python/">Redis, Python</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
     </div>
-  </div>
+</div>
 
-  <aside id="sidebar" class="sidebar">
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">Like this article? Support the author with</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                <!-- Visit https://www.paypal.com/donate/buttons/ to get your donate button -->
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2017/04/06/Redis-3/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">Redis学习笔记(三)：Redis命令补充</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2017/03/25/Redis-1/">
+                <span class="level-item">Redis学习笔记(一)：初识Redis</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
     
-    <div class="sidebar-inner">
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg" alt="LawTech">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        LawTech
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        CR7 is best!
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Nanjing, Jiangsu</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        Posts
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        67
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        Categories
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        13
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        Tags
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        27
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/lawtech0902" target="_blank">
+                Follow</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="https://github.com/lawtech0902">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Facebook" href="https://facebook.com">
+                
+                <i class="fab fa-facebook"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Twitter" href="https://twitter.com">
+                
+                <i class="fab fa-twitter"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Dribbble" href="/">
+                
+                <i class="fab fa-dribbble"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="RSS" href="/">
+                
+                <i class="fas fa-rss"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+        
 
-      
-
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            Links
+        </h3>
+        <ul class="menu-list">
+        
+            <li>
+                <a class="level is-mobile" href="https://hexo.io" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">Hexo</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">hexo.io</span>
+                    </span>
+                </a>
+            </li>
+        
+            <li>
+                <a class="level is-mobile" href="https://github.com/ppoffice" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">PPOffice</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">github.com</span>
+                    </span>
+                </a>
+            </li>
+        
         </ul>
-      
-
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-            
-              <img class="site-author-image" itemprop="image"
-                src="http://tvax2.sinaimg.cn/crop.0.5.501.501.180/ab0893b8ly8fdouqm245dj20dx0e8ab3.jpg"
-                alt="LawTech." />
-            
-              <p class="site-author-name" itemprop="name">LawTech.</p>
-              <p class="site-description motion-element" itemprop="description">破邮python爱好者。</p>
-          </div>
-
-          <nav class="site-state motion-element">
-
-            
-              <div class="site-state-item site-state-posts">
-              
-                <a href="/archives/">
-              
-                  <span class="site-state-item-count">67</span>
-                  <span class="site-state-item-name">日志</span>
-                </a>
-              </div>
-            
-
-            
-              
-              
-              <div class="site-state-item site-state-categories">
-                <a href="/categories/index.html">
-                  <span class="site-state-item-count">13</span>
-                  <span class="site-state-item-name">分类</span>
-                </a>
-              </div>
-            
-
-            
-              
-              
-              <div class="site-state-item site-state-tags">
-                <a href="/tags/index.html">
-                  <span class="site-state-item-count">27</span>
-                  <span class="site-state-item-name">标签</span>
-                </a>
-              </div>
-            
-
-          </nav>
-
-          
-            <div class="feed-link motion-element">
-              <a href="/atom.xml" rel="alternate">
-                <i class="fa fa-rss"></i>
-                RSS
-              </a>
-            </div>
-          
-
-          
-            <div class="links-of-author motion-element">
-                
-                  <span class="links-of-author-item">
-                    <a href="https://github.com/lawtech0902" target="_blank" title="GitHub">
-                      
-                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
-                  </span>
-                
-                  <span class="links-of-author-item">
-                    <a href="http://weibo.com/LawRev1s1on" target="_blank" title="weibo">
-                      
-                        <i class="fa fa-fw fa-globe"></i>weibo</a>
-                  </span>
-                
-            </div>
-          
-
-          
-          
-
-          
-          
-
-          
-
         </div>
-      </section>
-
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#redis-py简介"><span class="nav-number">1.</span> <span class="nav-text">redis-py简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装"><span class="nav-number">1.1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#快速开始"><span class="nav-number">1.2.</span> <span class="nav-text">快速开始</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#API参考"><span class="nav-number">1.3.</span> <span class="nav-text">API参考</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#连接池"><span class="nav-number">1.4.</span> <span class="nav-text">连接池</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线程安全性"><span class="nav-number">1.5.</span> <span class="nav-text">线程安全性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis命令及其对应redis-py-API"><span class="nav-number">2.</span> <span class="nav-text">Redis命令及其对应redis-py API</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#字符串"><span class="nav-number">2.1.</span> <span class="nav-text">字符串</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#列表"><span class="nav-number">2.2.</span> <span class="nav-text">列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#集合"><span class="nav-number">2.3.</span> <span class="nav-text">集合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#散列"><span class="nav-number">2.4.</span> <span class="nav-text">散列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#有序集合"><span class="nav-number">2.5.</span> <span class="nav-text">有序集合</span></a></li></ol></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
-      
-
-      
-
     </div>
-  </aside>
-
-
-        
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
-  <span class="with-love">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">LawTech.</span>
-
-  
 </div>
 
 
-  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
-
-
-
-  <span class="post-meta-divider">|</span>
-
-
-
-  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
-
-
-
-
+    
         
-<div class="busuanzi-count">
-  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-  
-    <span class="site-uv">
-      <i class="fa fa-user"></i> 访问人数
-      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
-      
-    </span>
-  
-
-  
-    <span class="site-pv">
-      <i class="fa fa-eye"></i> 总访问量
-      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
-      次
-    </span>
-  
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                Categories
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/Basic-knowledge/">
+            <span class="level-start">
+                <span class="level-item">Basic knowledge</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Django/">
+            <span class="level-start">
+                <span class="level-item">Django</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Django-Python/">
+            <span class="level-start">
+                <span class="level-item">Django, Python</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Django，Vue/">
+            <span class="level-start">
+                <span class="level-item">Django，Vue</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Git/">
+            <span class="level-start">
+                <span class="level-item">Git</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Go/">
+            <span class="level-start">
+                <span class="level-item">Go</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/JWT/">
+            <span class="level-start">
+                <span class="level-item">JWT</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Nginx/">
+            <span class="level-start">
+                <span class="level-item">Nginx</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/RESTful/">
+            <span class="level-start">
+                <span class="level-item">RESTful</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Redis/">
+            <span class="level-start">
+                <span class="level-item">Redis</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Scrapy/">
+            <span class="level-start">
+                <span class="level-item">Scrapy</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">33</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/TensorFlow/">
+            <span class="level-start">
+                <span class="level-item">TensorFlow</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/essay/">
+            <span class="level-start">
+                <span class="level-item">essay</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            Tag Cloud
+        </h3>
+        <a href="/tags/12-05/" style="font-size: 10px;">12.05</a> <a href="/tags/Django/" style="font-size: 10px;">Django</a> <a href="/tags/Django-Centos/" style="font-size: 10px;">Django, Centos</a> <a href="/tags/Django-Centos-nginx-uwsgi/" style="font-size: 10px;">Django, Centos, nginx, uwsgi</a> <a href="/tags/Django-Python/" style="font-size: 10px;">Django, Python</a> <a href="/tags/Django，Celery/" style="font-size: 11.67px;">Django，Celery</a> <a href="/tags/Django，Mysql，Python/" style="font-size: 10px;">Django，Mysql，Python</a> <a href="/tags/Django，Vue，Rest/" style="font-size: 18.33px;">Django，Vue，Rest</a> <a href="/tags/Git/" style="font-size: 11.67px;">Git</a> <a href="/tags/Go/" style="font-size: 16.67px;">Go</a> <a href="/tags/Go，Mac，Privoxy/" style="font-size: 10px;">Go，Mac，Privoxy</a> <a href="/tags/Nginx/" style="font-size: 10px;">Nginx</a> <a href="/tags/Redis-Python/" style="font-size: 18.33px;">Redis, Python</a> <a href="/tags/Scrapy，CSS，Python/" style="font-size: 10px;">Scrapy，CSS，Python</a> <a href="/tags/Scrapy，Django，Python/" style="font-size: 10px;">Scrapy，Django，Python</a> <a href="/tags/Scrapy，Python/" style="font-size: 20px;">Scrapy，Python</a> <a href="/tags/Scrapy，Python-Elasticsearch/" style="font-size: 10px;">Scrapy，Python, Elasticsearch</a> <a href="/tags/Scrapy，Python，Django，Elasticsearch/" style="font-size: 10px;">Scrapy，Python，Django，Elasticsearch</a> <a href="/tags/Scrapy，Python，ElasticSearch/" style="font-size: 10px;">Scrapy，Python，ElasticSearch</a> <a href="/tags/Scrapy，Python，Redis/" style="font-size: 10px;">Scrapy，Python，Redis</a> <a href="/tags/Scrapy，Python，scrapyd/" style="font-size: 10px;">Scrapy，Python，scrapyd</a> <a href="/tags/Scrapy，Regular-Expression，Python/" style="font-size: 10px;">Scrapy，Regular Expression，Python</a> <a href="/tags/Scrapy，Requests，Python/" style="font-size: 15px;">Scrapy，Requests，Python</a> <a href="/tags/Scrapy，Unicode，Python/" style="font-size: 10px;">Scrapy，Unicode，Python</a> <a href="/tags/Scrapy，XPath，Python/" style="font-size: 11.67px;">Scrapy，XPath，Python</a> <a href="/tags/TensorFlow-GPU-Ubuntu-Cuda/" style="font-size: 10px;">TensorFlow, GPU, Ubuntu, Cuda</a> <a href="/tags/Web/" style="font-size: 13.33px;">Web</a>
+    </div>
 </div>
 
-
-
-
-
-  <script type="text/javascript">
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "//tajs.qq.com/stats?sId=61398861";
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
-    })();
-  </script>
-
-
-
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            Recent
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2018/07/10/golang-sync-map/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Golang sync.Map浅析">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-07-10T05:18:54.000Z">2018-07-10</time></div>
+                    <a href="/2018/07/10/golang-sync-map/" class="has-link-black-ter is-size-6">Golang sync.Map浅析</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Go/">Go</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/07/05/golang-coding-notations/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Golang编码规范">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-07-05T05:18:54.000Z">2018-07-05</time></div>
+                    <a href="/2018/07/05/golang-coding-notations/" class="has-link-black-ter is-size-6">Golang编码规范</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Go/">Go</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/07/03/golang-reflect/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Golang反射浅析">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-07-03T05:18:54.000Z">2018-07-03</time></div>
+                    <a href="/2018/07/03/golang-reflect/" class="has-link-black-ter is-size-6">Golang反射浅析</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Go/">Go</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/06/23/golang-imooc/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Imooc Go基础">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-06-23T05:18:54.000Z">2018-06-23</time></div>
+                    <a href="/2018/06/23/golang-imooc/" class="has-link-black-ter is-size-6">Imooc Go基础</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Go/">Go</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/04/24/git-workflow/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Git工作流程">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-04-24T05:18:54.000Z">2018-04-24</time></div>
+                    <a href="/2018/04/24/git-workflow/" class="has-link-black-ter is-size-6">Git工作流程</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Git/">Git</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
 
         
-      </div>
-    </footer>
-
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            Archives
+        </h3>
+        <ul class="menu-list">
         
-      </div>
+        <li>
+            <a class="level is-marginless" href="/archives/2018/07/">
+                <span class="level-start">
+                    <span class="level-item">July 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/06/">
+                <span class="level-start">
+                    <span class="level-item">June 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/04/">
+                <span class="level-start">
+                    <span class="level-item">April 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/03/">
+                <span class="level-start">
+                    <span class="level-item">March 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/01/">
+                <span class="level-start">
+                    <span class="level-item">January 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/12/">
+                <span class="level-start">
+                    <span class="level-item">December 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">November 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">October 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/07/">
+                <span class="level-start">
+                    <span class="level-item">July 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/06/">
+                <span class="level-start">
+                    <span class="level-item">June 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/05/">
+                <span class="level-start">
+                    <span class="level-item">May 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">10</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">April 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">18</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/03/">
+                <span class="level-start">
+                    <span class="level-item">March 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                Tags
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/12-05/">
+                        <span class="tag">12.05</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django/">
+                        <span class="tag">Django</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django-Centos/">
+                        <span class="tag">Django, Centos</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django-Centos-nginx-uwsgi/">
+                        <span class="tag">Django, Centos, nginx, uwsgi</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django-Python/">
+                        <span class="tag">Django, Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django，Celery/">
+                        <span class="tag">Django，Celery</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django，Mysql，Python/">
+                        <span class="tag">Django，Mysql，Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django，Vue，Rest/">
+                        <span class="tag">Django，Vue，Rest</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Git/">
+                        <span class="tag">Git</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Go/">
+                        <span class="tag">Go</span>
+                        <span class="tag is-grey">5</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Go，Mac，Privoxy/">
+                        <span class="tag">Go，Mac，Privoxy</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Nginx/">
+                        <span class="tag">Nginx</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Redis-Python/">
+                        <span class="tag">Redis, Python</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，CSS，Python/">
+                        <span class="tag">Scrapy，CSS，Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Django，Python/">
+                        <span class="tag">Scrapy，Django，Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python/">
+                        <span class="tag">Scrapy，Python</span>
+                        <span class="tag is-grey">19</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python-Elasticsearch/">
+                        <span class="tag">Scrapy，Python, Elasticsearch</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python，Django，Elasticsearch/">
+                        <span class="tag">Scrapy，Python，Django，Elasticsearch</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python，ElasticSearch/">
+                        <span class="tag">Scrapy，Python，ElasticSearch</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python，Redis/">
+                        <span class="tag">Scrapy，Python，Redis</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python，scrapyd/">
+                        <span class="tag">Scrapy，Python，scrapyd</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Regular-Expression，Python/">
+                        <span class="tag">Scrapy，Regular Expression，Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Requests，Python/">
+                        <span class="tag">Scrapy，Requests，Python</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Unicode，Python/">
+                        <span class="tag">Scrapy，Unicode，Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，XPath，Python/">
+                        <span class="tag">Scrapy，XPath，Python</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/TensorFlow-GPU-Ubuntu-Cuda/">
+                        <span class="tag">TensorFlow, GPU, Ubuntu, Cuda</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Web/">
+                        <span class="tag">Web</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            Recent
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2018/07/10/golang-sync-map/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Golang sync.Map浅析">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-07-10T05:18:54.000Z">2018-07-10</time></div>
+                    <a href="/2018/07/10/golang-sync-map/" class="has-link-black-ter is-size-6">Golang sync.Map浅析</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Go/">Go</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/07/05/golang-coding-notations/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Golang编码规范">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-07-05T05:18:54.000Z">2018-07-05</time></div>
+                    <a href="/2018/07/05/golang-coding-notations/" class="has-link-black-ter is-size-6">Golang编码规范</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Go/">Go</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/07/03/golang-reflect/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Golang反射浅析">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-07-03T05:18:54.000Z">2018-07-03</time></div>
+                    <a href="/2018/07/03/golang-reflect/" class="has-link-black-ter is-size-6">Golang反射浅析</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Go/">Go</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/06/23/golang-imooc/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Imooc Go基础">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-06-23T05:18:54.000Z">2018-06-23</time></div>
+                    <a href="/2018/06/23/golang-imooc/" class="has-link-black-ter is-size-6">Imooc Go基础</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Go/">Go</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/04/24/git-workflow/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Git工作流程">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-04-24T05:18:54.000Z">2018-04-24</time></div>
+                    <a href="/2018/04/24/git-workflow/" class="has-link-black-ter is-size-6">Git工作流程</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Git/">Git</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            Archives
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/07/">
+                <span class="level-start">
+                    <span class="level-item">July 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/06/">
+                <span class="level-start">
+                    <span class="level-item">June 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/04/">
+                <span class="level-start">
+                    <span class="level-item">April 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/03/">
+                <span class="level-start">
+                    <span class="level-item">March 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/01/">
+                <span class="level-start">
+                    <span class="level-item">January 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/12/">
+                <span class="level-start">
+                    <span class="level-item">December 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">November 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">October 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/07/">
+                <span class="level-start">
+                    <span class="level-item">July 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/06/">
+                <span class="level-start">
+                    <span class="level-item">June 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/05/">
+                <span class="level-start">
+                    <span class="level-item">May 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">10</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">April 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">18</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/03/">
+                <span class="level-start">
+                    <span class="level-item">March 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                Tags
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/12-05/">
+                        <span class="tag">12.05</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django/">
+                        <span class="tag">Django</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django-Centos/">
+                        <span class="tag">Django, Centos</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django-Centos-nginx-uwsgi/">
+                        <span class="tag">Django, Centos, nginx, uwsgi</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django-Python/">
+                        <span class="tag">Django, Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django，Celery/">
+                        <span class="tag">Django，Celery</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django，Mysql，Python/">
+                        <span class="tag">Django，Mysql，Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Django，Vue，Rest/">
+                        <span class="tag">Django，Vue，Rest</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Git/">
+                        <span class="tag">Git</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Go/">
+                        <span class="tag">Go</span>
+                        <span class="tag is-grey">5</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Go，Mac，Privoxy/">
+                        <span class="tag">Go，Mac，Privoxy</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Nginx/">
+                        <span class="tag">Nginx</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Redis-Python/">
+                        <span class="tag">Redis, Python</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，CSS，Python/">
+                        <span class="tag">Scrapy，CSS，Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Django，Python/">
+                        <span class="tag">Scrapy，Django，Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python/">
+                        <span class="tag">Scrapy，Python</span>
+                        <span class="tag is-grey">19</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python-Elasticsearch/">
+                        <span class="tag">Scrapy，Python, Elasticsearch</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python，Django，Elasticsearch/">
+                        <span class="tag">Scrapy，Python，Django，Elasticsearch</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python，ElasticSearch/">
+                        <span class="tag">Scrapy，Python，ElasticSearch</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python，Redis/">
+                        <span class="tag">Scrapy，Python，Redis</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Python，scrapyd/">
+                        <span class="tag">Scrapy，Python，scrapyd</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Regular-Expression，Python/">
+                        <span class="tag">Scrapy，Regular Expression，Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Requests，Python/">
+                        <span class="tag">Scrapy，Requests，Python</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，Unicode，Python/">
+                        <span class="tag">Scrapy，Unicode，Python</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Scrapy，XPath，Python/">
+                        <span class="tag">Scrapy，XPath，Python</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/TensorFlow-GPU-Ubuntu-Cuda/">
+                        <span class="tag">TensorFlow, GPU, Ubuntu, Cuda</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Web/">
+                        <span class="tag">Web</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.svg" alt="Redis学习笔记(二)：Redis命令及其Python API" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2019 LawTech.&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                
+                <br>
+                <span id="busuanzi_container_site_uv">
+                Visited by <span id="busuanzi_value_site_uv">0</span> users
+                </span>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-Hans");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
     
 
     
-
-  </div>
-
-  
-
-<script type="text/javascript">
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
-  }
-</script>
-
-
-
-
-
-
-
-
-
-  
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
-  
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
-
-
-
-  
-  
-
-  
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
-
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
-
-
-
-  
-
-
-  
-
-
-
-
-	
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-  
-  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
-  <script>AV.initialize("R025aEVl3sFz6nIRV8p0nqRB-gzGzoHsz", "g1roHmmHckuQSu2n9JW16T5b");</script>
-  <script>
-    function showTime(Counter) {
-      var query = new AV.Query(Counter);
-      var entries = [];
-      var $visitors = $(".leancloud_visitors");
-
-      $visitors.each(function () {
-        entries.push( $(this).attr("id").trim() );
-      });
-
-      query.containedIn('url', entries);
-      query.find()
-        .done(function (results) {
-          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
-
-          if (results.length === 0) {
-            $visitors.find(COUNT_CONTAINER_REF).text(0);
-            return;
-          }
-
-          for (var i = 0; i < results.length; i++) {
-            var item = results[i];
-            var url = item.get('url');
-            var time = item.get('time');
-            var element = document.getElementById(url);
-
-            $(element).find(COUNT_CONTAINER_REF).text(time);
-          }
-          for(var i = 0; i < entries.length; i++) {
-            var url = entries[i];
-            var element = document.getElementById(url);
-            var countSpan = $(element).find(COUNT_CONTAINER_REF);
-            if( countSpan.text() == '') {
-              countSpan.text(0);
-            }
-          }
-        })
-        .fail(function (object, error) {
-          console.log("Error: " + error.code + " " + error.message);
-        });
-    }
-
-    function addCount(Counter) {
-      var $visitors = $(".leancloud_visitors");
-      var url = $visitors.attr('id').trim();
-      var title = $visitors.attr('data-flag-title').trim();
-      var query = new AV.Query(Counter);
-
-      query.equalTo("url", url);
-      query.find({
-        success: function(results) {
-          if (results.length > 0) {
-            var counter = results[0];
-            counter.fetchWhenSave(true);
-            counter.increment("time");
-            counter.save(null, {
-              success: function(counter) {
-                var $element = $(document.getElementById(url));
-                $element.find('.leancloud-visitors-count').text(counter.get('time'));
-              },
-              error: function(counter, error) {
-                console.log('Failed to save Visitor num, with error message: ' + error.message);
-              }
-            });
-          } else {
-            var newcounter = new Counter();
-            /* Set ACL */
-            var acl = new AV.ACL();
-            acl.setPublicReadAccess(true);
-            acl.setPublicWriteAccess(true);
-            newcounter.setACL(acl);
-            /* End Set ACL */
-            newcounter.set("title", title);
-            newcounter.set("url", url);
-            newcounter.set("time", 1);
-            newcounter.save(null, {
-              success: function(newcounter) {
-                var $element = $(document.getElementById(url));
-                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
-              },
-              error: function(newcounter, error) {
-                console.log('Failed to create');
-              }
-            });
-          }
-        },
-        error: function(error) {
-          console.log('Error:' + error.code + " " + error.message);
-        }
-      });
-    }
-
-    $(function() {
-      var Counter = AV.Object.extend("Counter");
-      if ($('.leancloud_visitors').length == 1) {
-        addCount(Counter);
-      } else if ($('.post-title-link').length > 1) {
-        showTime(Counter);
-      }
-    });
-  </script>
-
-
-
-  
-
-  
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
 <script>
-(function(){
-    var bp = document.createElement('script');
-    var curProtocol = window.location.protocol.split(':')[0];
-    if (curProtocol === 'https') {
-        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
-    }
-    else {
-        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
-    }
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(bp, s);
-})();
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
 </script>
 
 
-  
-  
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
 
-  
+    
+    
 
-  
+<a id="back-to-top" title="Back to Top" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
 
-  
 
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="Type something...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: 'Posts',
+                PAGES: 'Pages',
+                CATEGORIES: 'Categories',
+                TAGS: 'Tags',
+                UNTITLED: '(Untitled)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
 </body>
 </html>
