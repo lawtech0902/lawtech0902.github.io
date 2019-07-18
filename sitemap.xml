@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2018/01/03/go-base-tips/</loc>
+    
+    <lastmod>2019-07-18T07:13:40.926Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2018/07/10/golang-sync-map/</loc>
     
     <lastmod>2018-07-25T03:08:53.000Z</lastmod>
@@ -75,13 +82,6 @@
     <loc>http://yoursite.com/2018/01/04/centos-sentry/</loc>
     
     <lastmod>2018-01-07T05:23:54.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2018/01/03/go-base-tips/</loc>
-    
-    <lastmod>2018-01-03T06:47:13.000Z</lastmod>
     
   </url>
   
